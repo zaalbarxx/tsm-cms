@@ -17,11 +17,18 @@ extract($tsm->makeArraySafe($_REQUEST), EXTR_OVERWRITE);
 //INSTANTIATE THE DB CONNECTION
 require_once(__TSM_ROOT__.'tsm_db_conn.php');
 
+//INSTANTIATE THE ADMIN USER CLASS
+$tsm->adminUser = new AdminUser();
+
 //INSTANTIATE THE WEBSITE CLASS AND START THE SITE
 $tsm->website = new Website();
 $tsm->website->start();
 
-//TURN CONTROL OVER TO THE COMPONENT
-require_once($tsm->getComponent());
+if($tsm->adminUser->isLoggedIn()){
+  //TURN CONTROL OVER TO THE COMPONENT
+  require_once($tsm->getComponent());
+} else {
+  require_once(__TSM_ROOT__."/admin/controllers/login/main.controller.php");
+}
 
 ?>

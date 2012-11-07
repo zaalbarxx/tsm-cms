@@ -7,6 +7,7 @@ class Website{
 	public static $adminPortal;
 	private static $adminTopMenu;
 	private static $adminSideMenu;
+	private static $websiteId;
 
 
 	public function __construct(){
@@ -58,6 +59,14 @@ class Website{
 	  
 		return $this->title;
 	}
+	
+	public function getWebsiteId(){
+		if(isset($this->info['website_id'])){
+			$this->websiteId = $this->info['website_id'];
+		}
+		
+		return $this->websiteId; 
+  }
 
 	public function getTemplateId(){
 		return $this->templateId;
@@ -83,42 +92,29 @@ class Website{
 		return $this->info;
 	}
 	
-	public function getAdminTopMenu(){
-	  $array = Array(
-              0 => Array(
-                "title"=>'Home', 
-                "url"=>'index.php', 
-                  ),
-              1 => Array(
-                "title"=>'Manage', 
-                "url"=>'#', 
-                "children"=>Array(
-                    0=>Array(
-                      "title"=>'Registration', 
-                      "url"=>'index.php?com=registration'
-                      ),
-                    1=>Array(
-                      "title"=>'Something Else',
-                      "url"=>'hi.php'
-                      )
-                    )
-                  ),
-              2 => Array(
-                "title"=>'Manage', 
-                "url"=>'#', 
-                "children"=>Array(
-                    0=>Array(
-                      "title"=>'Registration', 
-                      "url"=>'index.php?com=registration'
-                      ),
-                    1=>Array(
-                      "title"=>'Something Else',
-                      "url"=>'hi.php'
-                      )
-                    )
-                  ),  
-                );
-	  $this->adminTopMenu = $array;
+	public function getAdminTopMenu($parentId = NULL){
+    if($parentId != null){
+      $q = "SELECT * FROM tsm_admin_menu WHERE parent_id = ".$parentId;  
+    } else {
+      $q = "SELECT * FROM tsm_admin_menu WHERE parent_id IS NULL";  
+    }
+	  
+    $items = Array();
+    $r = $this->db->runQuery($q);
+    if(mysql_num_rows($r) > 0){
+      while ($a = mysql_fetch_assoc($r)) {
+          $menuArray[$a['menu_item_id']] = Array(
+            "title"=>$a['title'],
+            "url"=>$a['url'],
+            "target"=>$a['target'],
+            "children"=>$this->getAdminTopMenu($a['menu_item_id'])
+          );
+      }
+    } else {
+      $menuArray = NULL;
+    }
+    
+	  $this->adminTopMenu = $menuArray;
 	  
 	  return $this->adminTopMenu;
   }
