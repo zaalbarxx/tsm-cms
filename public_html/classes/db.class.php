@@ -45,6 +45,30 @@ class Db{
       return false;
     }
   }
+  
+	public function updateRowFromPost($table,$id){
+    $q = "SHOW COLUMNS FROM ".$table;
+    $r = $this->runQuery($q);
+    $insertq = "UPDATE ".$table." ";
+    $values = " SET ";
+    while($a = mysql_fetch_assoc($r)){
+      if(!isset($firstColumn)){
+        $firstColumn = $a['Field'];
+      }
+      //print_r($a);
+      if(isset($_POST[$a['Field']])){
+        $values .= " ".$a['Field']."='".$this->tsm->makeVarSafe($_POST[$a['Field']])."', ";
+      } 
+    }
+    $values = substr_replace($values ,"",-2);
+    $values .= " WHERE ".$firstColumn."='".$id."'";
+    $insertq = $insertq.$values;
+    if($this->runQuery($insertq)){
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 ?>

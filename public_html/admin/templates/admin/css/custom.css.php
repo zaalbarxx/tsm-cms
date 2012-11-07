@@ -258,21 +258,44 @@ label{
   cursor: pointer;
   font-weight: bold;
 }
-.program .buttons .editIcon{
+.program .buttons{
   float: right;
-  display: block;
-  width: 16px;
-  height: 16px;
-  background: url(../images/icons/pencil.png);
 }
+.program .buttons a{
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+}
+.program .buttons a:hover{
+  top: -2px;
+}
+.program .buttons a:active{
+  top: 0px;
+}
+.program .buttons .editButton{
+  background: url(../images/icons/pencil24.png);
+}
+.program .buttons .deleteButton{
+  background: url(../images/icons/stop24.png);
+}
+
 .program .programDetails{
   padding: 30px;
   display: none;
 }
 .addButton{
+  position: relative;
   display: inline-block;
   margin-bottom:-3px;
-  width: 16px;
-  height: 16px;
-  background: url(../images/icons/add.png);
+  width: 32px;
+  height: 32px;
+  background: url(../images/icons/plus32.png);
+}
+.addButton:hover{
+  top: -2px;
+}
+.addButton:active{
+  top: 0px;
 }

@@ -58,7 +58,20 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
         die("uhoh");
       } 
     } else {
-    
+      die("not all fields required.");
+    }
+  }
+
+   public function saveProgram($programId){
+    if(isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
+      if($this->db->updateRowFromPost("tsm_reg_programs",$programId)){
+        return true;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      } 
+    } else {
+        die("not all fields required.");
     }
   }
 

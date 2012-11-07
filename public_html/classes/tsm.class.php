@@ -70,7 +70,7 @@ class TSM{
   public function createPassword($password){
   	$randSalt = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
   	$randSalt2 = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
-  	$salt = "$2a$12$".substr(sha1($randSalt.sha1($randSalt.$password.$randSalt2).$randSalt2),3,22);
+  	$salt = '$5$'.substr(sha1($randSalt.sha1($randSalt.$password.$randSalt2).$randSalt2),3,22);
   	$password = crypt($password,$salt);
   
   	return $password;
@@ -87,7 +87,7 @@ class TSM{
   }
   
   function checkPassword($passwordHash,$passwordToCheck){
-  	if(strpos($passwordHash,"$2a$12$") === false){
+  	if(strpos($passwordHash,'$5$') === false){
   		$salt = sha1("aUyh:B>G-+\,n<EOWklsO".md5("zV6ivBrm1ZJ".$passwordToCheck));
   		$salt2 = sha1("w^e[p0CJL7Q".md5("YdQ}VCp2".$salt));
   		$hash = sha1($salt2.sha1($salt.$passwordToCheck.$salt2).$salt);

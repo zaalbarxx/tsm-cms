@@ -18,10 +18,12 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION{
   }
   
   public function getInfo(){
-    $q = "SELECT * FROM tsm_reg_programs WHERE program_id = ".$this->programId;
-    $r = $this->db->runQuery($q);
-    while($a = mysql_fetch_assoc($r)){
-      $this->info = $a;
+    if($this->info == null){
+      $q = "SELECT * FROM tsm_reg_programs WHERE program_id = ".$this->programId;
+      $r = $this->db->runQuery($q);
+      while($a = mysql_fetch_assoc($r)){
+        $this->info = $a;
+      }
     }
     
     return $this->info;
