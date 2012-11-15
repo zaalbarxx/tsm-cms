@@ -3,6 +3,7 @@
 class TSM_REGISTRATION{
 
   private $currentCampusId;
+  private $feeConditionTypes;
 
   public function __construct(){
 		$tsm = TSM::getInstance();
@@ -27,6 +28,10 @@ class TSM_REGISTRATION{
    
   }
   
+  public function getSelectedSchoolYear(){
+    return 2013;
+  }
+  
   public function getCampuses(){
     $q = "SELECT * FROM tsm_reg_campuses WHERE website_id = '".$_SESSION['website_id']."'";
     $r = $this->db->runQuery($q);
@@ -48,6 +53,16 @@ class TSM_REGISTRATION{
     } else {
     
     }
+  }
+  
+  public function getFeeConditionTypes(){
+    $q = "SELECT * FROM tsm_reg_fee_condition_types";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $this->feeConditionTypes[$a['fee_condition_type_id']] = $a;
+    }
+    
+    return $this->feeConditionTypes;
   }
 
 }

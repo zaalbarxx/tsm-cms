@@ -19,6 +19,13 @@ class TSM{
 		return self::$_instance;
 	}
 
+  public function stringEndsWith($string, $test) {
+    $strlen = strlen($string);
+    $testlen = strlen($test);
+    if ($testlen > $strlen) return false;
+    return substr_compare($string, $test, -$testlen) === 0;
+  }
+
 	//SQL injection protection function
 	public function makeVarSafe( $value , $stripmetachar = 1 ){
 			if($stripmetachar == 1){
@@ -108,9 +115,31 @@ class TSM{
   	return $checkPassword;
   }
 
-	public function getHeaderHTML(){
+	public function getAdminHeaderHTML(){
 	  $this->headerHTML = "
     <script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js\" type=\"text/javascript\"></script>
+    <link rel=\"stylesheet\" href=\"../includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
+    <script type=\"text/javascript\" src=\"../includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>";
+    if(isset($_GET['fb'])){
+      $this->headerHTML .= "<link href=\"templates/admin/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+    } else {
+      $this->headerHTML .= "<link href=\"templates/admin/css/custom.css.php\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+    }
+		$this->headerHTML .= "<script type=\"text/javascript\">
+		$(document).ready( function(){
+		  $(\".fb\").attr('href', function() { return $(this).attr('href') + '&fb=1'; }).fancybox({
+    	  'width'          : 985,
+    	  'height'          : '85%',
+    	  'padding'       : 5,
+        'autoSize'    : false,
+        'leftRatio' : .51,
+    		'helpers': {
+          title: null
+        },
+    		'type'				: 'iframe'
+    	})
+    });
+		</script>
     ";
 	
 		return $this->headerHTML;

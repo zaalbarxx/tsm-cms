@@ -2,12 +2,17 @@
 require_once(__TSM_ROOT__."models/registration/tsm_registration.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_campus.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_program.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_fee.model.php");
 
 //INSTANTIATE THE REGISRATION CLASS
 $reg = new TSM_REGISTRATION();
 $campusList = $reg->getCampuses();
 if(!isset($view)){
   $view = null;
+}
+
+if(isset($ajax)){
+  require_once(__TSM_ROOT__."admin/controllers/registration/ajax.controller.php");
 }
 
 if(isset($createCampus)){
@@ -28,6 +33,7 @@ if($campusList == NULL){
 } else if(!$reg->getCurrentCampusId()){
   $activeView = __TSM_ROOT__."admin/views/registration/selectCurrentCampus.view.php";
 } else {
+  $currentCampus = new TSM_REGISTRATION_CAMPUS($reg->getCurrentCampusId());
   switch($view){
     case null:
       require_once(__TSM_ROOT__."admin/controllers/registration/dashboard.controller.php");
@@ -37,6 +43,9 @@ if($campusList == NULL){
       break;
     case "programs":
       require_once(__TSM_ROOT__."admin/controllers/registration/programs.controller.php");    
+      break;
+    case "fees":
+      require_once(__TSM_ROOT__."admin/controllers/registration/fees.controller.php"); 
       break;
     
   }

@@ -171,6 +171,9 @@ body{
   margin-top: 30px;
   margin-bottom: 30px;
 }
+#sideBar ul ul{
+  margin: 0px;
+}
 #sideBar ul li a{
   display: block;
   width: 160px;
@@ -180,7 +183,10 @@ body{
   color: #353535;
   font-weight: bold; 
 }
-
+#sideBar ul ul li a{
+  padding-left: 50px;
+  padding-right: 30px;
+}
 #sideBar ul li a:hover{
 	background: #4b545f;
 	background: linear-gradient(top, #4f5964 0%, #5f6975 40%);
@@ -210,13 +216,13 @@ body{
 input{
   border: 0px;
   padding: 5px;
-  float: right;
+  display: inline-block;
 }
 
 label{
-  float: left;
-  font-weight: bold;
-  margin: 5px;
+  width: 120px;
+  display: inline-block;
+  font-weight: bold;;
 }
 
 .errorMessage{
@@ -236,7 +242,7 @@ label{
 .contentWithSideBar{
   margin-left: 240px;
 }
-.program{
+.bigItem{
   position: relative;
   display: block;
   width: 650px;
@@ -250,7 +256,7 @@ label{
   border-radius: 5px;
   margin-bottom: 30px;
 }
-.program .title{
+.bigItem .title{
   margin-left: 30px;
   width: 500px;
   display: inline-block;
@@ -258,33 +264,94 @@ label{
   cursor: pointer;
   font-weight: bold;
 }
-.program .buttons{
+.bigItem .buttons{
   float: right;
 }
-.program .buttons a{
+.bigItem .buttons a{
   position: relative;
   display: inline-block;
   width: 24px;
   height: 24px;
   margin-left: 10px;
 }
-.program .buttons a:hover{
+.bigItem .buttons a:hover{
   top: -2px;
 }
-.program .buttons a:active{
+.bigItem .buttons a:active{
   top: 0px;
 }
-.program .buttons .editButton{
+.bigItem .buttons .reviewButton{
+  background: url(../images/icons/linedpaper24.png);
+}
+.bigItem .buttons .editButton{
   background: url(../images/icons/pencil24.png);
 }
-.program .buttons .deleteButton{
+.bigItem .buttons .deleteButton{
   background: url(../images/icons/stop24.png);
 }
 
-.program .programDetails{
+.bigItem .itemDetails{
   padding: 30px;
   display: none;
 }
+
+
+
+.smallItem{
+  position: relative;
+  display: block;
+  width: 650px;
+  padding: 10px;
+  margin-left: 10px;
+  background: #efefef; 
+	background: linear-gradient(top, #efefef 0%, #bbbbbb 100%);  
+	background: -moz-linear-gradient(top, #efefef 0%, #bbbbbb 100%); 
+	background: -webkit-linear-gradient(top, #efefef 0%,#bbbbbb 100%);
+  box-shadow: 0px 0px 9px rgba(0,0,0,0.5);
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+.smallItem .title{
+  margin-left: 30px;
+  width: 500px;
+  display: inline-block;
+  font-size: 18px;
+  font-weight: bold;
+}
+.smallItem .buttons{
+  margin-top: -2px;
+  float: right;
+}
+.smallItem .buttons a{
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+}
+.smallItem .buttons a:hover{
+  top: -2px;
+}
+.smallItem .buttons a:active{
+  top: 0px;
+}
+.smallItem .buttons .reviewButton{
+  background: url(../images/icons/linedpaper24.png);
+}
+.smallItem .buttons .editButton{
+  background: url(../images/icons/pencil24.png);
+}
+.smallItem .buttons .deleteButton{
+  background: url(../images/icons/stop24.png);
+}
+
+.smallItem .itemDetails{
+  padding: 30px;
+  display: none;
+}
+
+
+
 .addButton{
   position: relative;
   display: inline-block;
@@ -293,9 +360,29 @@ label{
   height: 32px;
   background: url(../images/icons/plus32.png);
 }
-.addButton:hover{
+.addButton24{
+  position: relative;
+  display: inline-block;
+  margin-bottom:-3px;
+  width: 24px;
+  height: 24px;
+  background: url(../images/icons/plus24.png);
+}
+.addButton:hover, .addButton24:hover{
   top: -2px;
 }
-.addButton:active{
+.addButton:active, .addButton24:active{
   top: 0px;
 }
+<?php if($_GET['fb'] == "1"){ ?>
+#topMenuWrapper{
+  display:none;
+}
+#sideBar{
+  display: none;
+}
+.contentWithSideBar{
+  margin-left: 120px;
+  width: 700px;
+}
+<?php } ?>

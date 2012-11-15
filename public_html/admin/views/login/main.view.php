@@ -5,12 +5,12 @@ if(isset($errorMessage)){
 } 
 ?>
 <p style="text-align: center;">You must login below to continue.</p>
-<form id="adminLoginForm" method="post" style="width: 300px; margin: auto;">
+<form id="adminLoginForm" method="post" style="width: 330px; margin: auto;">
   <fieldset>
     <br />
     <label for="username">Username: </label><input type="text" name="username" id="username" /><br />
     <label for="password">Password: </label><input type="password" name="password" id="password" />
-  <input type="submit" value="Login Now" style="margin-top: 20px;" class="submitButton" />
+  <input type="submit" value="Login Now" style="margin-top: 20px; float: right;" class="submitButton" />
   </fieldset>
   <input type="hidden" name="login" value="1" />
 

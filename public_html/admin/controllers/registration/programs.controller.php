@@ -1,12 +1,11 @@
 <?php
-  $campus = new TSM_REGISTRATION_CAMPUS($reg->getCurrentCampusId());
   if(!isset($action)){
     $action = null;
   }
   
   switch($action){
     case null:
-      $programList = $campus->getPrograms();
+      $programList = $currentCampus->getPrograms();
       if($programList){
         foreach($programList as $program){
           $programObject = new TSM_REGISTRATION_PROGRAM($program['program_id']);
@@ -15,36 +14,22 @@
       }
       $activeView = __TSM_ROOT__."admin/views/registration/programs.view.php";
       break;
+    case "addFee":
+      require_once(__TSM_ROOT__."admin/controllers/registration/addFee.program.controller.php");
+      $activeView = __TSM_ROOT__."admin/views/registration/addFee.program.view.php";
+      break;
+    case "addCondition":
+      require_once(__TSM_ROOT__."admin/controllers/registration/addCondition.program.controller.php");
+      $activeView = __TSM_ROOT__."admin/views/registration/addCondition.program.view.php";
+      break;
+    case "viewProgram":
+      require_once(__TSM_ROOT__."admin/controllers/registration/view.program.controller.php");
+      $activeView = __TSM_ROOT__."admin/views/registration/view.program.view.php";
+    break; 
     case "addProgram" or "editProgram":
-      if(isset($createProgram)){
-        if($campus->createProgram()){
-          header('Location: index.php?com=registration&view=programs');
-        }
-      }
-      if(isset($saveProgram)){
-        if($campus->saveProgram($program_id)){
-          header('Location: index.php?com=registration&view=programs');
-        }
-      }
-      switch($action){
-        case "addProgram":
-          $pageTitle = "Add Program";
-          $submitField = "createProgram";
-          $programInfo = null;
-          break;
-        case "editProgram":
-          $program = new TSM_REGISTRATION_PROGRAM($program_id);
-          $programInfo = $program->getInfo();
-          $pageTitle = "Edit Program";
-          $submitField = "saveProgram";
-          break;
-      }
-      $activeView = __TSM_ROOT__."admin/views/registration/addEditProgram.view.php";
+      require_once(__TSM_ROOT__."admin/controllers/registration/addEdit.program.controller.php");
+      $activeView = __TSM_ROOT__."admin/views/registration/addEdit.program.view.php";
       break;
-    case "editProgram":
-      $activeView = __TSM_ROOT__."admin/views/registration/editProgram.view.php";
-      break;
-    
   }
   
 ?>

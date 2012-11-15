@@ -2,8 +2,7 @@
 <html>
 	<head>
 		<title><?php echo $tsm->website->getTitle(); ?></title>
-		<?php echo $tsm->getHeaderHTML(); ?>
-		<link href="templates/admin/css/custom.css.php" rel="stylesheet" type="text/css" media="screen" />
+		<?php echo $tsm->getAdminHeaderHTML(); ?>
 	</head>
 	<body>
 	   <div id="headerWrapper"></div>
