@@ -25,7 +25,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       if($fee['conditions']){
         $i = 1;
         foreach($fee['conditions'] as $condition){
-          echo "<span id=\"condition_".$condition['fee_condition_id']."\">".$i.". ".$condition['name']." - <a href=\"index.asdasd\" class=\"deleteCondition\" ref=\"".$condition['fee_condition_id']."\" title=\"Delete this condition.\">Delete</a></span>";
+          echo "<span id=\"condition_".$condition['program_fee_condition_id']."\">".$i.". ".$condition['name']." - <a href=\"\" class=\"deleteCondition\" ref=\"".$condition['fee_condition_id']."\" title=\"Delete this condition.\">Delete</a></span>";
           $i++;
         }
       }
@@ -39,7 +39,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 <script type="text/javascript">
 $(".deleteCondition").click( function(){
   $("#condition_" + $(this).attr('ref')).remove();
-  $.get("index.php?com=registration&ajax=deleteFeeConditionFromProgram&program_id=<?php echo $program_id; ?>&fee_condition_id=" + $(this).attr('ref'), function(data){
+  $.get("index.php?com=registration&ajax=deleteFeeConditionFromProgram&program_id=<?php echo $program_id; ?>&program_fee_condition_id=" + $(this).attr('ref'), function(data){
     if(data == "1"){
       alert("Fee successfully deleted.");
       $("#condition_" + $(this).attr('ref')).remove();

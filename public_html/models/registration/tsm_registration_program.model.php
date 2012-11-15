@@ -84,8 +84,8 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION{
     return $conditions;
   }
   
-  public function deleteFeeCondition($feeConditionId){
-    $q = "DELETE FROM tsm_reg_program_fee_condition WHERE fee_condition_id = $feeConditionId AND program_id = ".$this->programId;
+  public function deleteFeeCondition($programFeeConditionId){
+    $q = "DELETE FROM tsm_reg_program_fee_condition WHERE program_fee_condition_id = $programFeeConditionId AND program_id = ".$this->programId;
     $r = $this->db->runQuery($q);
     
     return true;

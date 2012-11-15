@@ -47,6 +47,9 @@ if($campusList == NULL){
     case "fees":
       require_once(__TSM_ROOT__."admin/controllers/registration/fees.controller.php"); 
       break;
+    case "requirements":
+      require_once(__TSM_ROOT__."admin/controllers/registration/requirements.controller.php"); 
+      break;
     
   }
 }

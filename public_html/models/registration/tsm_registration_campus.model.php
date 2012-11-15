@@ -7,6 +7,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
   private $programs;
   private $fees;
   private $feeConditions;
+  private $requirements;
 
   public function __construct($campusId = null){
 		$tsm = TSM::getInstance();
@@ -49,6 +50,25 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
     }
     
     return $this->programs;
+  }
+  
+  public function getRequirements($searchq = null){
+    $q = "SELECT * FROM tsm_reg_requirements WHERE campus_id = ".$this->campusId." AND school_year = '".$this->info['current_school_year']."'";
+    if($searchq != null){
+      $q .= "AND name LIKE '%$searchq%'";
+    }
+    $q .= " ORDER BY name";
+    $r = $this->db->runQuery($q);
+    $this->requirements = null;
+    while($a = mysql_fetch_assoc($r)){
+      $this->requirements[$a['requirement_id']] = $a;
+    }
+    
+    return $this->requirements;
+  }
+  
+  public function deleteFee($feeId = null){
+    return true;
   }
   
   public function getFees($searchq = null){
