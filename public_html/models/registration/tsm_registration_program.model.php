@@ -7,6 +7,7 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION{
   private $programs;
   private $numStudentsEnrolled;
   private $fees;
+  private $requirements;
 
   public function __construct($programId = null){
 		$tsm = TSM::getInstance();
@@ -59,6 +60,18 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION{
     return $this->numStudentsEnrolled;
   }
   
+  public function getRequirements(){
+    if($this->requirements == null){
+      $q = "SELECT * FROM tsm_reg_program_requirements pr, tsm_reg_requirements r WHERE r.requirement_id = pr.requirement_id AND pr.program_id = ".$this->programId."";
+      $r = $this->db->runQuery($q);
+      while($a = mysql_fetch_assoc($r)){
+        $this->requirements[$a['program_requirement_id']] = $a;
+      }
+    }
+    
+    return $this->requirements;
+  }
+  
   public function getFees(){
     if($this->fees == null){
       $q = "SELECT * FROM tsm_reg_program_fee pf, tsm_reg_fees f WHERE f.fee_id = pf.fee_id AND pf.program_id = ".$this->programId."";
@@ -107,6 +120,24 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION{
     }
     
     return $feeAdded;
+  }
+  
+  public function addRequirement($requirementId){
+    //Check to see if the fee has already been added to the program
+    $q = "SELECT * FROM tsm_reg_program_requirements WHERE requirement_id = ".$requirementId." AND program_id = ".$this->programId;
+    $r = $this->db->runQuery($q);
+    if(mysql_num_rows($r) == 0){
+      $q = "INSERT INTO tsm_reg_program_requirements (program_id,requirement_id) VALUES ('".$this->programId."','$requirementId')";;
+      if($this->db->runQuery($q)){
+        $requirementAdded = true;
+      } else {
+        $requirementAdded = false;
+      }
+    } else {
+      $requirementAdded = false;
+    }
+    
+    return $requirementAdded;
   }
   
   public function addFeeCondition($feeConditionId,$feeId){

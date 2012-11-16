@@ -27,7 +27,7 @@ switch($ajax){
     }
     break;
   case "deleteFeeConditionFromProgram":
-    if(isset($program_id) && isset($fee_condition_id)){
+    if(isset($program_id) && isset($program_fee_condition_id)){
       $program = new TSM_REGISTRATION_PROGRAM($program_id);
       if($program->deleteFeeCondition($program_fee_condition_id)){
         echo true;

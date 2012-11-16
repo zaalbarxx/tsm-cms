@@ -9,17 +9,14 @@ if(isset($saveProgram)){
     header('Location: index.php?com=registration&view=programs');
   }
 }
-switch($action){
-  case "addProgram":
-    $pageTitle = "Add Program";
-    $submitField = "createProgram";
-    $programInfo = null;
-    break;
-  case "editProgram":
+if(isset($program_id)){
     $program = new TSM_REGISTRATION_PROGRAM($program_id);
     $programInfo = $program->getInfo();
     $pageTitle = "Edit Program";
     $submitField = "saveProgram";
-    break;
+} else {
+    $pageTitle = "Add Program";
+    $submitField = "createProgram";
+    $programInfo = null;
 }
 ?>

@@ -3,6 +3,7 @@ require_once(__TSM_ROOT__."models/registration/tsm_registration.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_campus.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_program.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_fee.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_requirement.model.php");
 
 //INSTANTIATE THE REGISRATION CLASS
 $reg = new TSM_REGISTRATION();
@@ -56,6 +57,10 @@ if($campusList == NULL){
 
 //CALL THE APPROPRIATE VIEW
 require_once($tsm->website->getTemplateHeader());
-require_once($activeView);
+if(isset($activeView)){
+	require_once($activeView);	
+} else {
+	echo "This command has not yet been implemented.";
+}
 require_once($tsm->website->getTemplateFooter());
 ?>

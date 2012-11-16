@@ -218,7 +218,6 @@ input{
   padding: 5px;
   display: inline-block;
 }
-
 label{
   width: 120px;
   display: inline-block;
@@ -273,6 +272,7 @@ label{
   width: 24px;
   height: 24px;
   margin-left: 10px;
+ 	background-repeat: no-repeat !important;
 }
 .bigItem .buttons a:hover{
   top: -2px;
@@ -301,7 +301,7 @@ label{
   position: relative;
   display: block;
   width: 650px;
-  padding: 10px;
+  padding: 10px 20px;
   margin-left: 10px;
   background: #efefef; 
 	background: linear-gradient(top, #efefef 0%, #bbbbbb 100%);  
@@ -328,6 +328,7 @@ label{
   width: 24px;
   height: 24px;
   margin-left: 10px;
+ 	background-repeat: no-repeat !important;
 }
 .smallItem .buttons a:hover{
   top: -2px;
@@ -350,15 +351,20 @@ label{
   display: none;
 }
 
-
-
+.editButton{
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background: url(../images/icons/pencil32.png) no-repeat;
+}
 .addButton{
   position: relative;
   display: inline-block;
   margin-bottom:-3px;
   width: 32px;
   height: 32px;
-  background: url(../images/icons/plus32.png);
+  background: url(../images/icons/plus32.png) no-repeat;
 }
 .addButton24{
   position: relative;
@@ -366,13 +372,13 @@ label{
   margin-bottom:-3px;
   width: 24px;
   height: 24px;
-  background: url(../images/icons/plus24.png);
+  background: url(../images/icons/plus24.png) no-repeat;
 }
 .addButton:hover, .addButton24:hover{
-  top: -2px;
+  top: 3px;
 }
 .addButton:active, .addButton24:active{
-  top: 0px;
+  top: 5px;
 }
 <?php if($_GET['fb'] == "1"){ ?>
 #topMenuWrapper{

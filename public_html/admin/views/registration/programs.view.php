@@ -10,7 +10,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         ?>
         <div class="bigItem">
           <span class="title"><?php echo $program['name']; ?></span>
-          <span class="buttons"><a href="index.php?com=registration&view=programs&action=viewProgram&program_id=<?php echo $program['program_id']; ?>" class="reviewButton" title="Review This Program"></a><a href="index.php?com=registration&view=programs&action=editProgram&program_id=<?php echo $program['program_id']; ?>" class="editButton" title="Edit This Program"></a><a href="index.php?com=registration&view=programs&action=deleteProgram&programId=<?php echo $program['program_id']; ?>" class="deleteButton" title="Delete Program"></a></span>
+          <span class="buttons"><a href="index.php?com=registration&view=programs&action=viewProgram&program_id=<?php echo $program['program_id']; ?>" class="reviewButton" title="Review This Program"></a><a href="index.php?com=registration&view=programs&action=addEditProgram&program_id=<?php echo $program['program_id']; ?>" class="editButton" title="Edit This Program"></a><a href="index.php?com=registration&view=programs&action=deleteProgram&programId=<?php echo $program['program_id']; ?>" class="deleteButton" title="Delete Program"></a></span>
           <div class="itemDetails">
           Students Enrolled: <?php echo $program['num_students']; ?>
           </div>

@@ -18,6 +18,10 @@
       require_once(__TSM_ROOT__."admin/controllers/registration/addFee.program.controller.php");
       $activeView = __TSM_ROOT__."admin/views/registration/addFee.program.view.php";
       break;
+    case "addRequirement":
+      require_once(__TSM_ROOT__."admin/controllers/registration/addRequirement.program.controller.php");
+      $activeView = __TSM_ROOT__."admin/views/registration/addRequirement.program.view.php";
+      break;
     case "addCondition":
       require_once(__TSM_ROOT__."admin/controllers/registration/addCondition.program.controller.php");
       $activeView = __TSM_ROOT__."admin/views/registration/addCondition.program.view.php";
@@ -26,7 +30,7 @@
       require_once(__TSM_ROOT__."admin/controllers/registration/view.program.controller.php");
       $activeView = __TSM_ROOT__."admin/views/registration/view.program.view.php";
     break; 
-    case "addProgram" or "editProgram":
+    case "addEditProgram":
       require_once(__TSM_ROOT__."admin/controllers/registration/addEdit.program.controller.php");
       $activeView = __TSM_ROOT__."admin/views/registration/addEdit.program.view.php";
       break;

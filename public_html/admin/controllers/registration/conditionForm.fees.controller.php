@@ -7,8 +7,7 @@ if(isset($fee_condition_id)){
 switch($fee_condition_type_id){
   case "1":
     ?>
-    <label for="config_1">Age is: </label>
-    <select name="config_1">
+    <label for="config_1">Age is: </label><select name="config_1">
       <option value="">Condition</option>
       <option value="-1" <?php if($condition['config_1'] == "-1"){ echo "selected=selected"; } ?>>Less Than</option>
       <option value="1" <?php if($condition['config_1'] == "1"){ echo "selected=selected"; } ?>>Greater Than</option>
@@ -25,8 +24,7 @@ switch($fee_condition_type_id){
     break;
   case "2":
     ?>
-    <label for="config_1">Grade is: </label>
-    <select name="config_1">
+    <label for="config_1">Grade is: </label><select name="config_1">
       <option value="">Condition</option>
       <option value="-1" <?php if($condition['config_1'] == "-1"){ echo "selected=selected"; } ?>>Less Than</option>
       <option value="1" <?php if($condition['config_1'] == "1"){ echo "selected=selected"; } ?>>Greater Than</option>

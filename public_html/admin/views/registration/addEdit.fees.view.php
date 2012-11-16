@@ -28,8 +28,8 @@ $(".submitButton").click( function(){
     } else if (data == "1"){
       
     } else {
-      alert(data);
-      //window.parent.location = data;
+      //alert(data);
+      window.parent.location = data;
     }
   });
   
