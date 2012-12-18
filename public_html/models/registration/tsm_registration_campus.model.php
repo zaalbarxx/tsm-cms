@@ -8,6 +8,9 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
   private $fees;
   private $feeConditions;
   private $requirements;
+  private $courses;
+  private $families;
+  private $students;
 
   public function __construct($campusId = null){
 		$tsm = TSM::getInstance();
@@ -33,6 +36,14 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
     return $this->info;
   }
   
+  public function getName(){
+  	if($this->info == null){
+  		$this->getInfo();	
+  	}
+  	
+  	return $this->info['name'];
+  }
+  
   public function getCurrentSchoolYear(){
     if($this->info == null){
       $this->getInfo();
@@ -52,6 +63,17 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
     return $this->programs;
   }
   
+  public function getCourses(){
+    $q = "SELECT * FROM tsm_reg_courses WHERE campus_id = ".$this->campusId." AND school_year = '".$this->info['current_school_year']."' ORDER BY name";
+    $r = $this->db->runQuery($q);
+    $this->courses = null;
+    while($a = mysql_fetch_assoc($r)){
+      $this->courses[$a['course_id']] = $a;
+    }
+    
+    return $this->courses;
+  }
+  
   public function getRequirements($searchq = null){
     $q = "SELECT * FROM tsm_reg_requirements WHERE campus_id = ".$this->campusId." AND school_year = '".$this->info['current_school_year']."'";
     if($searchq != null){
@@ -65,6 +87,15 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
     }
     
     return $this->requirements;
+  }
+  
+  public function getRequirement($requirement_id){
+    $q = "SELECT * FROM tsm_reg_requirements WHERE campus_id = ".$this->campusId." AND requirement_id = '".$requirement_id."'";
+    $r = $this->db->runQuery($q);
+    $requirement = null;
+    $requirement = mysql_fetch_assoc($r);
+    
+    return $requirement;
   }
   
   public function deleteFee($feeId = null){
@@ -107,6 +138,32 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
     return $condition;
   }
 
+  public function createRequirement(){
+    if(isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
+      if($this->db->insertRowFromPost("tsm_reg_requirements")){
+        return true;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      } 
+    } else {
+      die(print_r($_POST));
+    }
+  }
+  
+   public function saveRequirement($requirementId){
+    if(isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
+      if($this->db->updateRowFromPost("tsm_reg_requirements",$requirementId)){
+        return true;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      } 
+    } else {
+      die(print_r($_POST));
+    }
+  }
+  
   public function createFee(){
     if(isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
       if($this->db->insertRowFromPost("tsm_reg_fees")){
@@ -159,6 +216,32 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
     }
   }
   
+  public function createCourse(){
+    if(isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
+      if($this->db->insertRowFromPost("tsm_reg_courses")){
+        return true;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      } 
+    } else {
+      die("not all fields required.");
+    }
+  }  
+  
+   public function saveCourse($courseId){
+    if(isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
+      if($this->db->updateRowFromPost("tsm_reg_courses",$courseId)){
+        return true;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      } 
+    } else {
+        die("not all fields required.");
+    }
+  }
+
   public function createProgram(){
     if(isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
       if($this->db->insertRowFromPost("tsm_reg_programs")){
@@ -184,6 +267,28 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
         die("not all fields required.");
     }
   }
+  
+  public function getFamilies(){
+    $q = "SELECT * FROM tsm_reg_families f, tsm_reg_families_school_years fsy WHERE f.campus_id = ".$this->campusId." AND fsy.family_id = f.family_id AND fsy.school_year = '".$this->info['current_school_year']."' ORDER BY f.father_last, f.mother_last";
+    $r = $this->db->runQuery($q);
+    $this->families = null;
+    while($a = mysql_fetch_assoc($r)){
+      $this->families[$a['family_id']] = $a;
+    }
+    
+    return $this->families;
+  }	
+
+  public function getStudents(){
+    $q = "SELECT * FROM tsm_reg_students s, tsm_reg_students_school_years ssy WHERE s.campus_id = ".$this->campusId." AND ssy.student_id = s.student_id AND ssy.school_year = '".$this->info['current_school_year']."' ORDER BY s.last_name";
+    $r = $this->db->runQuery($q);
+    $this->students = null;
+    while($a = mysql_fetch_assoc($r)){
+      $this->students[$a['student_id']] = $a;
+    }
+    
+    return $this->students;
+  }	
 
 }
 

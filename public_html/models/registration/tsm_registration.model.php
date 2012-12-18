@@ -4,6 +4,7 @@ class TSM_REGISTRATION{
 
   private $currentCampusId;
   private $feeConditionTypes;
+  private $requirementTypes;
 
   public function __construct(){
 		$tsm = TSM::getInstance();
@@ -63,6 +64,16 @@ class TSM_REGISTRATION{
     }
     
     return $this->feeConditionTypes;
+  }
+  
+  public function getRequirementTypes(){
+    $q = "SELECT * FROM tsm_reg_requirement_types";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $this->requirementTypes[$a['requirement_type_id']] = $a;
+    }
+    
+    return $this->requirementTypes;
   }
 
 }

@@ -10,7 +10,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         ?>
         <div class="smallItem">
           <span class="title"><?php echo $req['name']; ?></span>
-          <span class="buttons"><a href="index.php?com=registration&view=requirements&action=addEditRequirement&requirement_id=<?php echo $req['requirement_id']; ?>" class="editButton" title="Edit This Requirement"></a><a href="index.php?com=registration&view=fees&action=deleteFee&fee_id=<?php echo $req['requirement_id']; ?>" class="deleteButton" title="Delete Fee"></a></span>
+          <span class="buttons"><a href="index.php?com=registration&view=requirements&action=addEditRequirement&requirement_id=<?php echo $req['requirement_id']; ?>" class="editButton" title="Edit This Requirement"></a><a href="index.php?com=registration&view=fees&action=deleteFee&fee_id=<?php echo $req['requirement_id']; ?>" class="deleteButton" title="Delete Requirement"></a></span>
         </div>
         <?php
       }

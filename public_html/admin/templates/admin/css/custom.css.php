@@ -17,6 +17,7 @@ body{
   background: #694E41;
   padding: 0px;
   margin: 0px;
+  font-family: Arial;
 }
 #headerWrapper{
   width: 1000px;
@@ -38,10 +39,15 @@ body{
   margin-right: auto;
   box-shadow: 0px 0px 29px rgba(0,0,0,1);
 }
-#contentArea h1{
+h1{
   color: #454545;
   margin: 5px 5px 15px 5px;
   padding: 0px;
+}
+h2{
+	color: #454545;
+	
+	 margin: 5px 5px 15px 0px;
 }
 #topMenuWrapper{ 
   position: absolute;
@@ -219,7 +225,7 @@ input{
   display: inline-block;
 }
 label{
-  width: 120px;
+  width: 150px;
   display: inline-block;
   font-weight: bold;;
 }
@@ -251,7 +257,7 @@ label{
 	background: linear-gradient(top, #efefef 0%, #bbbbbb 100%);  
 	background: -moz-linear-gradient(top, #efefef 0%, #bbbbbb 100%); 
 	background: -webkit-linear-gradient(top, #efefef 0%,#bbbbbb 100%);
-  box-shadow: 0px 0px 9px rgba(0,0,0,0.5);
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.8);
   border-radius: 5px;
   margin-bottom: 30px;
 }
@@ -293,10 +299,84 @@ label{
 .bigItem .itemDetails{
   padding: 30px;
   display: none;
+  	overflow: auto;
+  	width: 97%;
 }
-
-
-
+.divider{
+	width: 100%; clear: both; border: 0px; border-bottom: 2px solid #777; padding-top: 20px; margin-bottom: 10px;
+}
+.itemDetails h3{
+	text-align: center;
+	color: #444;
+  
+}
+.dataTable{
+	width: 100%;
+	border-spacing:0;
+  border-collapse:collapse;
+}
+.dataTable tr td{
+	padding: 7px;
+	border-bottom: 1px solid #999;
+}
+.dataTable tr.header{
+	font-weight: bold;
+}
+.med_button{
+	display: inline-block;
+	color: white;
+	font-weight: 600;
+	text-transform: uppercase;
+	font-size: 13px;
+	border-radius: 25px;
+	text-decoration: none;
+	padding: 8px 16px;
+	text-shadow: -1px 1px 0px rgba(0, 0, 0, 0.6);
+	background: #09F;
+	background: -moz-linear-gradient(top, #8A6655 1%, #47352C 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#09F), color-stop(100%,#47352C));
+	background: -webkit-linear-gradient(top, #8A6655 1%,#47352C 100%);
+	background: -o-linear-gradient(top, #8A6655 1%,#47352C 100%);
+	background: -ms-linear-gradient(top, #8A6655 1%,#47352C 100%);
+	background: linear-gradient(top, #8A6655 1%,#47352C 100%);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+}
+.right{
+	float: right;
+}
+.small_button{
+	display: inline-block;
+	color: white;
+	font-weight: 600;
+	text-transform: uppercase;
+	font-size: 12px;
+	border-radius: 13px;
+	text-decoration: none;
+	padding: 5px 10px;
+	text-shadow: -1px 1px 0px rgba(0, 0, 0, 0.6);
+	background: #09F;
+	background: -moz-linear-gradient(top, #8A6655 1%, #47352C 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,#09F), color-stop(100%,#47352C));
+	background: -webkit-linear-gradient(top, #8A6655 1%,#47352C 100%);
+	background: -o-linear-gradient(top, #8A6655 1%,#47352C 100%);
+	background: -ms-linear-gradient(top, #8A6655 1%,#47352C 100%);
+	background: linear-gradient(top, #8A6655 1%,#47352C 100%);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+}
+.med_button:hover, .small_button:hover {
+	background: linear-gradient(top, #946D5A 1%,#785A4C 100%);
+	background: -webkit-linear-gradient(top, #946D5A 1%,#785A4C 100%);
+	background: -ms-linear-gradient(top, #946D5A 1%,#785A4C 100%);
+	text-decoration: none;
+}
+.center{
+	display: block;
+	text-align: center;
+}
 .smallItem{
   position: relative;
   display: block;
@@ -307,7 +387,7 @@ label{
 	background: linear-gradient(top, #efefef 0%, #bbbbbb 100%);  
 	background: -moz-linear-gradient(top, #efefef 0%, #bbbbbb 100%); 
 	background: -webkit-linear-gradient(top, #efefef 0%,#bbbbbb 100%);
-  box-shadow: 0px 0px 9px rgba(0,0,0,0.5);
+  box-shadow: 0px 0px 4px rgba(0,0,0,0.8);
   border-radius: 5px;
   margin-bottom: 15px;
 }
@@ -379,6 +459,66 @@ label{
 }
 .addButton:active, .addButton24:active{
   top: 5px;
+}
+.tooltip{
+	cursor: pointer;
+}
+.infoSection{
+	padding: 20px;
+	border: 1px solid #777;
+	-webkit-box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.6);
+	box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.6);
+	background: #eee;
+	line-height: 1.3em;
+	overflow: auto;
+	margin-bottom: 30px;
+}
+.infoSection .title{
+	font-weight: bold;
+	color: #222;
+	padding-right: 15px;
+	width: 475px;
+}
+.label{
+	font-weight: bold;
+	margin-right: 10px;
+	width: 140px;
+	text-align: right;
+	display: inline-block;
+}
+.one-third .label{
+	width: 50px;
+}
+.infoSection .smallItem, .infoSection .bigItem{
+	width: 90%;
+}
+.infoSection .itemDetails{
+	padding: 10px;
+}
+.half{
+	width: 46%;
+	padding: 2%;
+	float: left;
+}
+.two-thirds{
+	width: 65%;
+	padding: 1%;
+	float: left;
+}
+.one-third{
+	width: 31%;
+	padding: 1%;
+	float: left;
+}
+.three-fourths{
+	width: 73%;
+	padding: 2%;
+	float: left;
+}
+.one-fourth{
+	width: 18%;
+	padding: 2%;
+	float: left;
 }
 <?php if($_GET['fb'] == "1"){ ?>
 #topMenuWrapper{

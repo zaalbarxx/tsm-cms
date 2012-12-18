@@ -140,6 +140,13 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION{
     return $requirementAdded;
   }
   
+  public function removeRequirement($requirementId){
+  		$q = "DELETE FROM tsm_reg_program_requirements WHERE requirement_id = ".$requirementId." AND program_id = ".$this->programId;
+  		$r = $this->db->runQuery($q);
+  		
+  		return true;
+  }
+  
   public function addFeeCondition($feeConditionId,$feeId){
     //Check to see if the fee has already been added to the program
     $q = "SELECT * FROM tsm_reg_program_fee_condition WHERE fee_id = ".$feeId." AND fee_condition_id = ".$feeConditionId." AND program_id = ".$this->programId;

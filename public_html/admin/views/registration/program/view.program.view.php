@@ -16,7 +16,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
   		?>
   		<div class="smallItem">
 				<span class="title"><?php echo $requirement['name']; ?></span>
-				<span class="buttons"><a href="index.php?com=registration&view=programs&action=deleteRequirement&program_requirement_id=<?php echo $requirement['program_requirement_id']; ?>" class="deleteButton" title="Delete Requirement"></a></span>
+				<span class="buttons"><a href="#" class="deleteButton deleteRequirement" title="Delete Requirement" ref="<?php echo $requirement['requirement_id']; ?>"></a></span>
 			</div>
   		<?php
   	}
@@ -32,13 +32,13 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 				<span class="title"><?php echo $fee['name']; ?> - $<?php echo $fee['amount']; ?></span>
 				<span class="buttons"><a href="index.php?com=registration&view=programs&action=deleteProgram&programId=<?php echo $fee['fee_id']; ?>" class="deleteButton" title="Delete Fee"></a></span>
 				<div class="itemDetails">
-				<b>Conditions</b> - <a href="index.php?com=registration&view=programs&action=addCondition&program_id=<?php echo $program_id; ?>&fee_id=<?php echo $fee['fee_id'] ?>" class="fb">Add</a>
-				<br />This fee is applied only if applicant matches the condition(s) below.<br /><br />
+				<b><span class="tooltip" title="This fee is applied only if applicant matches the condition(s) below.">Conditions:</span></b> - <a href="index.php?com=registration&view=programs&action=addCondition&program_id=<?php echo $program_id; ?>&fee_id=<?php echo $fee['fee_id'] ?>" class="fb">Add</a>
+				<br />
 				<?php 
 				if($fee['conditions']){
 					$i = 1;
 					foreach($fee['conditions'] as $condition){
-						echo "<span id=\"condition_".$condition['program_fee_condition_id']."\">".$i.". ".$condition['name']." - <a href=\"\" class=\"deleteCondition\" ref=\"".$condition['program_fee_condition_id']."\" title=\"Delete this condition.\">Delete</a></span>";
+						echo "<span id=\"condition_".$condition['program_fee_condition_id']."\">".$i.". ".$condition['name']." - <a href=\"\" class=\"deleteCondition\" ref=\"".$condition['program_fee_condition_id']."\" title=\"Delete this condition.\">Delete</a></span><br />";
 						$i++;
 					}
 				}
@@ -61,6 +61,19 @@ $(".deleteCondition").click( function(){
       alert("There was a problem deleting this condition.");
     }
   });
+  return false;
+});
+$(".deleteRequirement").click( function(){
+	var requirementDiv = $(this).parent().parent();
+  $.get("index.php?com=registration&ajax=deleteRequirementFromProgram&program_id=<?php echo $program_id; ?>&requirement_id=" + $(this).attr('ref'), function(data){
+    if(data == "1"){
+      alert("Requirement successfully deleted.");
+      requirementDiv.remove();
+    } else {
+      alert("There was a problem deleting this requirement.");
+    }
+  });
+
   return false;
 });
 $(".bigItem .title").click( function(){

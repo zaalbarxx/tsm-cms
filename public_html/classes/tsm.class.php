@@ -26,6 +26,34 @@ class TSM{
     return substr_compare($string, $test, -$testlen) === 0;
   }
 
+  public function intToDay($int){
+  	switch($int){
+  		case 1:
+  			$day = "Sun";
+  			break;
+  		case 2:
+  			$day = "Mon";
+  			break;
+  		case 3:
+  			$day = "Tue";
+  			break;
+  		case 4:
+  			$day = "Wed";
+  			break;
+  		case 5:
+  			$day = "Thu";
+  			break;
+  		case 6:
+  			$day = "Fri";
+  			break;
+  		case 7:
+  			$day = "Sat";
+  			break;
+  	}
+  	
+  	return $day;
+  }
+  
 	//SQL injection protection function
 	public function makeVarSafe( $value , $stripmetachar = 1 ){
 			if($stripmetachar == 1){
@@ -115,6 +143,50 @@ class TSM{
   	return $checkPassword;
   }
 
+  public function intToMonth($number = null){
+  	switch($number){
+  		case 1:
+  			$month = "January";
+  			break;
+  		case 2:
+  			$month = "February";
+  			break;
+   		case 3:
+   			$month = "March";
+  			break;
+  		case 4:
+  			$month = "April";
+  			break;
+  		case 5:
+  			$month = "May";
+  			break;
+  		case 6:
+  			$month = "June";
+  			break;
+  		case 7:
+  			$month = "July";
+  			break;
+  		case 8:
+  			$month = "August";
+  			break;
+  		case 9:
+  			$month = "September";
+  			break;
+  		case 10:
+  			$month = "October";
+  			break;
+  		case 11:
+  			$month = "November";
+  			break;
+  		case 12:
+  			$month = "December";
+  			break;
+ 
+  	}
+  	
+  	return $month;
+  }
+  
 	public function getAdminHeaderHTML(){
 	  $this->headerHTML = "
     <script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js\" type=\"text/javascript\"></script>
@@ -125,6 +197,10 @@ class TSM{
     } else {
       $this->headerHTML .= "<link href=\"templates/admin/css/custom.css.php\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
     }
+    $this->headerHTML .= "
+    <script type=\"text/javascript\" src=\"../includes/jquery.tooltip/jquery.tooltip.min.js\"></script>
+    <link rel=\"stylesheet\" href=\"../includes/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
+    ";
 		$this->headerHTML .= "<script type=\"text/javascript\">
 		$(document).ready( function(){
 		  $(\".fb\").attr('href', function() { return $(this).attr('href') + '&fb=1'; }).fancybox({
@@ -137,7 +213,8 @@ class TSM{
           title: null
         },
     		'type'				: 'iframe'
-    	})
+    	});
+    	$(\".tooltip\").tooltip();
     });
 		</script>
     ";

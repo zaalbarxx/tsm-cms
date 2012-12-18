@@ -11,7 +11,7 @@ switch($ajax){
           $response = false;
         }
         break;
-      case "addFee":
+      case "createFee":
         if($currentCampus->createFee()){
             $response = true;
             $redirect = "index.php?com=registration&view=fees";
@@ -36,6 +36,16 @@ switch($ajax){
       }
     }
     break;
+  case "deleteFeeConditionFromCourse":
+    if(isset($course_id) && isset($course_fee_condition_id)){
+      $course = new TSM_REGISTRATION_COURSE($course_id);
+      if($course->deleteFeeCondition($course_fee_condition_id)){
+        echo true;
+      } else {
+        echo false;
+      }
+    }
+    break;
   case "deleteFee":
     if($currentCampus->deleteFee($fee_id)){
       echo true;
@@ -43,6 +53,26 @@ switch($ajax){
       echo false; 
     }
     break;
+  case "deleteRequirementFromProgram":
+  	$program = new TSM_REGISTRATION_PROGRAM($program_id);
+  	$success = $program->removeRequirement($requirement_id);
+  	
+  	if($success == true){
+  		echo "1";
+  	} else {
+  		echo "0";
+  	}
+  	break;
+  case "deleteRequirementFromCourse":
+  	$course = new TSM_REGISTRATION_COURSE($course_id);
+  	$success = $course->removeRequirement($requirement_id);
+  	
+  	if($success == true){
+  		echo "1";
+  	} else {
+  		echo "0";
+  	}
+  	break;
 }
 die();
 ?>

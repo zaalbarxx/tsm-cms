@@ -2,7 +2,10 @@
 require_once(__TSM_ROOT__."models/registration/tsm_registration.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_campus.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_program.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_course.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_fee.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_family.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_student.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_requirement.model.php");
 
 //INSTANTIATE THE REGISRATION CLASS
@@ -40,16 +43,22 @@ if($campusList == NULL){
       require_once(__TSM_ROOT__."admin/controllers/registration/dashboard.controller.php");
       break;
     case "family":
-      require_once(__TSM_ROOT__."admin/controllers/registration/family.controller.php");
+      require_once(__TSM_ROOT__."admin/controllers/registration/family/family.controller.php");
+      break;
+    case "student":
+      require_once(__TSM_ROOT__."admin/controllers/registration/student/student.controller.php");
       break;
     case "programs":
-      require_once(__TSM_ROOT__."admin/controllers/registration/programs.controller.php");    
+      require_once(__TSM_ROOT__."admin/controllers/registration/program/programs.controller.php");    
+      break;
+    case "courses":
+      require_once(__TSM_ROOT__."admin/controllers/registration/course/course.controller.php");    
       break;
     case "fees":
       require_once(__TSM_ROOT__."admin/controllers/registration/fees.controller.php"); 
       break;
     case "requirements":
-      require_once(__TSM_ROOT__."admin/controllers/registration/requirements.controller.php"); 
+      require_once(__TSM_ROOT__."admin/controllers/registration/requirement/requirement.controller.php"); 
       break;
     
   }

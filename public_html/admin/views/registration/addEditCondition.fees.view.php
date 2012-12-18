@@ -6,8 +6,8 @@ require_once(__TSM_ROOT__."admin/views/registration/fees.sidebar.view.php");
   <h1><?php echo $pageTitle; ?></h2>
   <form method="post" style="" action="">
     <fieldset>
-      <label for="name">Fee Name: </label><input type="text" name="name" value="<?php echo $condition['name']; ?>" /> (ex. Must Be In Highschool) <br />
-      <label for="fee_condition_type_id">Fee Type: </label><select name="fee_condition_type_id" id="fee_condition_type_id" >
+      <label for="name">Condition Name: </label><input type="text" name="name" value="<?php echo $condition['name']; ?>" /> (ex. Must Be In Highschool) <br />
+      <label for="fee_condition_type_id">Condition Type: </label><select name="fee_condition_type_id" id="fee_condition_type_id" >
         <option value="">Choose a Type</option>
         <?php
         foreach($feeConditionTypes as $feeConditionType){

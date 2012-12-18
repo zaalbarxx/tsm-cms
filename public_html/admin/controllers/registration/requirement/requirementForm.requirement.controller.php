@@ -1,21 +1,21 @@
 <?php
-if(isset($fee_condition_id)){
-  $condition = $currentCampus->getFeeCondition($fee_condition_id);
+if(isset($requirement_id)){
+  $requirement = $currentCampus->getRequirement($requirement_id);
 } else {
-  $condition = null;
+  $requirement = null;
 }
-switch($fee_condition_type_id){
+switch($requirement_type_id){
   case "1":
     ?>
     <label for="config_1">Age is: </label><select name="config_1">
-      <option value="">Condition</option>
-      <option value="-1" <?php if($condition['config_1'] == "-1"){ echo "selected=selected"; } ?>>Less Than</option>
-      <option value="1" <?php if($condition['config_1'] == "1"){ echo "selected=selected"; } ?>>Greater Than</option>
+      <option value="">Requirement</option>
+      <option value="-1" <?php if($requirement['config_1'] == "-1"){ echo "selected=selected"; } ?>>Less Than</option>
+      <option value="1" <?php if($requirement['config_1'] == "1"){ echo "selected=selected"; } ?>>Greater Than</option>
     </select>
     <select name="config_2">
     <?php
     for($i = 1; $i <= 30; $i++){
-      if($condition['config_2'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
+      if($requirement['config_2'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
       echo "<option value=\"$i\" $selected>$i</option>";
     }
     ?>
@@ -25,14 +25,14 @@ switch($fee_condition_type_id){
   case "2":
     ?>
     <label for="config_1">Grade is: </label><select name="config_1">
-      <option value="">Condition</option>
-      <option value="-1" <?php if($condition['config_1'] == "-1"){ echo "selected=selected"; } ?>>Less Than</option>
-      <option value="1" <?php if($condition['config_1'] == "1"){ echo "selected=selected"; } ?>>Greater Than</option>
+      <option value="">Requirement</option>
+      <option value="-1" <?php if($requirement['config_1'] == "-1"){ echo "selected=selected"; } ?>>Less Than</option>
+      <option value="1" <?php if($requirement['config_1'] == "1"){ echo "selected=selected"; } ?>>Greater Than</option>
     </select>
     <select name="config_2">
     <?php
     for($i = 1; $i <= 14; $i++){
-      if($condition['config_2'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
+      if($requirement['config_2'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
       if($i == 13){
         $name = "Kindergarten";
       } elseif($i == 14){
@@ -52,7 +52,7 @@ switch($fee_condition_type_id){
     <select name="config_1">
     <?php
     for($i = 1; $i <= 12; $i++){
-      if($condition['config_1'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
+      if($requirement['config_1'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
         $name = $tsm->intToMonth($i);
       echo "<option value=\"$i\" $selected>$name</option>";
     }
@@ -61,7 +61,7 @@ switch($fee_condition_type_id){
     <select name="config_2">
     <?php
     for($i = 1; $i <= 31; $i++){
-      if($condition['config_2'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
+      if($requirement['config_2'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
         $name = $i;
       echo "<option value=\"$i\" $selected>$name</option>";
     }
@@ -70,7 +70,7 @@ switch($fee_condition_type_id){
     <select name="config_3">
     <?php
     for($i = 1; $i <= 12; $i++){
-      if($condition['config_3'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
+      if($requirement['config_3'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
         $name = $tsm->intToMonth($i);
       echo "<option value=\"$i\" $selected>$name</option>";
     }
@@ -79,7 +79,7 @@ switch($fee_condition_type_id){
     <select name="config_4">
     <?php
     for($i = 1; $i <= 31; $i++){
-      if($condition['config_4'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
+      if($requirement['config_4'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
         $name = $i;
       echo "<option value=\"$i\" $selected>$name</option>";
     }
@@ -92,7 +92,7 @@ switch($fee_condition_type_id){
     <label for="config_1">Enrolled in: </label><select name="config_1">
       <option value="">#</option>
       <?php for($i=0; $i < 41; $i++){ ?>
-      <option value="<?php echo $i; ?>" <?php if($condition['config_1'] == $i){ echo "selected=selected"; } ?>><?php echo $i; ?></option>
+      <option value="<?php echo $i; ?>" <?php if($requirement['config_1'] == $i){ echo "selected=selected"; } ?>><?php echo $i; ?></option>
       <?php } ?>
     </select><b> classes assigned to the </b>
     <select name="config_2">
