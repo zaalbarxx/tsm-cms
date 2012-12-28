@@ -7,13 +7,13 @@ if(!isset($searchq)){
   $searchq = null;
 }
 
-if(isset($addProgram)){
-  if($program->addProgram($addProgram)){
+if(isset($enrollInProgram)){
+  if($student->enrollInProgram($enrollInProgram)){
     die("1");  
   } else {
     die("0");
   }
 }
 
-$pageTitle = "Add Program to ".$studentInfo['first_name'];
+$pageTitle = "Add ".$studentInfo['first_name']." to Program";
 ?>

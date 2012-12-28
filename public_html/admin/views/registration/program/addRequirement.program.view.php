@@ -5,14 +5,18 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 <div class="contentWithSideBar">
   <h1><?php echo $pageTitle; ?></h2>
   <form name="searchBox" method="post" style="float: right; margin-top: -45px; margin-right: 20px;"><input id="searchField" type="text" name="searchq" value="<?php if(isset($searchq)){ echo $searchq; } else { echo "Search..."; } ?>"/></form>
-  <?php foreach($campusRequirements as $requirement){ ?>
+  <?php if(isset($campusRequirements)){
+  	foreach($campusRequirements as $requirement){ ?>
     <div class="smallItem">
       <span class="title"><?php echo $requirement['name']; ?></span>
       <span class="buttons">
       <a href="index.php?com=registration&view=programs&action=addRequirement&program_id=<?php echo $program_id; ?>&addRequirement=<?php echo $requirement['requirement_id']; ?>" class="addButton24" title="Add to <?php echo $programName; ?>"></a>
       </span>
     </div>  
-  <?php } ?>
+  <?php }
+  } else {
+  	echo "There are no requirements available.";	
+  } ?>
 </div>
 <script type="text/javascript">
 $(document).ready( function(){

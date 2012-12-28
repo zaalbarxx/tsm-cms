@@ -25,6 +25,8 @@ $(".deleteButton").click (function (){
   $.get($(this).attr('href'), function(data){
     if(data == "1"){
       window.location.reload();
+    } else {
+    	alert("Fees cannot yet be deleted. This feature is not yet complete.");
     }
   });
   return false;

@@ -3,6 +3,7 @@
 class TSM_REGISTRATION{
 
   private $currentCampusId;
+  private $selectedSchoolYear;
   private $feeConditionTypes;
   private $requirementTypes;
 
@@ -20,6 +21,14 @@ class TSM_REGISTRATION{
     return true;
   }
   
+  public function setSelectedSchoolYear($school_year){
+    echo "set school year to: ".$school_year;
+    $_SESSION['reg']['selectedSchoolYear'] = $school_year;
+    $this->selectedSchoolYear = $_SESSION['reg']['selectedSchoolYear'];
+    
+    return true;
+  }
+  
   public function getCurrentCampusId(){
     if(isset($_SESSION['reg']['currentCampusId'])){
       return $_SESSION['reg']['currentCampusId'];
@@ -29,8 +38,24 @@ class TSM_REGISTRATION{
    
   }
   
+  public function addFees($fees){
+  	$total = 0;
+  	
+  	if(isset($fees)){
+			foreach($fees as $fee){
+				$total = $total + $fee['amount'];
+			}
+  	}
+  	
+  	return $total;
+  }
+  
   public function getSelectedSchoolYear(){
-    return 2013;
+    if(isset($_SESSION['reg']['selectedSchoolYear'])){
+      return $_SESSION['reg']['selectedSchoolYear'];
+    } else {
+      return null;
+    }
   }
   
   public function getCampuses(){

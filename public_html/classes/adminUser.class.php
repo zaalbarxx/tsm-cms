@@ -2,7 +2,7 @@
 
 class AdminUser{
 
-  private static $isLoggedIn;
+  private $isLoggedIn;
 
   public function __construct(){
 		global $logout;

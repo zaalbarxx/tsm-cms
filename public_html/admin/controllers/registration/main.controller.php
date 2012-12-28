@@ -7,6 +7,9 @@ require_once(__TSM_ROOT__."models/registration/tsm_registration_fee.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_family.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_student.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_requirement.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_period.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_fee_condition.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_payment_plan.model.php");
 
 //INSTANTIATE THE REGISRATION CLASS
 $reg = new TSM_REGISTRATION();
@@ -30,12 +33,20 @@ if(isset($setCurrentCampusId)){
   }
 }
 
+if(isset($setSelectedSchoolYear)){
+  if($reg->setSelectedSchoolYear($setSelectedSchoolYear)){
+    header('Location: '.$_SERVER["REQUEST_URI"]);
+  }
+}
+
 
 
 if($campusList == NULL){
   $activeView = __TSM_ROOT__."admin/views/registration/createCampus.view.php";  
 } else if(!$reg->getCurrentCampusId()){
   $activeView = __TSM_ROOT__."admin/views/registration/selectCurrentCampus.view.php";
+} else if(!$reg->getSelectedSchoolYear()){ 
+	$activeView = __TSM_ROOT__."admin/views/registration/selectSchoolYear.view.php";
 } else {
   $currentCampus = new TSM_REGISTRATION_CAMPUS($reg->getCurrentCampusId());
   switch($view){
@@ -60,6 +71,9 @@ if($campusList == NULL){
     case "requirements":
       require_once(__TSM_ROOT__."admin/controllers/registration/requirement/requirement.controller.php"); 
       break;
+    case "periods":
+      require_once(__TSM_ROOT__."admin/controllers/registration/period/period.controller.php"); 
+      break;
     
   }
 }
@@ -69,7 +83,7 @@ require_once($tsm->website->getTemplateHeader());
 if(isset($activeView)){
 	require_once($activeView);	
 } else {
-	echo "This command has not yet been implemented.";
+	echo "<p style='text-align: center;'>This command has not yet been implemented. <a href='javascript:history.go(-1)'>Back</a><p>";
 }
 require_once($tsm->website->getTemplateFooter());
 ?>

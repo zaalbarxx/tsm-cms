@@ -2,6 +2,8 @@
 
 class Db{
   
+	private $numQueries;
+	
   public function __construct(){
 		$tsm = TSM::getInstance();
 		$this->tsm = $tsm;
@@ -16,9 +18,14 @@ class Db{
 	}
 
 	public function runQuery($query){
+		//echo $query."\r\n";
 		$result = mysql_query($query,$this->conn) or die(mysql_error().$query);
-
+		$this->numQueries++;
 		return $result;
+	}
+	
+	public function getNumQueries(){
+		return $this->numQueries;
 	}
 	
 	public function insertRowFromPost($table){

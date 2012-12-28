@@ -3,6 +3,7 @@
 class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
 
   private $info;
+  private $isLoggedIn;
 
   public function __construct($familyId = null){
 		$tsm = TSM::getInstance();
@@ -11,7 +12,39 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
 		if(isset($familyId)){
       $this->familyId = $familyId;
       $this->getInfo(); 
+    } else if(isset($_SESSION['family']['id'])){
+    	$this->familyId = $_SESSION['family']['id'];
+      $this->getInfo(); 
     }
+  }
+
+  public function login($email,$password,$campus_id){
+    $q = "SELECT * FROM tsm_reg_families WHERE primary_email = '$email' AND campus_id = '".$campus_id."' AND website_id = '".$_SESSION['website_id']."'";
+    $r = $this->db->runQuery($q);
+    if(mysql_num_rows($r) > 0){
+      $a = mysql_fetch_assoc($r);
+      if(TSM::getInstance()->checkPassword($a['password'],$password)){
+        $_SESSION['family']['id'] = $a['family_id'];
+        header("location: index.php");
+        $success = 1;
+      } else {
+        $success = 0;
+      }
+    } else {
+      $success = 0;
+    }
+
+    return $success;
+  }
+  
+  public function isLoggedIn(){
+    if(isset($_SESSION['family']['id'])){
+      $this->isLoggedIn = true;  
+    } else {
+      $this->isLoggedIn = false;
+    }
+    
+    return $this->isLoggedIn;
   }
   
   public function getInfo(){
@@ -35,6 +68,16 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
     }
     
     return $this->students;
+  }
+  
+  public function getFees($fee_type_id = null){
+  	$students = $this->getStudents($this->getSelectedSchoolYear());
+  	if(isset($students)){
+  		foreach($students as $student){
+  			$studentObject = new TSM_REGISTRATION_STUDENT($student['student_id']);
+  			$fees = $studentObject->getFees($fee_type_id);
+  		}
+  	}
   }
 
 }

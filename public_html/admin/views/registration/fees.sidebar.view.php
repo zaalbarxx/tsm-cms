@@ -9,6 +9,9 @@
         <li>
         <a href="index.php?com=registration&view=fees&action=conditions" <?php if($tsm->stringEndsWith($_SERVER["REQUEST_URI"],"index.php?com=registration&view=fees&action=conditions")){ echo "class='active'"; } ?>>Fee Conditions</a>
         </li>
+        <li>
+        <a href="index.php?com=registration&view=fees&action=paymentPlans" <?php if($tsm->stringEndsWith($_SERVER["REQUEST_URI"],"index.php?com=registration&view=fees&action=paymentPlans")){ echo "class='active'"; } ?>>Payment Plans</a>
+        </li>
 
       </ul>
     </li>

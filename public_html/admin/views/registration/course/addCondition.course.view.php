@@ -8,7 +8,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     <div class="smallItem">
       <span class="title"><?php echo $condition['name']; ?></span>
       <span class="buttons">
-      <a href="index.php?com=registration&view=courses&action=addCondition&course_id=<?php echo $course_id; ?>&addCondition=<?php echo $condition['fee_condition_id']; ?>&fee_id=<?php echo $fee_id; ?>" class="addButton24" title="Add to <?php echo $feeName; ?>"></a>
+      <a href="index.php?com=registration&view=courses&action=addCondition&course_id=<?php echo $course_id; ?>&addCondition=<?php echo $condition['fee_condition_id']; ?>&fee_id=<?php echo $fee_id; ?>&program_id=<?php echo $program_id; ?>" class="addButton24" title="Add to <?php echo $feeName; ?>"></a>
       </span>
     </div>  
   <?php } ?>

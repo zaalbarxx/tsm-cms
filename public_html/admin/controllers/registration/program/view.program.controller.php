@@ -4,9 +4,12 @@ $programInfo = $program->getInfo();
 $programFees = $program->getFees();
 $programRequirements = $program->getRequirements();
 if($programFees){
-	foreach($programFees as $fee){
-		$programFees[$fee['program_fee_id']]['conditions'] = $program->getFeeConditions($fee['fee_id']);
+	foreach($programFees as $key=>$fee){
+		$feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
+		$programFees[$key]['conditions'] = $feeObject->getConditionsForProgram($program_id);
 	}
 }
+$programCourses = $program->getCourses();
+
 $pageTitle = $programInfo['name'];
 ?>

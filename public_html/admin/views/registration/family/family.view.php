@@ -12,7 +12,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
   foreach($families as $family){
   	?>
 		<div class="smallItem">
-			<span class="title"><?php echo $family['father_last']; ?> Family</span>
+			<a href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>" class="title"><?php echo $family['father_last']; ?> Family</a>
 			<span class="buttons"><a href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>" class="reviewButton" title="Review This Family"></a></span>
 			<div class="itemDetails">
 			<?php 
@@ -27,7 +27,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
   ?>
 </div>
 <script type="text/javascript">
+/*
 $(".smallItem .title").click( function(){
   $(this).parent().children(".itemDetails").slideToggle();
 });
+*/
 </script>

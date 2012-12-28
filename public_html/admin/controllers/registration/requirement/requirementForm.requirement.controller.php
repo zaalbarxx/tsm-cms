@@ -129,6 +129,30 @@ switch($requirement_type_id){
     </select>
     <?php
     break;
+  case "7":
+    ?>
+    <label for="config_1">Enrolled In: </label><select name="config_1">
+    <?php
+    $courseList = $currentCampus->getCourses();
+    foreach($courseList as $course){
+    	echo "<option value=\"".$course['course_id']."\" $selected>".$course['name']."</option>";
+    }
+    ?>
+    </select>
+    <?php
+    break;
+  case "8":
+    ?>
+    <label for="config_1">Not Enrolled In: </label><select name="config_1">
+    <?php
+    $courseList = $currentCampus->getCourses();
+    foreach($courseList as $course){
+    	echo "<option value=\"".$course['course_id']."\" $selected>".$course['name']."</option>";
+    }
+    ?>
+    </select>
+    <?php
+    break;
 }
  die();
 ?>

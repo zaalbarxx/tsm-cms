@@ -8,6 +8,19 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
   <?php echo html_entity_decode($courseInfo['description']); ?>
   <h2></h2>
   </div>
+  <div class="availablePeriods">
+  	<h3>Available Periods - <a href="index.php?com=registration&view=courses&action=addPeriod&course_id=<?php echo $course_id; ?>" class="addButton24 fb" style="bottom:-5px" title="Add a Period"></a></h3> 
+  	<?php if(isset($coursePeriods)){
+  		foreach($coursePeriods as $period){
+  		?>
+  		<div class="smallItem">
+  		<span class="title"><?php echo $tsm->intToDay($period['day']).". ".date("g:ia",strtotime($period['start_time']))." - ".date("g:ia",strtotime($period['end_time'])); ?>: <?php echo $period['first_name']." ".$period['last_name']; ?></span>
+				<span class="buttons"><a href="#" class="deleteButton deletePeriod" title="Delete Period" ref="<?php echo $period['period_id']; ?>"></a></span>
+			</div>
+  		<?php
+  		}
+  	}?>
+  </div>
   <div class="courseRequirements">
   <h3>Enrollment Requirements - <a href="index.php?com=registration&view=courses&action=addRequirement&course_id=<?php echo $course_id; ?>" class="addButton24 fb" style="bottom:-5px" title="Add a Requirement"></a></h3>
   <?php
@@ -16,7 +29,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
   		?>
   		<div class="smallItem">
 				<span class="title"><?php echo $requirement['name']; ?></span>
-				<span class="buttons"><a href="#" class="deleteButton deleteRequirement" title="Delete Requirement" ref="<?php echo $requirement['requirement_id']; ?>"></a></span>
+				<span class="buttons"><a href="#" class="deleteButton deleteRequirement" title="Delete Requirement" ref="<?php echo $requirement['course_requirement_id']; ?>"></a></span>
 			</div>
   		<?php
   	}
@@ -65,7 +78,7 @@ $(".deleteCondition").click( function(){
 });
 $(".deleteRequirement").click( function(){
 	var requirementDiv = $(this).parent().parent();
-  $.get("index.php?com=registration&ajax=deleteRequirementFromCourse&course_id=<?php echo $course_id; ?>&requirement_id=" + $(this).attr('ref'), function(data){
+  $.get("index.php?com=registration&ajax=deleteRequirementFromCourse&course_id=<?php echo $course_id; ?>&course_requirement_id=" + $(this).attr('ref'), function(data){
     if(data == "1"){
       alert("Requirement successfully deleted.");
       requirementDiv.remove();

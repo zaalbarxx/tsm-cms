@@ -19,11 +19,37 @@ switch($ajax){
           $response = false;
         }
         break;
+      case "savePaymentPlan":
+        if($currentCampus->savePaymentPlan($payment_plan_id)){
+            $response = true;
+            $redirect = "index.php?com=registration&view=fees&action=paymentPlans";
+        } else {
+          $response = false;
+        }
+        break;
+      case "createPaymentPlan":
+        if($currentCampus->createPaymentPlan()){
+            $response = true;
+            $redirect = "index.php?com=registration&view=fees&action=paymentPlans";
+        } else {
+          $response = false;
+        }
+        break;
     }
     if(isset($fb)){
       echo $response;
     } else {
       echo $redirect;
+    }
+    break;
+  case "deleteFeeFromProgram":
+    if(isset($program_id) && isset($fee_id)){
+      $program = new TSM_REGISTRATION_PROGRAM($program_id);
+      if($program->deleteFee($fee_id)){
+        echo true;
+      } else {
+        echo false;
+      }
     }
     break;
   case "deleteFeeConditionFromProgram":
@@ -65,7 +91,7 @@ switch($ajax){
   	break;
   case "deleteRequirementFromCourse":
   	$course = new TSM_REGISTRATION_COURSE($course_id);
-  	$success = $course->removeRequirement($requirement_id);
+  	$success = $course->removeRequirement($course_requirement_id);
   	
   	if($success == true){
   		echo "1";

@@ -6,8 +6,12 @@ if(!isset($searchq)){
   $searchq = null;
 }
 
+if(!isset($program_id)){
+	$program_id = null;
+}
+
 if(isset($addCondition)){
-  if($course->addFeeCondition($addCondition,$fee_id)){
+  if($course->addFeeCondition($addCondition,$fee_id,$program_id)){
     die("1");  
   } else {
     die("0");

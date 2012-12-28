@@ -16,7 +16,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     </script>
     <input type="hidden" name="campus_id" value="<?php echo $currentCampus->getCampusId(); ?>" />
     <input type="hidden" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>" />
-    <input type="hidden" name="school_year" value="<?php echo $currentCampus->getCurrentSchoolYear(); ?>" />
+    <input type="hidden" name="school_year" value="<?php echo $reg->getSelectedSchoolYear(); ?>" />
     <input type="hidden" name="<?php echo $submitField; ?>" value="1" />
     <input type="submit" class="submitButton" style="margin-top: 20px; float: right;" value="Save Program" />
     <br /><br /><br />

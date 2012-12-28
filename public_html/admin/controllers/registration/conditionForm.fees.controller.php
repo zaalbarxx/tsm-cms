@@ -66,20 +66,38 @@ switch($fee_condition_type_id){
       echo "<option value=\"$i\" $selected>$name</option>";
     }
     ?>
-    </select> and 
+    </select>/
     <select name="config_3">
     <?php
+    for($i = date('Y') - 5; $i <= date('Y') + 5; $i++){
+      if($condition['config_3'] == $i){ $selected = "selected=selected"; } elseif($i == date('Y')){ $selected = "selected=selected"; } else { $selected = ""; }
+        $name = $i;
+      echo "<option value=\"$i\" $selected>$name</option>";
+    }
+    ?>
+    </select> and 
+    <select name="config_4">
+    <?php
     for($i = 1; $i <= 12; $i++){
-      if($condition['config_3'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
+      if($condition['config_4'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
         $name = $tsm->intToMonth($i);
       echo "<option value=\"$i\" $selected>$name</option>";
     }
     ?>
     </select>/
-    <select name="config_4">
+    <select name="config_5">
     <?php
     for($i = 1; $i <= 31; $i++){
-      if($condition['config_4'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
+      if($condition['config_5'] == $i){ $selected = "selected=selected"; } else { $selected = ""; }
+        $name = $i;
+      echo "<option value=\"$i\" $selected>$name</option>";
+    }
+    ?>
+    </select>/
+    <select name="config_6">
+    <?php
+    for($i = date('Y') - 5; $i <= date('Y') + 5; $i++){
+      if($condition['config_6'] == $i){ $selected = "selected=selected"; } elseif($i == date('Y')){ $selected = "selected=selected"; } else { $selected = ""; }
         $name = $i;
       echo "<option value=\"$i\" $selected>$name</option>";
     }
@@ -129,6 +147,48 @@ switch($fee_condition_type_id){
     </select>
     <?php
     break;
-}
+  case "7":
+    ?>
+    <label for="config_1">Not Enrolled In: </label><select name="config_1">
+    <?php
+    $programList = $currentCampus->getPrograms();
+    foreach($programList as $program){
+    	echo "<option value=\"".$program['program_id']."\" $selected>".$program['name']."</option>";
+    }
+    ?>
+    </select>
+    <?php
+    break;
+  case "8":
+    ?>
+    <label for="config_1">Not Enrolled In: </label><select name="config_1">
+    <?php
+    $programList = $currentCampus->getPrograms();
+    foreach($programList as $program){
+    	echo "<option value=\"".$program['program_id']."\" $selected>".$program['name']."</option>";
+    }
+    ?>
+    </select>
+    <?php
+    break;
+  case "9":
+    ?>
+    <label for="config_1">Student # is: </label><select name="config_1">
+      <option value="">Condition</option>
+      <option value="-1" <?php if($condition['config_1'] == "-1"){ echo "selected=selected"; } ?>>Less Than</option>
+      <option value="0" <?php if($condition['config_1'] == "0"){ echo "selected=selected"; } ?>>Equal To</option>
+      <option value="1" <?php if($condition['config_1'] == "1"){ echo "selected=selected"; } ?>>Greater Than</option>
+    </select>
+    <select name="config_2">
+    <?php
+    for($i = 1; $i < 11; $i++){
+    	if($i == $condition['config_2']){ $selected = "selected=selected"; } else { $selected = ""; }
+    	echo "<option value=\"".$i."\" $selected>".$i."</option>";
+    }
+    ?>
+    </select>
+    <?php
+    break;
+	}
  die();
 ?>

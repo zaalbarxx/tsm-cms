@@ -12,12 +12,12 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 			<span class="label">E-mail Address:</span> <?php echo $studentInfo['email']; ?>
 		</div>
 		<div class="one-third">
-		<span class="label">Status: </span>Unapproved
+		<span class="label">Status: </span><?php echo $studentStatus; ?>
 		</div>
 		
 	</div>
 	<div class="infoSection">
-		<a href="" class="showDetails right small_button">Show Details</a>
+		<a href="" class="showDetails right small_button">Hide Details</a>
 		<h2>Enrollment Summary</h2>
 		<br />
 	<?php
@@ -31,39 +31,48 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 					<a href="#" class="editButton" title="Edit This Student"></a>-->
 					<a href="#" class="deleteButton" title="Unenroll From This Program"></a>
 				</span>
-				<div class="itemDetails">
+				<div class="itemDetails" style="display: block;">
 					<br />
 					<table class="dataTable">
-						<tr class="header"><td>Course Name</td><td>Period</td><td>Total Fees</td></tr>
+						<tr class="header"><td>Course Name</td><td>Period</td><td>Teacher</td><td>Tuition</td><td>Registration</td></tr>
 						<?php 
 						$i = 1;
-						foreach($program['courses'] as $course){
-							echo "<tr><td>".$i.". ".$course['name']."</td><td>".$tsm->intToDay($course['day']).". ".date("g:ia",strtotime($course['start_time']))." - ".date("g:ia",strtotime($course['end_time']))."</td><td></td></tr>";
-							$i++;
+						if($program['courses']){
+							foreach($program['courses'] as $course){
+								echo "<tr><td>".$i.". ".$course['name']."</td><td>".$tsm->intToDay($course['day']).". ".date("g:ia",strtotime($course['start_time']))." - ".date("g:ia",strtotime($course['end_time']))."</td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td></tr>";
+								$i++;
+							}
+						} else {
+							echo "<tr><td colspan=5 align=center>This student is not in any courses for ".$program['name'].".</td></tr>";
 						}
 						?>
 					</table>
 					<br />
-					<span class="center"><a href="" class="small_button">Add Course</a></span>
+					<span class="center"><a href="index.php?com=registration&view=student&action=addCourse&student_id=<?php echo $studentInfo['student_id']; ?>&program_id=<?php echo $program['program_id']; ?>" class="small_button fb">Add Course</a></span>
 					<hr class="divider" />
 					<h3>Program Fee Summary</h3>
 					<div class="half">
-						<span class="label">Registration Fee:</span> $0.00<br />
+						<span class="label">Registration Fees:</span> $<?php echo $program['registration_total']; ?><br />
 					</div>
 					<div class="half">
-										<span class="label">Yearly Tuition:</span> $0.00<br />
+						<span class="label">Program Tuition:</span> $<?php echo $program['tuition_total']; ?><br />
+						<span class="label">Yearly Tuition:</span> $<?php echo $program['tuition_total']; ?><br />
 					</div>
 					
 				</div>
 			</div>
-			<span class="center"><a href="index.php?com=registration&view=student&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>" class="med_button fb">Enroll in Additional Programs</a></span>
 			<?php
 		}
 	}
 	?>
+		<span class="center"><a href="index.php?com=registration&view=student&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>" class="med_button fb">Enroll in Additional Programs</a></span>
 	</div>
 	<div class="infoSection">
 		<h2>Billing Summary</h2>
+		Registration Total: $<?php echo $registrationTotal; ?><br />
+		Tuition Total: $<?php echo $tuitionTotal; ?><br />
+		Grand Total: $<?php echo $grandTotal; ?>
+		
 	</div>
 	
 </div>

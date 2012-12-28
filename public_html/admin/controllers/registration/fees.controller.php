@@ -16,6 +16,14 @@ switch($action){
     $conditionsList = $currentCampus->getFeeConditions();
     $activeView = __TSM_ROOT__."admin/views/registration/conditions.fees.view.php";
     break;
+  case "paymentPlans":
+    $paymentPlans = $currentCampus->getPaymentPlans();
+    $activeView = __TSM_ROOT__."admin/views/registration/paymentPlans.fees.view.php";
+    break;
+  case "addEditPaymentPlan":
+    require_once(__TSM_ROOT__."admin/controllers/registration/addEdit.paymentPlan.fees.controller.php");
+    $activeView = __TSM_ROOT__."admin/views/registration/addEdit.paymentPlan.fees.view.php";
+    break;
   case "addEditCondition":
     require_once(__TSM_ROOT__."admin/controllers/registration/addEditConditions.controller.php");
     $activeView = __TSM_ROOT__."admin/views/registration/addEditCondition.fees.view.php";

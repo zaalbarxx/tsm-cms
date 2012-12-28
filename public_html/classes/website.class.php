@@ -1,13 +1,13 @@
 <?php
 class Website{
 
-	private static $info;
-	private static $templateId;
-	private static $title;
-	public static $adminPortal;
-	private static $adminTopMenu;
-	private static $adminSideMenu;
-	private static $websiteId;
+	private $info;
+	private $templateId;
+	private $title;
+	public $adminPortal;
+	private $adminTopMenu;
+	private $adminSideMenu;
+	private $websiteId;
 
 
 	public function __construct(){

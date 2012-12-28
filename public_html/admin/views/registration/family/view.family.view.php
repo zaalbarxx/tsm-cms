@@ -43,10 +43,10 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 				<hr class="divider" />
 				<h3>Fee Summary</h3>
 				<div class="half">
-					<span class="label">Registration Fee:</span> $0.00<br />
+					<span class="label">Registration Fees:</span> $<?php echo $student['registration_total']; ?><br />
 				</div>
 				<div class="half">
-									<span class="label">Yearly Tuition:</span> $0.00<br />
+					<span class="label">Yearly Tuition:</span> $<?php echo $student['tuition_total']; ?><br />
 				</div>
 				
 			</div>

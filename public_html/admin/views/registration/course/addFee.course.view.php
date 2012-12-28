@@ -9,7 +9,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     <div class="smallItem">
       <span class="title"><?php echo $fee['name']; ?> - $<?php echo $fee['amount']; ?></span>
       <span class="buttons">
-      <a href="index.php?com=registration&view=courses&action=addFee&course_id=<?php echo $course_id; ?>&addFee=<?php echo $fee['fee_id']; ?>" class="addButton24" title="Add to <?php echo $courseName; ?>"></a>
+      <a href="index.php?com=registration&view=courses&action=addFee&course_id=<?php echo $course_id; ?>&addFee=<?php echo $fee['fee_id']; ?>&program_id=<?php echo $program_id; ?>" class="addButton24" title="Add to <?php echo $courseName; ?>"></a>
       </span>
     </div>  
   <?php } ?>
@@ -19,7 +19,7 @@ $(document).ready( function(){
   $(".addButton24").click( function(){
     $.get($(this).attr('href'),function(data){
       if(data == "0"){
-        alert("There was an error adding the fee. It may already be added to <?php echo $programName; ?>.");
+        alert("There was an error adding the fee. It may already be added to <?php echo $courseName; ?>.");
         parent.window.location.reload();
       } else {
         parent.window.location.reload();

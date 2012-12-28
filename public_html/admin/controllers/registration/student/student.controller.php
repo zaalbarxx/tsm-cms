@@ -20,6 +20,10 @@ switch($action){
 		require_once( __TSM_ROOT__."admin/controllers/registration/student/addProgram.student.controller.php");
 		$activeView = __TSM_ROOT__."admin/views/registration/student/addProgram.student.view.php";
 		break;
+	case "addCourse":
+		require_once( __TSM_ROOT__."admin/controllers/registration/student/addCourse.student.controller.php");
+		$activeView = __TSM_ROOT__."admin/views/registration/student/addCourse.student.view.php";
+		break;
 }
 
 

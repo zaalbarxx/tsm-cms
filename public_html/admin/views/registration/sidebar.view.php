@@ -24,5 +24,8 @@
     <li>
       <a href="index.php?com=registration&view=requirements" <?php if(stristr($_SERVER["REQUEST_URI"],"index.php?com=registration&view=requirements")){ echo "class='active'"; } ?>>Requirements</a>
     </li>
+    <li>
+      <a href="index.php?com=registration&view=periods" <?php if(stristr($_SERVER["REQUEST_URI"],"index.php?com=registration&view=periods")){ echo "class='active'"; } ?>>Periods</a>
+    </li>
   </ul>
 </div>

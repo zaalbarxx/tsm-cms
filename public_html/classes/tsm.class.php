@@ -3,9 +3,10 @@
 class TSM{
 
 	private $headerHTML;
+	private $adminHeaderHTML;
 	protected static $_instance;
-  public static $db;
-  private static $rootPath;
+  public $db;
+  private $rootPath;
   
   protected function __construct(){}
   protected function __clone(){}
@@ -54,6 +55,85 @@ class TSM{
   	return $day;
   }
   
+  public function intToHour($int){
+  	switch($int){
+  		case 0:
+  			$hour = "12am";
+  			break;
+  		case 1:
+  			$hour = "1am";
+  			break;
+  		case 2:
+  			$hour = "2am";
+  			break;
+  		case 3:
+  			$hour = "3am";
+  			break;
+  		case 4:
+  			$hour = "4am";
+  			break;
+  		case 5:
+  			$hour = "5am";
+  			break;
+  		case 6:
+  			$hour = "6am";
+  			break;
+  		case 7:
+  			$hour = "7am";
+  			break;
+  		case 8:
+  			$hour = "8am";
+  			break;
+  		case 9:
+  			$hour = "9am";
+  			break;
+  		case 10:
+  			$hour = "10am";
+  			break;
+  		case 11:
+  			$hour = "11am";
+  			break;
+  		case 12:
+  			$hour = "12pm";
+  			break;
+  		case 13:
+  			$hour = "1pm";
+  			break;
+  		case 14:
+  			$hour = "2pm";
+  			break;
+  		case 15:
+  			$hour = "3pm";
+  			break;
+  		case 16:
+  			$hour = "4pm";
+  			break;
+  		case 17:
+  			$hour = "5pm";
+  			break;
+  		case 18:
+  			$hour = "6pm";
+  			break;
+  		case 19:
+  			$hour = "7pm";
+  			break;
+  		case 20:
+  			$hour = "8pm";
+  			break;
+  		case 21:
+  			$hour = "9pm";
+  			break;
+  		case 22:
+  			$hour = "10pm";
+  			break;
+  		case 23:
+  			$hour = "11pm";
+  			break;
+  	}
+  	
+  	return $hour;
+  }
+  
 	//SQL injection protection function
 	public function makeVarSafe( $value , $stripmetachar = 1 ){
 			if($stripmetachar == 1){
@@ -83,23 +163,24 @@ class TSM{
 		global $com;
 		
 	  if($this->website->adminPortal){
-	    $prefix = 'admin/controllers/';
+	    $prefix = 'admin/controllers/'; 
+			if(isset($com)){
+				$q = "SELECT * FROM tsm_components WHERE component_name = '".$com."';";
+				$r = $this->db->runQuery($q);
+				if(mysql_num_rows($r) > 0){
+					$a = mysql_fetch_assoc($r);
+					$com = $a["component_name"];
+					return __TSM_ROOT__.$prefix.$com.'/main.controller.php';
+				}
+	
+			} else {
+					return __TSM_ROOT__.$prefix.'/welcome/main.controller.php';
+			}  
 	  } else {
       $prefix = 'controllers/';
+      return __TSM_ROOT__.$prefix.'/registration/main.controller.php';
     }
-    
-		if(isset($com)){
-		  $q = "SELECT * FROM tsm_components WHERE component_name = '".$com."';";
-		  $r = $this->db->runQuery($q);
-		  if(mysql_num_rows($r) > 0){
-		    $a = mysql_fetch_assoc($r);
-        $com = $a["component_name"];
-        return __TSM_ROOT__.$prefix.$com.'/main.controller.php';
-      }
-
-		} else {
-        return __TSM_ROOT__.$prefix.'/welcome/main.controller.php';
-    }                                                           
+                                                         
 	}
 
   public function createPassword($password){
@@ -133,6 +214,7 @@ class TSM{
   		}
   	} else {
   		$hash = crypt($passwordToCheck,$passwordHash);
+  		//die($hash."<br />".$passwordHash);
   		if ($hash == $passwordHash){
   			$checkPassword = true;
   		} else {
@@ -188,18 +270,53 @@ class TSM{
   }
   
 	public function getAdminHeaderHTML(){
-	  $this->headerHTML = "
+	  $this->adminHeaderHTML = "
     <script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js\" type=\"text/javascript\"></script>
     <link rel=\"stylesheet\" href=\"../includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"../includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>";
     if(isset($_GET['fb'])){
-      $this->headerHTML .= "<link href=\"templates/admin/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+      $this->adminHeaderHTML .= "<link href=\"templates/admin/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
     } else {
-      $this->headerHTML .= "<link href=\"templates/admin/css/custom.css.php\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+      $this->adminHeaderHTML .= "<link href=\"templates/admin/css/custom.css.php\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
     }
-    $this->headerHTML .= "
+    $this->adminHeaderHTML .= "
     <script type=\"text/javascript\" src=\"../includes/jquery.tooltip/jquery.tooltip.min.js\"></script>
     <link rel=\"stylesheet\" href=\"../includes/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
+    ";
+		$this->adminHeaderHTML .= "<script type=\"text/javascript\">
+		$(document).ready( function(){
+		  $(\".fb\").attr('href', function() { return $(this).attr('href') + '&fb=1'; }).fancybox({
+    	  'width'          : 985,
+    	  'height'          : '85%',
+    	  'padding'       : 5,
+        'autoSize'    : false,
+        'leftRatio' : .51,
+    		'helpers': {
+          title: null
+        },
+    		'type'				: 'iframe'
+    	});
+    	$(\".tooltip\").tooltip();
+    });
+		</script>
+    ";
+	
+		return $this->adminHeaderHTML;
+	}
+	
+	public function getHeaderHTML(){
+	  $this->headerHTML = "
+    <script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js\" type=\"text/javascript\"></script>
+    <link rel=\"stylesheet\" href=\"includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
+    <script type=\"text/javascript\" src=\"includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>";
+    if(isset($_GET['fb'])){
+      $this->headerHTML .= "<link href=\"templates/".$this->website->getTemplateId()."/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+    } else {
+      $this->headerHTML .= "<link href=\"templates/".$this->website->getTemplateId()."/css/custom.css.php\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+    }
+    $this->headerHTML .= "
+    <script type=\"text/javascript\" src=\"includes/jquery.tooltip/jquery.tooltip.min.js\"></script>
+    <link rel=\"stylesheet\" href=\"includes/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
     ";
 		$this->headerHTML .= "<script type=\"text/javascript\">
 		$(document).ready( function(){

@@ -11,6 +11,8 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
   private $courses;
   private $families;
   private $students;
+  private $periods;
+  private $teachers;
 
   public function __construct($campusId = null){
 		$tsm = TSM::getInstance();
@@ -52,8 +54,30 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
     return $this->info['current_school_year'];  
   }
   
+  public function getPeriods(){
+    $q = "SELECT * FROM tsm_reg_periods WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."' ORDER BY day, start_time";
+    $r = $this->db->runQuery($q);
+    $this->periods = null;
+    while($a = mysql_fetch_assoc($r)){
+      $this->periods[$a['period_id']] = $a;
+    }
+    
+    return $this->periods;
+  }
+  
+  public function getTeachers(){
+    $q = "SELECT * FROM tsm_reg_teachers t, tsm_reg_teachers_school_years tsy WHERE tsy.teacher_id = t.teacher_id AND t.campus_id = ".$this->campusId." AND tsy.school_year = '".$this->info['current_school_year']."' ORDER BY last_name, first_name";
+    $r = $this->db->runQuery($q);
+    $this->teachers = null;
+    while($a = mysql_fetch_assoc($r)){
+      $this->teachers[$a['teacher_id']] = $a;
+    }
+    
+    return $this->teachers;
+  }
+  
   public function getPrograms(){
-    $q = "SELECT * FROM tsm_reg_programs WHERE campus_id = ".$this->campusId." AND school_year = '".$this->info['current_school_year']."' ORDER BY name";
+    $q = "SELECT * FROM tsm_reg_programs WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."' ORDER BY name";
     $r = $this->db->runQuery($q);
     $this->programs = null;
     while($a = mysql_fetch_assoc($r)){
@@ -64,7 +88,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
   }
   
   public function getCourses(){
-    $q = "SELECT * FROM tsm_reg_courses WHERE campus_id = ".$this->campusId." AND school_year = '".$this->info['current_school_year']."' ORDER BY name";
+    $q = "SELECT * FROM tsm_reg_courses WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."' ORDER BY name";
     $r = $this->db->runQuery($q);
     $this->courses = null;
     while($a = mysql_fetch_assoc($r)){
@@ -75,7 +99,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
   }
   
   public function getRequirements($searchq = null){
-    $q = "SELECT * FROM tsm_reg_requirements WHERE campus_id = ".$this->campusId." AND school_year = '".$this->info['current_school_year']."'";
+    $q = "SELECT * FROM tsm_reg_requirements WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."'";
     if($searchq != null){
       $q .= "AND name LIKE '%$searchq%'";
     }
@@ -99,11 +123,24 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
   }
   
   public function deleteFee($feeId = null){
-    return true;
+  	
+  	//fees cannot yet be deleted.
+    return false;
+  }
+  
+  public function getPaymentPlans(){
+  	$q = "SELECT * FROM tsm_reg_fee_payment_plans WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."'";
+  	$r = $this->db->runQuery($q);
+    $this->paymentPlans = null;
+    while($a = mysql_fetch_assoc($r)){
+      $this->paymentPlans[$a['payment_plan_id']] = $a;
+    }
+  	
+  	return $this->paymentPlans;
   }
   
   public function getFees($searchq = null){
-    $q = "SELECT * FROM tsm_reg_fees WHERE campus_id = ".$this->campusId." AND school_year = '".$this->info['current_school_year']."'";
+    $q = "SELECT * FROM tsm_reg_fees WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."'";
     if($searchq != null){
       $q .= "AND name LIKE '%$searchq%'";
     }
@@ -118,7 +155,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
   }
   
   public function getFeeConditions(){
-    $q = "SELECT * FROM tsm_reg_fee_conditions WHERE campus_id = ".$this->campusId." AND school_year = '".$this->info['current_school_year']."'";
+    $q = "SELECT * FROM tsm_reg_fee_conditions WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."'";
     $q .= " ORDER BY name";
     $r = $this->db->runQuery($q);
     $this->feeConditions = null;
@@ -138,6 +175,32 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
     return $condition;
   }
 
+  public function createPeriod(){
+    if(isset($_POST['day']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
+      if($this->db->insertRowFromPost("tsm_reg_periods")){
+        return true;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      } 
+    } else {
+      die(print_r($_POST));
+    }
+  }
+  
+   public function savePeriod($periodId){
+    if(isset($_POST['day']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
+      if($this->db->updateRowFromPost("tsm_reg_periods",$periodId)){
+        return true;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      } 
+    } else {
+      die(print_r($_POST));
+    }
+  }
+  
   public function createRequirement(){
     if(isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
       if($this->db->insertRowFromPost("tsm_reg_requirements")){
@@ -154,6 +217,32 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
    public function saveRequirement($requirementId){
     if(isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
       if($this->db->updateRowFromPost("tsm_reg_requirements",$requirementId)){
+        return true;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      } 
+    } else {
+      die(print_r($_POST));
+    }
+  }
+  
+  public function createPaymentPlan(){
+    if(isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
+      if($this->db->insertRowFromPost("tsm_reg_fee_payment_plans")){
+        return true;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      } 
+    } else {
+      die(print_r($_POST));
+    }
+  }
+  
+   public function savePaymentPlan($paymentPlanId){
+    if(isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
+      if($this->db->updateRowFromPost("tsm_reg_fee_payment_plans",$paymentPlanId)){
         return true;
       } else {
         //THERE WAS AN ERROR INSERTING THE ROW
@@ -269,7 +358,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
   }
   
   public function getFamilies(){
-    $q = "SELECT * FROM tsm_reg_families f, tsm_reg_families_school_years fsy WHERE f.campus_id = ".$this->campusId." AND fsy.family_id = f.family_id AND fsy.school_year = '".$this->info['current_school_year']."' ORDER BY f.father_last, f.mother_last";
+    $q = "SELECT * FROM tsm_reg_families f, tsm_reg_families_school_years fsy WHERE f.campus_id = ".$this->campusId." AND fsy.family_id = f.family_id AND fsy.school_year = '".$this->getSelectedSchoolYear()."' ORDER BY f.father_last, f.mother_last";
     $r = $this->db->runQuery($q);
     $this->families = null;
     while($a = mysql_fetch_assoc($r)){
@@ -280,7 +369,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
   }	
 
   public function getStudents(){
-    $q = "SELECT * FROM tsm_reg_students s, tsm_reg_students_school_years ssy WHERE s.campus_id = ".$this->campusId." AND ssy.student_id = s.student_id AND ssy.school_year = '".$this->info['current_school_year']."' ORDER BY s.last_name";
+    $q = "SELECT * FROM tsm_reg_students s, tsm_reg_students_school_years ssy WHERE s.campus_id = ".$this->campusId." AND ssy.student_id = s.student_id AND ssy.school_year = '".$this->getSelectedSchoolYear()."' ORDER BY s.last_name";
     $r = $this->db->runQuery($q);
     $this->students = null;
     while($a = mysql_fetch_assoc($r)){

@@ -520,6 +520,32 @@ label{
 	padding: 2%;
 	float: left;
 }
+.periods{
+	border: 1px solid #000;
+	position: absolute;
+	top: 100px;
+	display: block;
+	padding: 0px 20px 20px 20px;
+	margin-left: auto;
+	margin-right: auto;
+	background: #EFEFEF;
+	background: linear-gradient(top, #EFEFEF 0%, #BBB 100%);
+	background: -moz-linear-gradient(top, #EFEFEF 0%, #BBB 100%);
+	background: -webkit-linear-gradient(top, #EFEFEF 0%,#BBB 100%);
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.8);
+	border-radius: 5px;
+	margin-bottom: 15px;
+	z-index: 10;
+}
+#overlay{
+	opacity : 0.4;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: black;
+	width: 100%;
+	z-index: 9;
+}
 <?php if($_GET['fb'] == "1"){ ?>
 #topMenuWrapper{
   display:none;

@@ -8,6 +8,7 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION{
   private $numStudentsEnrolled;
   private $fees;
   private $requirements;
+  private $courses;
 
   public function __construct($programId = null){
 		$tsm = TSM::getInstance();
@@ -60,6 +61,34 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION{
     return $this->numStudentsEnrolled;
   }
   
+  public function addCourse($course_id){
+    //Check to see if the course has already been added to the program
+    $q = "SELECT * FROM tsm_reg_course_program WHERE course_id = ".$course_id." AND program_id = ".$this->programId;
+    $r = $this->db->runQuery($q);
+    if(mysql_num_rows($r) == 0){
+      $q = "INSERT INTO tsm_reg_course_program (program_id,course_id) VALUES ('".$this->programId."','".$course_id."')";;
+      if($this->db->runQuery($q)){
+        $courseAdded = true;
+      } else {
+        $courseAdded = false;
+      }
+    } else {
+      $courseAdded = false;
+    }
+    
+    return $courseAdded;
+  }
+  
+  public function getCourses(){
+  	$q = "SELECT * FROM tsm_reg_courses c, tsm_reg_course_program cp WHERE cp.course_id = c.course_id AND cp.program_id = '".$this->programId."'";
+		$r = $this->db->runQuery($q);
+		while($a = mysql_fetch_assoc($r)){
+			$this->courses[$a['course_id']] = $a;
+		}
+		
+		return $this->courses;
+  }
+  
   public function getRequirements(){
     if($this->requirements == null){
       $q = "SELECT * FROM tsm_reg_program_requirements pr, tsm_reg_requirements r WHERE r.requirement_id = pr.requirement_id AND pr.program_id = ".$this->programId."";
@@ -72,29 +101,20 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION{
     return $this->requirements;
   }
   
-  public function getFees(){
-    if($this->fees == null){
-      $q = "SELECT * FROM tsm_reg_program_fee pf, tsm_reg_fees f WHERE f.fee_id = pf.fee_id AND pf.program_id = ".$this->programId."";
-      $r = $this->db->runQuery($q);
-      while($a = mysql_fetch_assoc($r)){
-        $this->fees[$a['program_fee_id']] = $a;
-      }
-    }
+  public function getFees($fee_type_id = null){
+  	$fees = null;
+		if($fee_type_id == null){
+			$q = "SELECT * FROM tsm_reg_program_fee pf, tsm_reg_fees f WHERE f.fee_id = pf.fee_id AND pf.program_id = ".$this->programId."";
+		} else {
+			$q = "SELECT * FROM tsm_reg_program_fee pf, tsm_reg_fees f WHERE f.fee_id = pf.fee_id AND pf.program_id = ".$this->programId." AND f.fee_type_id = '$fee_type_id'";
+		}
+		$r = $this->db->runQuery($q);
+		while($a = mysql_fetch_assoc($r)){
+			//$this->fees[$a['program_fee_id']] = $a;
+			$fees[] = $a;
+		}
     
-    return $this->fees;
-  }
-  
-  public function getFeeConditions($feeId){
-    $q = "SELECT * FROM tsm_reg_program_fee_condition pfc, tsm_reg_fee_conditions fc 
-    WHERE pfc.fee_condition_id = fc.fee_condition_id 
-    AND pfc.program_id = ".$this->programId." AND pfc.fee_id = ".$feeId;
-    $r = $this->db->runQuery($q);
-    $conditions = null;
-    while($a = mysql_fetch_assoc($r)){
-      $conditions[$a['program_fee_condition_id']] = $a;
-    }
-  
-    return $conditions;
+    return $fees;
   }
   
   public function deleteFeeCondition($programFeeConditionId){
@@ -164,9 +184,29 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION{
     
     return $feeAdded;
   }
+
+  public function hasStudents(){
+  	$q = "SELECT student_id FROM tsm_reg_student_program WHERE program_id = '".$this->programId."'";
+  	$r = $this->db->runQuery($q);
+  	if(mysql_num_rows($r) == 0){
+  		return false;
+  	} else {
+  		return true;
+  	}
+  }
   
   public function deleteFee($feeId){
-  
+  	//if($this->hasStudents() == false){
+  		$q = "DELETE FROM tsm_reg_program_fee WHERE fee_id = ".$feeId." AND program_id = ".$this->programId;
+  		$r = $this->db->runQuery($q);
+  		
+  		$q = "DELETE FROM tsm_reg_program_fee_condition WHERE fee_id = ".$feeId." AND program_id = ".$this->programId;
+  		$r = $this->db->runQuery($q);
+  	
+  		return true;
+  	//} else {
+  	//	return false;
+  	//}
   }
 
 }
