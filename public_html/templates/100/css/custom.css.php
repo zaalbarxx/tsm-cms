@@ -215,7 +215,7 @@ h2{
 	background: linear-gradient(top, #efefef 0%, #bbbbbb 100%);  
 	background: -moz-linear-gradient(top, #efefef 0%, #bbbbbb 100%); 
 	background: -webkit-linear-gradient(top, #efefef 0%,#bbbbbb 100%);
-  box-shadow: 0px 0px 9px rgba(0,0,0,0.5);
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.8);
   border-radius: 5px;
 }
 
@@ -255,7 +255,8 @@ fieldset{
   display: block;
   width: 650px;
   padding: 20px;
-  margin-left: 10px;
+  margin-left: auto;
+  margin-right: auto;
   background: #efefef; 
 	background: linear-gradient(top, #efefef 0%, #bbbbbb 100%);  
 	background: -moz-linear-gradient(top, #efefef 0%, #bbbbbb 100%); 

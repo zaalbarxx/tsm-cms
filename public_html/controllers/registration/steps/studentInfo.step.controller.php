@@ -2,9 +2,15 @@
 if(isset($addStudent)){
 	if($currentCampus->studentExists($first_name,$birth_date)){
 		
-		//if($)	
-	)
-	$family->addStudent();
+	} else {
+		$student_id = $family->addStudent();
+		if($student_id){
+			$student = new TSM_REGISTRATION_STUDENT($student_id);
+			$student->addToSchoolYear($currentCampus->getCurrentSchoolYear());
+			$family->moveToNextStep();
+			header('Location: index.php?com=registration');
+		}
+	}
 }
 
 

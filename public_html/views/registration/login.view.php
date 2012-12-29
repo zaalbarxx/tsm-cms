@@ -15,8 +15,8 @@
 			} ?>
 			</select>
 			</label>
-			<label for="email">E-mail Address:<br><input type="text" id="loginemail" name="email" value="" class="textbox"></label>
-			<label for="password">Password: <br><input type="password" id="loginpassword" name="password" value="" class="textbox"></label>
+			<label for="email">E-mail Address:<br><input type="text" id="loginemail" name="email" value="" class="textbox" autocomplete="off"></label>
+			<label for="password">Password: <br><input type="password" id="loginpassword" name="password" value="" class="textbox" autocomplete="off"></label>
 			<input type="hidden" name="login" value="1">
 			<input type="submit" value="Login" class="small_button">
 		</form>
@@ -42,9 +42,9 @@
 		} ?>
 		</select>
 		</label>
-		<label for="primary_email">E-mail Address:<br><input type="text" name="primary_email" class="textbox"></label>
-		<label for="password">Password: <br><input type="password" id="registerpassword1" name="password" class="textbox"></label>
-		<label for="confirm_password">Confirm Password: <br><input type="password" id="registerpassword2" name="confirm_password" class="textbox"></label>
+		<label for="primary_email">E-mail Address:<br><input type="text" name="primary_email" class="textbox" autocomplete="off"></label>
+		<label for="password">Password: <br><input type="password" id="registerpassword1" name="password" class="textbox" autocomplete="off"></label>
+		<label for="confirm_password">Confirm Password: <br><input type="password" id="registerpassword2" name="confirm_password" class="textbox" autocomplete="off"></label>
 		<input type="hidden" name="registerNow" value="1">
 		<input type="submit" value="Register Now" class="small_button">
 		</form>

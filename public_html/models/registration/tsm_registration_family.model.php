@@ -26,6 +26,10 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
     }
   }
   
+  public function getFamilyId(){
+  	return $this->info['family_id'];
+  }
+  
   public function getCurrentStep(){
   	$this->currentStep = null;
 		if($this->isLoggedIn() == false){
@@ -75,16 +79,32 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
     }
   }
   
-  public function moveToNextStep(){
-  	$nextStep = $this->getCurrentStep() + 1;
-  	$q = "UPDATE tsm_reg_families_school_years SET current_step = '$nextStep' WHERE family_id = '".$this->familyId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
+  public function addStudent(){
+    	$student_id = $this->db->insertRowFromPost("tsm_reg_students");
+      if($student_id){
+        return $student_id;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      } 
+  }
+  
+  public function moveToStep($step){
+  	$q = "UPDATE tsm_reg_families_school_years SET current_step = '$step' WHERE family_id = '".$this->familyId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
   	$this->db->runQuery($q);
   	
   	return true;
   }
   
+  public function moveToNextStep(){
+  	$nextStep = $this->getCurrentStep() + 1;
+  	$this->moveToStep($nextStep);
+  	
+  	return true;
+  }
+  
   public function addToSchoolYear($school_year){
-  	$q = "SELECT current_step FROM tsm_reg_families_school_years WHERE family_id = '".$this->familyId."' AND school_year = '".$school_year."'";
+  	$q = "SELECT family_id FROM tsm_reg_families_school_years WHERE family_id = '".$this->familyId."' AND school_year = '".$school_year."'";
   	$r = $this->db->runQuery($q);
   	if(mysql_num_rows($r) == 0){
   		$q = "INSERT INTO tsm_reg_families_school_years (family_id,current_step,school_year) VALUES('".$this->familyId."','1','".$school_year."')";
@@ -116,6 +136,16 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
     }
 
     return $success;
+  }
+  
+  public function getLatestStudent(){
+  	$q = "SELECT s.student_id FROM tsm_reg_students s, tsm_reg_students_school_years sy WHERE sy.student_id = s.student_id AND sy.school_year = '".$this->getSelectedSchoolYear()."' AND s.family_id = '".$this->familyId."' ORDER BY sy.registration_time DESC LIMIT 1";
+  	$r = $this->db->runQuery($q);
+  	while($a = mysql_fetch_assoc($r)){
+  		$student_id = $a['student_id'];
+  	}
+  	
+  	return $student_id;
   }
   
   public function inSchoolYear($school_year){
@@ -167,8 +197,15 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
   		foreach($students as $student){
   			$studentObject = new TSM_REGISTRATION_STUDENT($student['student_id']);
   			$fees = $studentObject->getFees($fee_type_id);
+  			if(isset($fees)){
+					foreach($fees as $fee){
+						$returnFees[] = $fee;
+					}
+  			}
   		}
   	}
+  	
+  	return $returnFees;
   }
 
 }

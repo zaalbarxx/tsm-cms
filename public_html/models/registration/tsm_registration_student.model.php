@@ -11,9 +11,36 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS{
 		$this->tsm = $tsm;
 		$this->db = $tsm->db;
 		if(isset($studentId)){
-      $this->studentId = $studentId;
-      $this->getInfo(); 
+			if($this->hasPermission($studentId)){
+				$this->studentId = $studentId;
+				$this->getInfo(); 
+			} else {
+				die("No Permission");
+			}
     }
+  }
+  
+  public function hasPermission($student_id){
+  	if(isset($this->tsm->adminUser)){
+			if($this->tsm->adminUser->isLoggedIn()){
+				return true;
+			} else {
+				return false;
+			}
+  	} else {
+  		$family = new TSM_REGISTRATION_FAMILY();
+  		if($family->isLoggedIn()){
+  			$q = "SELECT student_id FROM tsm_reg_students WHERE student_id = '".$student_id."' AND family_id = '".$family->getFamilyId()."'";
+  			$r = $this->db->runQuery($q);
+  			if(mysql_num_rows($r) == 1){
+  				return true;
+  			} else {
+  				return false;
+  			}
+  		} else {
+  			return false;
+  		}
+  	}
   }
   
   public function getInfo(){
@@ -26,6 +53,16 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS{
     }
     
     return $this->info;
+  }
+  
+  public function addToSchoolYear($school_year){
+  	$q = "SELECT student_id FROM tsm_reg_students_school_years WHERE student_id = '".$this->studentId."' AND school_year = '".$school_year."'";
+  	$r = $this->db->runQuery($q);
+  	if(mysql_num_rows($r) == 0){
+  		$q = "INSERT INTO tsm_reg_students_school_years (student_id,school_year) VALUES('".$this->studentId."','".$school_year."')";
+  		$this->db->runQuery($q);
+  		return true;
+  	}
   }
   
   public function isApproved(){
@@ -242,6 +279,16 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS{
   	
   }
   
+  public function getLatestProgram(){
+  	$q = "SELECT sp.program_id FROM tsm_reg_students s, tsm_reg_student_program sp, tsm_reg_programs p WHERE sp.program_id = p.program_id AND sp.student_id = s.student_id AND p.school_year = '".$this->getSelectedSchoolYear()."' ORDER BY sp.registration_date DESC LIMIT 1";
+  	$r = $this->db->runQuery($q);
+  	while($a = mysql_fetch_assoc($r)){
+  		$program_id = $a['program_id'];
+  	}
+  	
+  	return $program_id;
+  }
+  
   public function getFeesForProgramAndCourses($program_id,$fee_type_id = null){
   	$eligibleFees = null;
   	if($this->isApproved() == false){
@@ -319,8 +366,12 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS{
 		return $spotInFamily;
   }
   
+  public function getCampusId(){
+  	return $this->info['campus_id'];
+  }
+  
   public function getEligiblePrograms(){
-  	$campus = new TSM_REGISTRATION_CAMPUS($_SESSION['reg']['currentCampusId']);
+  	$campus = new TSM_REGISTRATION_CAMPUS($this->getCampusId());
   	$eligiblePrograms = null;
   	$allPrograms = $campus->getPrograms();
   	if(isset($allPrograms)){

@@ -64,6 +64,16 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
 		}
   }
   
+  public function studentExists($first_name,$birth_date){
+  	$q = "SELECT student_id FROM tsm_reg_students WHERE first_name = '".$first_name."' AND birth_date = '".$birth_date."' AND campus_id = '".$this->campusId."'";
+		$r = $this->db->runQuery($q);
+		if(mysql_num_rows($r) == 0){
+			return false;
+		} else {
+			return true;
+		}
+  }
+  
   public function getPeriods(){
     $q = "SELECT * FROM tsm_reg_periods WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."' ORDER BY day, start_time";
     $r = $this->db->runQuery($q);
@@ -138,8 +148,11 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
     return false;
   }
   
-  public function getPaymentPlans(){
+  public function getPaymentPlans($fee_type_id = null){
   	$q = "SELECT * FROM tsm_reg_fee_payment_plans WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."'";
+  	if(isset($fee_type_id)){
+  		$q .= " AND fee_type_id = '$fee_type_id'";
+  	}
   	$r = $this->db->runQuery($q);
     $this->paymentPlans = null;
     while($a = mysql_fetch_assoc($r)){
