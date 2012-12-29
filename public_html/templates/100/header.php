@@ -9,14 +9,13 @@
 	   <div id="topMenuWrapper">
       <div id="topMenu">
         <?php
-        /*
-        if($tsm->adminUser->isLoggedIn()){
-          $tsm->website->generateMenuHTML($tsm->website->getAdminTopMenu());
+        if($reg->family->isLoggedIn()){
+        	
+          $tsm->website->generateMenuHTML(Array(1 => Array('title' => 'Home','url' => 'index.php','target' => '_self','children' => null)));
           ?>
           <a class="logoutButton" href="index.php?logout=1">Logout</a>
           <?php 
-        } 
-        */
+        }
         ?>
       </div>
      </div>

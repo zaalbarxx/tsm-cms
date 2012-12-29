@@ -14,12 +14,7 @@ require_once(__TSM_ROOT__."models/registration/tsm_registration_payment_plan.mod
 //INSTANTIATE THE REGISRATION CLASS
 $reg = new TSM_REGISTRATION();
 $reg->family = new TSM_REGISTRATION_FAMILY();
-
-if(isset($login)){
-	$reg->family->login($email,$password,$campus_id);
-}
-
-
+$family = $reg->family;
 
 if(!isset($view)){
   $view = null;
@@ -42,37 +37,51 @@ if(isset($setSelectedSchoolYear)){
 }
 
 if($reg->family->isLoggedIn() == false){
+	if(isset($login)){
+		if(!$reg->family->login($email,$password,$campus_id)){
+			$error = "Incorrect e-mail address and password.";
+		}
+	}
 	$campusList = $reg->getCampuses();
-  $activeView = __TSM_ROOT__."views/registration/login.view.php";  
+	if(isset($registerNow)){
+		require_once(__TSM_ROOT__."controllers/registration/steps/step.controller.php");
+	} else {
+		$activeView = __TSM_ROOT__."views/registration/login.view.php";  
+  }
 } else {
-  $currentCampus = new TSM_REGISTRATION_CAMPUS($reg->getCurrentCampusId());
-  switch($view){
-    case null:
-    	$activeView = __TSM_ROOT__."views/registration/main.view.php";  
-      //require_once(__TSM_ROOT__."controllers/registration/dashboard.controller.php");
-      break;
-    case "family":
-      require_once(__TSM_ROOT__."controllers/registration/family/family.controller.php");
-      break;
-    case "student":
-      require_once(__TSM_ROOT__."controllers/registration/student/student.controller.php");
-      break;
-    case "programs":
-      require_once(__TSM_ROOT__."controllers/registration/program/programs.controller.php");    
-      break;
-    case "courses":
-      require_once(__TSM_ROOT__."controllers/registration/course/course.controller.php");    
-      break;
-    case "fees":
-      require_once(__TSM_ROOT__."controllers/registration/fees.controller.php"); 
-      break;
-    case "requirements":
-      require_once(__TSM_ROOT__."controllers/registration/requirement/requirement.controller.php"); 
-      break;
-    case "periods":
-      require_once(__TSM_ROOT__."controllers/registration/period/period.controller.php"); 
-      break;
-    
+  $currentCampus = new TSM_REGISTRATION_CAMPUS($family->getCampusId());
+  //if the family has not completed the registration process, send them to the first step.
+  if($family->getCurrentStep() != 0){
+  	require_once(__TSM_ROOT__."controllers/registration/steps/step.controller.php");
+  } else {
+		switch($view){
+			case null:
+				$activeView = __TSM_ROOT__."views/registration/dashboard.view.php";  
+				//require_once(__TSM_ROOT__."controllers/registration/dashboard.controller.php");
+				break;
+			case "family":
+				require_once(__TSM_ROOT__."controllers/registration/family/family.controller.php");
+				break;
+			case "student":
+				require_once(__TSM_ROOT__."controllers/registration/student/student.controller.php");
+				break;
+			case "programs":
+				require_once(__TSM_ROOT__."controllers/registration/program/programs.controller.php");    
+				break;
+			case "courses":
+				require_once(__TSM_ROOT__."controllers/registration/course/course.controller.php");    
+				break;
+			case "fees":
+				require_once(__TSM_ROOT__."controllers/registration/fees.controller.php"); 
+				break;
+			case "requirements":
+				require_once(__TSM_ROOT__."controllers/registration/requirement/requirement.controller.php"); 
+				break;
+			case "periods":
+				require_once(__TSM_ROOT__."controllers/registration/period/period.controller.php"); 
+				break;
+			
+		}
   }
 }
 

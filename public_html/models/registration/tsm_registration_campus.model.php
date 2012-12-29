@@ -54,6 +54,16 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
     return $this->info['current_school_year'];  
   }
   
+  public function familyExists($primaryEmail){
+  	$q = "SELECT family_id FROM tsm_reg_families WHERE primary_email = '".$primaryEmail."' AND campus_id = '".$this->campusId."'";
+		$r = $this->db->runQuery($q);
+		if(mysql_num_rows($r) == 0){
+			return false;
+		} else {
+			return true;
+		}
+  }
+  
   public function getPeriods(){
     $q = "SELECT * FROM tsm_reg_periods WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."' ORDER BY day, start_time";
     $r = $this->db->runQuery($q);

@@ -229,6 +229,9 @@ label{
   display: inline-block;
   font-weight: bold;;
 }
+fieldset{
+	margin-bottom: 20px;
+}
 
 .errorMessage{
   color: red;
