@@ -57,5 +57,9 @@ switch($family->getCurrentStep()) {
 		require_once(__TSM_ROOT__."controllers/registration/steps/paymentPlan.step.controller.php");
 		$activeView = __TSM_ROOT__."views/registration/steps/paymentPlan.step.view.php";
 		break;
+	case 6:
+		require_once(__TSM_ROOT__."controllers/registration/steps/setupPaymentPlans.step.controller.php");
+		$activeView = __TSM_ROOT__."views/registration/steps/setupPaymentPlans.step.view.php";
+		break;
 }
 ?>

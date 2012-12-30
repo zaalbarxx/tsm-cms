@@ -191,6 +191,44 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
     return $this->students;
   }
   
+  public function getPaymentPlans($payment_plan_type_id){
+  	$q = "SELECT pp.*, fpp.payment_plan_type_id, fpp.name, fpp.fee_type_id AS payment_plan_fee_type_id FROM tsm_reg_families_payment_plans pp, tsm_reg_fee_payment_plans fpp WHERE fpp.payment_plan_id = pp.payment_plan_id AND pp.family_id = '".$this->familyId."' AND pp.school_year = '".$this->getSelectedSchoolYear()."'";
+  	if(isset($payment_plan_type_id)){
+  		$q .= " AND fpp.payment_plan_type_id = '$payment_plan_type_id'";
+  	}
+  	$r = $this->db->runQuery($q);
+  	while($a = mysql_fetch_assoc($r)){
+  		$paymentPlans[$a['payment_plan_id']][$a['fee_type_id']] = $a['setup_complete'];
+  	}
+  	
+  	return $paymentPlans;
+  }
+  
+  public function deletePaymentPlans(){
+  	$q = "DELETE FROM tsm_reg_families_payment_plans WHERE family_id = '".$this->familyId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
+  	$this->db->runQuery($q);
+  	
+  	return true;
+  }
+  
+  public function savePaymentPlans(){
+  	if($this->deletePaymentPlans()){
+			foreach($_POST as $key=>$value){
+				if(strstr($key,'fee_type_id')){
+					$fee_type_id = explode("_",$key);
+					$fee_type_id = $fee_type_id[3];
+					$_POST['fee_type_id'] = $fee_type_id;
+					$_POST['payment_plan_id'] = $value;
+					$_POST['school_year'] = $this->getSelectedSchoolYear();
+					$_POST['family_id'] = $this->familyId;
+					$family_payment_plan_id = $this->db->insertRowFromPost("tsm_reg_families_payment_plans");
+				}
+			}
+  	}
+  	
+  	return true;
+  }
+  
   public function getFees($fee_type_id = null){
   	$students = $this->getStudents($this->getSelectedSchoolYear());
   	if(isset($students)){
@@ -199,6 +237,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
   			$fees = $studentObject->getFees($fee_type_id);
   			if(isset($fees)){
 					foreach($fees as $fee){
+						$fee['student_id'] = $student['student_id'];
 						$returnFees[] = $fee;
 					}
   			}

@@ -81,6 +81,14 @@ class TSM_REGISTRATION{
     }
   }
   
+  public function getFeeTypeName($fee_type_id){
+  	$q = "SELECT name FROM tsm_reg_fee_types WHERE fee_type_id = $fee_type_id";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+    	return $a['name'];
+    }
+  }
+  
   public function getFeeConditionTypes(){
     $q = "SELECT * FROM tsm_reg_fee_condition_types";
     $r = $this->db->runQuery($q);
