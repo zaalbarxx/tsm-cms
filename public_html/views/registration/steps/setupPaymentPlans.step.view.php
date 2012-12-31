@@ -30,9 +30,9 @@
 	}
 	?>
 	
-	<div style="width: 150px; margin-left: auto;margin-right: auto;text-align: center;">
+	<div style="width: 300px; margin-left: auto;margin-right: auto;text-align: center;">
 		<b>Total Due:</b> $<?php echo $paymentPlanTotal; ?><br /><br />
-		<a href="#" class="submitButton" style="text-decoration: none;">Pay Now</a>
+		<a href="index.php?payNow=<?php echo $invoice_id; ?>" class="submitButton" style="text-decoration: none; margin-right: 30px;">Pay Online</a> <a href="index.php?payNow=<?php echo $invoice_id; ?>" class="submitButton" style="text-decoration: none;">Pay By Mail</a>
 	</div>
 	<br /><br />
 	</div>

@@ -25,6 +25,8 @@ if(!isset($searchq)){
   $searchq = null;
 }
 
+$student->setUseRecordedFees(false);
+
 if(isset($enrollInCourse)){
   if($student->enrollInCourse($enrollInCourse,$program_id,$course_period_id)){
     die("1");  

@@ -10,6 +10,9 @@ require_once(__TSM_ROOT__."models/registration/tsm_registration_requirement.mode
 require_once(__TSM_ROOT__."models/registration/tsm_registration_period.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_fee_condition.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_payment_plan.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_invoice.model.php");
+
+
 
 //INSTANTIATE THE REGISRATION CLASS
 $reg = new TSM_REGISTRATION();

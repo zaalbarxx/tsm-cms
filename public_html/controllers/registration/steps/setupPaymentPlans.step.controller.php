@@ -8,6 +8,12 @@ foreach($paymentPlans as $payment_plan_id=>$fee_types){
 		}
 	}
 }
+
+if($plan_to_process == null){
+	$family->moveToStep(7);
+	header("Location: index.php?com=registration");
+}
+
 $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($plan_to_process);
 $planInfo = $paymentPlan->getInfo();
 $planFeeTypes = $paymentPlans[$plan_to_process];
@@ -32,16 +38,26 @@ foreach($students as $student){
 				$students[$student['student_id']]['planFeeTypes'][$fee_type_id][$key]['course_name'] = $course['name'];
 			}
 			
-			if(!isset($students[$student['student_id']]['planFeeTypes'][$fee_type_id][$key]['program_name'])){
-				$students[$student['student_id']]['planFeeTypes'][$fee_type_id][$key]['program_name'] = $previous_program_name;
-			} else {
-				$previous_program_name = $students[$student['student_id']]['planFeeTypes'][$fee_type_id][$key]['program_name'];
-			}
 		}
 	}
 }
 $paymentPlanTotal = 0;
 foreach($planFeeTypes as $fee_type_id=>$value){
 	$paymentPlanTotal = $paymentPlanTotal + $reg->addFees($family->getFees($fee_type_id));
+}
+
+$invoices = $family->getInvoicesByPaymentPlan($plan_to_process);
+if($invoices == null){
+	$invoice_id = $family->createInvoice($plan_to_process);
+	$invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+	foreach($planFeeTypes as $fee_type_id=>$array){
+		$familyFees = $family->getFees($fee_type_id);
+		foreach($familyFees as $fee){
+			$invoice->addFee($fee['family_fee_id']);
+		}
+	}
+	$invoice->updateTotal();
+} else {
+	$invoice_id = $invoices[0]['family_invoice_id'];
 }
 ?>

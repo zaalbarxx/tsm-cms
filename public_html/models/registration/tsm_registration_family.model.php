@@ -204,6 +204,13 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
   	return $paymentPlans;
   }
   
+  public function completePaymentPlanSetup($payment_plan_id){
+  	$q = "UPDATE tsm_reg_families_payment_plans SET setup_complete = 1 WHERE payment_plan_id = '$payment_plan_id' AND family_id = '".$this->familyId."'";
+  	$this->db->runQuery($q);
+  	
+  	return true;
+  }
+  
   public function deletePaymentPlans(){
   	$q = "DELETE FROM tsm_reg_families_payment_plans WHERE family_id = '".$this->familyId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
   	$this->db->runQuery($q);
@@ -227,6 +234,29 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
   	}
   	
   	return true;
+  }
+  
+  public function getInvoicesByPaymentPlan($payment_plan_id){
+  	$q = "SELECT * FROM tsm_reg_families_invoices WHERE payment_plan_id = '".$payment_plan_id."' AND family_id = '".$this->familyId."' ORDER BY family_invoice_id ASC";
+  	$r = $this->db->runQuery($q);
+  	$returnInvoices = null;
+  	while($a = mysql_fetch_assoc($r)){
+  		$returnInvoices[] = $a;
+  	}
+  	
+  	return $returnInvoices;
+  }
+  
+  public function createInvoice($payment_plan_id){
+  	$q = "INSERT INTO tsm_reg_families_invoices (family_id,payment_plan_id) VALUES('".$this->familyId."','$payment_plan_id')";
+  	$this->db->runQuery($q);
+  	$invoice_id = mysql_insert_id();
+  	
+  	return $invoice_id;
+  }
+  
+  public function recordFee($fee){
+  	
   }
   
   public function getFees($fee_type_id = null){
