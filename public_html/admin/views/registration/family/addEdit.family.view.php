@@ -27,6 +27,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     	<fieldset>
     		<legend>Quickbook Information</legend>
       	<label for="quickbooks_customer_id">Customer: </label><select name="quickbooks_customer_id">
+          <option value="">Select a Customer</option>
       	<?php
 				foreach($quickbooksCustomers as $customer){
 					$id = $customer->getId();

@@ -5,7 +5,7 @@ if(isset($errorMessage)){
 } 
 ?>
 <p style="text-align: center;">You must login below to continue.</p>
-<form id="adminLoginForm" method="post" style="width: 330px; margin: auto;">
+<form id="adminLoginForm" method="post">
   <fieldset>
     <br />
     <label for="username">Username: </label><input type="text" name="username" id="username" autocomplete="off" /><br />

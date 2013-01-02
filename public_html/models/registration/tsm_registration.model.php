@@ -14,7 +14,7 @@ class TSM_REGISTRATION{
   }
   
   public function setCurrentCampusId($campus_id){
-    echo "set campusId to: ".$campus_id;
+    //echo "set campusId to: ".$campus_id;
     $_SESSION['reg']['currentCampusId'] = $campus_id;
     $this->currentCampusId = $_SESSION['reg']['currentCampusId'];
     

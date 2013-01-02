@@ -33,6 +33,12 @@ fieldset{
   position: absolute;
   z-index: 2;
 }
+#adminLoginForm{
+  width: 330px;
+  margin: auto;
+  margin-bottom: 100px;
+  margin-top: 30px;
+}
 #contentArea{
   width: 960px;
   background: #ddd;

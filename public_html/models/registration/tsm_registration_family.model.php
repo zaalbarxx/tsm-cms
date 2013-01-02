@@ -5,6 +5,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
   private $info;
   private $isLoggedIn;
   private $currentStep;
+  private $students;
 
   public function __construct($familyId = null){
 		global $logout;
@@ -61,7 +62,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
     //    die("not all fields required.");
     //}
   }
-  
+
   public function registerFamily(){
     if(isset($_POST['father_first']) && isset($_POST['father_last']) && isset($_POST["website_id"]) && isset($_POST['school_year'])){
     	if(isset($_POST['password'])){

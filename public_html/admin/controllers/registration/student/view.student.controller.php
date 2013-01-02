@@ -2,12 +2,7 @@
 $student = new TSM_REGISTRATION_STUDENT($student_id);
 $studentInfo = $student->getInfo();
 $programs = $student->getEnrolledPrograms();
-/*
-echo "<pre>";
-print_r($student->getFees());
-echo "</pre>";
-die();
-*/
+
 if($student->isApproved() == true){
 	$studentStatus = "Approved";
 } else {
