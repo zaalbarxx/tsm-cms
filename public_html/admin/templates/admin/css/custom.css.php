@@ -19,6 +19,9 @@ body{
   margin: 0px;
   font-family: Arial;
 }
+fieldset{
+	margin-bottom: 30px;
+}
 #headerWrapper{
   width: 1000px;
   margin-left: auto;

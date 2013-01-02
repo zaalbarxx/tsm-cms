@@ -206,7 +206,9 @@ h2{
 	width: 156px;
 	height: 18px;
 }
-
+a.submitButton{
+	text-decoration: none;
+}
 .submitButton{
   border: 0px;
   padding: 10px;

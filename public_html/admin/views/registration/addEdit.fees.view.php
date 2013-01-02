@@ -10,7 +10,27 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       	<option value="1" <?php if($feeInfo['fee_type_id'] == 1){ echo "selected=selected"; } ?>>Tuition</option>
       	<option value="2" <?php if($feeInfo['fee_type_id'] == 2){ echo "selected=selected"; } ?>>Registration Fee</option>
       </select><br />
-      <label for="amount">Amount: </label><input type="text" name="amount" value="<?php echo $feeInfo['amount']; ?>" />
+      <label for="amount">Amount: </label><input type="text" name="amount" value="<?php echo $feeInfo['amount']; ?>" /><br />
+      <?php if($currentCampus->usesQuickbooks()){ ?>
+      	<label for="quickbooks_item_id">Quickbooks Item: </label><select name="quickbooks_item_id">
+      	<?php
+				foreach($quickbooksItems as $item){
+					$unitPrice =$item->getUnitPrice();
+					if(isset($unitPrice)){
+						$price = $unitPrice->getAmount();
+					}
+					$id = $item->getId();
+					if($id == $feeInfo['quickbooks_item_id']){
+						$selected = " selected=selected";
+					} else {
+						$selected = "";
+					}
+					echo "<option value='".$id."' $selected>".$item->getName()." - $".$price."</option>";
+					//echo $item->getId()."--".$item->getName()."--$".$price."<br />";
+				}
+				?>
+				</select>
+			<?php } ?>
     </fieldset>
     <br />
     <input type="hidden" name="fee_id" value="<?php echo $feeInfo['fee_id']; ?>" />

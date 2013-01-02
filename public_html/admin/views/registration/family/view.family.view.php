@@ -13,7 +13,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 		</div>
 		<div class="half">
 			<span class="title">Billing Address</span><br />
-			<?php echo $familyInfo['address']; ?>
+			<?php echo $familyInfo['address']."<br />".$familyInfo['city'].", ".$familyInfo['state']." ".$familyInfo['zip']; ?>
 		</div>
 		
 	</div>

@@ -6,9 +6,6 @@ if(!isset($action)){
 switch($action){
 	case null:
 		$students = $currentCampus->getStudents();
-		foreach($students as $student){
-
-		}
 		
 		$activeView = __TSM_ROOT__."admin/views/registration/student/student.view.php";
 		break;

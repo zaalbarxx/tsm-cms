@@ -38,12 +38,25 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION{
     return $this->info;
   }
   
+  public function saveCampus(){
+  	if($this->db->updateRowFromPost("tsm_reg_campuses",$this->campusId)){
+			return true;
+		} else {
+			//THERE WAS AN ERROR INSERTING THE ROW
+			die("uhoh");
+		} 
+  }
+  
   public function getName(){
   	if($this->info == null){
   		$this->getInfo();	
   	}
   	
   	return $this->info['name'];
+  }
+  
+  public function usesQuickbooks(){
+  	return $this->info['quickbooks_enabled'];
   }
   
   public function getCurrentSchoolYear(){

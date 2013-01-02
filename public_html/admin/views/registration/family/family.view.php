@@ -16,9 +16,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 			<span class="buttons"><a href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>" class="reviewButton" title="Review This Family"></a></span>
 			<div class="itemDetails">
 			<?php 
-			foreach($family['students'] as $student){
-				echo $student['first_name'];
-			}
+			//foreach($family['students'] as $student){
+			//	echo $student['first_name'];
+			//}
 			?>
 			</div>
 		</div>

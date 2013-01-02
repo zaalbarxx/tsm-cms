@@ -258,7 +258,8 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS{
   }
   
   public function approve(){
-  	if($this->getUseRecordedFees() == false){
+  	//if($this->getUseRecordedFees() == false){
+  	/*
   		$q = "DELETE FROM tsm_reg_families_fees WHERE student_id = '".$this->studentId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
   		$this->db->runQuery($q);
   		
@@ -280,16 +281,16 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS{
 					}
 				}
 			}
-			
+			*/
 			$q = "UPDATE tsm_reg_students_school_years SET approved = 1 WHERE student_id = '".$this->studentId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
 			$this->db->runQuery($q);
 			
 			$this->isApproved = true;
 			
-  	} else {
-  		return false;	
-  	}
-  	
+  	//} else {
+  	//	return false;	
+  	//}
+  	return true;
   }
   
   public function getLatestProgram(){
@@ -300,6 +301,16 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS{
   	}
   	
   	return $program_id;
+  }
+  
+  public function saveStudent(){
+		$student_id = $this->db->updateRowFromPost("tsm_reg_students",$this->studentId);
+		if($student_id){
+			return $student_id;
+		} else {
+			//THERE WAS AN ERROR INSERTING THE ROW
+			die("uhoh");
+		} 
   }
   
   public function getFeesForProgramAndCourses($program_id,$fee_type_id = null){

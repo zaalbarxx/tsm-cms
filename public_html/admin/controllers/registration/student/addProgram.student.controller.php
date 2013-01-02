@@ -7,6 +7,8 @@ if(!isset($searchq)){
   $searchq = null;
 }
 
+$student->setUseRecordedFees(false);
+
 if(isset($enrollInProgram)){
   if($student->enrollInProgram($enrollInProgram)){
     die("1");  

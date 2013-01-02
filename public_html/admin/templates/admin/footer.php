@@ -8,7 +8,7 @@
       </div>
       <div style="clear: both; width: 100%;">
 			<?php
-			/*
+				/*
 				if($_SERVER['SERVER_NAME'] == "localhost"){
 					echo "Page created in: " . xdebug_time_index() . " seconds.<br />";
 					echo "<b><u>THE SESSION:</b></u> ";

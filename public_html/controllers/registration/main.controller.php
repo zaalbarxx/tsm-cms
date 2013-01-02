@@ -11,6 +11,7 @@ require_once(__TSM_ROOT__."models/registration/tsm_registration_period.model.php
 require_once(__TSM_ROOT__."models/registration/tsm_registration_fee_condition.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_payment_plan.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_invoice.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_quickbooks.model.php");
 
 
 
@@ -59,7 +60,8 @@ if($reg->family->isLoggedIn() == false){
   } else {
 		switch($view){
 			case null:
-				$activeView = __TSM_ROOT__."views/registration/dashboard.view.php";  
+				require_once(__TSM_ROOT__."controllers/registration/student/student.controller.php");
+				//$activeView = __TSM_ROOT__."views/registration/dashboard.view.php";  
 				//require_once(__TSM_ROOT__."controllers/registration/dashboard.controller.php");
 				break;
 			case "family":

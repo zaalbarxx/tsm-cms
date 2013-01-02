@@ -2,7 +2,7 @@
 <form action="" method="post" id="selectSchoolYearForm">
 <select name="setSelectedSchoolYear" id="selectSchoolYear">
   <option value="">Choose a School Year</option>
-  <?php for($i=date('Y');$i<date('Y') + 5; $i++){
+  <?php for($i=date('Y')-1;$i<date('Y') + 5; $i++){
   	echo "<option value='$i'>$i</option>";
   } ?>
 </select>

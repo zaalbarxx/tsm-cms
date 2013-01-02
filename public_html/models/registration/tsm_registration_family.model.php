@@ -261,6 +261,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
   
   public function getFees($fee_type_id = null){
   	$students = $this->getStudents($this->getSelectedSchoolYear());
+  	$returnFees = null;
   	if(isset($students)){
   		foreach($students as $student){
   			$studentObject = new TSM_REGISTRATION_STUDENT($student['student_id']);

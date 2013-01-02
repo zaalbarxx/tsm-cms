@@ -10,6 +10,7 @@ require_once(__TSM_ROOT__."models/registration/tsm_registration_requirement.mode
 require_once(__TSM_ROOT__."models/registration/tsm_registration_period.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_fee_condition.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_payment_plan.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_quickbooks.model.php");
 
 //INSTANTIATE THE REGISRATION CLASS
 $reg = new TSM_REGISTRATION();
@@ -49,6 +50,7 @@ if($campusList == NULL){
 	$activeView = __TSM_ROOT__."admin/views/registration/selectSchoolYear.view.php";
 } else {
   $currentCampus = new TSM_REGISTRATION_CAMPUS($reg->getCurrentCampusId());
+  $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
   switch($view){
     case null:
       require_once(__TSM_ROOT__."admin/controllers/registration/dashboard.controller.php");
@@ -73,6 +75,9 @@ if($campusList == NULL){
       break;
     case "periods":
       require_once(__TSM_ROOT__."admin/controllers/registration/period/period.controller.php"); 
+      break;
+    case "quickbooks":
+      require_once(__TSM_ROOT__."admin/controllers/registration/quickbooks/quickbooks.controller.php"); 
       break;
     
   }

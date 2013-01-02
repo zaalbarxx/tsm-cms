@@ -12,4 +12,11 @@ if(isset($fee_id)){
     $formAction = "createFee";
     $feeInfo = null;
 }
+
+if($currentCampus->usesQuickbooks() == true){
+	$ItemService = new QuickBooks_IPP_Service_Item();
+	//$id = "{QB-459}";
+	$quickbooksItems = $ItemService->findAll($quickbooks->Context,$quickbooks->creds['qb_realm'],null,1,999);
+}
+
 ?>
