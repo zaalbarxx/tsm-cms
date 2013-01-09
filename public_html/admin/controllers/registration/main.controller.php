@@ -61,6 +61,9 @@ if($campusList == NULL){
     case "student":
       require_once(__TSM_ROOT__."admin/controllers/registration/student/student.controller.php");
       break;
+    case "teacher":
+      require_once(__TSM_ROOT__."admin/controllers/registration/teacher/teacher.controller.php");
+      break;
     case "programs":
       require_once(__TSM_ROOT__."admin/controllers/registration/program/programs.controller.php");    
       break;

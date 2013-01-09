@@ -382,7 +382,7 @@ class TSM{
   
 	public function getAdminHeaderHTML(){
 	  $this->adminHeaderHTML = "
-    <script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js\" type=\"text/javascript\"></script>
+    <script src=\"../includes/jquery-1.8.3.min.js\" type=\"text/javascript\"></script>
     <link rel=\"stylesheet\" href=\"../includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"../includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>";
     if(isset($_GET['fb'])){
@@ -417,7 +417,7 @@ class TSM{
 	
 	public function getHeaderHTML(){
 	  $this->headerHTML = "
-    <script src=\"//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js\" type=\"text/javascript\"></script>
+    <script src=\"../includes/jquery-1.8.3.min.js\" type=\"text/javascript\"></script>
     <link rel=\"stylesheet\" href=\"includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>";
     if(isset($_GET['fb'])){

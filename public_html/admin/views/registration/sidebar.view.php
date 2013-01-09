@@ -10,7 +10,7 @@
       <a href="index.php?com=registration&view=student" <?php if(stristr($_SERVER["REQUEST_URI"],"index.php?com=registration&view=student")){ echo "class='active'"; } ?>>Students</a>
     </li>
     <li>
-      <a href="index.php?com=registration&view=teachers" <?php if(stristr($_SERVER["REQUEST_URI"],"index.php?com=registration&view=teachers")){ echo "class='active'"; } ?>>Teachers</a>
+      <a href="index.php?com=registration&view=teacher" <?php if(stristr($_SERVER["REQUEST_URI"],"index.php?com=registration&view=teacher")){ echo "class='active'"; } ?>>Teachers</a>
     </li>
     <li>
       <a href="index.php?com=registration&view=programs" <?php if(stristr($_SERVER["REQUEST_URI"],"index.php?com=registration&view=programs")){ echo "class='active'"; } ?>>Programs</a>

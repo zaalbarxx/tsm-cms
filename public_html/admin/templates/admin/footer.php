@@ -8,7 +8,7 @@
       </div>
       <div style="clear: both; width: 100%;">
 			<?php
-				/*
+        /*
 				if($_SERVER['SERVER_NAME'] == "localhost"){
 					echo "Page created in: " . xdebug_time_index() . " seconds.<br />";
 					echo "<b><u>THE SESSION:</b></u> ";
@@ -26,7 +26,7 @@
 					echo "<br /><br><b><u>THE CURRENTLY DECLARED VARIABLES:</b></u> ";
 					var_dump(xdebug_get_declared_vars());
 				}
-				*/
+        */
 			?>
 			</div>
     </div>
