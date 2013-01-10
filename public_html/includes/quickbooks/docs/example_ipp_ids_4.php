@@ -2,7 +2,7 @@
 
 /**
  * Example of reading/writing data to/from Intuit Data Services
- * 
+ *
  * @package QuickBooks
  * @subpackage Documentation
  */
@@ -38,21 +38,20 @@ $dbid = 'be9mh7qd5';
 // IPP instance
 $IPP = new QuickBooks_IPP();
 
-if ($Context = $IPP->authenticate($username, $password, $token))
-{
-	// DBID
-	$IPP->dbid($Context, $dbid);
-	
-	// Flavor
-	$IPP->flavor(QuickBooks_IPP_IDS::FLAVOR_DESKTOP);
-	
-	// Create a new Vendor Service for IDS access
-	$VendorService = new QuickBooks_IPP_Service_Vendor();
-	
-	// Get a list of Customers from QuickBooks
-	$vendor_list = $VendorService->findAll($Context, $realmID);
-	
-	// Print the vendors 
-	print_r($vendor_list);
+if ($Context = $IPP->authenticate($username, $password, $token)) {
+  // DBID
+  $IPP->dbid($Context, $dbid);
+
+  // Flavor
+  $IPP->flavor(QuickBooks_IPP_IDS::FLAVOR_DESKTOP);
+
+  // Create a new Vendor Service for IDS access
+  $VendorService = new QuickBooks_IPP_Service_Vendor();
+
+  // Get a list of Customers from QuickBooks
+  $vendor_list = $VendorService->findAll($Context, $realmID);
+
+  // Print the vendors
+  print_r($vendor_list);
 }
 	

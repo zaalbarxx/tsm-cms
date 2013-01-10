@@ -22,16 +22,18 @@ $IPP->application('be9mh7qd5');
 
 //print_r($IPP->getAvailableCompanies($Context));
 
-$value = 'testvalue' . mt_rand();
+$value = 'testvalue'.mt_rand();
 
 $return = $IPP->setDBVar($Context, 'testvar', $value);
-print('set db var to "' . $value . '": '); var_dump($return);
+print('set db var to "'.$value.'": ');
+var_dump($return);
 
 
 $return = $IPP->getDBVar($Context, 'testvar');
-print('get db var: '); var_dump($return);
+print('get db var: ');
+var_dump($return);
 
-print('ERROR: ' . $IPP->errorCode() . ': ' . $IPP->errorText());
+print('ERROR: '.$IPP->errorCode().': '.$IPP->errorText());
 
 //exit;
 

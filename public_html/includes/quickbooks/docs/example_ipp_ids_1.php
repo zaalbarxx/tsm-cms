@@ -2,11 +2,11 @@
 
 /**
  * Example of reading/writing data to/from Intuit Data Services
- * 
+ *
  * @package QuickBooks
  * @subpackage Documentation
  */
- 
+
 // Error reporting
 error_reporting(E_ALL);
 ini_set('display_errors', true);
@@ -41,42 +41,34 @@ $IPP = new QuickBooks_IPP();
 // Set the QuickBooks flavor
 $IPP->flavor(QuickBooks_IPP_IDS::FLAVOR_DESKTOP);
 
-if ($Context = $IPP->authenticate($username, $password, $token))
-{
-	// Set the DBID passed to you by OAuth/SAML
-	$IPP->dbid($Context, $dbid);
-	
-	// Create a new Customer Service for IDS
-	$CustomerService = new QuickBooks_IPP_Service_Customer();
-	
-	// Get a list of Customers from QuickBooks
-	$list = $CustomerService->findAll($Context, $realmID);
-	
-	if ($list)
-	{
-		// Print them out
-		foreach ($list as $Customer)
-		{
-			$line = '';
-			$city = '';
-			$state = '';
-			if ($Address = $Customer->getAddress(0))
-			{
-				$line = $Address->getLine1();
-				$city = $Address->getCity();
-				$state = $Address->getCountrySubDivisionCode();
-			}
-			
-			print('Customer name is: ' . $Customer->getName() . ' has an address of: ' . $line . ' ' . $city . ' ' . $state . "\n");
-		}
-	}
-	else
-	{
-		print('Could not fetch list of customers... [' . $IPP->lastRequest() . "\n\n\n\n" . $IPP->lastResponse() . ']');
-	}
-}
-else
-{
-	print('Could not auth to AppCenter... [' . $IPP->lastResponse() . ']');
+if ($Context = $IPP->authenticate($username, $password, $token)) {
+  // Set the DBID passed to you by OAuth/SAML
+  $IPP->dbid($Context, $dbid);
+
+  // Create a new Customer Service for IDS
+  $CustomerService = new QuickBooks_IPP_Service_Customer();
+
+  // Get a list of Customers from QuickBooks
+  $list = $CustomerService->findAll($Context, $realmID);
+
+  if ($list) {
+    // Print them out
+    foreach ($list as $Customer) {
+      $line = '';
+      $city = '';
+      $state = '';
+      if ($Address = $Customer->getAddress(0)) {
+        $line = $Address->getLine1();
+        $city = $Address->getCity();
+        $state = $Address->getCountrySubDivisionCode();
+      }
+
+      print('Customer name is: '.$Customer->getName().' has an address of: '.$line.' '.$city.' '.$state."\n");
+    }
+  } else {
+    print('Could not fetch list of customers... ['.$IPP->lastRequest()."\n\n\n\n".$IPP->lastResponse().']');
+  }
+} else {
+  print('Could not auth to AppCenter... ['.$IPP->lastResponse().']');
 }	
 

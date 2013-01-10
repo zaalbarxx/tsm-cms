@@ -87,7 +87,6 @@ print($Service->lastResponse());
 //exit;
 
 
-
 // Create a new Service for IDS access
 $Service = new QuickBooks_IPP_Service_Invoice();
 
@@ -96,9 +95,8 @@ $list = $Service->findAll($Context, $realmID);
 //print_r($list);
 //exit;
 
-foreach ($list as $key => $Invoice)
-{
-	print($key . ': Invoice #' . $Invoice->getHeader()->getDocNumber() . ', balance: $' . $Invoice->getHeader()->getBalance() . "\n");
+foreach ($list as $key => $Invoice) {
+  print($key.': Invoice #'.$Invoice->getHeader()->getDocNumber().', balance: $'.$Invoice->getHeader()->getBalance()."\n");
 }
 
 //print_r($list[11]);

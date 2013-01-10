@@ -1,12 +1,12 @@
 <?php
 
 require_once '../QuickBooks.php';
- 
+
 // Create our customer object
 $Customer = new QuickBooks_IPP_Object_Customer();
 
 // Set the name of the customer (a UNIQUE PRIMARY KEY in QuickBooks)
-$Customer->setName('Brand New Customer #' . mt_rand(0, 100));
+$Customer->setName('Brand New Customer #'.mt_rand(0, 100));
 
 // Set the first name
 $Customer->setGivenName('Keith');

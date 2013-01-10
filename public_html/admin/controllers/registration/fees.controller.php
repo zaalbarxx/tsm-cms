@@ -1,9 +1,9 @@
 <?php
-if(!isset($action)){
+if (!isset($action)) {
   $action = null;
 }
 
-switch($action){
+switch ($action) {
   case null:
     $feesList = $currentCampus->getFees();
     $activeView = __TSM_ROOT__."admin/views/registration/fees.view.php";
@@ -28,9 +28,9 @@ switch($action){
     require_once(__TSM_ROOT__."admin/controllers/registration/addEditConditions.controller.php");
     $activeView = __TSM_ROOT__."admin/views/registration/addEditCondition.fees.view.php";
     break;
-  case "getConditionForm":  
+  case "getConditionForm":
     require_once(__TSM_ROOT__."admin/controllers/registration/conditionForm.fees.controller.php");
     break;
 }
-  
+
 ?>

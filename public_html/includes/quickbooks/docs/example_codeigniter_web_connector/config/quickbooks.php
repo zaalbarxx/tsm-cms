@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 // Turn on some error reporting
 error_reporting(E_ALL);
@@ -8,7 +8,7 @@ ini_set('display_errors', 1);
 define('QUICKBOOKS_LOADER_AUTOLOADER', false);
 
 // Require the framework
-require_once dirname(__FILE__) . '/../../../QuickBooks.php';
+require_once dirname(__FILE__).'/../../../QuickBooks.php';
 
 // A username and password you'll use in: 
 //	a) Your .QWC file

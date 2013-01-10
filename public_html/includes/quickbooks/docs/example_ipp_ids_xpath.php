@@ -2,7 +2,7 @@
 
 /**
  * Example of reading/writing data to/from Intuit Data Services
- * 
+ *
  * @package QuickBooks
  * @subpackage Documentation
  */
@@ -113,15 +113,15 @@ $Customer = end($list);
 
 // Let's try our XPath stuff
 print("\n\n");
-print('Id is: [' . $Customer->getXPath('Id') . ']');
+print('Id is: ['.$Customer->getXPath('Id').']');
 print("\n\n");
-print('Given Name is: [' . $Customer->getXPath('GivenName') . ']');
+print('Given Name is: ['.$Customer->getXPath('GivenName').']');
 print("\n\n");
-print('Shipping Line 1 is: [' . $Customer->getXPath('Address[Tag="Shipping"]/Line1') . ']');
+print('Shipping Line 1 is: ['.$Customer->getXPath('Address[Tag="Shipping"]/Line1').']');
 print("\n\n");
-print('The first addresses Line 2 is: [' . $Customer->getXPath('Address/Line2') . ']');
+print('The first addresses Line 2 is: ['.$Customer->getXPath('Address/Line2').']');
 print("\n\n");
-print('This tag just does not exist: [' . $Customer->getXPath('Something') . ']');
+print('This tag just does not exist: ['.$Customer->getXPath('Something').']');
 print("\n\n");
-print('This tag has a parent that exists, but a child that does not: [' . $Customer->getXPath('MetaData/Something') . ']');
+print('This tag has a parent that exists, but a child that does not: ['.$Customer->getXPath('MetaData/Something').']');
 print("\n\n");

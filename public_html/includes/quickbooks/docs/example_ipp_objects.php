@@ -2,7 +2,7 @@
 
 /**
  * Example of reading/writing data to/from Intuit Data Services
- * 
+ *
  * @package QuickBooks
  * @subpackage Documentation
  */
@@ -141,19 +141,17 @@ $list = $Parser->parseIDS($xml, $optype, $xml_errnum, $xml_errmsg, $err_code, $e
 print_r($list);
 
 // Loop through the list of customers
-foreach ($list as $Customer)
-{
-	$line = '';
-	$city = '';
-	$state = '';
-	if ($Address = $Customer->getAddress(0))
-	{
-		$line = $Address->getLine1();
-		$city = $Address->getCity();
-		$state = $Address->getCountrySubDivisionCode();
-	}
-	
-	print('' . $Customer->getName() . ' has an address of: ' . $line . ' ' . $city . ' ' . $state . "\n");
+foreach ($list as $Customer) {
+  $line = '';
+  $city = '';
+  $state = '';
+  if ($Address = $Customer->getAddress(0)) {
+    $line = $Address->getLine1();
+    $city = $Address->getCity();
+    $state = $Address->getCountrySubDivisionCode();
+  }
+
+  print(''.$Customer->getName().' has an address of: '.$line.' '.$city.' '.$state."\n");
 }
 
 // Here's the last customer in the list

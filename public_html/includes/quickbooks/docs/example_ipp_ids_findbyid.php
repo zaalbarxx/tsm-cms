@@ -2,11 +2,11 @@
 
 /**
  * Example of reading/writing data to/from Intuit Data Services
- * 
+ *
  * @package QuickBooks
  * @subpackage Documentation
  */
- 
+
 // Error reporting
 error_reporting(E_ALL);
 ini_set('display_errors', true);
@@ -41,32 +41,26 @@ $IPP = new QuickBooks_IPP();
 // Set the QuickBooks flavor
 $IPP->flavor(QuickBooks_IPP_IDS::FLAVOR_DESKTOP);
 
-if ($Context = $IPP->authenticate($username, $password, $token))
-{
-	// Set the DBID passed to you by OAuth/SAML
-	$IPP->dbid($Context, $dbid);
-	
-	// Create a new Customer Service for IDS
-	$CustomerService = new QuickBooks_IPP_Service_Customer();
-	
-	// Here's the ID of the customer we want to fetch
-	$ID = '{NG-2762403}';
-	
-	// In case you want XML back...
-	//$IPP->useIDSParser(false);
-	
-	// Get the customer
-	if ($Customer = $CustomerService->findById($Context, $realmID, $ID))
-	{
-		print_r($Customer);
-	}
-	else
-	{
-		print('Could not fetch list of customers... [' . $IPP->lastRequest() . "\n\n\n\n" . $IPP->lastResponse() . ']');
-	}
-}
-else
-{
-	print('Could not auth to AppCenter... [' . $IPP->lastRequest() . ']' . "\n\n\n" . '[' . $IPP->lastResponse() . ']');
+if ($Context = $IPP->authenticate($username, $password, $token)) {
+  // Set the DBID passed to you by OAuth/SAML
+  $IPP->dbid($Context, $dbid);
+
+  // Create a new Customer Service for IDS
+  $CustomerService = new QuickBooks_IPP_Service_Customer();
+
+  // Here's the ID of the customer we want to fetch
+  $ID = '{NG-2762403}';
+
+  // In case you want XML back...
+  //$IPP->useIDSParser(false);
+
+  // Get the customer
+  if ($Customer = $CustomerService->findById($Context, $realmID, $ID)) {
+    print_r($Customer);
+  } else {
+    print('Could not fetch list of customers... ['.$IPP->lastRequest()."\n\n\n\n".$IPP->lastResponse().']');
+  }
+} else {
+  print('Could not auth to AppCenter... ['.$IPP->lastRequest().']'."\n\n\n".'['.$IPP->lastResponse().']');
 }	
 

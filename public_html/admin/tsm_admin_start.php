@@ -24,7 +24,7 @@ $tsm->adminUser = new AdminUser();
 $tsm->website = new Website();
 $tsm->website->start();
 
-if($tsm->adminUser->isLoggedIn()){
+if ($tsm->adminUser->isLoggedIn()) {
   //TURN CONTROL OVER TO THE COMPONENT
   require_once($tsm->getComponent());
 } else {

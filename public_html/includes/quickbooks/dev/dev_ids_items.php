@@ -60,8 +60,6 @@ print($Service->lastResponse() . "\n\n");
 */
 
 
-
-
 // ErroredObjectsOnly="true"
 
 $xml = '<?xml version="1.0" encoding="UTF-8"?>
@@ -71,5 +69,5 @@ $Service = new QuickBooks_IPP_Service_Item();
 
 $Service->rawQuery($Context, $realmID, $xml);
 
-print($Service->lastRequest() . "\n\n");
-print($Service->lastResponse() . "\n\n");
+print($Service->lastRequest()."\n\n");
+print($Service->lastResponse()."\n\n");

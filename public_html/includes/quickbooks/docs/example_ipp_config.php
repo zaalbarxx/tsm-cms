@@ -2,9 +2,9 @@
 
 /**
  * Intuit Partner Platform configuration variables
- * 
- * See the scripts that use these variables for more details. 
- * 
+ *
+ * See the scripts that use these variables for more details.
+ *
  * @package QuickBooks
  * @subpackage Documentation
  */
@@ -44,8 +44,7 @@ $the_username = 'your_app_username_here';
 $the_tenant = 12345;
 
 // Initialize the database tables for storing OAuth information
-if (!QuickBooks_Utilities::initialized($dsn))
-{
-	// Initialize creates the neccessary database schema for queueing up requests and logging
-	QuickBooks_Utilities::initialize($dsn);
+if (!QuickBooks_Utilities::initialized($dsn)) {
+  // Initialize creates the neccessary database schema for queueing up requests and logging
+  QuickBooks_Utilities::initialize($dsn);
 }	

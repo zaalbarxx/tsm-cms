@@ -1,7 +1,7 @@
 ﻿/*
-Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
-For licensing, see LICENSE.html or http://ckeditor.com/license
-*/
+ Copyright (c) 2003-2012, CKSource - Frederico Knabben. All rights reserved.
+ For licensing, see LICENSE.html or http://ckeditor.com/license
+ */
 
 /**
  * @fileOverview Defines the "virtual" dialog, dialog content and dialog button
@@ -199,7 +199,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
  * @field
  * @type String
  * @example
- * contentDefinition.accessKey = 'Q';	// Switch to this page when CTRL-Q is pressed.
+ * contentDefinition.accessKey = 'Q';    // Switch to this page when CTRL-Q is pressed.
  */
 
 /**
@@ -543,7 +543,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 /**
  * (Optional) Applies only to horizontal layouts: a two elements array of lengths to specify the widths of the
-* 	label and the content element. See also {@link CKEDITOR.dialog.definition.labeledElement#labelLayout}.
+ *     label and the content element. See also {@link CKEDITOR.dialog.definition.labeledElement#labelLayout}.
  * @name CKEDITOR.dialog.definition.labeledElement.prototype.widths
  * @type Array
  * @field

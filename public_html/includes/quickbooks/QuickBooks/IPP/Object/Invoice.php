@@ -2,7 +2,6 @@
 
 QuickBooks_Loader::load('/QuickBooks/IPP/Object.php');
 
-class QuickBooks_IPP_Object_Invoice extends QuickBooks_IPP_Object
-{
-	
+class QuickBooks_IPP_Object_Invoice extends QuickBooks_IPP_Object {
+
 }

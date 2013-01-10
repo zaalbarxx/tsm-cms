@@ -1,7 +1,7 @@
 <?php
 $activeView = __TSM_ROOT__."admin/views/login/main.view.php";
-if(isset($login)){
-  if($tsm->adminUser->login($username,$password)){
+if (isset($login)) {
+  if ($tsm->adminUser->login($username, $password)) {
     $loginSuccessful = 1;
   } else {
     $loginSuccessful = 0;

@@ -1,17 +1,17 @@
 <?php
-if(isset($createPeriod)){
-  if($currentCampus->createPeriod()){
+if (isset($createPeriod)) {
+  if ($currentCampus->createPeriod()) {
     header('Location: index.php?com=registration&view=periods');
   }
-} else if(isset($savePeriod)){
-  if($currentCampus->savePeriod($period_id)){
+} else if (isset($savePeriod)) {
+  if ($currentCampus->savePeriod($period_id)) {
     header('Location: index.php?com=registration&view=periods');
   } else {
     die();
   }
 }
 
-if(isset($period_id)){
+if (isset($period_id)) {
   $period = new TSM_REGISTRATION_PERIOD($period_id);
   $period = $period->getInfo();
   $submitField = "savePeriod";

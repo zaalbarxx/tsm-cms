@@ -3,13 +3,13 @@ $program = new TSM_REGISTRATION_PROGRAM($program_id);
 $programInfo = $program->getInfo();
 $courses = $currentCampus->getCourses();
 
-if(!isset($searchq)){
+if (!isset($searchq)) {
   $searchq = null;
 }
 
-if(isset($addCourse)){
-  if($program->addCourse($addCourse)){
-    die("1");  
+if (isset($addCourse)) {
+  if ($program->addCourse($addCourse)) {
+    die("1");
   } else {
     die("0");
   }

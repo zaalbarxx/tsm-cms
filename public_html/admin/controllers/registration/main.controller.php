@@ -15,43 +15,42 @@ require_once(__TSM_ROOT__."models/registration/tsm_registration_quickbooks.model
 //INSTANTIATE THE REGISRATION CLASS
 $reg = new TSM_REGISTRATION();
 $campusList = $reg->getCampuses();
-if(!isset($view)){
+if (!isset($view)) {
   $view = null;
 }
 
-if(isset($ajax)){
+if (isset($ajax)) {
   require_once(__TSM_ROOT__."admin/controllers/registration/ajax.controller.php");
 }
 
-if(isset($createCampus)){
-  if($reg->createCampus()){
+if (isset($createCampus)) {
+  if ($reg->createCampus()) {
     header('Location: '.$_SERVER["REQUEST_URI"]);
   }
 }
-if(isset($setCurrentCampusId)){
-  if($reg->setCurrentCampusId($setCurrentCampusId)){
-    header('Location: '.$_SERVER["REQUEST_URI"]);
-  }
-}
-
-if(isset($setSelectedSchoolYear)){
-  if($reg->setSelectedSchoolYear($setSelectedSchoolYear)){
+if (isset($setCurrentCampusId)) {
+  if ($reg->setCurrentCampusId($setCurrentCampusId)) {
     header('Location: '.$_SERVER["REQUEST_URI"]);
   }
 }
 
+if (isset($setSelectedSchoolYear)) {
+  if ($reg->setSelectedSchoolYear($setSelectedSchoolYear)) {
+    header('Location: '.$_SERVER["REQUEST_URI"]);
+  }
+}
 
 
-if($campusList == NULL){
-  $activeView = __TSM_ROOT__."admin/views/registration/createCampus.view.php";  
-} else if(!$reg->getCurrentCampusId()){
+if ($campusList == NULL) {
+  $activeView = __TSM_ROOT__."admin/views/registration/createCampus.view.php";
+} else if (!$reg->getCurrentCampusId()) {
   $activeView = __TSM_ROOT__."admin/views/registration/selectCurrentCampus.view.php";
-} else if(!$reg->getSelectedSchoolYear()){ 
-	$activeView = __TSM_ROOT__."admin/views/registration/selectSchoolYear.view.php";
+} else if (!$reg->getSelectedSchoolYear()) {
+  $activeView = __TSM_ROOT__."admin/views/registration/selectSchoolYear.view.php";
 } else {
   $currentCampus = new TSM_REGISTRATION_CAMPUS($reg->getCurrentCampusId());
   $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
-  switch($view){
+  switch ($view) {
     case null:
       require_once(__TSM_ROOT__."admin/controllers/registration/dashboard.controller.php");
       break;
@@ -65,33 +64,33 @@ if($campusList == NULL){
       require_once(__TSM_ROOT__."admin/controllers/registration/teacher/teacher.controller.php");
       break;
     case "programs":
-      require_once(__TSM_ROOT__."admin/controllers/registration/program/programs.controller.php");    
+      require_once(__TSM_ROOT__."admin/controllers/registration/program/programs.controller.php");
       break;
     case "courses":
-      require_once(__TSM_ROOT__."admin/controllers/registration/course/course.controller.php");    
+      require_once(__TSM_ROOT__."admin/controllers/registration/course/course.controller.php");
       break;
     case "fees":
-      require_once(__TSM_ROOT__."admin/controllers/registration/fees.controller.php"); 
+      require_once(__TSM_ROOT__."admin/controllers/registration/fees.controller.php");
       break;
     case "requirements":
-      require_once(__TSM_ROOT__."admin/controllers/registration/requirement/requirement.controller.php"); 
+      require_once(__TSM_ROOT__."admin/controllers/registration/requirement/requirement.controller.php");
       break;
     case "periods":
-      require_once(__TSM_ROOT__."admin/controllers/registration/period/period.controller.php"); 
+      require_once(__TSM_ROOT__."admin/controllers/registration/period/period.controller.php");
       break;
     case "quickbooks":
-      require_once(__TSM_ROOT__."admin/controllers/registration/quickbooks/quickbooks.controller.php"); 
+      require_once(__TSM_ROOT__."admin/controllers/registration/quickbooks/quickbooks.controller.php");
       break;
-    
+
   }
 }
 
 //CALL THE APPROPRIATE VIEW
 require_once($tsm->website->getTemplateHeader());
-if(isset($activeView)){
-	require_once($activeView);	
+if (isset($activeView)) {
+  require_once($activeView);
 } else {
-	echo "<p style='text-align: center;'>This command has not yet been implemented. <a href='javascript:history.go(-1)'>Back</a><p>";
+  echo "<p style='text-align: center;'>This command has not yet been implemented. <a href='javascript:history.go(-1)'>Back</a><p>";
 }
 require_once($tsm->website->getTemplateFooter());
 ?>

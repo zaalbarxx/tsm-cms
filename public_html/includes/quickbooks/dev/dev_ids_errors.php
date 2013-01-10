@@ -25,14 +25,13 @@ $InvoiceService = new QuickBooks_IPP_Service_Invoice();
 $EstimateService = new QuickBooks_IPP_Service_Estimate();
 
 
-
 // 4791075
 // 4792532
 // 4792533
 
 
 $xml = '<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<Del RequestId="' . md5(microtime()) . '" xmlns="http://www.intuit.com/sb/cdm/v2">
+<Del RequestId="'.md5(microtime()).'" xmlns="http://www.intuit.com/sb/cdm/v2">
    <Object xsi:type="Check"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <Id idDomain="NG">4800355</Id>
@@ -45,7 +44,6 @@ print("\n\n");
 print($response);
 
 exit;
-
 
 
 /*
@@ -68,7 +66,6 @@ exit;
 */
 
 
-
 $xml = '<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <CheckQuery ErroredObjectsOnly="true" xmlns="http://www.intuit.com/sb/cdm/v2">
 </CheckQuery>';
@@ -79,7 +76,6 @@ print("\n\n\n\n\n");
 print($CheckService->lastResponse($Context));
 
 exit;
-
 
 
 /*
@@ -98,8 +94,6 @@ exit;
 */
 
 
-
-
 $xml = '<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <EstimateQuery ErroredObjectsOnly="true" xmlns="http://www.intuit.com/sb/cdm/v2">
 </EstimateQuery>';
@@ -110,9 +104,6 @@ print("\n\n");
 print($response);
 
 exit;
-
-
-
 
 
 $xml = '<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
@@ -131,7 +122,6 @@ $xml = '<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <CustomerQuery xmlns="http://www.intuit.com/sb/cdm/v2">
 	<SynchronizedFilter>NotSynchronized</SynchronizedFilter>
 </CustomerQuery>';
-
 
 
 $response = $CustomerService->rawQuery($Context, $realmID, $xml);
@@ -153,9 +143,6 @@ print("\n\n");
 print($response);
 
 //exit;
-
-
-
 
 
 exit;

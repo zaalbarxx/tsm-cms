@@ -2,18 +2,18 @@
 
 /**
  * Example of building qbXML for specific versions of QuickBooks using the QuickBooks_Object_* classes
- * 
- * Certain versions of QuickBooks may or may not support certain different 
- * features of the qbXML specification. For instance, Online Edition may not 
- * support the 'Customer Type' field. The use of locale constants allows us to 
- * build qbXML requests from objects, tailoring those requests to the specific 
- * qbXML version and locale we want to send the request to. 
- * 
+ *
+ * Certain versions of QuickBooks may or may not support certain different
+ * features of the qbXML specification. For instance, Online Edition may not
+ * support the 'Customer Type' field. The use of locale constants allows us to
+ * build qbXML requests from objects, tailoring those requests to the specific
+ * qbXML version and locale we want to send the request to.
+ *
  * @author Keith Palmer <keith@consolibyte.com>
  *
  * @package QuickBooks
  * @subpackage Documentation
- */ 
+ */
 
 // Plain text output
 header('Content-Type: text/plain');
@@ -69,17 +69,17 @@ $Customer->setFullName('Contractors:ConsoliBYTE, LLC:Keith Palmer');
 $Customer->setCustomerTypeFullName('Web:Direct');
 $Customer->setNotes('Test notes go here.');
 
-print('qbXML Customer for QuickBooks qbXML (latest version the framework supports): ' . "\r\n");
+print('qbXML Customer for QuickBooks qbXML (latest version the framework supports): '."\r\n");
 print($Customer->asQBXML(QUICKBOOKS_ADD_CUSTOMER));
 
 print("\r\n\r\n");
 
-print('qbXML Customer for QuickBooks qbXML US editions: ' . "\r\n");
+print('qbXML Customer for QuickBooks qbXML US editions: '."\r\n");
 print($Customer->asQBXML(QUICKBOOKS_ADD_CUSTOMER, null, QuickBooks_QBXML::LOCALE_UNITED_STATES));
 
 print("\r\n\r\n");
 
-print('qbXML Customer for QuickBooks qbXML Online Edition: ' . "\r\n");
+print('qbXML Customer for QuickBooks qbXML Online Edition: '."\r\n");
 print($Customer->asQBXML(QUICKBOOKS_ADD_CUSTOMER, null, QuickBooks_QBXML::LOCALE_ONLINE_EDITION));
 
 print("\r\n\r\n");
@@ -87,5 +87,5 @@ print("\r\n\r\n");
 $Customer->setListID('1234');
 $Customer->setEditSequence('5678');
 
-print('qbXML Customer (modification) for QuickBooks qbXML Online Edition: ' . "\r\n");
+print('qbXML Customer (modification) for QuickBooks qbXML Online Edition: '."\r\n");
 print($Customer->asQBXML(QUICKBOOKS_MOD_CUSTOMER, null, QuickBooks_QBXML::LOCALE_ONLINE_EDITION));

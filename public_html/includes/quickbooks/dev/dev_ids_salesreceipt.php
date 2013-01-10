@@ -22,9 +22,9 @@ $Service = new QuickBooks_IPP_Service_SalesReceipt();
 $list = $Service->findAll($Context, $realmID);
 
 print("\n\n");
-print($Service->lastRequest() . "\n\n\n");
+print($Service->lastRequest()."\n\n\n");
 print("\n\n");
-print($Service->lastResponse() . "\n\n\n");
+print($Service->lastResponse()."\n\n\n");
 print("\n\n");
 
 

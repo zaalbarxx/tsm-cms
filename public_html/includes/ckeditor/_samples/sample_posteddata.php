@@ -18,4 +18,5 @@
 
 
 
-*/ include "assets/_posteddata.php"; ?>
+*/
+include "assets/_posteddata.php"; ?>

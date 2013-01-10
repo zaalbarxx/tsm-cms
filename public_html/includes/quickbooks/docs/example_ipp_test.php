@@ -2,9 +2,9 @@
 
 /**
  * Example of OAuth authentication for an Intuit Anywhere application
- * 
- * 
- * 
+ *
+ *
+ *
  * @package QuickBooks
  * @subpackage Documentation
  */
@@ -16,12 +16,12 @@ ini_set('display_errors', 1);
 /**
  * Require the QuickBooks library
  */
-require_once dirname(__FILE__) . '/../QuickBooks.php';
+require_once dirname(__FILE__).'/../QuickBooks.php';
 
 /**
  * Require some IPP/OAuth configuration data
  */
-require_once dirname(__FILE__) . '/example_ipp_config.php';
+require_once dirname(__FILE__).'/example_ipp_config.php';
 
 // Instantiate our Intuit Anywhere auth handler 
 // 
@@ -35,11 +35,8 @@ require_once dirname(__FILE__) . '/example_ipp_config.php';
 $IntuitAnywhere = new QuickBooks_IPP_IntuitAnywhere($dsn, $encryption_key, $oauth_consumer_key, $oauth_consumer_secret, $this_url, $that_url);
 
 // Test if the OAuth tokens we have on file are still valid
-if ($IntuitAnywhere->test($the_username, $the_tenant))
-{
-	print('Connected with valid OAuth tokens!');
-}
-else
-{
-	print('These tokens (if they exist) don\'t seem to work...');
+if ($IntuitAnywhere->test($the_username, $the_tenant)) {
+  print('Connected with valid OAuth tokens!');
+} else {
+  print('These tokens (if they exist) don\'t seem to work...');
 }

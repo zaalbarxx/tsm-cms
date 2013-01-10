@@ -3,25 +3,25 @@ $student = new TSM_REGISTRATION_STUDENT($student_id);
 $studentInfo = $student->getInfo();
 $programs = $student->getEnrolledPrograms();
 
-if($student->isApproved() == true){
-	$studentStatus = "Approved";
+if ($student->isApproved() == true) {
+  $studentStatus = "Approved";
 } else {
-	$studentStatus = "Unapproved";
+  $studentStatus = "Unapproved";
 }
 
-if(isset($programs)){
-	foreach($programs as $program){
-		$programs[$program['program_id']]['tuition_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'],1));
-		$programs[$program['program_id']]['registration_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'],2));
-		$programs[$program['program_id']]['courses'] = $student->getCoursesIn($program['program_id']);
-		if(isset($programs[$program['program_id']]['courses'])){
-			foreach($programs[$program['program_id']]['courses'] as $course){
-				$programs[$program['program_id']]['courses'][$course['course_id']]['tuition_amount'] = $reg->addFees($student->getFeesForCourse($course['course_id'],$program['program_id'],1));
-				$programs[$program['program_id']]['courses'][$course['course_id']]['registration_amount'] = $reg->addFees($student->getFeesForCourse($course['course_id'],$program['program_id'],2));
-			}
-		}
+if (isset($programs)) {
+  foreach ($programs as $program) {
+    $programs[$program['program_id']]['tuition_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], 1));
+    $programs[$program['program_id']]['registration_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], 2));
+    $programs[$program['program_id']]['courses'] = $student->getCoursesIn($program['program_id']);
+    if (isset($programs[$program['program_id']]['courses'])) {
+      foreach ($programs[$program['program_id']]['courses'] as $course) {
+        $programs[$program['program_id']]['courses'][$course['course_id']]['tuition_amount'] = $reg->addFees($student->getFeesForCourse($course['course_id'], $program['program_id'], 1));
+        $programs[$program['program_id']]['courses'][$course['course_id']]['registration_amount'] = $reg->addFees($student->getFeesForCourse($course['course_id'], $program['program_id'], 2));
+      }
+    }
 
-	}
+  }
 
 }
 

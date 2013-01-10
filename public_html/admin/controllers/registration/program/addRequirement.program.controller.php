@@ -1,13 +1,13 @@
 <?php
 $program = new TSM_REGISTRATION_PROGRAM($program_id);
 
-if(!isset($searchq)){
+if (!isset($searchq)) {
   $searchq = null;
 }
 
-if(isset($addRequirement)){
-  if($program->addRequirement($addRequirement)){
-    die("1");  
+if (isset($addRequirement)) {
+  if ($program->addRequirement($addRequirement)) {
+    die("1");
   } else {
     die("0");
   }

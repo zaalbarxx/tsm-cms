@@ -2,9 +2,9 @@
 
 /**
  * Example of OAuth authentication for an Intuit Anywhere application
- * 
- * 
- * 
+ *
+ *
+ *
  * @package QuickBooks
  * @subpackage Documentation
  */
@@ -16,12 +16,12 @@ ini_set('display_errors', 1);
 /**
  * Require the QuickBooks library
  */
-require_once dirname(__FILE__) . '/../QuickBooks.php';
+require_once dirname(__FILE__).'/../QuickBooks.php';
 
 /**
  * Require some IPP/OAuth configuration data
  */
-require_once dirname(__FILE__) . '/example_ipp_config.php';
+require_once dirname(__FILE__).'/example_ipp_config.php';
 
 // Instantiate our Intuit Anywhere auth handler 
 // 
@@ -35,14 +35,11 @@ require_once dirname(__FILE__) . '/example_ipp_config.php';
 $IntuitAnywhere = new QuickBooks_IPP_IntuitAnywhere($dsn, $encryption_key, $oauth_consumer_key, $oauth_consumer_secret, $this_url, $that_url);
 
 // Try to handle the OAuth request 
-if ($IntuitAnywhere->handle($the_username, $the_tenant))
-{
-	; // The user has been connected, and will be redirected to $that_url automatically. 
-}
-else
-{
-	// If this happens, something went wrong with the OAuth handshake
-	die('Oh no, something bad happened: ' . $IntuitAnywhere->errorNumber() . ': ' . $IntuitAnywhere->errorMessage());
+if ($IntuitAnywhere->handle($the_username, $the_tenant)) {
+  ; // The user has been connected, and will be redirected to $that_url automatically.
+} else {
+  // If this happens, something went wrong with the OAuth handshake
+  die('Oh no, something bad happened: '.$IntuitAnywhere->errorNumber().': '.$IntuitAnywhere->errorMessage());
 }
 
 

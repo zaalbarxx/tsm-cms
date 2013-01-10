@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Example of generating QuickBooks *.QWC files 
- * 
+ * Example of generating QuickBooks *.QWC files
+ *
  * @author Keith Palmer <keith@consolibyte.com>
- * 
+ *
  * @package QuickBooks
  * @subpackage Documentation
  */
@@ -18,27 +18,25 @@ ini_set('display_errors', 1);
  */
 require_once '../QuickBooks.php';
 
-$name = 'QuickBooks SQL Mirror - ' . $_SERVER['HTTP_HOST'];			// A name for your server (make it whatever you want)
-$descrip = 'QuickBooks SQL Mirror - ' . $_SERVER['HTTP_HOST'];		// A description of your server 
+$name = 'QuickBooks SQL Mirror - '.$_SERVER['HTTP_HOST']; // A name for your server (make it whatever you want)
+$descrip = 'QuickBooks SQL Mirror - '.$_SERVER['HTTP_HOST']; // A description of your server
 
 //$appurl = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];		// This *must* be httpS:// (path to your QuickBooks SOAP server)
 //$appsupport = 'https://' . $_SERVER['HTTP_HOST'] . '/store/quickbooks/server.php?support=1'; 		// This *must* be httpS:// and the domain name must match the domain name above
 
 // This *must* be httpS:// (path to your QuickBooks SOAP server)
-$appurl = 'https://' . str_replace('//', '/', $_SERVER['HTTP_HOST'] . '' . dirname($_SERVER['REQUEST_URI']) . '/example_mysql_mirror.php');
-if (false !== strpos($_SERVER['HTTP_HOST'], 'localhost'))
-{
-	$appurl = str_replace('https://', 'http://', $appurl);
+$appurl = 'https://'.str_replace('//', '/', $_SERVER['HTTP_HOST'].''.dirname($_SERVER['REQUEST_URI']).'/example_mysql_mirror.php');
+if (false !== strpos($_SERVER['HTTP_HOST'], 'localhost')) {
+  $appurl = str_replace('https://', 'http://', $appurl);
 }
 
-$appsupport = $appurl . '?support=1'; 
-if (false !== strpos($appurl, '?'))
-{
-	// This *must* be httpS:// and the domain name must match the domain name above
-	$appsupport = $appurl . '&support=1';
+$appsupport = $appurl.'?support=1';
+if (false !== strpos($appurl, '?')) {
+  // This *must* be httpS:// and the domain name must match the domain name above
+  $appsupport = $appurl.'&support=1';
 }
 
-$username = 'quickbooks';		// This is the username you stored in the 'quickbooks_user' table by using QuickBooks_Utilities::createUser()
+$username = 'quickbooks'; // This is the username you stored in the 'quickbooks_user' table by using QuickBooks_Utilities::createUser()
 
 //$fileid = '57F3B9B6-86F1-4FCC-B1FF-966DE1813D20';		// Just make this up, but make sure it keeps that format
 //$ownerid = '57F3B9B6-86F1-4FCC-B1FF-166DE1813D20';		// Just make this up, but make sure it keeps that format
@@ -46,7 +44,7 @@ $username = 'quickbooks';		// This is the username you stored in the 'quickbooks
 $fileid = QuickBooks_WebConnector_QWC::GUID();
 $ownerid = QuickBooks_WebConnector_QWC::GUID();
 
-$qbtype = QUICKBOOKS_TYPE_QBFS;	// You can leave this as-is unless you're using QuickBooks POS
+$qbtype = QUICKBOOKS_TYPE_QBFS; // You can leave this as-is unless you're using QuickBooks POS
 
 $readonly = false; // No, we want to write data to QuickBooks
 
@@ -59,6 +57,6 @@ $xml = $QWC->generate();
 // Send as a file download
 //header('Content-Type: text/plain');
 header('Content-type: text/xml');
-header('Content-Disposition: attachment; filename="QuickBooks-SQL-Mirror_' . $_SERVER['HTTP_HOST'] . '.qwc"');
+header('Content-Disposition: attachment; filename="QuickBooks-SQL-Mirror_'.$_SERVER['HTTP_HOST'].'.qwc"');
 print($xml);
 exit;

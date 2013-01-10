@@ -4,13 +4,13 @@ $courseInfo = $course->getInfo();
 $periods = $currentCampus->getPeriods();
 $teachers = $currentCampus->getTeachers();
 
-if(!isset($searchq)){
+if (!isset($searchq)) {
   $searchq = null;
 }
 
-if(isset($addPeriod)){
-  if($course->addPeriod($addPeriod,$teacher_id)){
-    die("1");  
+if (isset($addPeriod)) {
+  if ($course->addPeriod($addPeriod, $teacher_id)) {
+    die("1");
   } else {
     die("0");
   }

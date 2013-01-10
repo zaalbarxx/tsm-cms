@@ -22,15 +22,13 @@ define('QUICKBOOKS_FRAMEWORKS', QUICKBOOKS_FRAMEWORK_QUEUE);
 
 require_once 'QuickBooks.php';
 
-print('TIME: ' . (microtime(true) - $start) . "\n\n");
+print('TIME: '.(microtime(true) - $start)."\n\n");
 
-print('VERSION: ' . QUICKBOOKS_PACKAGE_VERSION . "\n\n");
+print('VERSION: '.QUICKBOOKS_PACKAGE_VERSION."\n\n");
 
 $classes = get_declared_classes();
-foreach ($classes as $class)
-{
-	if (false !== strpos($class, 'QuickBooks'))
-	{
-		print("\t" . $class . "\n");
-	}
+foreach ($classes as $class) {
+  if (false !== strpos($class, 'QuickBooks')) {
+    print("\t".$class."\n");
+  }
 }

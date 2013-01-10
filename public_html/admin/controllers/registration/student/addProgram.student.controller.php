@@ -3,15 +3,15 @@ $student = new TSM_REGISTRATION_STUDENT($student_id);
 $studentInfo = $student->getInfo();
 $eligiblePrograms = $student->getEligiblePrograms();
 
-if(!isset($searchq)){
+if (!isset($searchq)) {
   $searchq = null;
 }
 
 $student->setUseRecordedFees(false);
 
-if(isset($enrollInProgram)){
-  if($student->enrollInProgram($enrollInProgram)){
-    die("1");  
+if (isset($enrollInProgram)) {
+  if ($student->enrollInProgram($enrollInProgram)) {
+    die("1");
   } else {
     die("0");
   }

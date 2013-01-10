@@ -20,7 +20,7 @@ $IPP->application($Context, $application);
 //$IPP->useIDSParser(false);
 
 
-$Service = new QuickBooks_IPP_Service_Employee(); 
+$Service = new QuickBooks_IPP_Service_Employee();
 
 
 $Employee = $Service->findById($Context, $realmID, '{NG-124029}');
@@ -33,7 +33,6 @@ print($Service->lastResponse($Context));
 print("\n\n\n\n\n");
 
 exit;
-
 
 
 $Employee = new QuickBooks_IPP_Object_Employee();
@@ -58,8 +57,7 @@ $Employee->setPhone($Phone);
 //$Employee->setFamilyName('Palmer');
 
 
-
-$Address = new 	QuickBooks_IPP_Object_Address();
+$Address = new   QuickBooks_IPP_Object_Address();
 $Address->setLine1('56 Cowles Road');
 $Address->setCity('Willington');
 $Address->setState('CT');
@@ -68,16 +66,13 @@ $Address->setTag('Billing');
 
 $Employee->addAddress($Address);
 
-$Employee->setName('Tom Anderson ' . mt_rand(0, 100));
+$Employee->setName('Tom Anderson '.mt_rand(0, 100));
 
 
-if ($Id = $Service->add($Context, $realmID, $Employee))
-{
-	print('NEW EMPLOYEE: #' . $Id);
-}
-else
-{
-	print('An error occurred {' . $Service->errorNumber() . ': ' . $Service->errorMessage() . '}' . "\n");
+if ($Id = $Service->add($Context, $realmID, $Employee)) {
+  print('NEW EMPLOYEE: #'.$Id);
+} else {
+  print('An error occurred {'.$Service->errorNumber().': '.$Service->errorMessage().'}'."\n");
 }
 
 
@@ -98,11 +93,10 @@ print($Service->lastRequest($Context));
 print("\n\n\n\n\n");
 print($Service->lastResponse($Context));
 
-foreach ($list as $Employee)
-{
-	print('Employee: ' . $Employee->getId() . ', ' . $Employee->getName() . "\n\n");
-	$Id = $Employee->getId();
-	break;
+foreach ($list as $Employee) {
+  print('Employee: '.$Employee->getId().', '.$Employee->getName()."\n\n");
+  $Id = $Employee->getId();
+  break;
 }
 
 

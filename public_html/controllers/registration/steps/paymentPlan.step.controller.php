@@ -1,8 +1,8 @@
 <?php
-if(isset($savePaymentPlans)){
-	$family->savePaymentPlans();
-	$family->moveToNextStep();
-	header("Location: index.php?com=registration");
+if (isset($savePaymentPlans)) {
+  $family->savePaymentPlans();
+  $family->moveToNextStep();
+  header("Location: index.php?com=registration");
 }
 
 $regPaymentPlans = $currentCampus->getPaymentPlans(2);

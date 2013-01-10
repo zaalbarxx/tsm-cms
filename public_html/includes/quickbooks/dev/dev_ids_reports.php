@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL | E_STRICT);
@@ -18,7 +18,6 @@ $IPP = new QuickBooks_IPP();
 $Context = $IPP->authenticate($username, $password, $token);
 
 $IPP->application($Context, 'be9mh7qd5');
-
 
 
 //print_r($Context);
@@ -44,24 +43,21 @@ $Report = $Service->report($Context, $realmID);
 
 
 print("\n\n");
-print('report has [' . $Report->getColumnCount() . '] columns and [' . $Report->getRowCount() . '] rows' . "\n\n");
+print('report has ['.$Report->getColumnCount().'] columns and ['.$Report->getRowCount().'] rows'."\n\n");
 
 // Print the columns
-for ($i = 0; $i < $Report->getColumnCount(); $i++)
-{
-	print(str_pad($Report->getColDesc($i)->getColTitle(), 25));
+for ($i = 0; $i < $Report->getColumnCount(); $i++) {
+  print(str_pad($Report->getColDesc($i)->getColTitle(), 25));
 }
 
 print("\n");
-	
-for ($i = 0; $i < $Report->getRowCount(); $i++)
-{
-	for ($j = 0; $j < $Report->getColumnCount(); $j++)
-	{
-		print(str_pad($Report->getData()->getDataRow($i)->getColumnData($j), 25));
-	}
-	
-	print("\r\n");
+
+for ($i = 0; $i < $Report->getRowCount(); $i++) {
+  for ($j = 0; $j < $Report->getColumnCount(); $j++) {
+    print(str_pad($Report->getData()->getDataRow($i)->getColumnData($j), 25));
+  }
+
+  print("\r\n");
 }
 
 

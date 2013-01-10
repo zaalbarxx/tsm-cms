@@ -1,8 +1,8 @@
 <?php
 
-require_once dirname(__FILE__) . '/../mockci.php';
-require_once dirname(__FILE__) . '/../controllers/quickbooks.php';
-require_once dirname(__FILE__) . '/../controllers/mydemo.php';
+require_once dirname(__FILE__).'/../mockci.php';
+require_once dirname(__FILE__).'/../controllers/quickbooks.php';
+require_once dirname(__FILE__).'/../controllers/mydemo.php';
 
 $tmp = new QuickBooks();
 $tmp->qbwc();

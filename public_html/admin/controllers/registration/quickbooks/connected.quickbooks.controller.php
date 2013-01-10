@@ -1,7 +1,7 @@
 <?php
-if(isset($saveQuickbooksStatus)){
-	$currentCampus->saveCampus();
-	$message = "Your Quickbooks status has been successfully saved.";
+if (isset($saveQuickbooksStatus)) {
+  $currentCampus->saveCampus();
+  $message = "Your Quickbooks status has been successfully saved.";
 }
 $campusInfo = $currentCampus->getInfo();
 
