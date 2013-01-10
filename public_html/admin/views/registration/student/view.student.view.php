@@ -34,12 +34,12 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 				<div class="itemDetails" style="display: block;">
 					<br />
 					<table class="dataTable">
-						<tr class="header"><td>Course Name</td><td>Period</td><td>Teacher</td><td>Tuition</td><td>Registration</td></tr>
+						<tr class="header"><td>Course Name</td><td>Period</td><td>Teacher</td><td>Tuition</td><td>Registration</td><td></td></tr>
 						<?php 
 						$i = 1;
 						if($program['courses']){
 							foreach($program['courses'] as $course){
-								echo "<tr><td>".$i.". ".$course['name']."</td><td>".$tsm->intToDay($course['day']).". ".date("g:ia",strtotime($course['start_time']))." - ".date("g:ia",strtotime($course['end_time']))."</td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td></tr>";
+								echo "<tr><td>".$i.". ".$course['name']."</td><td>".$tsm->intToDay($course['day']).". ".date("g:ia",strtotime($course['start_time']))." - ".date("g:ia",strtotime($course['end_time']))."</td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?com=registration&ajax=unenrollStudentFromCourse&course_id=".$course['course_id']."\" title=\"Unenroll From This Course\" class=\"button deleteButton\"></a></td></tr>";
 								$i++;
 							}
 						} else {
@@ -77,19 +77,28 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 	
 </div>
 <script type="text/javascript">
-$(".bigItem .title").click( function(){
-  $(this).parent().children(".itemDetails").slideToggle();
-});
-$(".showDetails").click( function(){
-		if($(this).html() == "Show Details"){
-			$(this).parent().children(".bigItem").children(".itemDetails").show(500);
-			$(this).html("Hide Details");
-		} else {
-			$(this).parent().children(".bigItem").children(".itemDetails").hide(500);
-			$(this).html("Show Details");
-		}
-		
-		
-		return false;
-});
+  $(".bigItem .title").click( function(){
+    $(this).parent().children(".itemDetails").slideToggle();
+  });
+  $(".showDetails").click( function(){
+      if($(this).html() == "Show Details"){
+        $(this).parent().children(".bigItem").children(".itemDetails").show(500);
+        $(this).html("Hide Details");
+      } else {
+        $(this).parent().children(".bigItem").children(".itemDetails").hide(500);
+        $(this).html("Show Details");
+      }
+
+      return false;
+  });
+  $(".button").click (function (){
+      $.get($(this).attr('href'), function(data){
+          if(data == "1"){
+              window.location.reload();
+          } else {
+              alert("Fees cannot yet be deleted. This feature is not yet complete.");
+          }
+      });
+      return false;
+  });
 </script>

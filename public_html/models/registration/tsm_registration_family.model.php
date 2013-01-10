@@ -252,7 +252,29 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS{
   	$q = "INSERT INTO tsm_reg_families_invoices (family_id,payment_plan_id) VALUES('".$this->familyId."','$payment_plan_id')";
   	$this->db->runQuery($q);
   	$invoice_id = mysql_insert_id();
-  	
+
+    //If the campus uses quickbooks, we have to create the invoice in quickbooks as well.
+    $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
+    if($campus->usesQuickbooks() == true){
+      /*
+      global $quickbooks;
+      $invoice = new QuickBooks_IPP_Object_Invoice();
+      $invoiceHeader = new QuickBooks_IPP_Object_Header();
+      $invoiceHeader->setCustomerId($this->info['quickbooks_customer_id']);
+
+      $invoice->addHeader($invoiceHeader);
+      $Line = new QuickBooks_IPP_Object_Line();
+      $Line->setItemId('{QB-162}');
+      $Line->setQty(1);
+      //$Line->setOverrideItemAccountName("test");
+
+      $invoice->addLine($Line);
+
+      $service = new QuickBooks_IPP_Service_Invoice();
+      $service->add($quickbooks->Context,$quickbooks->creds['qb_realm'],$invoice);
+      */
+    }
+
   	return $invoice_id;
   }
   

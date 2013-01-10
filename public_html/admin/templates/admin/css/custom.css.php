@@ -304,6 +304,16 @@ label{
 .bigItem .buttons .deleteButton{
   background: url(../images/icons/stop24.png);
 }
+.button{
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat !important;
+}
+.deleteButton{
+background: url(../images/icons/stop24.png);
+}
 
 .bigItem .itemDetails{
   padding: 30px;
@@ -330,6 +340,13 @@ label{
 }
 .dataTable tr.header{
 	font-weight: bold;
+  font-size: 15px;
+}
+.dataTable td{
+  font-size: 13px;
+}
+.dataTable tr td{
+  font-size: 15px;
 }
 .med_button{
 	display: inline-block;

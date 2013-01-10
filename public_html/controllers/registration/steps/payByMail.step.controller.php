@@ -17,6 +17,10 @@ if($plan_to_process == null){
 $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($plan_to_process);
 $planInfo = $paymentPlan->getInfo();
 $planFeeTypes = $paymentPlans[$plan_to_process];
+$invoices = $family->getInvoicesByPaymentPlan($plan_to_process);
+$firstInvoice = $invoices[0];
+$campusInfo = $currentCampus->getInfo();
+
 
 if(isset($setupComplete)){
 	$family->completePaymentPlanSetup($plan_to_process);

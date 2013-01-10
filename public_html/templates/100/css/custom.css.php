@@ -286,6 +286,14 @@ fieldset{
   margin-left: 10px;
  	background-repeat: no-repeat !important;
 }
+.button{
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+  background-repeat: no-repeat !important;
+}
 .bigItem .buttons a:hover{
   top: -2px;
 }
@@ -300,6 +308,9 @@ fieldset{
 }
 .bigItem .buttons .deleteButton{
   background: url(../images/icons/stop24.png);
+}
+.deleteButton{
+background: url(../images/icons/stop24.png);
 }
 
 .bigItem .itemDetails{
