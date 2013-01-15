@@ -53,6 +53,7 @@ if ($reg->family->isLoggedIn() == false) {
   }
 } else {
   $currentCampus = new TSM_REGISTRATION_CAMPUS($family->getCampusId());
+  $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
   //if the family has not completed the registration process, send them to the first step.
   if ($family->getCurrentStep() != 0) {
     require_once(__TSM_ROOT__."controllers/registration/steps/step.controller.php");

@@ -1,5 +1,6 @@
 <?php
 $paymentPlans = $family->getPaymentPlans(1);
+$familyInfo = $family->getInfo();
 $plan_to_process = null;
 foreach ($paymentPlans as $payment_plan_id => $fee_types) {
   foreach ($fee_types as $fee_type_id => $setup_complete) {
@@ -48,15 +49,45 @@ foreach ($planFeeTypes as $fee_type_id => $value) {
 
 $invoices = $family->getInvoicesByPaymentPlan($plan_to_process);
 if ($invoices == null) {
-  $invoice_id = $family->createInvoice($plan_to_process);
-  $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+  //$invoice_id = $family->createInvoice($plan_to_process);
+  //$invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+
+  $quickbooksInvoice = new QuickBooks_IPP_Object_Invoice();
+  $invoiceHeader = new QuickBooks_IPP_Object_Header();
+  $invoiceHeader->setCustomerId($familyInfo['quickbooks_customer_id']);
+  $quickbooksInvoice->addHeader($invoiceHeader);
+
   foreach ($planFeeTypes as $fee_type_id => $array) {
     $familyFees = $family->getFees($fee_type_id);
     foreach ($familyFees as $fee) {
-      $invoice->addFee($fee['family_fee_id']);
+      $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
+      $feeInfo = $feeObject->getInfo();
+      //$invoice->addFee($fee['family_fee_id']);
+
+      $Line = new QuickBooks_IPP_Object_Line();
+      $Line->setItemId($feeInfo['quickbooks_item_id']);
+      $Line->setQty(1);
+      $quickbooksInvoice->addLine($Line);
+
     }
   }
-  $invoice->updateTotal();
+  //$invoice->updateTotal();
+
+  $service = new QuickBooks_IPP_Service_Invoice();
+  $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooksInvoice);
+  //$allInvoices = $service->findAll($quickbooks->Context,$quickbooks->creds['qb_realm']);
+  //$allInvoices = $service->findById($quickbooks->Context,$quickbooks->creds['qb_realm'],'{NG-258945}');
+  //print_r($allInvoices);
+  $parser = new QuickBooks_XML_Parser($service->lastResponse());
+
+  $Doc = $parser->parse(0, '');
+  echo "got here";
+  $Root = $Doc->getRoot();
+  print_r($Root);
+
+  //print_R( $service->lastResponse());
+  //die("got here");
+  die();
 } else {
   $invoice_id = $invoices[0]['family_invoice_id'];
 }
