@@ -22,7 +22,7 @@ if (!$family->isLoggedIn()) {
         $newFamily->addToSchoolYear($currentCampus->getCurrentSchoolYear());
         if ($newFamily->moveToNextStep()) {
           $family->login($primary_email, $password, $campus_id);
-          //header("Location: index.php");
+          header("Location: index.php?com=registration");
         } else {
           die("Error moving to the next step.");
         }

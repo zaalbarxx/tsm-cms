@@ -54,6 +54,7 @@
                 href="index.php?action=payByMail&invoice_id=<?php echo $invoice_id; ?>" class="submitButton fb"
                 style="text-decoration: none;">Pay By Mail</a>
         </div>
+
         <br/><br/>
     </div>
 </div>

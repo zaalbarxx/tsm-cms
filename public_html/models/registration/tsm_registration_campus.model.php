@@ -98,8 +98,12 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $this->periods;
   }
 
-  public function getTeachers() {
-    $q = "SELECT * FROM tsm_reg_teachers t, tsm_reg_teachers_school_years tsy WHERE tsy.teacher_id = t.teacher_id AND t.campus_id = ".$this->campusId." AND tsy.school_year = '".$this->info['current_school_year']."' ORDER BY last_name, first_name";
+  public function getTeachers($options = null) {
+    if ($options['showAll'] == 1) {
+      $q = "SELECT * FROM tsm_reg_teachers t, tsm_reg_teachers_school_years tsy WHERE tsy.teacher_id = t.teacher_id AND t.campus_id = ".$this->campusId." ORDER BY last_name, first_name";
+    } else {
+      $q = "SELECT * FROM tsm_reg_teachers t, tsm_reg_teachers_school_years tsy WHERE tsy.teacher_id = t.teacher_id AND t.campus_id = ".$this->campusId." AND tsy.school_year = '".$this->info['current_school_year']."' ORDER BY last_name, first_name";
+    }
     $r = $this->db->runQuery($q);
     $this->teachers = null;
     while ($a = mysql_fetch_assoc($r)) {
@@ -357,6 +361,32 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
   public function saveCourse($courseId) {
     if (isset($_POST['name']) && isset($_POST["website_id"]) && isset($_POST['school_year'])) {
       if ($this->db->updateRowFromPost("tsm_reg_courses", $courseId)) {
+        return true;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      }
+    } else {
+      die("not all fields required.");
+    }
+  }
+
+  public function createTeacher() {
+    if (isset($_POST['first_name']) && isset($_POST["last_name"]) && isset($_POST['campus_id'])) {
+      if ($teacher_id = $this->db->insertRowFromPost("tsm_reg_teachers")) {
+        return $teacher_id;
+      } else {
+        //THERE WAS AN ERROR INSERTING THE ROW
+        die("uhoh");
+      }
+    } else {
+      die("not all fields required.");
+    }
+  }
+
+  public function saveTeacher($teacherId) {
+    if (isset($_POST['first_name']) && isset($_POST["last_name"]) && isset($_POST['campus_id'])) {
+      if ($this->db->updateRowFromPost("tsm_reg_teachers", $teacherId)) {
         return true;
       } else {
         //THERE WAS AN ERROR INSERTING THE ROW

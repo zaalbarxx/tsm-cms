@@ -10,7 +10,7 @@ foreach ($paymentPlans as $payment_plan_id => $fee_types) {
 }
 
 if ($plan_to_process == null) {
-  $family->moveToStep(7);
+  $family->moveToStep(0);
   header("Location: index.php?com=registration");
 }
 
@@ -24,5 +24,6 @@ $campusInfo = $currentCampus->getInfo();
 
 if (isset($setupComplete)) {
   $family->completePaymentPlanSetup($plan_to_process);
+  header("Location: index.php?com=registration");
 }
 ?>

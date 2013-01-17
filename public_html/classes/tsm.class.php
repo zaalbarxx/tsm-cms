@@ -376,6 +376,7 @@ class TSM {
     $this->adminHeaderHTML .= "
     <script type=\"text/javascript\" src=\"../includes/jquery.tooltip/jquery.tooltip.min.js\"></script>
     <link rel=\"stylesheet\" href=\"../includes/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
+    <script type=\"text/javascript\" src=\"../includes/jquery_implementation.js\"></script>
     ";
     $this->adminHeaderHTML .= "<script type=\"text/javascript\">
 		$(document).ready( function(){

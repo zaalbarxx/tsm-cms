@@ -22,7 +22,7 @@ class TSM_REGISTRATION {
   }
 
   public function setSelectedSchoolYear($school_year) {
-    echo "set school year to: ".$school_year;
+    //echo "set school year to: ".$school_year;
     $_SESSION['reg']['selectedSchoolYear'] = $school_year;
     $this->selectedSchoolYear = $_SESSION['reg']['selectedSchoolYear'];
 

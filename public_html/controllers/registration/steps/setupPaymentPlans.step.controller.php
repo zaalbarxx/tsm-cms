@@ -48,47 +48,31 @@ foreach ($planFeeTypes as $fee_type_id => $value) {
 }
 
 $invoices = $family->getInvoicesByPaymentPlan($plan_to_process);
-if ($invoices == null) {
-  //$invoice_id = $family->createInvoice($plan_to_process);
-  //$invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 
-  $quickbooksInvoice = new QuickBooks_IPP_Object_Invoice();
-  $invoiceHeader = new QuickBooks_IPP_Object_Header();
-  $invoiceHeader->setCustomerId($familyInfo['quickbooks_customer_id']);
-  $quickbooksInvoice->addHeader($invoiceHeader);
+if ($invoices == null) {
+  $invoice_id = $family->createInvoice($plan_to_process);
+  $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 
   foreach ($planFeeTypes as $fee_type_id => $array) {
     $familyFees = $family->getFees($fee_type_id);
     foreach ($familyFees as $fee) {
       $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
       $feeInfo = $feeObject->getInfo();
-      //$invoice->addFee($fee['family_fee_id']);
-
-      $Line = new QuickBooks_IPP_Object_Line();
-      $Line->setItemId($feeInfo['quickbooks_item_id']);
-      $Line->setQty(1);
-      $quickbooksInvoice->addLine($Line);
-
+      $invoice->addFee($fee['family_fee_id']);
     }
   }
-  //$invoice->updateTotal();
-
-  $service = new QuickBooks_IPP_Service_Invoice();
-  $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooksInvoice);
-  //$allInvoices = $service->findAll($quickbooks->Context,$quickbooks->creds['qb_realm']);
-  //$allInvoices = $service->findById($quickbooks->Context,$quickbooks->creds['qb_realm'],'{NG-258945}');
-  //print_r($allInvoices);
-  $parser = new QuickBooks_XML_Parser($service->lastResponse());
-
-  $Doc = $parser->parse(0, '');
-  echo "got here";
-  $Root = $Doc->getRoot();
-  print_r($Root);
-
-  //print_R( $service->lastResponse());
-  //die("got here");
-  die();
+  $invoice->updateTotal();
+  if (isset($familyInfo['quickbooks_customer_id']) && $currentCampus->usesQuickbooks()) {
+    $invoice->addToQuickbooks();
+  }
 } else {
   $invoice_id = $invoices[0]['family_invoice_id'];
+  //$invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+  //$invoiceInfo = $invoice->getInfo();
+  //$invoiceService = new QuickBooks_IPP_Service_Invoice();
+  //$qbInvoice = $invoiceService->findById($quickbooks->Context,$quickbooks->creds['qb_realm'],$invoiceInfo['quickbooks_invoice_id']);
+  //echo $invoiceService->lastResponse();
+
+  //die();
 }
 ?>

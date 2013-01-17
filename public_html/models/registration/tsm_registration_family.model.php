@@ -251,7 +251,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   public function createInvoice($payment_plan_id) {
     $q = "INSERT INTO tsm_reg_families_invoices (family_id,payment_plan_id) VALUES('".$this->familyId."','$payment_plan_id')";
     $this->db->runQuery($q);
-    $invoice_id = mysql_insert_id();
+    $invoice_id = mysql_insert_id($this->db->conn);
 
     //If the campus uses quickbooks, we have to create the invoice in quickbooks as well.
     $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());

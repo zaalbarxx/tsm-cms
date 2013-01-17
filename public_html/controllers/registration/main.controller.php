@@ -52,6 +52,7 @@ if ($reg->family->isLoggedIn() == false) {
     $activeView = __TSM_ROOT__."views/registration/login.view.php";
   }
 } else {
+  $reg->setCurrentCampusId($family->getCampusId());
   $currentCampus = new TSM_REGISTRATION_CAMPUS($family->getCampusId());
   $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
   //if the family has not completed the registration process, send them to the first step.

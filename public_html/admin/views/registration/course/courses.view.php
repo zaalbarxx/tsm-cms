@@ -10,7 +10,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       if ($courseList) {
         foreach ($courseList as $course) {
           ?>
-            <div class="bigItem">
+            <div class="smallItem">
                 <a class="title"
                    href="index.php?com=registration&view=courses&action=viewCourse&course_id=<?php echo $course['course_id']; ?>"><?php echo $course['name']; ?></a>
                 <span class="buttons"><a

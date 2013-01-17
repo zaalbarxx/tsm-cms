@@ -66,6 +66,8 @@ switch ($family->getCurrentStep()) {
           $activeView = __TSM_ROOT__."views/registration/steps/payByMail.step.view.php";
           break;
         case "payOnline":
+          require_once(__TSM_ROOT__."controllers/registration/steps/payOnline.step.controller.php");
+          $activeView = __TSM_ROOT__."views/registration/steps/payOnline.step.view.php";
           break;
       }
     } else {

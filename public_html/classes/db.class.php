@@ -47,7 +47,7 @@ class Db {
     $values .= ")";
     $insertq = $insertq.$fields.$values;
     if ($this->runQuery($insertq)) {
-      return mysql_insert_id();
+      return mysql_insert_id($this->conn);
     } else {
       return false;
     }

@@ -8,25 +8,26 @@
 </div>
 <div style="clear: both; width: 100%;">
   <?php
-  /*
-    if($_SERVER['SERVER_NAME'] == "localhost"){
-      echo "Page created in: " . xdebug_time_index() . " seconds.<br />";
-      echo "<b><u>THE SESSION:</b></u> ";
-      var_dump($_SESSION);
-      echo "<br><b><u>THE COOKIES:</b></u> ";
-      var_dump($_COOKIE);;
-      echo "<br><b><u>THE POST:</b></u> ";
-      var_dump($_POST);
-      echo "<br><b><u>THE GET:</b></u> ";
-      var_dump($_GET);
-      //echo "<br /><b><u>Page Headers:</u></b> ";
-      //var_dump(xdebug_get_headers());
-      echo "<br /><b><u>Memory Used:</u></b> ".xdebug_peak_memory_usage();
-      //var_dump(xdebug_get_code_coverage());
-      echo "<br /><br><b><u>THE CURRENTLY DECLARED VARIABLES:</b></u> ";
-      var_dump(xdebug_get_declared_vars());
-    }
-    */
+
+  if ($_SERVER['SERVER_NAME'] == "localhost") {
+    echo "Page created in: ".xdebug_time_index()." seconds.<br />";
+    echo "<b><u>THE SESSION:</b></u> ";
+    var_dump($_SESSION);
+    echo "<br><b><u>THE COOKIES:</b></u> ";
+    var_dump($_COOKIE);
+    ;
+    echo "<br><b><u>THE POST:</b></u> ";
+    var_dump($_POST);
+    echo "<br><b><u>THE GET:</b></u> ";
+    var_dump($_GET);
+    //echo "<br /><b><u>Page Headers:</u></b> ";
+    //var_dump(xdebug_get_headers());
+    echo "<br /><b><u>Memory Used:</u></b> ".xdebug_peak_memory_usage();
+    //var_dump(xdebug_get_code_coverage());
+    echo "<br /><br><b><u>THE CURRENTLY DECLARED VARIABLES:</b></u> ";
+    var_dump(xdebug_get_declared_vars());
+  }
+
   ?>
 </div>
 </div>
