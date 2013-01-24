@@ -222,19 +222,29 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   public function savePaymentPlans() {
     if ($this->deletePaymentPlans()) {
       foreach ($_POST as $key => $value) {
-        if (strstr($key, 'fee_type_id')) {
-          $fee_type_id = explode("_", $key);
-          $fee_type_id = $fee_type_id[3];
-          $_POST['fee_type_id'] = $fee_type_id;
-          $_POST['payment_plan_id'] = $value;
-          $_POST['school_year'] = $this->getSelectedSchoolYear();
-          $_POST['family_id'] = $this->familyId;
-          $family_payment_plan_id = $this->db->insertRowFromPost("tsm_reg_families_payment_plans");
+        if ($value != "") {
+          if (strstr($key, 'fee_type_id')) {
+            $fee_type_id = explode("_", $key);
+            $fee_type_id = $fee_type_id[3];
+            $_POST['fee_type_id'] = $fee_type_id;
+            $_POST['payment_plan_id'] = $value;
+            $_POST['school_year'] = $this->getSelectedSchoolYear();
+            $_POST['family_id'] = $this->familyId;
+            $family_payment_plan_id = $this->db->insertRowFromPost("tsm_reg_families_payment_plans");
+          }
+        } else {
+          $error = true;
+          break;
         }
       }
     }
 
-    return true;
+    if (!isset($error)) {
+      return true;
+    } else {
+      return false;
+    }
+
   }
 
   public function getInvoicesByPaymentPlan($payment_plan_id) {

@@ -10,14 +10,22 @@
         <h2><?php echo $studentInfo['last_name'].", ".$studentInfo['first_name']; ?></h2>
 
         <div class="two-thirds">
-            <span class="label">Nickname:</span> <?php echo $studentInfo['nickname']; ?><br/>
+            <span class="label">Nickname:</span> <?php if ($studentInfo['nickname'] == "") {
+          echo "N/A";
+        } else {
+          echo $studentInfo['nickname'];
+        } ?><br/>
             <span class="label">Age:</span> <?php echo $studentInfo['age']; ?><br/>
             <span class="label">Grade:</span> <?php echo $studentInfo['grade']; ?><br/>
-            <span class="label">E-mail Address:</span> <?php echo $studentInfo['email']; ?>
+            <span class="label">E-mail Address:</span> <?php if ($studentInfo['nickname'] == "") {
+          echo "N/A";
+        } else {
+          echo $studentInfo['email'];
+        } ?>
         </div>
-        <div class="one-third">
+        <!--<div class="one-third">
             <span class="label">Status: </span><?php echo $studentStatus; ?>
-        </div>
+        </div>-->
 
         <br style="width: 100%; clear: both;"/>
         <br style="width: 100%; clear: both;"/>

@@ -9,6 +9,7 @@ class TSM_REGISTRATION_COURSE extends TSM_REGISTRATION {
   private $tuitionFees;
   private $requirements;
   private $periods;
+  private $assignedPrograms;
 
   public function __construct($courseId = null) {
     $tsm = TSM::getInstance();
@@ -40,6 +41,25 @@ class TSM_REGISTRATION_COURSE extends TSM_REGISTRATION {
     $this->name = $this->info['name'];
 
     return $this->name;
+  }
+
+  public function delete() {
+    if (!$this->getNumStudentsEnrolled() && !$this->getAssignedPrograms() && !$this->getFees() && !$this->getRequirements()) {
+      echo "can be deleted";
+    } else {
+      return false;
+    }
+  }
+
+  public function getAssignedPrograms() {
+    $q = "SELECT * FROM tsm_reg_course_program WHERE course_id = '".$this->courseId."'";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $this->assignedPrograms[$a['program_id']] = $a;
+    }
+
+    return $this->assignedPrograms;
+
   }
 
   public function addFee($feeId, $program_id = null) {
@@ -126,6 +146,18 @@ class TSM_REGISTRATION_COURSE extends TSM_REGISTRATION {
     return $this->periods;
   }
 
+  public function sudentsInPeriod($course_period_id) {
+    $q = "SELECT * FROM tsm_reg_student_course WHERE course_id = '".$this->courseId."' AND course_period_id = '".$course_period_id."'";
+    $r = $this->db->runQuery($q);
+    if (mysql_num_rows($r) > 0) {
+      return true;
+    } else {
+      return false;
+
+    }
+
+  }
+
   public function addPeriod($period_id, $teacher_id) {
     //Check to see if this teacher is already teaching this course and period.
     $q = "SELECT * FROM tsm_reg_course_period WHERE course_id = '".$this->courseId."' AND period_id = ".$period_id." AND teacher_id = ".$teacher_id;
@@ -148,6 +180,22 @@ class TSM_REGISTRATION_COURSE extends TSM_REGISTRATION {
   public function deleteFeeCondition($courseFeeConditionId) {
     $q = "DELETE FROM tsm_reg_course_fee_condition WHERE course_fee_condition_id = $courseFeeConditionId AND course_id = ".$this->courseId;
     $r = $this->db->runQuery($q);
+
+    return true;
+  }
+
+  public function deletePeriod($course_period_id) {
+    if (!$this->sudentsInPeriod($course_period_id)) {
+      $q = "DELETE FROM tsm_reg_course_period WHERE course_period_id = $course_period_id AND course_id = ".$this->courseId;
+      $r = $this->db->runQuery($q);
+
+      return true;
+    }
+  }
+
+  public function deleteFee($courseFeeId) {
+    $q = "DELETE FROM tsm_reg_course_fee WHERE course_fee_id = $courseFeeId AND course_id = ".$this->courseId;
+    $this->db->runQuery($q);
 
     return true;
   }

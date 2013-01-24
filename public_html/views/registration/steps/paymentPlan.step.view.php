@@ -2,7 +2,9 @@
     <h1>Choose Payment Plan</h1>
 
     <p style="text-align: center;">Please choose a payment plan for both your tuition and registration fees.</p>
-
+  <?php if (isset($errorMessage)) {
+  echo "<p style='text-align: center; color: red; font-weight: bold'>".$errorMessage."</p>";
+} ?>
     <form action="" id="paymentPlans" method="post">
         <div class="half">
             <h2 style="text-align: center;">Registration Fees</h2>

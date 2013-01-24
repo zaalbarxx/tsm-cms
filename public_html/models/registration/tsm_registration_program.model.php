@@ -4,7 +4,6 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
 
   private $programId;
   private $info;
-  private $programs;
   private $numStudentsEnrolled;
   private $fees;
   private $requirements;
@@ -46,6 +45,19 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
     $this->numStudentsEnrolled = $this->getNumStudentsEnrolled();
   }
 
+  public function delete() {
+    if (!$this->getFees(null) && !$this->hasStudents() && !$this->getCourses() && !$this->getRequirements()) {
+      $q = "DELETE FROM tsm_reg_programs WHERE program_id = '".$this->programId."'";
+      if ($this->db->runQuery($q)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
   public function getNumStudentsEnrolled($programId = null) {
     if ($this->numStudentsEnrolled == null) {
       if ($programId == null) {
@@ -78,6 +90,18 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
     }
 
     return $courseAdded;
+  }
+
+  public function removeCourse($course_id) {
+    $course = new TSM_REGISTRATION_COURSE($course_id);
+    if (!$course->getRequirements($this->programId) && !$course->getFees($this->programId, null)) {
+      $q = "DELETE FROM tsm_reg_course_program WHERE program_id = '".$this->programId."' AND course_id = '$course_id'";
+      $this->db->runQuery($q);
+
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public function getCourses() {

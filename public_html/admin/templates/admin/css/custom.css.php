@@ -41,6 +41,7 @@ margin-top: 30px;
 }
 #contentArea{
 width: 960px;
+min-height: 400px;
 background: #ddd;
 padding: 20px;
 padding-bottom: 0px;

@@ -39,6 +39,7 @@ foreach ($_POST as $key => $value) {
 
 // post back to PayPal system to validate
 $header .= "POST /cgi-bin/webscr HTTP/1.0\r\n";
+$header .= "Host: www.sandbox.paypal.com\r\n";
 $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
 $header .= "Content-Length: ".strlen($req)."\r\n\r\n";
 
@@ -48,10 +49,10 @@ $header .= "Content-Length: ".strlen($req)."\r\n\r\n";
 // comment out one of the following lines
 
 //$fp = fsockopen ('www.sandbox.paypal.com', 80, $errno, $errstr, 30);
-$fp = fsockopen('www.paypal.com', 80, $errno, $errstr, 30);
+//$fp = fsockopen('www.paypal.com', 80, $errno, $errstr, 30);
 
 // or use port 443 for an SSL connection
-//$fp = fsockopen ('ssl://www.paypal.com', 443, $errno, $errstr, 30);
+$fp = fsockopen('ssl://www.sandbox.paypal.com', 443, $errno, $errstr, 30);
 
 if (!$fp) {
   // HTTP ERROR
@@ -59,7 +60,7 @@ if (!$fp) {
   fputs($fp, $header.$req);
 
   //ENABLE TESTING
-  //$test = 0;
+  //$test = 1;
   //END ENABLE TESTING 
 
   while (!feof($fp)) {
@@ -85,7 +86,7 @@ if (!$fp) {
       $item_number = $_POST['item_number'];
       $item_colour = $_POST['custom'];
       $payment_status = $_POST['payment_status'];
-      $payment_amount = $_POST['mc_gross']; //full amount of payment. payment_gross in US
+      $payment_amount = $_POST['payment_gross']; //full amount of payment. payment_gross in US
       $payment_currency = $_POST['mc_currency'];
       $txn_id = $_POST['txn_id']; //unique transaction id
       $receiver_email = $_POST['receiver_email'];
@@ -102,16 +103,18 @@ if (!$fp) {
       // use the above params to look up what the price of "item_name" should be.
 
       //LOOK UP THE CAMPUS PAYMENT INFORMATION
-      if ($parents_id != null) {
-        $piq = "SELECT c.payment_email, c.campuses_name  
-        FROM tsm_com_registration_campuses c, tsm_com_registration_parents p 
-        WHERE p.parents_id = $parents_id 
-        AND p.campuses_id = c.campuses_id";
-        $pir = mysql_query($piq) or die(mysql_error());
-        while ($pia = mysql_fetch_assoc($pir)) {
-          $campus_email = $pia['payment_email'];
-          $campuses_name = $pia['campuses_name'];
-        }
+      if ($family_id != null) {
+        //$piq = "SELECT c.payment_email, c.campuses_name
+        // FROM tsm_com_registration_campuses c, tsm_com_registration_parents p
+        // WHERE p.parents_id = $parents_id
+        //  AND p.campuses_id = c.campuses_id";
+        // $pir = mysql_query($piq) or die(mysql_error());
+        // while ($pia = mysql_fetch_assoc($pir)) {
+        //   $campus_email = $pia['payment_email'];
+        //   $campuses_name = $pia['campuses_name'];
+        // }
+        $campus_email = "jlane_1225424090_biz@veritasproductions.net";
+        $campuses_name = "Jeremy Lane's Test Store";
       } else {
         //SEND THIS E-MAIL IF THERE IS NO PARENT ID AND THE SUBJECT IS APPLICATION
         if (stristr($item_name, 'application')) {
@@ -128,7 +131,7 @@ if (!$fp) {
 
       // the next part is also very important from a security point of view
       // you must check at the least the following...
-
+      //mail("jlane@veritasproductions.net","Testing123",$receiver_email.$campus_email);
       if (($payment_status == 'Completed') && //payment_status = Completed
         ($receiver_email == $campus_email) && // receiver_email is same as your account email
         ($family_id != null) && //and the parents_id is not blank
@@ -139,11 +142,12 @@ if (!$fp) {
         // you will probably want to do some processing here such as logging the purchase in a database etc
 
         //check to make sure the transacation hasn't already been logged
-        $checkq = "SELECT family_invoice_payment_id FROM tsm_reg_families_invoice_payments WHERE paypal_transaction_id = '$txn_id'";
+
+        $checkq = "SELECT invoice_payment_id FROM tsm_reg_families_invoice_payments WHERE paypal_transaction_id = '$txn_id'";
         $checkr = $tsm->db->runQuery($checkq);
         if (mysql_num_rows($checkr) == 0) {
-          $log_payment_q = "INSERT INTO tsm_com_registration_payments (parents_id, method, payment_type, date, item_name, paypal_transaction_id, paypal_payer_email, payment_amount, school_year) 
-          VALUES ('$parents_id', '1', '$payment_type', '$payment_date', '$item_name', '$txn_id', '$payer_email', '$payment_amount', '$school_year')";
+          $log_payment_q = "INSERT INTO tsm_reg_families_invoice_payments (family_id, family_invoice_id, paypal_transaction_id,amount)
+          VALUES ($family_id, $invoice_num, '$txn_id','$payment_amount')";
           mysql_query($log_payment_q) or die(mysql_error());
           $logged = 1;
 
@@ -164,7 +168,7 @@ if (!$fp) {
         Payment Type: $payment_type\n";
         mail($mail_To, $mail_Subject, $mail_Body);
 
-      } else if ($parents_id != null) {
+      } else if ($family_id != null) {
         //
         // paypal replied with something other than completed or one of the security checks failed.
         // you might want to do some extra processing here
@@ -183,7 +187,7 @@ if (!$fp) {
         Payment amount = $payment_amount\n\n
         Currency Type: $payment_currency\n\n
         Custom Field: $custom\n\n
-        Parent ID: $parents_id\n\n
+        Family ID: $family_id\n\n
         School Year: $school_year\n\n
         Campus E-mail: $campus_email\n\n
         Receiver E-mail: $receiver_email";

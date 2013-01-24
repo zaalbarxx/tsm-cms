@@ -10,5 +10,7 @@ if ($courseFees) {
     $courseFees[$key]['conditions'] = $feeObject->getConditionsForCourse($course_id, $program_id);
   }
 }
-$pageTitle = $courseInfo['name'];
+$program = new TSM_REGISTRATION_PROGRAM($program_id);
+$programInfo = $program->getInfo();
+$pageTitle = $courseInfo['name']." in ".$programInfo['name'];
 ?>
