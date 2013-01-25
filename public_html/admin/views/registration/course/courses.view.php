@@ -2,6 +2,9 @@
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 <div class="contentWithSideBar">
+    <input id="searchItems" rel="smallItem" style="float: right; position: relative; right: 75px; top: 10px;"
+           value="Search..."/>
+
     <h1>Available Courses</h1>
         <span style="float: right; margin-top: -45px; right: 20px; position: relative;"><a
                 href="index.php?com=registration&view=courses&action=addEditCourse" class="addButton"
