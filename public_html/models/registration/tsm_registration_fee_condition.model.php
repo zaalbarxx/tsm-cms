@@ -28,6 +28,8 @@ class TSM_REGISTRATION_FEE_CONDITION extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function studentMeetsFeeCondition($student, $params = null) {
+
+    //die("got here");
     $fee_condition_type_id = $this->info['fee_condition_type_id'];
     $studentInfo = $student->getInfo();
     switch ($fee_condition_type_id) {
@@ -85,6 +87,36 @@ class TSM_REGISTRATION_FEE_CONDITION extends TSM_REGISTRATION_CAMPUS {
         break;
       //ENROLLED IN # OF CLASSES IN PROGRAM
       case "4":
+        $condition = $this->info['config_1'];
+        $specified = $this->info['config_2'];
+        $numCourses = count($student->getCoursesIn($this->info['config_3']));
+        $result = false;
+        switch ($condition) {
+          //less than
+
+          case "-1":
+            if ($numCourses < $specified) {
+              $result = true;
+            }
+
+            break;
+          //equal to
+          case "0":
+            if ($numCourses == $specified) {
+              $result = true;
+            }
+
+            break;
+          //greater than
+          case "1":
+            if ($numCourses > $specified) {
+              $result = true;
+            }
+
+            break;
+        }
+
+        return $result;
         break;
       //ENROLLED IN PROGRAM
       case "5":
@@ -161,6 +193,39 @@ class TSM_REGISTRATION_FEE_CONDITION extends TSM_REGISTRATION_CAMPUS {
           } else {
             $result = false;
           }
+        }
+
+        return $result;
+        break;
+      case "10":
+        $spotInProgram = $student->getSpotInFamilyInProgram($this->info['config_3']);
+        if ($this->info['config_1'] == "-1") {
+          if ($spotInProgram < $this->info['config_3']) {
+            $result = true;
+          } else {
+            $result = false;
+          }
+        } elseif ($this->info['config_1'] == "1") {
+          if ($spotInProgram > $this->info['config_3']) {
+            $result = true;
+          } else {
+            $result = false;
+          }
+        } elseif ($this->info['config_1'] == "0") {
+          if ($spotInProgram == $this->info['config_3']) {
+            $result = true;
+          } else {
+            $result = false;
+          }
+        }
+
+        return $result;
+        break;
+      case "11":
+        if ($student->isFirstYear()) {
+          $result = true;
+        } else {
+          $result = false;
         }
 
         return $result;

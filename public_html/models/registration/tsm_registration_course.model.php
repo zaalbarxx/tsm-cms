@@ -262,12 +262,9 @@ class TSM_REGISTRATION_COURSE extends TSM_REGISTRATION {
     return $this->requirements;
   }
 
-  public function getNumStudentsEnrolled($courseId = null) {
+  public function getNumStudentsEnrolled() {
     if ($this->numStudentsEnrolled == null) {
-      if ($courseId == null) {
-        $courseId = $this->courseId;
-      }
-      $q = "SELECT COUNT(student_id) AS num_students FROM tsm_reg_student_course WHERE course_id = ".$courseId;
+      $q = "SELECT COUNT(student_id) AS num_students FROM tsm_reg_student_course WHERE course_id = ".$this->courseId;
       $r = $this->db->runQuery($q);
       while ($a = mysql_fetch_assoc($r)) {
         $this->numStudentsEnrolled = $a['num_students'];

@@ -56,6 +56,19 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
+  public function isFirstYear() {
+    $q = "SELECT * FROM tsm_reg_students_school_years WHERE student_id = '".$this->studentId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
+    $r = $this->db->runQuery($q);
+    $result = false;
+    while ($a = mysql_fetch_assoc($r)) {
+      if ($a['first_year'] == 1) {
+        $result = true;
+      }
+    }
+
+    return $result;
+  }
+
   public function addToSchoolYear($school_year) {
     $q = "SELECT student_id FROM tsm_reg_students_school_years WHERE student_id = '".$this->studentId."' AND school_year = '".$school_year."'";
     $r = $this->db->runQuery($q);
@@ -176,7 +189,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       if (isset($fees)) {
         foreach ($fees as $fee) {
           $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
-          $feeConditions = $feeObject->getConditionsForProgram($program_id);
+          $feeConditions = $feeObject->getConditionsForCourse($course_id, $program_id);
           $params = Array('course_id' => $course_id, 'program_id' => $program_id);
           $studentEligible = $this->meetsConditions($feeConditions, $params);
           $fee['program_id'] = $program_id;
@@ -192,7 +205,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       if (isset($fees)) {
         foreach ($fees as $fee) {
           $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
-          $feeConditions = $feeObject->getConditionsForProgram($program_id);
+          $feeConditions = $feeObject->getConditionsForCourse($course_id, null);
           $params = Array('course_id' => $course_id, 'program_id' => $program_id);
           $studentEligible = $this->meetsConditions($feeConditions, $params);
           $fee['program_id'] = $program_id;
@@ -390,6 +403,24 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     return $spotInFamily;
   }
 
+  public function getSpotInFamilyInProgram($program_id) {
+    $q = "SELECT sp.student_id FROM tsm_reg_student_program sp, tsm_reg_students s
+    WHERE s.student_id = sp.student_id
+    AND s.family_id = '".$this->info['family_id']."'
+    AND sp.program_id = '$program_id'
+    ORDER BY sp.student_program_id DESC";
+    $r = $this->db->runQuery($q);
+    $i = 1;
+    while ($a = mysql_fetch_assoc($r)) {
+      if ($a['student_id'] == $this->studentId) {
+        $spotInFamily = $i;
+      }
+      $i++;
+    }
+
+    return $spotInFamily;
+  }
+
   public function getCampusId() {
     return $this->info['campus_id'];
   }
@@ -434,20 +465,22 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
 
   public function enrollInCourse($course_id, $program_id, $course_period_id) {
     if ($this->inCourse($course_id) == false) {
+
       $q = "INSERT INTO tsm_reg_student_course (student_id,course_id,program_id,course_period_id) VALUES('".$this->studentId."','".$course_id."','".$program_id."','".$course_period_id."')";
       $this->db->runQuery($q);
 
-
+      /*
       $this->setUseRecordedFees(false);
       $fees = $this->getFeesForCourse($course_id, $program_id, null);
+      $this->setUseRecordedFees(true);
       if (isset($fees)) {
         foreach ($fees as $fee) {
-          $q = "INSERT INTO tsm_reg_families_fees (family_id,student_id,program_id,course_id,fee_id,name,fee_type_id,amount,school_year) VALUES ('".$this->info['family_id']."','".$this->studentId."',".$program_id.",".$course_id.",'".$fee['fee_id']."','".$fee['name']."','".$fee['fee_type_id']."','".$fee['amount']."','".$fee['school_year']."');";
-          $this->db->runQuery($q);
+          $this->assignFee($fee['fee_id'],$program_id,$course_id);
         }
       }
-      $this->setUseRecordedFees(true);
+      */
 
+      $this->processFees();
 
       return true;
     } else {
@@ -455,25 +488,95 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
+  public function assignedFee($fee_id, $program_id, $course_id) {
+    $q = "SELECT * FROM tsm_reg_families_fees WHERE student_id = '".$this->studentId."'
+    AND fee_id = '".$fee_id."'";
+    if (!$course_id) {
+      $q .= " AND course_id IS NULL";
+    } else {
+      $q .= " AND course_id = '$course_id'";
+    }
+    if (!$program_id) {
+      $q .= " AND program_id IS NULL";
+    } else {
+      $q .= " AND program_id = '$program_id'";
+    }
+
+    $r = $this->db->runQuery($q);
+
+    if (mysql_num_rows($r) > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function assignFee($fee_id, $program_id, $course_id) {
+    if (!$this->assignedFee($fee_id, $program_id, $course_id)) {
+      $feeObject = new TSM_REGISTRATION_FEE($fee_id);
+      $feeInfo = $feeObject->getInfo();
+      if ($course_id == null) {
+        $course_id = "NULL";
+      }
+      if ($program_id == null) {
+        $program_id = "NULL";
+      }
+
+      $q = "INSERT INTO tsm_reg_families_fees (family_id,student_id,program_id,course_id,fee_id,name,fee_type_id,amount,school_year) VALUES ('".$this->info['family_id']."','".$this->studentId."',".$program_id.",".$course_id.",'".$fee_id."','".$feeInfo['name']."','".$feeInfo['fee_type_id']."','".$feeInfo['amount']."','".$this->getSelectedSchoolYear()."');";
+      $this->db->runQuery($q);
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function processFees() {
+    $this->setUseRecordedFees(false);
+    $fees = $this->getFees();
+    $this->setUseRecordedFees(true);
+    foreach ($fees as $fee) {
+      if (!isset($fee['course_id'])) {
+        $fee['course_id'] = null;
+      }
+      if (!isset($fee['program_id'])) {
+        $fee['program_id'] = null;
+      }
+
+      if (!$this->assignedFee($fee['fee_id'], $fee['program_id'], $fee['course_id'])) {
+        $addFees[] = $fee;
+      }
+
+    }
+
+    if (isset($addFees)) {
+      foreach ($addFees as $fee) {
+        $this->assignFee($fee['fee_id'], $fee['program_id'], $fee['course_id']);
+      }
+
+    }
+
+    return true;
+  }
+
   public function enrollInProgram($program_id) {
     if ($this->inProgram($program_id) == false) {
       $q = "INSERT INTO tsm_reg_student_program (student_id,program_id) VALUES('".$this->studentId."','".$program_id."')";
       $this->db->runQuery($q);
 
+      /*
       $this->setUseRecordedFees(false);
       $fees = $this->getFeesForProgramAndCourses($program_id, null);
+      $this->setUseRecordedFees(true);
       if (isset($fees)) {
         foreach ($fees as $fee) {
-          if (!isset($fee['course_id'])) {
-            $course_id = "NULL";
-          } else {
-            $course_id = $fee['course_id'];
-          }
-          $q = "INSERT INTO tsm_reg_families_fees (family_id,student_id,program_id,course_id,fee_id,name,fee_type_id,amount,school_year) VALUES ('".$this->info['family_id']."','".$this->studentId."','".$program_id."',".$course_id.",'".$fee['fee_id']."','".$fee['name']."','".$fee['fee_type_id']."','".$fee['amount']."','".$fee['school_year']."');";
-          $this->db->runQuery($q);
+          $this->assignFee($fee['fee_id'],$program_id,null);
         }
       }
-      $this->setUseRecordedFees(true);
+      */
+
+      $this->processFees();
+
 
       return true;
     } else {
