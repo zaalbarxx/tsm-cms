@@ -7,6 +7,14 @@ if (!isset($searchq)) {
   $searchq = null;
 }
 
+if (isset($addCourses)) {
+  if ($program->addCourses()) {
+    die("1");
+  } else {
+    die("0");
+  }
+}
+
 if (isset($addCourse)) {
   if ($program->addCourse($addCourse)) {
     die("1");

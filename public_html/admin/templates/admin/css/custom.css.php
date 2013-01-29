@@ -429,6 +429,10 @@ font-weight: bold;
 margin-top: -2px;
 float: right;
 }
+.smallItem .buttons input{
+position: relative;
+top: -5px;
+}
 .smallItem .buttons a{
 position: relative;
 display: inline-block;
@@ -451,6 +455,10 @@ background: url(../images/icons/pencil24.png);
 }
 .smallItem .buttons .deleteButton{
 background: url(../images/icons/stop24.png);
+}
+.smallItem .buttons .addButton{
+background: url(../images/icons/plus24.png);
+margin-bottom: 0px;
 }
 
 .smallItem .itemDetails{

@@ -3,6 +3,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 
 <div class="contentWithSideBar">
+    <input id="searchItems" rel="smallItem" style="float: right; position: relative; right: 75px; top: 10px;"
+           value="Search..."/>
+
     <h1><?php echo $pageTitle; ?></h1>
   <?php foreach ($feeConditions as $condition) { ?>
     <div class="smallItem">

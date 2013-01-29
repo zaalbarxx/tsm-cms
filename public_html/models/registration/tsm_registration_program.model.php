@@ -73,6 +73,17 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
     return $this->numStudentsEnrolled;
   }
 
+  public function addCourses() {
+    foreach ($_POST as $key => $value) {
+      $value = $this->tsm->makeVarSafe($value);
+      if (stristr($key, "course_")) {
+        $this->addCourse($value);
+      }
+    }
+
+    return true;
+  }
+
   public function addCourse($course_id) {
     //Check to see if the course has already been added to the program
     $q = "SELECT * FROM tsm_reg_course_program WHERE course_id = ".$course_id." AND program_id = ".$this->programId;

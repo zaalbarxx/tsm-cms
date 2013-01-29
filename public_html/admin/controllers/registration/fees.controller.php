@@ -31,6 +31,10 @@ switch ($action) {
   case "getConditionForm":
     require_once(__TSM_ROOT__."admin/controllers/registration/conditionForm.fees.controller.php");
     break;
+  case "addConditionToFees":
+    require_once(__TSM_ROOT__."admin/controllers/registration/addToFees.conditions.fees.controller.php");
+    $activeView = __TSM_ROOT__."admin/views/registration/addToFees.conditions.fees.view.php";
+    break;
 }
 
 ?>
