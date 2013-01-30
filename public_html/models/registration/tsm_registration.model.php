@@ -21,12 +21,41 @@ class TSM_REGISTRATION {
     return true;
   }
 
+  public function getGradeDisplay($grade) {
+    if ($grade == -1) {
+      $return = "Preschool";
+
+    } elseif ($grade == 0) {
+      $return = "Kindergarten";
+    } else {
+      $return = $grade;
+    }
+
+    return $return;
+  }
+
   public function setSelectedSchoolYear($school_year) {
     //echo "set school year to: ".$school_year;
     $_SESSION['reg']['selectedSchoolYear'] = $school_year;
     $this->selectedSchoolYear = $_SESSION['reg']['selectedSchoolYear'];
 
     return true;
+  }
+
+  public function displayPeriod($period) {
+    if ($period['start_time'] == "00:00:00" and $period['end_time'] == "00:00:00") {
+      $return = "TBD";
+      if (isset($period['first_name']) && isset($period['last_name'])) {
+        $return .= ": ".$period['first_name']." ".$period['last_name'];
+      }
+    } else {
+      $return = $this->tsm->intToDay($period['day']).". ".date("g:ia", strtotime($period['start_time']))." - ".date("g:ia", strtotime($period['end_time']));
+      if (isset($period['first_name']) && isset($period['last_name'])) {
+        $return .= ": ".$period['first_name']." ".$period['last_name'];
+      }
+    }
+
+    return $return;
   }
 
   public function getCurrentCampusId() {

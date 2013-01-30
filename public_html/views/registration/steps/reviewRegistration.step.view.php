@@ -16,7 +16,7 @@
           echo $studentInfo['nickname'];
         } ?><br/>
             <span class="label">Age:</span> <?php echo $studentInfo['age']; ?><br/>
-            <span class="label">Grade:</span> <?php echo $studentInfo['grade']; ?><br/>
+            <span class="label">Grade:</span> <?php echo $reg->getGradeDisplay($studentInfo['grade']); ?><br/>
             <span class="label">E-mail Address:</span> <?php if ($studentInfo['nickname'] == "") {
           echo "N/A";
         } else {

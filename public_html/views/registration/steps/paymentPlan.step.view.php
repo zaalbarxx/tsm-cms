@@ -1,4 +1,6 @@
 <div class="contentArea">
+    <a class="submitButton" href="index.php?com=registration&backToReview=1" style="float: right">Back to Review</a>
+
     <h1>Choose Payment Plan</h1>
 
     <p style="text-align: center;">Please choose a payment plan for both your tuition and registration fees.</p>

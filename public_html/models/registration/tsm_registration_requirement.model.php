@@ -54,17 +54,45 @@ class TSM_REGISTRATION_REQUIREMENT extends TSM_REGISTRATION_CAMPUS {
         //grade is greater than
         if ($this->info['config_1'] == 1) {
           if ($studentInfo['grade'] > $this->info['config_2']) {
-            $result = true;
+            $meets1 = true;
           } else {
-            $result = false;
+            $meets1 = false;
           }
         } //grade is less than
         elseif ($this->info['config_1'] == -1) {
           if ($studentInfo['grade'] < $this->info['config_2']) {
-            $result = true;
+            $meets1 = true;
           } else {
-            $result = false;
+            $meets1 = false;
           }
+        } else {
+          $meets1 = false;
+        }
+
+        if ($this->info['config_3'] != "") {
+          if ($this->info['config_3'] == 1) {
+            if ($studentInfo['grade'] > $this->info['config_4']) {
+              $meets2 = true;
+            } else {
+              $meets2 = false;
+            }
+          } elseif ($this->info['config_3'] == -1) {
+            if ($studentInfo['grade'] < $this->info['config_4']) {
+              $meets2 = true;
+            } else {
+              $meets2 = false;
+            }
+          } else {
+            $meets2 = false;
+          }
+        } else {
+          $meets2 = true;
+        }
+
+        if ($meets1 == true && $meets2 == true) {
+          $result = true;
+        } else {
+          $result = false;
         }
         break;
       //REGISTRATION DATE

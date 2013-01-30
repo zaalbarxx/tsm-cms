@@ -43,6 +43,10 @@ switch ($family->getCurrentStep()) {
           require_once(__TSM_ROOT__."controllers/registration/student/addCourse.student.controller.php");
           $activeView = __TSM_ROOT__."views/registration/student/addCourse.student.view.php";
           break;
+        case "editStudent":
+          require_once(__TSM_ROOT__."controllers/registration/steps/studentInfo.step.controller.php");
+          $activeView = __TSM_ROOT__."views/registration/steps/studentInfo.step.view.php";
+          break;
       }
     } else {
       require_once(__TSM_ROOT__."controllers/registration/steps/viewStudent.step.controller.php");

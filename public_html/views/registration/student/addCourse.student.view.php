@@ -37,8 +37,7 @@
               if (isset($course['periods'])) {
                 foreach ($course['periods'] as $period) {
                   ?>
-                  <?php echo $tsm->intToDay($period['day']).". ".date("g:ia", strtotime($period['start_time']))." - ".date("g:ia", strtotime($period['end_time'])); ?>
-                    : <?php echo $period['first_name']." ".$period['last_name']; ?> - <a
+                  <?php echo $reg->displayPeriod($period); ?> - <a
                             href="index.php?com=registration&action=addCourse&student_id=<?php echo $studentInfo['student_id']; ?>&program_id=<?php echo $programInfo['program_id']; ?>&enrollInCourse=<?php echo $course['course_id']; ?>&course_period_id=<?php echo $period['course_period_id']; ?>"
                             class="addCourse" ref="<?php echo $course['name']; ?>">Choose</a><br/>
                   <?php

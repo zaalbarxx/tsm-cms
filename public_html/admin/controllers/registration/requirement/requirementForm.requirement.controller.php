@@ -20,6 +20,7 @@ switch ($requirement_type_id) {
   </select>
   <select name="config_2">
     <?php
+
     for ($i = 1; $i <= 30; $i++) {
       if ($requirement['config_2'] == $i) {
         $selected = "selected=selected";
@@ -38,24 +39,61 @@ switch ($requirement_type_id) {
       <option value="">Requirement</option>
       <option value="-1" <?php if ($requirement['config_1'] == "-1") {
         echo "selected=selected";
-      } ?>>Less Than
+      } ?>>Less Than or Equal To
       </option>
       <option value="1" <?php if ($requirement['config_1'] == "1") {
         echo "selected=selected";
-      } ?>>Greater Than
+      } ?>>Greater Than or Equal To
       </option>
   </select>
   <select name="config_2">
     <?php
-    for ($i = 1; $i <= 14; $i++) {
-      if ($requirement['config_2'] == $i) {
+    if ($requirement['config_2'] == "") {
+      unset($requirement['config_2']);
+    }
+    for ($i = -1; $i <= 12; $i++) {
+      if ($requirement['config_2'] == $i && isset($requirement['config_2'])) {
         $selected = "selected=selected";
       } else {
         $selected = "";
       }
-      if ($i == 13) {
+      if ($i == 0) {
         $name = "Kindergarten";
-      } elseif ($i == 14) {
+      } elseif ($i == -1) {
+        $name = "Preschool";
+      } else {
+        $name = $i;
+      }
+      echo "<option value=\"$i\" $selected>$name</option>";
+    }
+    ?>
+  </select> and
+  <select name="config_3">
+      <option value="">N/A</option>
+      <option value="-1" <?php if ($requirement['config_3'] == "-1") {
+        echo "selected=selected";
+      } ?>>Less Than or Equal To
+      </option>
+      <option value="1" <?php if ($requirement['config_3'] == "1") {
+        echo "selected=selected";
+      } ?>>Greater Than or Equal To
+      </option>
+  </select>
+  <select name="config_4">
+      <option value="">N/A</option>
+    <?php
+    if ($requirement['config_4'] == "") {
+      unset($requirement['config_4']);
+    }
+    for ($i = -1; $i <= 12; $i++) {
+      if ($requirement['config_4'] == $i && isset($requirement['config_4'])) {
+        $selected = "selected=selected";
+      } else {
+        $selected = "";
+      }
+      if ($i == 0) {
+        $name = "Kindergarten";
+      } elseif ($i == -1) {
         $name = "Preschool";
       } else {
         $name = $i;

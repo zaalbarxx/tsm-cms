@@ -131,7 +131,7 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
   }
 
   public function getCourses() {
-    $q = "SELECT * FROM tsm_reg_courses c, tsm_reg_course_program cp WHERE cp.course_id = c.course_id AND cp.program_id = '".$this->programId."'";
+    $q = "SELECT * FROM tsm_reg_courses c, tsm_reg_course_program cp WHERE cp.course_id = c.course_id AND cp.program_id = '".$this->programId."' ORDER BY c.name";
     $r = $this->db->runQuery($q);
     while ($a = mysql_fetch_assoc($r)) {
       $this->courses[$a['course_id']] = $a;
@@ -142,7 +142,7 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
 
   public function getRequirements() {
     if ($this->requirements == null) {
-      $q = "SELECT * FROM tsm_reg_program_requirements pr, tsm_reg_requirements r WHERE r.requirement_id = pr.requirement_id AND pr.program_id = ".$this->programId."";
+      $q = "SELECT * FROM tsm_reg_program_requirements pr, tsm_reg_requirements r WHERE r.requirement_id = pr.requirement_id AND pr.program_id = ".$this->programId." ORDER BY r.name";
       $r = $this->db->runQuery($q);
       while ($a = mysql_fetch_assoc($r)) {
         $this->requirements[$a['program_requirement_id']] = $a;
@@ -155,9 +155,9 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
   public function getFees($fee_type_id = null) {
     $fees = null;
     if ($fee_type_id == null) {
-      $q = "SELECT * FROM tsm_reg_program_fee pf, tsm_reg_fees f WHERE f.fee_id = pf.fee_id AND pf.program_id = ".$this->programId."";
+      $q = "SELECT * FROM tsm_reg_program_fee pf, tsm_reg_fees f WHERE f.fee_id = pf.fee_id AND pf.program_id = ".$this->programId." ORDER BY f.name";
     } else {
-      $q = "SELECT * FROM tsm_reg_program_fee pf, tsm_reg_fees f WHERE f.fee_id = pf.fee_id AND pf.program_id = ".$this->programId." AND f.fee_type_id = '$fee_type_id'";
+      $q = "SELECT * FROM tsm_reg_program_fee pf, tsm_reg_fees f WHERE f.fee_id = pf.fee_id AND pf.program_id = ".$this->programId." AND f.fee_type_id = '$fee_type_id' ORDER BY f.name";
     }
     $r = $this->db->runQuery($q);
     while ($a = mysql_fetch_assoc($r)) {

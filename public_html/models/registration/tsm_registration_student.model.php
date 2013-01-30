@@ -56,6 +56,13 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
+  public function getAge() {
+    $dt = strtotime($this->info['birth_date']);
+    $a = gmdate('Y') - gmdate('Y', $dt);
+
+    return $a; // return the age.
+  }
+
   public function isFirstYear() {
     $q = "SELECT * FROM tsm_reg_students_school_years WHERE student_id = '".$this->studentId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
     $r = $this->db->runQuery($q);

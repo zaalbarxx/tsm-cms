@@ -82,13 +82,13 @@
     .registrationLogin label {
         display: block;
         margin-bottom: 4px;
-        font-family: Tahoma, Geneva, sans-serif;
         font-weight: bold;
-        font-size: 12px;
-        color: #666;
+        font-size: 14px;
+        color: #000;
     }
 
     .registrationLogin .textbox {
+        font-family: "Rokkitt";
         font-size: 14px;
         padding: 8px;
         -webkit-border-radius: 5px;

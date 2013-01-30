@@ -6,7 +6,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       <?php if ($periods) { ?>
         <?php foreach ($periods as $period) { ?>
                 <div class="smallItem">
-                    <span class="title"><?php echo $tsm->intToDay($period['day']).". ".date("g:ia", strtotime($period['start_time']))." - ".date("g:ia", strtotime($period['end_time'])); ?></span>
+                    <span class="title"><?php echo $reg->displayPeriod($period); ?></span>
 				<span class="buttons">
 				<a href="#" class="addButton24" title="Add Period"></a>
 				</span>

@@ -11,7 +11,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 
         <div class="two-thirds">
             <span class="label">Nickname:</span> <?php echo $studentInfo['nickname']; ?><br/>
-            <span class="label">Age:</span> <?php echo $studentInfo['age']; ?><br/>
+            <span class="label">Age:</span> <?php echo $student->getAge(); ?><br/>
             <span class="label">Grade:</span> <?php echo $studentInfo['grade']; ?><br/>
             <span class="label">E-mail Address:</span> <?php echo $studentInfo['email']; ?>
         </div>

@@ -3,7 +3,9 @@
       <?php echo $pageTitle; ?><!-- - <a href="index.php?com=registration&view=student&action=addEditStudent&student_id=<?php echo $studentInfo['student_id']; ?>" class="editButton" title="Edit Student"></a>--></h1>
 
     <div class="infoSection">
-        <h2>Student Information</h2>
+        <h2>Student Information - <a
+                href="index.php?com=registration&student_id=<?php echo $student_id; ?>&action=editStudent"
+                class="editButton" title="Edit Student"></a></h2>
 
         <div class="two-thirds">
             <span class="label">Nickname:</span> <?php if ($studentInfo['nickname'] == "") {
@@ -11,9 +13,9 @@
         } else {
           echo $studentInfo['nickname'];
         } ?><br/>
-            <span class="label">Age:</span> <?php echo $studentInfo['age']; ?><br/>
-            <span class="label">Grade:</span> <?php echo $studentInfo['grade']; ?><br/>
-            <span class="label">E-mail Address:</span> <?php if ($studentInfo['nickname'] == "") {
+            <span class="label">Age:</span> <?php echo $student->getAge(); ?><br/>
+            <span class="label">Grade:</span> <?php echo $reg->getGradeDisplay($studentInfo['grade']); ?><br/>
+            <span class="label">E-mail Address:</span> <?php if ($studentInfo['email'] == "") {
           echo "N/A";
         } else {
           echo $studentInfo['email'];
@@ -34,7 +36,8 @@
         foreach ($programs as $program) {
           ?>
             <div class="bigItem">
-                <span class="title"><?php echo $program['name']; ?></span>
+                <span class="title"><?php echo $program['name']; ?><span class="tuition"
+                                                                         style="margin-left: 60px; display: none;">Program Tuition: $<?php echo $program['tuition_total']; ?></span></span>
 				<span class="buttons">
 					<!--<a href="#" class="reviewButton" title="Review This Program"></a>
 					<a href="#" class="editButton" title="Edit This Student"></a>-->
@@ -58,7 +61,7 @@
                       $i = 1;
                       if ($program['courses']) {
                         foreach ($program['courses'] as $course) {
-                          echo "<tr><td>".$i.". ".$course['name']."</td><td>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?com=registration&ajax=unenrollFromCourse&course_id=".$course['course_id']."&program_id=".$course['program_id']."&student_id=".$studentInfo['student_id']."\" class=\"button deleteButton\" title=\"Unenroll From This Course\"></a></td></tr>";
+                          echo "<tr><td>".$i.". ".$course['name']."</td><td>".$reg->displayPeriod($course)."</td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?com=registration&ajax=unenrollFromCourse&course_id=".$course['course_id']."&program_id=".$course['program_id']."&student_id=".$studentInfo['student_id']."\" class=\"button deleteButton\" title=\"Unenroll From This Course\"></a></td></tr>";
                           $i++;
                         }
                       } else {
@@ -94,14 +97,19 @@
         <span class="center"><a
                 href="index.php?com=registration&view=student&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>"
                 class="med_button fb">Enroll in Programs</a></span>
+        <br style="width: 100%; clear: both;"/>
+
+        <h3 style="text-align: center;"><?php echo $studentInfo['first_name']; ?>'s Billing Summary</h3>
+
+        <div style="width: 325px; margin-left: auto; margin-right: auto;">
+            <span class="label" style="width: 200px;">Registration Total:</span>
+            $<?php echo $registrationTotal; ?><br/>
+            <span class="label" style="width: 200px;">Tuition Total:</span> $<?php echo $tuitionTotal; ?>
+            <br/>
+            <span class="label" style="width: 200px;">Student Total:</span> $<?php echo $grandTotal; ?>
+        </div>
     </div>
-    <!--<div class="infoSection">
-		<h2>Billing Summary</h2>
-		Registration Total: $<?php echo $registrationTotal; ?><br />
-		Tuition Total: $<?php echo $tuitionTotal; ?><br />
-		Grand Total: $<?php echo $grandTotal; ?>
-		
-	</div>-->
+
     <br/>
     <a href="index.php?com=registration&reviewRegistration=1" class="submitButton"
        style="margin-right: 20px;float: right; text-decoration: none;">Review Family Registration</a><a
@@ -124,14 +132,17 @@
     });
     $(".bigItem .title").click(function () {
         $(this).parent().children(".itemDetails").slideToggle();
+        $(this).children(".tuition").toggle(500);
     });
     $(".showDetails").click(function () {
         if ($(this).html() == "Show Details") {
             $(this).parent().children(".bigItem").children(".itemDetails").show(500);
             $(this).html("Hide Details");
+            $(".tuition").toggle(500);
         } else {
             $(this).parent().children(".bigItem").children(".itemDetails").hide(500);
             $(this).html("Show Details");
+            $(".tuition").fadeIn(500);
         }
 
         return false;

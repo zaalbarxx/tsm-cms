@@ -33,24 +33,24 @@
               echo "<option value=\"".$i."\">".$i."</option>";
             } ?>
             </select><br/>
-            <label for="age">Age: </label><select name="age">
+            <!--<label for="age">Age: </label><select name="age">
             <option value="">Select Age</option>
           <?php for ($i = 1; $i <= 100; $i++) {
-          echo "<option value=\"".$i."\">".$i."</option>";
-        } ?>
-        </select><br/>
+              echo "<option value=\"".$i."\">".$i."</option>";
+            } ?>
+        </select><br/>-->
             <label for="grade">Grade: </label><select name="grade">
             <option value="">Select Grade</option>
           <?php
-          for ($i = 1; $i <= 14; $i++) {
-            if ($condition['config_2'] == $i) {
+          for ($i = -1; $i <= 12; $i++) {
+            if ($studentInfo['grade'] == $i) {
               $selected = "selected=selected";
             } else {
               $selected = "";
             }
-            if ($i == 13) {
+            if ($i == 0) {
               $name = "Kindergarten";
-            } elseif ($i == 14) {
+            } elseif ($i == -1) {
               $name = "Preschool";
             } else {
               $name = $i;
@@ -62,7 +62,7 @@
         </fieldset>
 
         <br/>
-        <input type="hidden" name="birth_date" id="birth_date" value=""/>
+        <input type="hidden" name="birth_date" id="birth_date" value="<?php echo $studentInfo['birth_date']; ?>"/>
         <input type="hidden" name="family_id" value="<?php echo $family->getFamilyId(); ?>"/>
         <input type="hidden" name="campus_id" value="<?php echo $currentCampus->getCampusId(); ?>"/>
         <input type="hidden" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>"/>
@@ -78,12 +78,18 @@
             last_name:"required",
             email:"email",
             grade:"required",
-            age:"required",
+            //age:"required",
             birthdate_day:"required",
             birthdate_month:"required",
             birthdate_year:"required"
         }
     });
+    <?php if (isset($student_id)) { ?>
+    var birth_date = $("#birth_date").val().split("-");
+    $("#birthdate_month").val(parseInt(birth_date[1]));
+    $("#birthdate_day").val(parseInt(birth_date[2]));
+    $("#birthdate_year").val(parseInt(birth_date[0]));
+      <?php } ?>
     $("#studentInfoForm").submit(function () {
         var birthDate = $("#birthdate_year").val() + "-" + $("#birthdate_month").val() + "-" + $("#birthdate_day").val();
         $("#birth_date").val(birthDate);

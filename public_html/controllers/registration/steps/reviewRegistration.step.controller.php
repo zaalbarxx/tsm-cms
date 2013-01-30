@@ -32,6 +32,7 @@ foreach ($students as $student) {
   $students[$studentInfo['student_id']]['tuitionTotal'] = $reg->addFees($student->getFees(1));
   $students[$studentInfo['student_id']]['registrationTotal'] = $reg->addFees($student->getFees(2));
   $students[$studentInfo['student_id']]['studentTotal'] = $reg->addFees($student->getFees(null));
+  $students[$studentInfo['student_id']]['age'] = $student->getAge();
 
 }
 //print_r($students);die();

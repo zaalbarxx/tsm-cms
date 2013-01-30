@@ -10,6 +10,11 @@ if (isset($savePaymentPlans)) {
 
 }
 
+if (isset($backToReview)) {
+  $family->moveToStep(4);
+  header("Location: index.php?com=registration");
+}
+
 $regPaymentPlans = $currentCampus->getPaymentPlans(2);
 $tuitionPaymentPlans = $currentCampus->getPaymentPlans(1);
 
