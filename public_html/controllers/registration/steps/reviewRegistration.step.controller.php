@@ -13,6 +13,8 @@ foreach ($students as $student) {
 
   if (isset($students[$studentInfo['student_id']]['programs'])) {
     foreach ($students[$studentInfo['student_id']]['programs'] as $program) {
+      $programObject = new TSM_REGISTRATION_PROGRAM($program['program_id']);
+      $students[$studentInfo['student_id']]['programs'][$program['program_id']]['has_courses'] = $programObject->hasCourses();
       $students[$studentInfo['student_id']]['programs'][$program['program_id']]['tuition_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], 1));
       $students[$studentInfo['student_id']]['programs'][$program['program_id']]['registration_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], 2));
       $students[$studentInfo['student_id']]['programs'][$program['program_id']]['courses'] = $student->getCoursesIn($program['program_id']);

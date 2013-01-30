@@ -10,7 +10,7 @@ class TSM_REGISTRATION_PERIOD extends TSM_REGISTRATION_CAMPUS {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($periodId)) {
-      $this->periodId = $periodId;
+      $this->periodId = intval($periodId);
       $this->getInfo();
     }
   }

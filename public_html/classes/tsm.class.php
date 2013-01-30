@@ -138,16 +138,19 @@ class TSM {
 
   //SQL injection protection function
   public function makeVarSafe($value, $stripmetachar = 1) {
+
     if ($stripmetachar == 1) {
       if (is_array($value) == false) {
-        $value = htmlentities($value, ENT_QUOTES);
+        $value = htmlentities($value);
       }
     }
+
     if (get_magic_quotes_gpc()) {
       $value = stripslashes($value);
     } else {
       $value = addslashes($value);
     }
+
     return $value;
   }
 
@@ -367,7 +370,9 @@ class TSM {
     $this->adminHeaderHTML = "
     <script src=\"../includes/jquery-1.8.3.min.js\" type=\"text/javascript\"></script>
     <link rel=\"stylesheet\" href=\"../includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
-    <script type=\"text/javascript\" src=\"../includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>";
+    <script type=\"text/javascript\" src=\"../includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
+    <script type=\"text/javascript\" src=\"../includes/jquery.validate.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../includes/jquery.maskedinput.js\"></script>";
     if (isset($_GET['fb'])) {
       $this->adminHeaderHTML .= "<link href=\"templates/admin/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
     } else {
@@ -403,7 +408,9 @@ class TSM {
     $this->headerHTML = "
     <script src=\"includes/jquery-1.8.3.min.js\" type=\"text/javascript\"></script>
     <link rel=\"stylesheet\" href=\"includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
-    <script type=\"text/javascript\" src=\"includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>";
+    <script type=\"text/javascript\" src=\"includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
+    <script type=\"text/javascript\" src=\"includes/jquery.validate.min.js\"></script>
+    <script type=\"text/javascript\" src=\"includes/jquery.maskedinput.js\"></script>";
     if (isset($_GET['fb'])) {
       $this->headerHTML .= "<link href=\"templates/".$this->website->getTemplateId()."/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
     } else {
@@ -429,6 +436,11 @@ class TSM {
     	$(\".tooltip\").tooltip();
     });
 		</script>
+    <!--[if IE 7]>
+      <script type=\"text/javascript\">
+        //window.location = window.location + \"?noIE7\";
+      </script>
+    <![endif]-->
     ";
 
     return $this->headerHTML;

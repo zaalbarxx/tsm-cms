@@ -9,7 +9,7 @@ class TSM_REGISTRATION_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($paymentPlanId)) {
-      $this->paymentPlanId = $paymentPlanId;
+      $this->paymentPlanId = intval($paymentPlanId);
       $this->getInfo();
     }
   }

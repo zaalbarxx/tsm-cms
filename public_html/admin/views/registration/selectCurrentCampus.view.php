@@ -1,6 +1,8 @@
 <h1>Select a Campus</h1>
-<form action="" method="post" id="selectCampusForm">
-    <select name="setCurrentCampusId" id="selectCampusId">
+<p>To continue, you must select a campus to work on.</p>
+<form action="" method="post" id="selectCampusForm" style="text-align: center;">
+    <select name="setCurrentCampusId" id="selectCampusId"
+            style="font-size: 16px; padding: 10px; background: none; border: 1px solid #000; ">
         <option value="">Choose a Campus</option>
       <?php
       if ($campusList != NULL) {

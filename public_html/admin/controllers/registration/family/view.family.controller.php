@@ -9,6 +9,6 @@ if (isset($students)) {
     $students[$student['student_id']]['registration_total'] = $reg->addFees($studentObject->getFees(2));
   }
 }
-$family->getFees(1);
+//$family->getFees(1);
 $pageTitle = $familyInfo['father_last'];
 ?>

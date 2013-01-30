@@ -7,7 +7,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             class="editButton" title="Edit Program"></a></h1>
 
     <div class="programDescription">
-        <h3>Description:</h3>
+        <!--<h3>Description:</h3>-->
       <?php echo html_entity_decode($programInfo['description']); ?>
         <h2></h2>
     </div>

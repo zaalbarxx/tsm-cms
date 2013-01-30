@@ -10,7 +10,7 @@ class TSM_REGISTRATION_FEE_CONDITION extends TSM_REGISTRATION_CAMPUS {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($feeConditionId)) {
-      $this->feeConditionId = $feeConditionId;
+      $this->feeConditionId = intval($feeConditionId);
       $this->getInfo();
     }
   }

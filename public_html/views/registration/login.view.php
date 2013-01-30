@@ -1,4 +1,4 @@
-<h2>Registration Login</h2>
+<!--<h2>Registration Login</h2>-->
 <div class="registrationLogin">
     <div class="half">
         <form name="familyLoginForm" method="post" action="">

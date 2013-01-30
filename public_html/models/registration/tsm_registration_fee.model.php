@@ -9,7 +9,7 @@ class TSM_REGISTRATION_FEE extends TSM_REGISTRATION_CAMPUS {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($feeId)) {
-      $this->feeId = $feeId;
+      $this->feeId = intval($feeId);
       $this->getInfo();
     }
   }

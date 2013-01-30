@@ -11,34 +11,61 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
   <?php if (isset($programs)) { ?>
   <form id="addToFees" method="post">
   <?php foreach ($programs as $program) {
-    if (isset($program['fees'])) {
-      ?>
+    //if (isset($program['fees'])) {
+    ?>
         <h2><?php echo $program['name']." Fees"; ?></h2>
-      <?php foreach ($program['fees'] as $fee) { ?>
-            <div class="smallItem">
-                <span class="title"><?php echo $fee['name']; ?></span>
-      <span class="buttons">
-          <input type="checkbox"
-                 name="programId:<?php echo $program['program_id']; ?>_feeId:<?php echo $fee['fee_id']; ?>" value="1"/>
-      </span>
-            </div>
-        <?php } ?>
+    <?php
+    if (isset($program['fees'])) {
+      foreach ($program['fees'] as $fee) {
+        ?>
+          <div class="smallItem">
+              <span class="title"><?php echo $fee['name']." - $".$fee['amount']; ?></span>
+          <span class="buttons">
+              <input type="checkbox"
+                     name="programId:<?php echo $program['program_id']; ?>_feeId:<?php echo $fee['fee_id']; ?>"
+                     value="1"/>
+          </span>
+          </div>
+        <?php
+      }
+    }?>
         <div style="margin-left: 40px;">
           <?php foreach ($program['courses'] as $course) { ?>
             <h3><?php echo $program['name']." ".$course['name']." Fees "; ?></h3>
-          <?php foreach ($course['fees'] as $fee) { ?>
+          <?php
+          if (isset($course['fees'])) {
+            foreach ($course['fees'] as $fee) {
+              ?>
                 <div class="smallItem" style="width: 610px;">
-                    <span class="title"><?php echo $fee['name']; ?></span>
+                    <span class="title"><?php echo $fee['name']." - $".$fee['amount']; ?></span>
               <span class="buttons">
                   <input type="checkbox"
                          name="courseId:<?php echo $course['course_id']; ?>_programId:<?php echo $program['program_id']; ?>_feeId:<?php echo $fee['fee_id']; ?>"
                          value="<?php echo $fee['course_fee_id']; ?>"/>
               </span>
                 </div>
-            <?php } ?>
+              <?php
+            }
+          }
+          ?>
+          <?php
+          if (isset($course['courseOnlyFees'])) {
+            foreach ($course['courseOnlyFees'] as $fee) {
+              ?>
+                <div class="smallItem" style="width: 610px;">
+                    <span class="title"><?php echo $fee['name']." - $".$fee['amount']; ?> - All Programs</span>
+              <span class="buttons">
+                  <input type="checkbox"
+                         name="courseId:<?php echo $course['course_id']; ?>_programId:null_feeId:<?php echo $fee['fee_id']; ?>"
+                         value="<?php echo $fee['course_fee_id']; ?>"/>
+              </span>
+                </div>
+              <?php
+            }
+          } ?>
           <?php } ?>
         </div>
-      <?php } ?>
+    <?php //} ?>
     <?php } ?>
   <?php } else { ?>
     <span>There are no fees available.</span><br/><br/>

@@ -456,6 +456,9 @@ background: url(../images/icons/pencil24.png);
 .smallItem .buttons .deleteButton{
 background: url(../images/icons/stop24.png);
 }
+.smallItem .buttons .exchangeButton{
+background: url(../images/icons/exchange24.png);
+}
 .smallItem .buttons .addButton{
 background: url(../images/icons/plus24.png);
 margin-bottom: 0px;

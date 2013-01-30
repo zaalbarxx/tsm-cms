@@ -16,7 +16,7 @@ class TSM_REGISTRATION_COURSE extends TSM_REGISTRATION {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($courseId)) {
-      $this->courseId = $courseId;
+      $this->courseId = intval($courseId);
       $this->getInfo();
     }
   }

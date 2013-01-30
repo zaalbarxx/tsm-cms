@@ -42,6 +42,7 @@ foreach ($programs as $program) {
     foreach ($programs[$program['program_id']]['courses'] as $course) {
       $courseObject = new TSM_REGISTRATION_COURSE($course['course_id']);
       $programs[$program['program_id']]['courses'][$course['course_id']]['fees'] = $courseObject->getFees($program['program_id']);
+      $programs[$program['program_id']]['courses'][$course['course_id']]['courseOnlyFees'] = $courseObject->getFees(null, null);
     }
   }
 

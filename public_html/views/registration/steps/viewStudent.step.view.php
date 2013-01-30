@@ -42,6 +42,7 @@
 				</span>
 
                 <div class="itemDetails" style="display: block;">
+                  <?php if ($program['has_courses']) { ?>
                     <br/>
                     <table class="dataTable">
                         <tr class="header">
@@ -64,11 +65,14 @@
                       }
                       ?>
                     </table>
+
                     <br/>
                     <span class="center"><a
                             href="index.php?com=registration&view=student&action=addCourse&student_id=<?php echo $studentInfo['student_id']; ?>&program_id=<?php echo $program['program_id']; ?>"
                             class="small_button fb">Add Course</a></span>
+
                     <hr class="divider"/>
+                  <?php } ?>
                     <h3>Program Fee Summary</h3>
 
                     <div class="half">

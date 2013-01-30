@@ -10,7 +10,7 @@ class TSM_REGISTRATION_REQUIREMENT extends TSM_REGISTRATION_CAMPUS {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($requirementId)) {
-      $this->requirementId = $requirementId;
+      $this->requirementId = intval($requirementId);
       $this->getInfo();
     }
   }

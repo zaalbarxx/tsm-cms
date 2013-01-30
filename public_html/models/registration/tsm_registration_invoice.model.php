@@ -9,7 +9,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($invoiceId)) {
-      $this->invoiceId = $invoiceId;
+      $this->invoiceId = intval($invoiceId);
       $this->getInfo();
     }
   }

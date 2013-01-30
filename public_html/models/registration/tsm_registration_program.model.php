@@ -14,7 +14,7 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($programId)) {
-      $this->programId = $programId;
+      $this->programId = intval($programId);
       $this->getInfo();
     }
   }
@@ -63,7 +63,7 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
       if ($programId == null) {
         $programId = $this->programId;
       }
-      $q = "SELECT COUNT(student_id) AS num_students FROM tsm_reg_student_program WHERE program_id = ".$programId;
+      $q = "SELECT COUNT(student_id) AS num_students FROM tsm_reg_student_program WHERE program_id = '".$programId."'";
       $r = $this->db->runQuery($q);
       while ($a = mysql_fetch_assoc($r)) {
         $this->numStudentsEnrolled = $a['num_students'];
@@ -82,6 +82,21 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
     }
 
     return true;
+  }
+
+  public function hasCourses() {
+    $q = "SELECT COUNT(course_id) AS num_courses FROM tsm_reg_course_program WHERE program_id = '".$this->programId."'";
+    $r = $this->db->runQuery($q);
+    $numCourses = 0;
+    while ($a = mysql_fetch_assoc($r)) {
+      $numCourses = $a['num_courses'];
+    }
+
+    if ($numCourses == 0) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   public function addCourse($course_id) {

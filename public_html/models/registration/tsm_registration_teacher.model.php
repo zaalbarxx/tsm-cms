@@ -9,7 +9,7 @@ class TSM_REGISTRATION_TEACHER extends TSM_REGISTRATION_CAMPUS {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($teacherId)) {
-      $this->teacherId = $teacherId;
+      $this->teacherId = intval($teacherId);
       $this->getInfo();
     }
   }

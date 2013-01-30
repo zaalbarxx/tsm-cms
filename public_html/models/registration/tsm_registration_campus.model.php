@@ -19,7 +19,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($campusId)) {
-      $this->campusId = $campusId;
+      $this->campusId = intval($campusId);
       $this->getInfo();
     }
   }

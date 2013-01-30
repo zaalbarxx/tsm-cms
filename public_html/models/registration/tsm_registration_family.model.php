@@ -14,10 +14,10 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($familyId)) {
-      $this->familyId = $familyId;
+      $this->familyId = intval($familyId);
       $this->getInfo();
     } else if (isset($_SESSION['family']['id'])) {
-      $this->familyId = $_SESSION['family']['id'];
+      $this->familyId = intval($_SESSION['family']['id']);
       $this->getInfo();
     }
 

@@ -19,6 +19,8 @@ if ($student->isApproved() == true) {
 
 if (isset($programs)) {
   foreach ($programs as $program) {
+    $programObject = new TSM_REGISTRATION_PROGRAM($program['program_id']);
+    $programs[$program['program_id']]['has_courses'] = $programObject->hasCourses();
     $programs[$program['program_id']]['tuition_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], 1));
     $programs[$program['program_id']]['registration_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], 2));
     $programs[$program['program_id']]['courses'] = $student->getCoursesIn($program['program_id']);

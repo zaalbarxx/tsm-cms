@@ -13,7 +13,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     $this->db = $tsm->db;
     if (isset($studentId)) {
       if ($this->hasPermission($studentId)) {
-        $this->studentId = $studentId;
+        $this->studentId = intval($studentId);
         $this->getInfo();
       } else {
         die("No Permission");
@@ -46,7 +46,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
 
   public function getInfo() {
     if ($this->info == null) {
-      $q = "SELECT * FROM tsm_reg_students WHERE student_id = ".$this->studentId;
+      $q = "SELECT * FROM tsm_reg_students WHERE student_id = '".$this->studentId."'";
       $r = $this->db->runQuery($q);
       while ($a = mysql_fetch_assoc($r)) {
         $this->info = $a;

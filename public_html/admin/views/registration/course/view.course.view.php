@@ -7,7 +7,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             class="editButton" title="Edit Course"></a></h1>
 
     <div class="courseDescription">
-        <h3>Description:</h3>
+        <!--<h3>Description:</h3>-->
       <?php echo html_entity_decode($courseInfo['description']); ?>
         <h2></h2>
     </div>
@@ -24,6 +24,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                   <span class="buttons"><a
                           href="index.php?com=registration&ajax=deletePeriodFromCourse&course_id=<?php echo $courseInfo['course_id']; ?>&course_period_id=<?php echo $period['course_period_id']; ?>"
                           class="deleteButton" title="Delete Period"
+                          ref="<?php echo $period['period_id']; ?>"></a><a
+                          href="index.php?com=registration&view=course&action=changePeriodInCourse&course_id=<?php echo $courseInfo['course_id']; ?>&course_period_id=<?php echo $period['course_period_id']; ?>"
+                          class="exchangeButton fb" title="Change Period and Move Students"
                           ref="<?php echo $period['period_id']; ?>"></a></span>
           </div>
         <?php

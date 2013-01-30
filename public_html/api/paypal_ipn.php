@@ -2,7 +2,11 @@
 error_reporting(E_ALL);
 
 session_start();
-
+$postVars = "";
+foreach ($_POST as $key => $value) {
+  $postVars .= $key."=".$value."&";
+}
+//mail("jlane@veritasproductions.net", "IPN POST", $postVars);
 //REQUIRE THE CONFIG FILE
 require_once('../tsm_config.php');
 
@@ -62,11 +66,12 @@ if (!$fp) {
   //ENABLE TESTING
   //$test = 1;
   //END ENABLE TESTING 
-
+  $response = "";
   while (!feof($fp)) {
     $res = fgets($fp, 1024);
+    $response .= $res."\n\n";
 
-    echo $res."<br />";
+    //echo $res."<br />";
     if (strcmp($res, "VERIFIED") == 0) {
 
       //ENABLE TEST
@@ -86,24 +91,28 @@ if (!$fp) {
       $item_number = $_POST['item_number'];
       $item_colour = $_POST['custom'];
       $payment_status = $_POST['payment_status'];
-      $payment_amount = $_POST['payment_gross']; //full amount of payment. payment_gross in US
+      $payment_amount = $_POST['mc_gross']; //full amount of payment. payment_gross in US
       $payment_currency = $_POST['mc_currency'];
       $txn_id = $_POST['txn_id']; //unique transaction id
       $receiver_email = $_POST['receiver_email'];
       $payer_email = $_POST['payer_email'];
       $custom = $_POST['custom'];
-      $customarray = explode("-", $custom);
-      $family_id = $customarray[0];
-      $invoice_num = $customarray[1];
-      $school_year = $customarray[2];
+      //$customarray = explode(":", $custom);
+      //$family_id = $customarray[0];
+      //$invoice_num = $customarray[1];
+      //$school_year = $customarray[2];
+      $family_id = $custom;
+      $invoice_num = $_POST['invoice'];
       $last_name = $_POST['last_name'];
       $first_name = $_POST['first_name'];
       $payment_date = $_POST['payment_date'];
 
       // use the above params to look up what the price of "item_name" should be.
 
+      //mail("jlane@veritasproductions.net","Campus Info","Looking up campus info");
       //LOOK UP THE CAMPUS PAYMENT INFORMATION
       if ($family_id != null) {
+
         //$piq = "SELECT c.payment_email, c.campuses_name
         // FROM tsm_com_registration_campuses c, tsm_com_registration_parents p
         // WHERE p.parents_id = $parents_id
@@ -129,9 +138,10 @@ if (!$fp) {
         }
       }
 
+
       // the next part is also very important from a security point of view
       // you must check at the least the following...
-      //mail("jlane@veritasproductions.net","Testing123",$receiver_email.$campus_email);
+
       if (($payment_status == 'Completed') && //payment_status = Completed
         ($receiver_email == $campus_email) && // receiver_email is same as your account email
         ($family_id != null) && //and the parents_id is not blank
@@ -144,10 +154,12 @@ if (!$fp) {
         //check to make sure the transacation hasn't already been logged
 
         $checkq = "SELECT invoice_payment_id FROM tsm_reg_families_invoice_payments WHERE paypal_transaction_id = '$txn_id'";
+        //mail("jlane@veritasproductions.net","About to Log Payment","Logging Payment...$checkq");
         $checkr = $tsm->db->runQuery($checkq);
         if (mysql_num_rows($checkr) == 0) {
           $log_payment_q = "INSERT INTO tsm_reg_families_invoice_payments (family_id, family_invoice_id, paypal_transaction_id,amount)
           VALUES ($family_id, $invoice_num, '$txn_id','$payment_amount')";
+          //mail("jlane@veritasproductions.net","About to Log Payment","Logging Payment...$log_payment_q");
           mysql_query($log_payment_q) or die(mysql_error());
           $logged = 1;
 
@@ -193,6 +205,18 @@ if (!$fp) {
         Receiver E-mail: $receiver_email";
         mail($mail_To, $mail_Subject, $mail_Body);
 
+      } else {
+        $mail_To = "jlane@veritasproductions.net";
+        $mail_Subject = "PayPal - IPN ERROR";
+        $mail_Body = "Transaction ID: $txn_id\n
+        Payer Name: $first_name $last_name\n
+        Payer Email: $payer_email\n
+        Family ID: $family_id\n
+        Logged?: $logged\n
+        Amount Paid: $payment_amount\n
+        Item Name: $item_name\n
+        Payment Type: $payment_type\n";
+        mail($mail_To, $mail_Subject, $mail_Body);
       }
     } else if (strcmp($res, "INVALID") == 0) {
       //

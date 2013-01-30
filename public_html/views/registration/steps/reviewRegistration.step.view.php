@@ -23,9 +23,6 @@
           echo $studentInfo['email'];
         } ?>
         </div>
-        <!--<div class="one-third">
-            <span class="label">Status: </span><?php echo $studentStatus; ?>
-        </div>-->
 
         <br style="width: 100%; clear: both;"/>
         <br style="width: 100%; clear: both;"/>
@@ -40,6 +37,7 @@
                 <span class="title"><?php echo $program['name']; ?></span>
 
                 <div class="itemDetails" style="display: block;">
+                  <?php if ($program['has_courses']) { ?>
                     <br/>
                     <table class="dataTable">
                         <tr class="header">
@@ -63,6 +61,7 @@
                     </table>
                     <br/>
                     <hr class="divider"/>
+                  <?php } ?>
                     <h3>Program Fee Summary</h3>
 
                     <div class="half">
