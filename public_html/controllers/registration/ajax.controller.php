@@ -39,6 +39,27 @@ switch ($ajax) {
       echo json_encode($response);
     }
     break;
+  case "addPayPalFeeToInvoice":
+    if (isset($family_invoice_id)) {
+      $invoice = new TSM_REGISTRATION_INVOICE($family_invoice_id);
+      $invoice->addPayPalFee();
+      $newTotal = null;
+      $newTotal = $invoice->getTotal();
+
+      $response = Array("success" => false, "alertMessage" => null, "newTotal" => null);
+
+      if ($newTotal) {
+        $response["success"] = true;
+        $response["alertMessage"] = null;
+        $response["newTotal"] = $newTotal;
+      } else {
+        $response["success"] = false;
+        $response["alertMessage"] = "The student could not be unenrolled from this program. Please make sure they are not enrolled in any courses.";
+      }
+      echo json_encode($response);
+
+    }
+    break;
 }
 die();
 

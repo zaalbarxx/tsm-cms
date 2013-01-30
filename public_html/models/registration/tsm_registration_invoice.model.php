@@ -26,6 +26,39 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
+  public function getPayPalFee() {
+    $q = "SELECT * FROM tsm_reg_families_fees ff, tsm_reg_families_invoice_fees fif
+    WHERE fif.family_fee_id = ff.family_fee_id
+    AND fif.family_invoice_id = '".$this->invoiceId."'
+    AND ff.name = 'PayPal Convenience Fee'";
+    $r = $this->db->runQuery($q);
+    $fee = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $fee = $a;
+    }
+
+    return $fee;
+  }
+
+  public function addPayPalFee() {
+    $payPalFee = $this->getPayPalFee();
+    if (!$payPalFee) {
+      $total = $this->getTotal();
+      $paypalFeeAmount = $total * .03;
+
+      $family_id = $this->info['family_id'];
+      $family = new TSM_REGISTRATION_FAMILY($family_id);
+      $family_fee_id = $family->addFee("PayPal Convenience Fee", $paypalFeeAmount);
+      $this->addFee($family_fee_id);
+      $this->updateTotal();
+      $return = true;
+    } else {
+      $return = true;
+    }
+    return $return;
+
+  }
+
   public function containsFee($family_fee_id) {
     $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."' AND family_fee_id = '".$family_fee_id."'";
     $r = $this->db->runQuery($q);
@@ -109,6 +142,16 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $this->db->runQuery($q);
 
     return true;
+  }
+
+  public function getTotal() {
+    $q = "SELECT amount FROM tsm_reg_families_invoices WHERE family_invoice_id = '".$this->invoiceId."'";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $total = $a['amount'];
+    }
+
+    return $total;
   }
 
   public function updateTotal() {

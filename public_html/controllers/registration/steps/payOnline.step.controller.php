@@ -26,8 +26,7 @@ if (isset($setupComplete)) {
   $family->completePaymentPlanSetup($plan_to_process);
 }
 
-
-$notify_url = urlencode("http://".$_SERVER['HTTP_HOST']."/sandbox/api/paypal_ipn.php");
-$return_url = urlencode("http://".$_SERVER['HTTP_HOST']."/sandbox/index.php?com=registration&paymentPlanPaid=" & $plan_to_process);
-$cancel_url = urlencode("http://".$_SERVER['HTTP_HOST']."/sandbox/index.php?com=registration");
+$notify_url = urlencode("http://".$_SERVER['HTTP_HOST']."/api/paypal_ipn.php");
+$return_url = urlencode("http://".$_SERVER['HTTP_HOST']."/index.php?com=registration&setupComplete=1");
+$cancel_url = urlencode("http://".$_SERVER['HTTP_HOST']."/index.php?com=registration");
 ?>

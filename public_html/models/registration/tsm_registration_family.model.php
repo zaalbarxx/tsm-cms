@@ -247,6 +247,14 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
 
   }
 
+  public function addFee($name, $amount) {
+    $q = "INSERT INTO tsm_reg_families_fees (family_id,name,amount,school_year) VALUES('".$this->familyId."','$name','$amount','".$this->getSelectedSchoolYear()."')";
+    $this->db->runQuery($q);
+    $id = mysql_insert_id($this->db->conn);
+
+    return $id;
+  }
+
   public function getInvoicesByPaymentPlan($payment_plan_id) {
     $q = "SELECT * FROM tsm_reg_families_invoices WHERE payment_plan_id = '".$payment_plan_id."' AND family_id = '".$this->familyId."' ORDER BY family_invoice_id ASC";
     $r = $this->db->runQuery($q);

@@ -1,5 +1,7 @@
 <div class="contentArea">
     <h1><?php echo $pageTitle; ?></h1>
+    <input id="searchItems" rel="bigItem"
+           value="Search..."/>
   <?php if ($eligibleCourses) { ?>
   <?php foreach ($eligibleCourses as $course) { ?>
         <div class="bigItem" style="margin-left: auto; margin-right: auto;">
@@ -59,8 +61,8 @@
             var docHeight = $(document).height();
             $("body").append("<div id='overlay'></div>");
             $("#overlay").height(docHeight);
-            $(this).parent().parent().children(".periods").clone().addClass("activePeriod").prependTo("body").css({left:$(window).width() / 2 - 180}).show();
-
+            var curPosition = $(this).offset();
+            $(this).parents(".bigItem").children(".periods").clone().addClass("activePeriod").prependTo("body").css({left:$(window).width() / 2 - 130, top:curPosition.top - 30}).show();
             return false;
         });
         $(".addCourse").live('click', function () {

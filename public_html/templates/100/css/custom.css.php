@@ -645,8 +645,11 @@ display: none;
 display: none;
 }
 #contentArea h1:first-child{
-
 margin-top: -120px;
 margin-bottom: 50px;
+margin-left: 40px;
+}
+#searchItems{
+float: right; position: relative; right: 75px; top: -80px;
 }
 <?php } ?>
