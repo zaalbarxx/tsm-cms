@@ -529,6 +529,8 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         $return = true;
       }
 
+      $this->processFees();
+
       return $return;
     }
   }
@@ -594,11 +596,51 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
 
     }
 
+
     if (isset($addFees)) {
       foreach ($addFees as $fee) {
         $this->assignFee($fee['fee_id'], $fee['program_id'], $fee['course_id']);
       }
 
+    }
+
+    $assignedFees = $this->getFees();
+    foreach ($assignedFees as $fee) {
+      if (!isset($fee['course_id'])) {
+        $fee['course_id'] = null;
+      }
+      if (!isset($fee['program_id'])) {
+        $fee['program_id'] = null;
+      }
+      $needed = false;
+
+      foreach ($fees as $neededFee) {
+        if (!isset($neededFee['course_id'])) {
+          $neededFee['course_id'] = null;
+        }
+        if (!isset($neededFee['program_id'])) {
+          $neededFee['program_id'] = null;
+        }
+        if ($neededFee['fee_id'] == $fee['fee_id'] &&
+          $neededFee['program_id'] == $fee['program_id'] &&
+          $neededFee['course_id'] == $fee['course_id']
+        ) {
+          $needed = true;
+        }
+      }
+
+      if ($needed == false) {
+        $removeFees[] = $fee;
+      }
+
+      if (isset($removeFees)) {
+        foreach ($removeFees as $fee) {
+          $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+          if (!$feeObject->isInvoiced()) {
+            $feeObject->delete();
+          }
+        }
+      }
     }
 
     return true;
@@ -633,6 +675,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
             }
 
           }
+
           if ($canDelete == true) {
             foreach ($fees as $fee) {
               $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
@@ -645,6 +688,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
           } else {
             $return = false;
           }
+
         }
         if ($canDelete == true) {
           $q = "DELETE FROM tsm_reg_student_program WHERE student_id = '".$this->studentId."' AND program_id = '".$program_id."'";
@@ -658,6 +702,8 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       }
 
     }
+
+    $this->processFees();
 
     return $return;
   }
