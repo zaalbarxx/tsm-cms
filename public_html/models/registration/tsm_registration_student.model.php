@@ -1,7 +1,7 @@
 <?php
 
 class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
-
+//THIS IS MY COMMENT
   private $info;
   private $enrolledPrograms;
   private $approved;
@@ -605,7 +605,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     }
 
     $assignedFees = $this->getFees();
-    foreach($assignedFees as $fee){
+    foreach ($assignedFees as $fee) {
       if (!isset($fee['course_id'])) {
         $fee['course_id'] = null;
       }
@@ -614,28 +614,29 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       }
       $needed = false;
 
-      foreach($fees as $neededFee){
+      foreach ($fees as $neededFee) {
         if (!isset($neededFee['course_id'])) {
           $neededFee['course_id'] = null;
         }
         if (!isset($neededFee['program_id'])) {
           $neededFee['program_id'] = null;
         }
-        if($neededFee['fee_id'] == $fee['fee_id'] &&
+        if ($neededFee['fee_id'] == $fee['fee_id'] &&
           $neededFee['program_id'] == $fee['program_id'] &&
-          $neededFee['course_id'] == $fee['course_id']){
+          $neededFee['course_id'] == $fee['course_id']
+        ) {
           $needed = true;
         }
       }
 
-      if($needed == false){
+      if ($needed == false) {
         $removeFees[] = $fee;
       }
 
-      if(isset($removeFees)){
-        foreach($removeFees as $fee){
+      if (isset($removeFees)) {
+        foreach ($removeFees as $fee) {
           $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-          if(!$feeObject->isInvoiced()){
+          if (!$feeObject->isInvoiced()) {
             $feeObject->delete();
           }
         }
