@@ -229,19 +229,19 @@ class TSM_REGISTRATION_FEE_CONDITION extends TSM_REGISTRATION_CAMPUS {
       case "10":
         $spotInProgram = $student->getSpotInFamilyInProgram($this->info['config_3']);
         if ($this->info['config_1'] == "-1") {
-          if ($spotInProgram < $this->info['config_3']) {
+          if ($spotInProgram < $this->info['config_2']) {
             $result = true;
           } else {
             $result = false;
           }
         } elseif ($this->info['config_1'] == "1") {
-          if ($spotInProgram > $this->info['config_3']) {
+          if ($spotInProgram > $this->info['config_2']) {
             $result = true;
           } else {
             $result = false;
           }
         } elseif ($this->info['config_1'] == "0") {
-          if ($spotInProgram == $this->info['config_3']) {
+          if ($spotInProgram == $this->info['config_2']) {
             $result = true;
           } else {
             $result = false;

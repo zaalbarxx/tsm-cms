@@ -3,7 +3,7 @@
 <p style="text-align: center;">Please choose a payment option below.
     <br/><br/>
     <a target="_parent" class="payByPayPal"
-       href="https://sandbox.paypal.com/cgi-bin/webscr?notify_url=<?php echo $notify_url; ?>&amp;cmd=_xclick&amp;business=jlane_1225424090_biz@veritasproductions.net&amp;lc=US&amp;item_name=<?php echo $planInfo['name']; ?>&amp;currency_code=USD&amp;button_subtype=services&amp;no_note=1&amp;no_shipping=1&amp;rm=2&amp;return=<?php echo $return_url; ?>&amp;cancel_return=<?php echo $cancel_url; ?>&amp;bn=PP%2dBuyNowBF%3abtn_buynow_LG%2egif%3aNonHosted&amp;custom=<?php echo $familyInfo['family_id']; ?>&invoice=<?php echo $firstInvoice['family_invoice_id']; ?>"><img
+       href="https://www.paypal.com/cgi-bin/webscr?notify_url=<?php echo $notify_url; ?>&amp;cmd=_xclick&amp;business=<?php echo $campusInfo['paypal_email']; ?>&amp;lc=US&amp;item_name=<?php echo $planInfo['name']; ?>&amp;currency_code=USD&amp;button_subtype=services&amp;no_note=1&amp;no_shipping=1&amp;rm=2&amp;return=<?php echo $return_url; ?>&amp;cancel_return=<?php echo $cancel_url; ?>&amp;bn=PP%2dBuyNowBF%3abtn_buynow_LG%2egif%3aNonHosted&amp;custom=<?php echo $familyInfo['family_id']; ?>&invoice=<?php echo $firstInvoice['family_invoice_id']; ?>"><img
             src="templates/100/images/paypal_button.gif" style="display: inline-block;"/></a>
   <?php if (isset($familyInfo['quickbooks_customer_id']) && $currentCampus->usesQuickbooks()) { ?>
     <form style="text-align: center;" method="post" target="_payByIpnWindow"
@@ -27,8 +27,10 @@
                     alert(response.alertMessage);
                 }
                 if (response.success == true) {
-                    //$.get('index.php?com=registration&invoice_id=<?php echo $firstInvoice['family_invoice_id']; ?>&setupComplete=1',function(data){ alert("done"); });
-                    parent.window.location = payPalButton.attr("href") + "&amount=" + response.newTotal;
+                    $.get('index.php?com=registration&action=payOnline&invoice_id=<?php echo $firstInvoice['family_invoice_id']; ?>&setupComplete=1', function (data) {
+                        //alert(data);
+                        parent.window.location = payPalButton.attr("href") + "&amount=" + response.newTotal;
+                    });
                 }
             });
             return false;

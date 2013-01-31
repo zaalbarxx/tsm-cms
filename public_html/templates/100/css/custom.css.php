@@ -186,13 +186,9 @@ color: white;
 #sideBar{
 width: 210px;
 float: left;
-margin-left: -20px;
+margin-left: -14px;
 margin-top: -20px;
 margin-right: 40px;
-background: #DDD;
-background: linear-gradient(right, #DDD 0%, #bbbbbb 100%);
-background: -moz-linear-gradient(right, #DDD 0%, #bbbbbb 100%);
-background: -webkit-linear-gradient(right, #DDD 0%,#bbbbbb 100%);
 }
 #sideBar .active{
 background: #4b545f;

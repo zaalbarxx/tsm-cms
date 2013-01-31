@@ -255,6 +255,13 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     while ($a = mysql_fetch_assoc($r)) {
       $regDate = $a['registration_date'];
     }
+    if ($regDate == null) {
+      $q = "SELECT registration_time FROM tsm_reg_students_school_years WHERE student_id = '".$this->studentId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
+      $r = $this->db->runQuery($q);
+      while ($a = mysql_fetch_assoc($r)) {
+        $regDate = $a['registration_time'];
+      }
+    }
 
     return $regDate;
   }
@@ -339,6 +346,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       $program = new TSM_REGISTRATION_PROGRAM($program_id);
 
       $fees = $program->getFees($fee_type_id);
+
       if (isset($fees)) {
         foreach ($fees as $fee) {
           $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
@@ -397,7 +405,10 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getSpotInFamily() {
-    $q = "SELECT * FROM tsm_reg_students s, tsm_reg_students_school_years ssy WHERE ssy.student_id = s.student_id AND s.family_id = '".$this->info['family_id']."' ORDER BY student_school_year_id";
+    $q = "SELECT * FROM tsm_reg_students s, tsm_reg_students_school_years ssy
+    WHERE ssy.student_id = s.student_id
+    AND s.family_id = '".$this->info['family_id']."'
+    ORDER BY student_school_year_id";
     $r = $this->db->runQuery($q);
     $i = 1;
     while ($a = mysql_fetch_assoc($r)) {
@@ -415,7 +426,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     WHERE s.student_id = sp.student_id
     AND s.family_id = '".$this->info['family_id']."'
     AND sp.program_id = '$program_id'
-    ORDER BY sp.student_program_id DESC";
+    ORDER BY sp.student_program_id ASC";
     $r = $this->db->runQuery($q);
     $i = 1;
     while ($a = mysql_fetch_assoc($r)) {

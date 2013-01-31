@@ -9,7 +9,7 @@ switch ($action) {
     foreach ($students as $student) {
 
     }
-
+    require_once(__TSM_ROOT__."controllers/registration/student/students.controller.php");
     $activeView = __TSM_ROOT__."views/registration/student/student.view.php";
     break;
   case "viewStudent":
