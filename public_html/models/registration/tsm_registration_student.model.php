@@ -1,5 +1,5 @@
 <?php
-//TSM_REGISTRATION_STUDENT
+
 class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
 
   private $info;
