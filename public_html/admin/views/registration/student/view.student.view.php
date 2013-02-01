@@ -34,7 +34,8 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 				<span class="buttons">
 					<!--<a href="#" class="reviewButton" title="Review This Program"></a>
 					<a href="#" class="editButton" title="Edit This Student"></a>-->
-					<a href="#" class="deleteButton" title="Unenroll From This Program"></a>
+					<a href="index.php?com=registration&ajax=unenrollStudentFromProgram&student_id=<?php echo $student_id; ?>&program_id=<?php echo $program['program_id']; ?>"
+             class="deleteButton" title="Unenroll From This Program"></a>
 				</span>
 
                 <div class="itemDetails" style="display: block;">
@@ -52,7 +53,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                       $i = 1;
                       if ($program['courses']) {
                         foreach ($program['courses'] as $course) {
-                          echo "<tr><td>".$i.". ".$course['name']."</td><td>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?com=registration&ajax=unenrollStudentFromCourse&course_id=".$course['course_id']."\" title=\"Unenroll From This Course\" class=\"button deleteButton\"></a></td></tr>";
+                          echo "<tr><td>".$i.". ".$course['name']."</td><td>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?com=registration&ajax=unenrollStudentFromCourse&course_id=".$course['course_id']."&student_id=".$student_id."&program_id=".$course['program_id']."\" title=\"Unenroll From This Course\" class=\"button deleteButton\"></a></td></tr>";
                           $i++;
                         }
                       } else {
@@ -99,6 +100,18 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     $(".bigItem .title").click(function () {
         $(this).parent().children(".itemDetails").slideToggle();
     });
+    $(".deleteButton").click(function () {
+        $.get($(this).attr("href"), function (data) {
+            var response = JSON.parse(data);
+            if (response.alertMessage != null) {
+                alert(response.alertMessage);
+            }
+            if (response.success == true) {
+                window.location.reload();
+            }
+        });
+        return false;
+    });
     $(".showDetails").click(function () {
         if ($(this).html() == "Show Details") {
             $(this).parent().children(".bigItem").children(".itemDetails").show(500);
@@ -110,6 +123,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 
         return false;
     });
+    /*
     $(".button").click(function () {
         $.get($(this).attr('href'), function (data) {
             if (data == "1") {
@@ -120,4 +134,5 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         });
         return false;
     });
+    */
 </script>
