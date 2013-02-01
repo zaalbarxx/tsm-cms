@@ -67,6 +67,17 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $this->info['current_school_year'];
   }
 
+  public function getFeeTypes() {
+    $q = "SELECT * FROM tsm_reg_fee_types WHERE campus_id = '".$this->campusId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
+    $r = $this->db->runQuery($q);
+    $feeTypes = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $feeTypes[$a['fee_type_id']] = $a;
+    }
+
+    return $feeTypes;
+  }
+
   public function familyExists($primaryEmail) {
     $q = "SELECT family_id FROM tsm_reg_families WHERE primary_email = '".$primaryEmail."' AND campus_id = '".$this->campusId."'";
     $r = $this->db->runQuery($q);

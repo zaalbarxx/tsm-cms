@@ -67,17 +67,6 @@ class TSM_REGISTRATION {
 
   }
 
-  public function getFeeTypes() {
-    $q = "SELECT * FROM tsm_reg_fee_types";
-    $r = $this->db->runQuery($q);
-    $feeTypes = null;
-    while ($a = mysql_fetch_assoc($r)) {
-      $feeTypes[$a['fee_type_id']] = $a;
-    }
-
-    return $feeTypes;
-  }
-
   public function addFees($fees) {
     $total = 0;
 
