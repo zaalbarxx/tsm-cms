@@ -320,7 +320,7 @@ background: url(../images/icons/stop24.png);
 padding: 30px;
 display: none;
 overflow: auto;
-width: 97%;
+width: 92%;
 }
 .divider{
 width: 100%; clear: both; border: 0px; border-bottom: 2px solid #777; padding-top: 20px; margin-bottom: 10px;
