@@ -179,7 +179,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
   public function getPaymentPlans($fee_type_id = null) {
     $q = "SELECT * FROM tsm_reg_fee_payment_plans WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."'";
     if (isset($fee_type_id)) {
-      $q .= " AND fee_type_id = '$fee_type_id'";
+      $q .= " AND fee_type_id = '$fee_type_id' OR fee_type_id = '0'";
     }
     $r = $this->db->runQuery($q);
     $this->paymentPlans = null;

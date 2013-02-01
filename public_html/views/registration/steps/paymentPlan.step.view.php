@@ -20,12 +20,11 @@
                   <br/>
                   <label class="label" style="width: 200px;" for="fee_type_id_<?php echo $feeType['fee_type_id']; ?>">Payment
                       Plan: </label>
-                  <select name="fee_type_id_2" class="fee_type_id">
+                  <select name="payment_plan_id_for_fee_type_id:<?php echo $feeType['fee_type_id']; ?>">
                       <option value="">Choose a Plan</option>
                     <?php foreach ($feeType['payment_plans'] as $plan) {
                     echo "<option value='".$plan['payment_plan_id']."'>".$plan['name']."</option>";
                   } ?>
-
                   </select>
 
               </div>

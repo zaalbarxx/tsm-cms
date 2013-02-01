@@ -192,14 +192,21 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $this->students;
   }
 
-  public function getPaymentPlans($payment_plan_type_id) {
-    $q = "SELECT pp.*, fpp.payment_plan_type_id, fpp.name, fpp.fee_type_id AS payment_plan_fee_type_id FROM tsm_reg_families_payment_plans pp, tsm_reg_fee_payment_plans fpp WHERE fpp.payment_plan_id = pp.payment_plan_id AND pp.family_id = '".$this->familyId."' AND pp.school_year = '".$this->getSelectedSchoolYear()."'";
+  public function getPaymentPlans($payment_plan_type_id = null) {
+    $q = "SELECT pp.*, fpp.payment_plan_type_id, fpp.name, fpp.fee_type_id AS payment_plan_fee_type_id
+    FROM tsm_reg_families_payment_plans pp, tsm_reg_fee_payment_plans fpp
+    WHERE fpp.payment_plan_id = pp.payment_plan_id
+    AND pp.family_id = '".$this->familyId."'
+    AND pp.school_year = '".$this->getSelectedSchoolYear()."'";
     if (isset($payment_plan_type_id)) {
       $q .= " AND fpp.payment_plan_type_id = '$payment_plan_type_id'";
     }
+
     $r = $this->db->runQuery($q);
     while ($a = mysql_fetch_assoc($r)) {
-      $paymentPlans[$a['payment_plan_id']][$a['fee_type_id']] = $a['setup_complete'];
+      $paymentPlans[$a['family_payment_plan_id']] = $a;
+      $paymentPlans[$a['family_payment_plan_id']]['fee_types'] = unserialize($a['fee_types']);
+      //$paymentPlans[$a['family_payment_plan_id']]['setup_complete'] = $a['setup_complete'];
     }
 
     return $paymentPlans;
@@ -221,21 +228,32 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
 
   public function savePaymentPlans() {
     if ($this->deletePaymentPlans()) {
+      $paymentPlans = null;
       foreach ($_POST as $key => $value) {
         if ($value != "") {
-          if (strstr($key, 'fee_type_id')) {
-            $fee_type_id = explode("_", $key);
-            $fee_type_id = $fee_type_id[3];
-            $_POST['fee_type_id'] = $fee_type_id;
-            $_POST['payment_plan_id'] = $value;
-            $_POST['school_year'] = $this->getSelectedSchoolYear();
-            $_POST['family_id'] = $this->familyId;
-            $family_payment_plan_id = $this->db->insertRowFromPost("tsm_reg_families_payment_plans");
+          if (strstr($key, 'payment_plan_id_for_fee_type_id')) {
+            $payment_plan_id = $value;
+            if (!isset($paymentPlans[$payment_plan_id])) {
+              $paymentPlans[$payment_plan_id] = Array();
+            }
+            $array = explode(":", $key);
+            $fee_type_id = $array[1];
+            array_push($paymentPlans[$payment_plan_id], $fee_type_id);
+
+
+            //$family_payment_plan_id = $this->db->insertRowFromPost("tsm_reg_families_payment_plans");
           }
         } else {
           $error = true;
           break;
         }
+      }
+
+      foreach ($paymentPlans as $payment_plan_id => $feeTypes) {
+        $paymentPlans[$payment_plan_id] = serialize($feeTypes);
+        $q = "INSERT INTO tsm_reg_families_payment_plans (family_id,payment_plan_id,fee_types,school_year)
+        VALUES ('".$this->familyId."','$payment_plan_id','".$paymentPlans[$payment_plan_id]."','".$this->getSelectedSchoolYear()."')";
+        $this->db->runQuery($q);
       }
     }
 
@@ -255,8 +273,11 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $id;
   }
 
-  public function getInvoicesByPaymentPlan($payment_plan_id) {
-    $q = "SELECT * FROM tsm_reg_families_invoices WHERE payment_plan_id = '".$payment_plan_id."' AND family_id = '".$this->familyId."' ORDER BY family_invoice_id ASC";
+  public function getInvoicesByPaymentPlan($family_payment_plan_id) {
+    $q = "SELECT * FROM tsm_reg_families_invoices
+    WHERE family_payment_plan_id = '".$family_payment_plan_id."'
+    AND family_id = '".$this->familyId."'
+    ORDER BY family_invoice_id ASC";
     $r = $this->db->runQuery($q);
     $returnInvoices = null;
     while ($a = mysql_fetch_assoc($r)) {
@@ -266,8 +287,8 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $returnInvoices;
   }
 
-  public function createInvoice($payment_plan_id) {
-    $q = "INSERT INTO tsm_reg_families_invoices (family_id,payment_plan_id) VALUES('".$this->familyId."','$payment_plan_id')";
+  public function createInvoice($family_payment_plan_id = null) {
+    $q = "INSERT INTO tsm_reg_families_invoices (family_id,family_payment_plan_id) VALUES('".$this->familyId."','$family_payment_plan_id')";
     $this->db->runQuery($q);
     $invoice_id = mysql_insert_id($this->db->conn);
 
