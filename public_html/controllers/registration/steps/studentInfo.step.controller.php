@@ -30,6 +30,7 @@ if (isset($student_id)) {
   $headerMessage = "Please add a student by entering their information below.";
 }
 
+$shirtSizes = $currentCampus->getShirtSizes();
 
 error_reporting(E_ALL ^ E_NOTICE);
 //$familyInfo = $family->getInfo();

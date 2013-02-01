@@ -14,6 +14,20 @@
                                                             value="<?php echo $studentInfo['nickname']; ?>"/><br/>
             <label for="email">E-mail Address: </label><input type="text" name="email"
                                                               value="<?php echo $studentInfo['email']; ?>"/><br/>
+          <?php if (isset($shirtSizes)) { ?>
+            <label for="shirt_size_id">Shirt Size: </label><select name="shirt_size_id" id="shirt_size_id">
+            <?php
+            foreach ($shirtSizes as $shirtSize) {
+              if ($shirtSize['shirt_size_id'] == $studentInfo['shirt_size_id']) {
+                $selected = "selected=selected";
+              } else {
+                $selected = "";
+              }
+              echo "<option value='".$shirtSize['shirt_size_id']."' $selected>".$shirtSize['name']."</option>";
+            }
+            ?>
+            </select><br/>
+          <?php } ?>
             <label for="birthdate">Birthdate: </label>
             <select name="birthdate_month" id="birthdate_month" style="margin-left: -2px;">
                 <option value="">Month</option>

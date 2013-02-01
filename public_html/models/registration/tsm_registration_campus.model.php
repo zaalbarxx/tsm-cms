@@ -170,6 +170,17 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $requirement;
   }
 
+  public function getShirtSizes() {
+    $q = "SELECT * FROM tsm_reg_shirt_sizes WHERE campus_id = '".$this->campusId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
+    $r = $this->db->runQuery($q);
+    $shirtSizes = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $shirtSizes[] = $a;
+    }
+
+    return $shirtSizes;
+  }
+
   public function deleteFee($feeId = null) {
 
     //fees cannot yet be deleted.
