@@ -1,7 +1,7 @@
 <?php
 
 class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
-//THIS IS MY COMMENT
+
   private $info;
   private $enrolledPrograms;
   private $approved;
