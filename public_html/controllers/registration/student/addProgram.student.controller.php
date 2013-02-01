@@ -6,6 +6,9 @@ $student = new TSM_REGISTRATION_STUDENT($student_id);
 $studentInfo = $student->getInfo();
 $student->setUseRecordedFees(false);
 $eligiblePrograms = $student->getEligiblePrograms();
+print_r($eligiblePrograms);
+die();
+
 
 if (!isset($searchq)) {
   $searchq = null;
