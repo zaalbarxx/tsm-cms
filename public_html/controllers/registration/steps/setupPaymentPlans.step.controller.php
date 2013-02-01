@@ -57,6 +57,8 @@ if ($invoices == null) {
     $familyFees = $family->getFees($fee_type_id);
 
     foreach ($familyFees as $fee) {
+      $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+      $familyFee->setPaymentPlan($plan_to_process['family_payment_plan_id']);
       $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
       $feeInfo = $feeObject->getInfo();
       $invoice->addFee($fee['family_fee_id']);
@@ -65,7 +67,7 @@ if ($invoices == null) {
   $invoice->updateTotal();
 
   if (isset($familyInfo['quickbooks_customer_id']) && $currentCampus->usesQuickbooks()) {
-    $invoice->addToQuickbooks();
+    //$invoice->addToQuickbooks();
   }
 } else {
   $invoice_id = $invoices[0]['family_invoice_id'];
