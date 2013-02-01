@@ -19,7 +19,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                   } else {
                     $selected = "";
                   }
-                  echo "<option value=\"1\" $selected>".$feeType['name']."</option>";
+                  echo "<option value=\"".$feeType['fee_type_id']."\" $selected>".$feeType['name']."</option>";
                 }
               }
               ?>

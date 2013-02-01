@@ -15,9 +15,12 @@ if (isset($backToReview)) {
   header("Location: index.php?com=registration");
 }
 
-$regPaymentPlans = $currentCampus->getPaymentPlans(2);
-$tuitionPaymentPlans = $currentCampus->getPaymentPlans(1);
+$feeTypes = $currentCampus->getFeeTypes();
+if (isset($feeTypes)) {
+  foreach ($feeTypes as $feeType) {
+    $feeTypes[$feeType['fee_type_id']]['payment_plans'] = $currentCampus->getPaymentPlans($feeType['fee_type_id']);
 
-$tuitionTotal = $reg->addFees($family->getFees(1));
-$registrationTotal = $reg->addFees($family->getFees(2));
+    $feeTypes[$feeType['fee_type_id']]['total_amount'] = $reg->addFees($family->getFees($feeType['fee_type_id']));
+  }
+}
 ?>
