@@ -128,7 +128,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     return $this->enrolledPrograms;
   }
 
-  public function meetsRequirements() {
+  public function meetsRequirements($requirements) {
     $studentEligible = true;
     if (isset($requirements)) {
       foreach ($requirements as $requirement) {
@@ -455,6 +455,8 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       foreach ($allPrograms as $program) {
         $programObject = new TSM_REGISTRATION_PROGRAM($program['program_id']);
         $requirements = $programObject->getRequirements();
+
+
         $studentEligible = $this->meetsRequirements($requirements);
 
         if ($studentEligible == true && $this->inProgram($program['program_id']) == false) {

@@ -1,10 +1,14 @@
 <div class="contentArea">
     <h1><?php echo $pageTitle; ?></h1>
+    <input id="searchItems" rel="bigItem"
+           value="Search..."/>
   <?php if ($eligiblePrograms) { ?>
   <?php foreach ($eligiblePrograms as $program) { ?>
         <div class="bigItem" style="margin-left: auto; margin-right: auto;">
-            <span class="title"><?php echo $program['name']; ?> - <span
-                    style="font-size: 12px; position: relative; top: -1px;">Click for Details</span></span>
+            <span class="title"><img src="<?php echo $program['icon_url']; ?>"
+                                     style="width: 40px; margin-top: -25px; margin-bottom: -15px; margin-right: 20px; margin-left: -30px;"/><?php echo $program['name']; ?>
+                - <span
+                        style="font-size: 12px; position: relative; top: -1px;">Click for Details</span></span>
 				<span class="buttons">
 				<a href="index.php?com=registration&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
            class="addButton24"

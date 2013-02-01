@@ -212,7 +212,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $paymentPlans;
   }
 
-  public function completePaymentPlanSetup($payment_plan_id) {
+  public function completePaymentPlanSetup($family_payment_plan_id) {
     $q = "UPDATE tsm_reg_families_payment_plans SET setup_complete = 1 WHERE family_payment_plan_id = '$family_payment_plan_id' AND family_id = '".$this->familyId."'";
     $this->db->runQuery($q);
 

@@ -37,8 +37,10 @@
         foreach ($studentInfo['programs'] as $program) {
           ?>
             <div class="bigItem">
-                <span class="title"><?php echo $program['name']; ?><span class="tuition"
-                                                                         style="margin-left: 60px; display: none;">Program Tuition: $<?php echo $program['tuition_total']; ?></span></span>
+                <span class="title"><img src="<?php echo $program['icon_url']; ?>"
+                                         style="width: 40px; margin-top: -25px; margin-bottom: -15px; margin-right: 20px; margin-left: -30px;"/><?php echo $program['name']; ?>
+                    <span class="tuition"
+                          style="float:right; width: 200px; display: none;">Program Tuition: $<?php echo $program['tuition_total']; ?></span></span>
 
                 <div class="itemDetails" style="display: block;">
                   <?php if ($program['has_courses']) { ?>

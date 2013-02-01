@@ -1,0 +1,3 @@
+<?php
+$campuses = $reg->getCampuses();
+?>

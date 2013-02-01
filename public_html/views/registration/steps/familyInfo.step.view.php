@@ -31,11 +31,11 @@
         </fieldset>
         <fieldset>
             <legend>General Information</legend>
-            <label for="primary_phone">Primary Phone: </label><input type="text" name="primary_phone" id="primary_phone"
-                                                                     value="<?php echo $familyInfo['primary_phone']; ?>"/><br/>
-            <label for="secondary_phone">Secondary Phone: </label><input type="text" name="secondary_phone"
-                                                                         id="secondary_phone"
-                                                                         value="<?php echo $familyInfo['secondary_phone']; ?>"/><br/>
+            <label for="primary_phone">Home Phone: </label><input type="text" name="primary_phone" id="primary_phone"
+                                                                  value="<?php echo $familyInfo['primary_phone']; ?>"/><br/>
+            <label for="secondary_phone">Work Phone: </label><input type="text" name="secondary_phone"
+                                                                    id="secondary_phone"
+                                                                    value="<?php echo $familyInfo['secondary_phone']; ?>"/><br/>
 
             <label for="address">Address: </label><input type="text" name="address"
                                                          value="<?php echo $familyInfo['address']; ?>"/><br/>

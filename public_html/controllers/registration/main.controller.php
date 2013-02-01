@@ -40,7 +40,9 @@ if (isset($setSelectedSchoolYear)) {
   }
 }
 
-if ($reg->family->isLoggedIn() == false) {
+if (isset($browseOfferings)) {
+  require_once(__TSM_ROOT__."controllers/registration/browse/browse.controller.php");
+} else if ($reg->family->isLoggedIn() == false) {
   if (isset($login)) {
     if (!$reg->family->login($email, $password, $campus_id)) {
       $error = "Incorrect e-mail address and password.";

@@ -30,7 +30,8 @@ require_once(__TSM_ROOT__."views/registration/sidebar.view.php");
         foreach ($programs as $program) {
           ?>
             <div class="bigItem">
-                <span class="title"><?php echo $program['name']; ?></span>
+                <span class="title"><img src="<?php echo $program['icon_url']; ?>"
+                                         style="width: 40px; margin-top: -25px; margin-bottom: -15px; margin-right: 20px; margin-left: -30px;"/><?php echo $program['name']; ?></span>
 				<span class="buttons">
 					<!--<a href="#" class="reviewButton" title="Review This Program"></a>
 					<a href="#" class="editButton" title="Edit This Student"></a>-->
