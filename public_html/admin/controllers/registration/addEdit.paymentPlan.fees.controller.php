@@ -1,4 +1,5 @@
 <?php
+$feeTypes = $currentCampus->getFeeTypes();
 if (isset($payment_plan_id)) {
   $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($payment_plan_id);
   $planInfo = $paymentPlan->getInfo();

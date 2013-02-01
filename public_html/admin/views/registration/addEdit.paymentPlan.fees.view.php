@@ -8,20 +8,22 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         <fieldset>
             <label for="plan_name">Plan Name: </label><input type="text" name="name" id="plan_name"
                                                              value="<?php echo $planInfo['name']; ?>"/><br/>
-            <label for="fee_type_id">Applies To: </label><select name="fee_type_id" id="fee_type_id">
-            <option value="1" <?php if ($planInfo['fee_type_id'] == 1) {
-              echo "selected=selected";
-            } ?>>Tuition
-            </option>
-            <option value="2" <?php if ($planInfo['fee_type_id'] == 2) {
-              echo "selected=selected";
-            } ?>>Registration Fees
-            </option>
-            <option value="" <?php if ($planInfo['fee_type_id'] == 1) {
-              echo "selected=selected";
-            } ?>>Everything
-            </option>
-        </select><br/>
+            <label for="fee_type_id">Available To: </label>
+            <select name="fee_type_id" id="fee_type_id">
+                <option value="">All Fee Types</option>
+              <?php
+              if (isset($feeTypes)) {
+                foreach ($feeTypes as $feeType) {
+                  if ($feeType['fee_type_id'] == $planInfo['fee_type_id']) {
+                    $selected = "selected=selected";
+                  } else {
+                    $selected = "";
+                  }
+                  echo "<option value=\"1\" $selected>".$feeType['name']."</option>";
+                }
+              }
+              ?>
+            </select><br/>
             <label for="payment_plan_type_id">Invoice: </label><select name="payment_plan_type_id"
                                                                        id="payment_plan_type_id">
             <option value="1" <?php if ($planInfo['payment_plan_type_id'] == 1) {

@@ -12,7 +12,7 @@ if (isset($fee_id)) {
   $formAction = "createFee";
   $feeInfo = null;
 }
-$feeTypes = $reg->getFeeTypes();
+$feeTypes = $currentCampus->getFeeTypes();
 
 if ($currentCampus->usesQuickbooks() == true) {
   $ItemService = new QuickBooks_IPP_Service_Item();
