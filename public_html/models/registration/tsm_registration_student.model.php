@@ -197,7 +197,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         foreach ($fees as $fee) {
           $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
           $feeConditions = $feeObject->getConditionsForCourse($course_id, $program_id);
-          $params = Array('course_id' => $course_id, 'program_id' => $program_id);
+          $params = Array('course_id' => $course_id, 'program_id' => $program_id, 'fee' => $fee);
           $studentEligible = $this->meetsConditions($feeConditions, $params);
           $fee['program_id'] = $program_id;
 
@@ -213,7 +213,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         foreach ($fees as $fee) {
           $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
           $feeConditions = $feeObject->getConditionsForCourse($course_id, null);
-          $params = Array('course_id' => $course_id, 'program_id' => $program_id);
+          $params = Array('course_id' => $course_id, 'program_id' => $program_id, 'fee' => $fee);
           $studentEligible = $this->meetsConditions($feeConditions, $params);
           $fee['program_id'] = $program_id;
 
@@ -357,7 +357,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         foreach ($fees as $fee) {
           $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
           $feeConditions = $feeObject->getConditionsForProgram($program_id);
-          $params = Array('program_id' => $program_id);
+          $params = Array('program_id' => $program_id, 'fee' => $fee);
           $studentEligible = $this->meetsConditions($feeConditions, $params);
 
           if ($studentEligible == true) {
@@ -595,18 +595,20 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     $this->setUseRecordedFees(false);
     $fees = $this->getFees();
     $this->setUseRecordedFees(true);
-    foreach ($fees as $fee) {
-      if (!isset($fee['course_id'])) {
-        $fee['course_id'] = null;
-      }
-      if (!isset($fee['program_id'])) {
-        $fee['program_id'] = null;
-      }
+    if (isset($fees)) {
+      foreach ($fees as $fee) {
+        if (!isset($fee['course_id'])) {
+          $fee['course_id'] = null;
+        }
+        if (!isset($fee['program_id'])) {
+          $fee['program_id'] = null;
+        }
 
-      if (!$this->assignedFee($fee['fee_id'], $fee['program_id'], $fee['course_id'])) {
-        $addFees[] = $fee;
-      }
+        if (!$this->assignedFee($fee['fee_id'], $fee['program_id'], $fee['course_id'])) {
+          $addFees[] = $fee;
+        }
 
+      }
     }
 
 
@@ -618,45 +620,49 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     }
 
     $assignedFees = $this->getFees();
-    foreach ($assignedFees as $fee) {
-      if (!isset($fee['course_id'])) {
-        $fee['course_id'] = null;
-      }
-      if (!isset($fee['program_id'])) {
-        $fee['program_id'] = null;
-      }
-      $needed = false;
-
-      foreach ($fees as $neededFee) {
-        if (!isset($neededFee['course_id'])) {
-          $neededFee['course_id'] = null;
+    if (isset($assignedFees)) {
+      foreach ($assignedFees as $fee) {
+        if (!isset($fee['course_id'])) {
+          $fee['course_id'] = null;
         }
-        if (!isset($neededFee['program_id'])) {
-          $neededFee['program_id'] = null;
+        if (!isset($fee['program_id'])) {
+          $fee['program_id'] = null;
         }
-        if ($neededFee['fee_id'] == $fee['fee_id'] &&
-          $neededFee['program_id'] == $fee['program_id'] &&
-          $neededFee['course_id'] == $fee['course_id']
-        ) {
-          $needed = true;
+        $needed = false;
+
+        if (isset($fees)) {
+          foreach ($fees as $neededFee) {
+            if (!isset($neededFee['course_id'])) {
+              $neededFee['course_id'] = null;
+            }
+            if (!isset($neededFee['program_id'])) {
+              $neededFee['program_id'] = null;
+            }
+            if ($neededFee['fee_id'] == $fee['fee_id'] &&
+              $neededFee['program_id'] == $fee['program_id'] &&
+              $neededFee['course_id'] == $fee['course_id']
+            ) {
+              $needed = true;
+            }
+          }
         }
-      }
 
-      if ($needed == false) {
-        $removeFees[] = $fee;
-      }
+        if ($needed == false) {
+          $removeFees[] = $fee;
+        }
 
-      if (isset($removeFees)) {
-        foreach ($removeFees as $fee) {
-          $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-          if (!$feeObject->isInvoiced()) {
-            $feeObject->delete();
+        if (isset($removeFees)) {
+          foreach ($removeFees as $fee) {
+            $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+            if (!$feeObject->isInvoiced()) {
+              $feeObject->delete();
+            }
           }
         }
       }
-    }
 
-    return true;
+      return true;
+    }
   }
 
   public function enrollInProgram($program_id) {
@@ -673,6 +679,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function unenrollFromProgram($program_id) {
+    $return = false;
     if ($this->inProgram($program_id)) {
       $courses = $this->getCoursesIn($program_id);
       if (isset($courses)) {

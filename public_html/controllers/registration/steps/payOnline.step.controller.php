@@ -1,5 +1,7 @@
 <?php
-$paymentPlans = $family->getPaymentPlans(1);
+$immediatePlans = $family->getPaymentPlans(1);
+$partNowPartLaterPlans = $family->getPaymentPlans(4);
+$paymentPlans = array_merge($immediatePlans, $partNowPartLaterPlans);
 $plan_to_process = null;
 foreach ($paymentPlans as $family_payment_plan_id => $familyPaymentPlan) {
   if ($familyPaymentPlan['setup_complete'] == 0 && $plan_to_process == null) {

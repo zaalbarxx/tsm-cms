@@ -44,7 +44,7 @@
                 <?php
                 $i++;
               } ?>
-              <?php echo "<tr><td colspan=3 align=right style=\"font-weight: bold;\">Grand Total: </td><td>$".$student['planFeeTotals'][$fee_type_id]."</td></tr>"; ?>
+              <?php echo "<tr><td colspan=3 align=right style=\"font-weight: bold;\">Student Total: </td><td>$".$student['planFeeTotals'][$fee_type_id]."</td></tr>"; ?>
             </table>
           <?php
         }
@@ -53,7 +53,8 @@
       ?>
 
         <div style="width: 300px; margin-left: auto;margin-right: auto;text-align: center;">
-            <b>Total Due:</b> $<?php echo $paymentPlanTotal; ?><br/><br/>
+            <b>Total Due:</b> $<?php echo $paymentPlanTotal; ?><br/>
+            <b>Due Today:</b> $<?php echo $dueToday; ?><br/><br/>
             <a href="index.php?action=payOnline&invoice_id=<?php echo $invoice_id; ?>" class="submitButton fb"
                style="text-decoration: none; margin-right: 30px;">Pay Online</a> <a
                 href="index.php?action=payByMail&invoice_id=<?php echo $invoice_id; ?>" class="submitButton fb"

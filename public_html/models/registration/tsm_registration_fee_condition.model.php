@@ -261,6 +261,37 @@ class TSM_REGISTRATION_FEE_CONDITION extends TSM_REGISTRATION_CAMPUS {
 
         return $result;
         break;
+      case "12":
+        if (!$student->isFirstYear()) {
+          $result = true;
+        } else {
+          $result = false;
+        }
+
+        return $result;
+        break;
+      case "13":
+        if ($student->getUseRecordedFees() == false) {
+          $student->setUseRecordedFees(true);
+          $resetUseRecorded = true;
+        } else {
+          $resetUseRecorded = false;
+        }
+        $fees = $student->getFees();
+        if ($resetUseRecorded == true) {
+          $student->setUseRecordedFees(false);
+        }
+        $result = true;
+        if (isset($fees)) {
+          foreach ($fees as $fee) {
+            if ($fee['fee_id'] == $params['fee']['fee_id']) {
+              $result = false;
+            }
+          }
+        }
+
+        return $result;
+        break;
     }
 
     return $result;

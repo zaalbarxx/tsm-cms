@@ -1,6 +1,8 @@
 <?php
 //GET PAYMENT PLANS THAT ARE SET TO BILL IMMEDIATELY
-$paymentPlans = $family->getPaymentPlans(1);
+$immediatePlans = $family->getPaymentPlans(1);
+$partNowPartLaterPlans = $family->getPaymentPlans(4);
+$paymentPlans = array_merge($immediatePlans, $partNowPartLaterPlans);
 $familyInfo = $family->getInfo();
 $plan_to_process = null;
 foreach ($paymentPlans as $family_payment_plan_id => $familyPaymentPlan) {
@@ -10,8 +12,8 @@ foreach ($paymentPlans as $family_payment_plan_id => $familyPaymentPlan) {
 }
 
 if ($plan_to_process == null) {
-  $family->moveToStep(0);
-  header("Location: index.php?com=registration");
+  //$family->moveToStep(0);
+  //header("Location: index.php?com=registration");
 }
 
 $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($plan_to_process['payment_plan_id']);
@@ -41,10 +43,13 @@ foreach ($students as $student) {
     }
   }
 }
-$paymentPlanTotal = 0;
+//$paymentPlanTotal = 0;
+$allFees = Array();
 foreach ($planFeeTypes as $fee_type_id) {
-  $paymentPlanTotal = $paymentPlanTotal + $reg->addFees($family->getFees($fee_type_id));
+  $allFees = array_merge($allFees, $family->getFees($fee_type_id));
+  //$paymentPlanTotal = $paymentPlanTotal + $reg->addFees($family->getFees($fee_type_id));
 }
+$paymentPlanTotal = $reg->addFees($allFees);
 
 $invoices = $family->getInvoicesByPaymentPlan($plan_to_process['family_payment_plan_id']);
 
@@ -54,6 +59,7 @@ if (isset($acceptDisclaimer)) {
 
 
 if ($invoices == null) {
+
   $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
   $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 
@@ -64,18 +70,42 @@ if ($invoices == null) {
       $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
       $familyFee->setPaymentPlan($plan_to_process['family_payment_plan_id']);
       $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
-      $feeInfo = $feeObject->getInfo();
-      $invoice->addFee($fee['family_fee_id']);
+      $familyFeeInfo = $familyFee->getInfo();
+      $invoice->addFee(Array("family_fee_id" => $fee['family_fee_id'], "description" => $familyFeeInfo['name'], "amount" => $familyFeeInfo['amount']));
     }
   }
   $invoice->updateTotal();
+  $planTotal = $invoice->getTotal();
 
   if (isset($familyInfo['quickbooks_customer_id']) && $currentCampus->usesQuickbooks()) {
     //$invoice->addToQuickbooks();
   }
+
+  $dueToday = $planTotal;
+
+  if ($plan_to_process['payment_plan_type_id'] == 4) {
+    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
+    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+    $invoice->addFee(Array("family_fee_id" => null, "description" => "Offset annual tuition to invoice according to payment plan selected.", "amount" => -$planTotal));
+    $invoice->updateTotal();
+
+    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
+    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+    $percentage = $plan_to_process['immediate_invoice_percentage'] / 100;
+    $initialAmount = $planTotal * $percentage;
+    $invoice->addFee(Array("family_fee_id" => null, "description" => "".$plan_to_process['immediate_invoice_percentage']."% of Payment Plan Total", "amount" => $initialAmount));
+    $invoice->updateTotal();
+
+    $dueToday = $initialAmount;
+  }
 } else {
-  $invoice_id = $invoices[0]['family_invoice_id'];
-  //$invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+  if ($plan_to_process['payment_plan_type_id'] == 1) {
+    $invoice_id = $invoices[0]['family_invoice_id'];
+  } else {
+    $invoice_id = $invoices[2]['family_invoice_id'];
+  }
+  $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+  $dueToday = $invoice->getTotal();
   //$invoiceInfo = $invoice->getInfo();
   //$invoiceService = new QuickBooks_IPP_Service_Invoice();
   //$qbInvoice = $invoiceService->findById($quickbooks->Context,$quickbooks->creds['qb_realm'],$invoiceInfo['quickbooks_invoice_id']);

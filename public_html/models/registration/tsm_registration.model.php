@@ -76,6 +76,8 @@ class TSM_REGISTRATION {
       }
     }
 
+    $total = number_format($total, 2, '.', '');
+
     return $total;
   }
 

@@ -1,5 +1,7 @@
 <?php
-$paymentPlans = $family->getPaymentPlans(1);
+$immediatePlans = $family->getPaymentPlans(1);
+$partNowPartLaterPlans = $family->getPaymentPlans(4);
+$paymentPlans = array_merge($immediatePlans, $partNowPartLaterPlans);
 $plan_to_process = null;
 foreach ($paymentPlans as $family_payment_plan_id => $familyPaymentPlan) {
   if ($familyPaymentPlan['setup_complete'] == 0 && $plan_to_process == null) {
@@ -14,11 +16,9 @@ if ($plan_to_process == null) {
 
 $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($plan_to_process['payment_plan_id']);
 $planInfo = $paymentPlan->getInfo();
-$planFeeTypes = $plan_to_process['fee_types'];
-$invoices = $family->getInvoicesByPaymentPlan($plan_to_process['family_payment_plan_id']);
-$firstInvoice = $invoices[0];
+$invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+$firstInvoice = $invoice->getInfo();
 $campusInfo = $currentCampus->getInfo();
-
 
 if (isset($setupComplete)) {
   $family->completePaymentPlanSetup($plan_to_process['family_payment_plan_id']);

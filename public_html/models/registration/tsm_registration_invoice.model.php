@@ -69,9 +69,27 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
-  public function addFee($family_fee_id) {
+  public function addFee($options = Array("family_fee_id" => null, "description" => "", "amount" => 0)) {
+    if (isset($options['family_fee_id'])) {
+      $family_fee_id = $options['family_fee_id'];
+    } else {
+      $family_fee_id = null;
+    }
+    if (isset($options['description'])) {
+      $description = $options['description'];
+    } else {
+      $description = null;
+    }
+    if (isset($options['amount'])) {
+      $amount = $options['amount'];
+    } else {
+      $amount = null;
+    }
+
+
     if ($this->containsFee($family_fee_id) == false) {
-      $q = "INSERT INTO tsm_reg_families_invoice_fees (family_id,family_fee_id,family_invoice_id) VALUES('".$this->info['family_id']."','$family_fee_id','".$this->invoiceId."')";
+      $q = "INSERT INTO tsm_reg_families_invoice_fees (family_id,description,amount,family_fee_id,family_invoice_id)
+      VALUES('".$this->info['family_id']."','".$description."','".$amount."','$family_fee_id','".$this->invoiceId."')";
       $this->db->runQuery($q);
 
       return true;
@@ -81,7 +99,8 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getFees() {
-    $q = "SELECT * FROM tsm_reg_families_fees ff, tsm_reg_families_invoice_fees invf WHERE invf.family_fee_id = ff.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."'";
+    //$q = "SELECT * FROM tsm_reg_families_fees ff, tsm_reg_families_invoice_fees invf WHERE (invf.family_fee_id = ff.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."') OR invf.family_fee_id IS NULL";
+    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."'";
     $r = $this->db->runQuery($q);
     while ($a = mysql_fetch_assoc($r)) {
       $returnFees[] = $a;
