@@ -84,6 +84,16 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
     return true;
   }
 
+  public function removeCourses($force = false) {
+    foreach ($_POST as $key => $value) {
+      $value = $this->tsm->makeVarSafe($value);
+      if (stristr($key, "course_")) {
+        $this->removeCourse($value, $force);
+      }
+    }
+    return true;
+  }
+
   public function hasCourses() {
     $q = "SELECT COUNT(course_id) AS num_courses FROM tsm_reg_course_program WHERE program_id = '".$this->programId."'";
     $r = $this->db->runQuery($q);
@@ -118,9 +128,26 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
     return $courseAdded;
   }
 
-  public function removeCourse($course_id) {
+  public function removeCourse($course_id, $force = false) {
     $course = new TSM_REGISTRATION_COURSE($course_id);
-    if (!$course->getRequirements($this->programId) && !$course->getFees($this->programId, null)) {
+    $requirements = $course->getRequirements($this->programId);
+    $fees = $course->getFees($this->programId, null);
+    if ((!$requirements && !$fees) or (!$course->getNumStudentsEnrolled() && $force == true)) {
+      if ($force == true) {
+        //DELETE ALL REQUIREMENTS AND FEES HERE
+        if (isset($requirements)) {
+          foreach ($requirements as $requirement) {
+            $course->removeRequirement($requirement['course_requirement_id']);
+          }
+        }
+        if (isset($fees)) {
+          foreach ($fees as $fee) {
+            $course->deleteFee($fee['course_fee_id']);
+          }
+        }
+      }
+
+
       $q = "DELETE FROM tsm_reg_course_program WHERE program_id = '".$this->programId."' AND course_id = '$course_id'";
       $this->db->runQuery($q);
 

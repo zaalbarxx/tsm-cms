@@ -14,7 +14,6 @@ require_once(__TSM_ROOT__."models/registration/tsm_registration_payment_plan.mod
 require_once(__TSM_ROOT__."models/registration/tsm_registration_invoice.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_quickbooks.model.php");
 
-
 //INSTANTIATE THE REGISRATION CLASS
 $reg = new TSM_REGISTRATION();
 $reg->family = new TSM_REGISTRATION_FAMILY();
@@ -57,6 +56,7 @@ if (isset($browseOfferings)) {
 } else {
   $reg->setCurrentCampusId($family->getCampusId());
   $currentCampus = new TSM_REGISTRATION_CAMPUS($family->getCampusId());
+  $campusInfo = $currentCampus->getInfo();
   $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
   //if the family has not completed the registration process, send them to the first step.
   if ($family->getCurrentStep() != 0) {

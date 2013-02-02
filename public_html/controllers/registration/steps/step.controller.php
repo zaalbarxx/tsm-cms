@@ -21,6 +21,10 @@ if ($family->getCurrentStep() != 1) {
     $family->moveToStep(5);
     header("Location: index.php?com=registration");
   }
+  if (isset($editFamilyInfo)) {
+    $family->moveToStep(1);
+    header("Location: index.php?com=registration&backToReview=1");
+  }
 }
 
 switch ($family->getCurrentStep()) {
@@ -58,8 +62,18 @@ switch ($family->getCurrentStep()) {
     $activeView = __TSM_ROOT__."views/registration/steps/reviewRegistration.step.view.php";
     break;
   case 5:
-    require_once(__TSM_ROOT__."controllers/registration/steps/paymentPlan.step.controller.php");
-    $activeView = __TSM_ROOT__."views/registration/steps/paymentPlan.step.view.php";
+    if (isset($action)) {
+      switch ($action) {
+        case "viewAvailablePaymentPlans":
+          require_once(__TSM_ROOT__."controllers/registration/steps/view.paymentPlan.step.controller.php");
+          $activeView = __TSM_ROOT__."views/registration/steps/view.paymentPlan.step.view.php";
+          break;
+      }
+
+    } else {
+      require_once(__TSM_ROOT__."controllers/registration/steps/paymentPlan.step.controller.php");
+      $activeView = __TSM_ROOT__."views/registration/steps/paymentPlan.step.view.php";
+    }
     break;
   case 6:
 

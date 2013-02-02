@@ -225,7 +225,9 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       }
     } else {
       //get course specific fees
-      $q = "SELECT * FROM tsm_reg_families_fees WHERE student_id = ".$this->studentId." AND course_id = '".$course_id."' AND program_id IS NULL AND school_year = '".$this->getSelectedSchoolYear()."'";
+      $q = "SELECT * FROM tsm_reg_families_fees WHERE student_id = ".$this->studentId."
+      AND course_id = '".$course_id."' AND program_id IS NULL
+      AND school_year = '".$this->getSelectedSchoolYear()."'";
       if ($fee_type_id != null) {
         $q .= " AND fee_type_id = '$fee_type_id'";
       }
@@ -235,7 +237,10 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       }
 
       //get fees assigned to course AND program
-      $q = "SELECT * FROM tsm_reg_families_fees WHERE student_id = ".$this->studentId." AND course_id = '".$course_id."' AND program_id = '".$program_id."' AND school_year = '".$this->getSelectedSchoolYear()."'";
+      $q = "SELECT * FROM tsm_reg_families_fees WHERE student_id = ".$this->studentId."
+      AND course_id = '".$course_id."'
+      AND program_id = '".$program_id."'
+      AND school_year = '".$this->getSelectedSchoolYear()."'";
       if ($fee_type_id != null) {
         $q .= " AND fee_type_id = '$fee_type_id'";
       }
@@ -343,6 +348,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
   public function getFeesForProgramAndCourses($program_id, $fee_type_id = null) {
     $eligibleFees = null;
     if ($this->getUseRecordedFees() == false) {
+
       $program = new TSM_REGISTRATION_PROGRAM($program_id);
 
       $fees = $program->getFees($fee_type_id);
@@ -375,8 +381,12 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         }
       }
     } else {
+
       //get fees for program, but not courses
-      $q = "SELECT * FROM tsm_reg_families_fees WHERE student_id = ".$this->studentId." AND program_id = '".$program_id."' AND course_id IS NULL AND school_year = '".$this->getSelectedSchoolYear()."'";
+      $q = "SELECT * FROM tsm_reg_families_fees WHERE student_id = ".$this->studentId."
+      AND program_id = '".$program_id."'
+      AND course_id IS NULL
+      AND school_year = '".$this->getSelectedSchoolYear()."'";
       if ($fee_type_id != null) {
         $q .= " AND fee_type_id = '$fee_type_id'";
       }
@@ -384,6 +394,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       while ($a = mysql_fetch_assoc($r)) {
         $eligibleFees[] = $a;
       }
+
 
       $courses = $this->getCoursesIn($program_id);
       if (isset($courses)) {

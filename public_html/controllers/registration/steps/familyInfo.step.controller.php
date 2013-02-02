@@ -56,8 +56,11 @@ if (!$family->isLoggedIn()) {
 
   if (isset($verifyFamily)) {
     if ($family->saveFamily()) {
-      if ($family->moveToNextStep()) {
-        header("Location: index.php");
+      if (isset($backToReview)) {
+        $family->moveToStep(4);
+        header("Location: index.php?com=registration");
+      } else if ($family->moveToNextStep()) {
+        header("Location: index.php?com=registration");
       } else {
         die("Error moving to the next step.");
       }
@@ -69,7 +72,6 @@ if (!$family->isLoggedIn()) {
   //IF THE FAMILY IS IN THE CURRENT SCHOOL YEAR, VERIFY THEIR INFORMATION
   if ($family->inSchoolYear($currentCampus->getCurrentSchoolYear())) {
     $familyInfo = $family->getInfo();
-    ;
     $pageTitle = "Verify Family Information";
     $submitField = "verifyFamily";
     $headerMessage = "Your family is already in the registration system. Please verify your information below to move on to the next step.";
@@ -77,7 +79,6 @@ if (!$family->isLoggedIn()) {
     //IF THE FAMILY IS NOT YET IN THE CURRENT SCHOOL YEAR, VERIFY THEIR INFORMATION AND ADD THEM.
   } else {
     $familyInfo = $family->getInfo();
-    ;
     $pageTitle = "Verify Family Information";
     $submitField = "verifyFamilyAndAddToSchoolYear";
     $headerMessage = "Your family is not yet registered in the ".$currentCampus->getCurrentSchoolYear()." school year. Please verify your information below to register.";
@@ -86,6 +87,4 @@ if (!$family->isLoggedIn()) {
   $hidePasswordFields = 1;
 }
 error_reporting(E_ALL ^ E_NOTICE);
-//$familyInfo = $family->getInfo();
-
 ?>

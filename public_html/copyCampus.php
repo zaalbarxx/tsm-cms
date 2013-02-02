@@ -131,6 +131,16 @@ if (isset($from_campus) && isset($to_campus)) {
   }
   echo $sql."<br /><br />";
 
+
+  //FEE UPDATES
+  $sql = "UPDATE tsm_reg_fees dest, (SELECT fee_type_id, old_fee_type_id, campus_id FROM tsm_reg_fee_types WHERE campus_id = '$to_campus') src
+  SET dest.fee_type_id = src.fee_type_id WHERE src.old_fee_type_id = dest.fee_type_id AND dest.fee_type_id IS NOT NULL
+  AND dest.old_fee_type_id != 0;";
+  if (isset($runSql)) {
+    mysql_query($sql) or die(mysql_error());
+  }
+  echo $sql."<br /><br />";
+
   //COURSE PROGRAM UPDATES
   // echo "update tsm_reg_course_program<br />";
   $sql = "UPDATE tsm_reg_course_program dest, (SELECT program_id, old_program_id, campus_id FROM tsm_reg_programs WHERE campus_id = '$to_campus') src

@@ -23,11 +23,11 @@
 
                 <div class="half">
                     <span class="label">Registration Fee:</span>
-                    $<?php echo $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], 2)); ?>
+                    $<?php echo $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], $campusInfo['registration_fee_type_id'])); ?>
                 </div>
                 <div class="half">
                     <span class="label">Tuition:</span>
-                    $<?php echo $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], 1)); ?>
+                    $<?php echo $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], $campusInfo['tuition_fee_type_id'])); ?>
                 </div>
                 <div style="text-align: center; position: relative; top: 20px;">
                     <a href="index.php?com=registration&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"

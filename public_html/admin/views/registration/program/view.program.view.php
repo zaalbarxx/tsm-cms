@@ -15,22 +15,32 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         <h3>Available Courses - <a
                 href="index.php?com=registration&view=programs&action=addCourse&program_id=<?php echo $program_id; ?>"
                 class="addButton24 fb" style="bottom:-5px" title="Add a Course"></a></h3>
-      <?php if (isset($programCourses)) {
-      foreach ($programCourses as $course) {
-        ?>
-          <div class="smallItem">
-              <a href="index.php?com=registration&view=programs&action=viewCourse&course_id=<?php echo $course['course_id']; ?>&program_id=<?php echo $program_id; ?>"
-                 class="title"><?php echo $course['name']; ?></a>
+
+        <form id="removeCourses" method="post">
+          <?php if (isset($programCourses)) {
+          foreach ($programCourses as $course) {
+            ?>
+              <div class="smallItem">
+                  <a href="index.php?com=registration&view=programs&action=viewCourse&course_id=<?php echo $course['course_id']; ?>&program_id=<?php echo $program_id; ?>"
+                     class="title"><?php echo $course['name']; ?></a>
                   <span class="buttons"><a
                           href="index.php?com=registration&ajax=removeCourseFromProgram&program_id=<?php echo $program_id; ?>&course_id=<?php echo $course['course_id']; ?>"
                           class="deleteButton deleteCourse" title="Remove Course"
-                          ref="<?php echo $course['course_id']; ?>"></a></span>
-          </div>
-        <?php
-      }
-    } else {
-      echo "There are no courses available for this Program.";
-    }?>
+                          ref="<?php echo $course['course_id']; ?>"></a>
+                  <input type="checkbox" name="course_<?php echo $course['course_id']; ?>"
+                         value="<?php echo $course['course_id']; ?>"/>
+                  </span>
+              </div>
+            <?php
+          }
+        } else {
+          echo "There are no courses available for this Program.";
+        }?>
+            <input type="hidden" name="removeCourses" value="1"/>
+            <input type="submit" style="float: right; margin-right: 20px;" class="submitButton"
+                   value="Remove Selected"/>
+        </form>
+        <br/>
     </div>
     <div class="programRequirements">
         <h3>Enrollment Requirements - <a
@@ -94,6 +104,20 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 
 </div>
 <script type="text/javascript">
+    $("#removeCourses").submit(function () {
+        var formData = $(this).serialize();
+        $.post(window.location, formData, function (data) {
+            if (data == "1") {
+                alert("The courses were removed");
+                parent.window.location.reload();
+            } else {
+                alert("There was an error removing the courses.");
+                parent.window.location.reload();
+            }
+        });
+
+        return false;
+    });
     $(".deleteButton").click(function () {
         $.get($(this).attr("href"), function (data) {
             var response = JSON.parse(data);

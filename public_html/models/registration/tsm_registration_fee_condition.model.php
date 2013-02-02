@@ -161,9 +161,11 @@ class TSM_REGISTRATION_FEE_CONDITION extends TSM_REGISTRATION_CAMPUS {
       case "6":
         $programs = $student->getEnrolledPrograms();
         $inProgram = false;
-        foreach ($programs as $program) {
-          if ($program['program_id'] == $this->info['config_1']) {
-            $inProgram = true;
+        if (isset($programs)) {
+          foreach ($programs as $program) {
+            if ($program['program_id'] == $this->info['config_1']) {
+              $inProgram = true;
+            }
           }
         }
         if ($inProgram == true) {

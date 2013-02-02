@@ -25,7 +25,9 @@
                     <?php foreach ($feeType['payment_plans'] as $plan) {
                     echo "<option value='".$plan['payment_plan_id']."'>".$plan['name']."</option>";
                   } ?>
-                  </select>
+                  </select> - <a
+                      href="index.php?com=registration&action=viewAvailablePaymentPlans&fee_type_id=<?php echo $feeType['fee_type_id']; ?>"
+                      class="fb paymentPlanHelp">what's this?</a>
 
               </div>
             <?php
@@ -41,5 +43,5 @@
     </form>
 </div>
 <script type="text/javascript">
-
+    $(document).ready()
 </script>

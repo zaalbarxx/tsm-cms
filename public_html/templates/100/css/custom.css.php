@@ -378,7 +378,7 @@ padding-top: 0px;
 display: none;
 overflow: auto;
 /*width: 97%;*/
-width: 93%;
+width: 97%;
 }
 .bigItem .itemDetails h4{
 margin-bottom: 0px;
@@ -551,16 +551,57 @@ padding: 20px;
 border: 1px solid #777;
 -webkit-box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.6);
 box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.6);
+border-radius: 10px;
 background: #eee;
 line-height: 1.3em;
 overflow: auto;
 margin-bottom: 30px;
 }
+/*
 .infoSection .title{
 font-weight: bold;
 color: #222;
 padding-right: 15px;
 width: 475px;
+}
+*/
+.infoSection .title{
+margin-left: 30px;
+width: 700px;
+display: inline-block;
+font-size: 18px;
+cursor: pointer;
+font-weight: bold;
+margin-bottom: -5px;
+}
+.infoSection .title .summary{
+float: right;
+width: 425px;
+text-align: right;
+display: inline-block;
+margin-top: -20px;
+}
+.infoSection .title .summary .feeTotals{
+position: relative;
+top: 3px;
+display: inline-block;
+}
+.infoSection .title .icons{
+display: inline-block;
+margin-top: 0px;
+margin-right: 20px;
+position: relative;
+top: 5px;
+/*width: 150px;*/
+}
+.infoSection .title .icons img{
+width: 40px;
+margin-right: 10px;
+margin-top: 5px;
+}
+.paymentPlanHelp{
+cursor: pointer;
+text-decoration: underline;
 }
 .label{
 font-weight: bold;
@@ -683,6 +724,9 @@ margin-bottom: -30px;
 }
 body{
 background: url(../images/fb_background.jpg) no-repeat center top fixed #3c1b0a;
+}
+.bigItem .itemDetails{
+width: 92%;
 }
 
 <?php } ?>

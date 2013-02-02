@@ -146,6 +146,25 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $this->courses;
   }
 
+  public function removeCourses($courses, $force = false) {
+    foreach ($courses as $course_id) {
+      if ($force == true) {
+        $course = new TSM_REGISTRATION_COURSE($course_id);
+        $course->delete();
+      }
+    }
+    /*
+    foreach ($_POST as $key => $value) {
+      $value = $this->tsm->makeVarSafe($value);
+      if (stristr($key, "course_")) {
+        $course = new TSM_REGISTRATION_COURSE($value);
+        $course->delete();
+      }
+    }
+*/
+    return true;
+  }
+
   public function getRequirements($searchq = null) {
     $q = "SELECT * FROM tsm_reg_requirements WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."'";
     if ($searchq != null) {

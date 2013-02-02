@@ -19,7 +19,6 @@ $feeTypes = $currentCampus->getFeeTypes();
 if (isset($feeTypes)) {
   foreach ($feeTypes as $feeType) {
     $feeTypes[$feeType['fee_type_id']]['payment_plans'] = $currentCampus->getPaymentPlans($feeType['fee_type_id']);
-
     $feeTypes[$feeType['fee_type_id']]['total_amount'] = $reg->addFees($family->getFees($feeType['fee_type_id']));
   }
 }

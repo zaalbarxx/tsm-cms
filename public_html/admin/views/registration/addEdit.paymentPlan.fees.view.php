@@ -1,6 +1,8 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
+<script src="../includes/ckeditor/ckeditor.js" type="text/javascript"></script>
+<script type="text/javascript" src="../includes/ckeditor/adapters/jquery.js"></script>
 <div class="contentWithSideBar">
     <h1><?php echo $pageTitle; ?></h1>
 
@@ -98,7 +100,15 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             </select>
             invoice(s).</p>
       </span>
+
         </fieldset>
+        <label for="description">Description: </label>
+        <textarea name="description" id="description" class="editor"/><?php echo $planInfo['description']; ?></textarea>
+        <label for="description">Disclaimer: </label>
+        <textarea name="disclaimer" id="disclaimer" class="editor"/><?php echo $planInfo['disclaimer']; ?></textarea>
+        <script type="text/javascript">
+            $('textarea.editor').ckeditor();
+        </script>
         <br/>
         <input type="hidden" name="start_date" id="start_date" value="<?php echo $planInfo['start_date']; ?>"/>
         <input type="hidden" name="payment_plan_id" value="<?php echo $planInfo['payment_plan_id']; ?>"/>

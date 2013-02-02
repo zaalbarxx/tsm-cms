@@ -9,6 +9,16 @@ if ($programFees) {
     $programFees[$key]['conditions'] = $feeObject->getConditionsForProgram($program_id);
   }
 }
+
+if (isset($removeCourses)) {
+  if ($program->removeCourses(true)) {
+    die("1");
+  } else {
+    die("0");
+  }
+}
+
+
 $programCourses = $program->getCourses();
 
 $pageTitle = $programInfo['name'];

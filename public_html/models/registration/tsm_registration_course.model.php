@@ -43,8 +43,8 @@ class TSM_REGISTRATION_COURSE extends TSM_REGISTRATION {
     return $this->name;
   }
 
-  public function delete() {
-    if (!$this->getNumStudentsEnrolled() && !$this->getAssignedPrograms() && !$this->getFees() && !$this->getRequirements()) {
+  public function delete($force = false) {
+    if ((!$this->getNumStudentsEnrolled() && !$this->getAssignedPrograms() && !$this->getFees() && !$this->getRequirements()) or $force == true) {
       echo "can be deleted";
     } else {
       return false;

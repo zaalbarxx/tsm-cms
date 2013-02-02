@@ -48,6 +48,10 @@ foreach ($planFeeTypes as $fee_type_id) {
 
 $invoices = $family->getInvoicesByPaymentPlan($plan_to_process['family_payment_plan_id']);
 
+if (isset($acceptDisclaimer)) {
+  $family->acceptDisclaimer($family_payment_plan_id);
+}
+
 
 if ($invoices == null) {
   $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);

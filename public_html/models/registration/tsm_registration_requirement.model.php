@@ -53,14 +53,14 @@ class TSM_REGISTRATION_REQUIREMENT extends TSM_REGISTRATION_CAMPUS {
       case "2":
         //grade is greater than
         if ($this->info['config_1'] == 1) {
-          if ($studentInfo['grade'] > $this->info['config_2']) {
+          if ($studentInfo['grade'] >= $this->info['config_2']) {
             $meets1 = true;
           } else {
             $meets1 = false;
           }
         } //grade is less than
         elseif ($this->info['config_1'] == -1) {
-          if ($studentInfo['grade'] < $this->info['config_2']) {
+          if ($studentInfo['grade'] <= $this->info['config_2']) {
             $meets1 = true;
           } else {
             $meets1 = false;
@@ -71,13 +71,13 @@ class TSM_REGISTRATION_REQUIREMENT extends TSM_REGISTRATION_CAMPUS {
 
         if ($this->info['config_3'] != "") {
           if ($this->info['config_3'] == 1) {
-            if ($studentInfo['grade'] > $this->info['config_4']) {
+            if ($studentInfo['grade'] >= $this->info['config_4']) {
               $meets2 = true;
             } else {
               $meets2 = false;
             }
           } elseif ($this->info['config_3'] == -1) {
-            if ($studentInfo['grade'] < $this->info['config_4']) {
+            if ($studentInfo['grade'] <= $this->info['config_4']) {
               $meets2 = true;
             } else {
               $meets2 = false;

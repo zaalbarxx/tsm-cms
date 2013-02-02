@@ -226,6 +226,11 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
+  public function acceptDisclaimer($family_payment_plan_id) {
+    $q = "UPDATE tsm_reg_families_payment_plans SET accept_disclaimer = '1' WHERE family_payment_plan_id = '".$family_payment_plan_id."'";
+    $this->db->runQuery($q);
+  }
+
   public function savePaymentPlans() {
     if ($this->deletePaymentPlans()) {
       $paymentPlans = null;
