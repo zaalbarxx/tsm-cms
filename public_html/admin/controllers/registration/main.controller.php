@@ -51,6 +51,7 @@ if ($campusList == NULL) {
   $activeView = __TSM_ROOT__."admin/views/registration/selectSchoolYear.view.php";
 } else {
   $currentCampus = new TSM_REGISTRATION_CAMPUS($reg->getCurrentCampusId());
+  $campusInfo = $currentCampus->getInfo();
   $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
   switch ($view) {
     case null:

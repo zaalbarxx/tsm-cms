@@ -23,11 +23,11 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 
                 <div class="half">
                     <span class="label">Registration Fee:</span>
-                    $<?php echo $reg->addFees($student->getFeesForCourse($course['course_id'], $program_id, 2)); ?>
+                    $<?php echo $reg->addFees($student->getFeesForCourse($course['course_id'], $program_id, $campusInfo['registration_fee_type_id'])); ?>
                 </div>
                 <div class="half">
                     <span class="label">Course Tuition:</span>
-                    $<?php echo $reg->addFees($student->getFeesForCourse($course['course_id'], $program_id, 1)); ?>
+                    $<?php echo $reg->addFees($student->getFeesForCourse($course['course_id'], $program_id, $campusInfo['tuition_fee_type_id'])); ?>
                 </div>
                 <div style="text-align: center; position: relative; top: 20px;">
                     <a href="#" class="med_button enrollNow" style="margin-left: -30px;">Enroll in Course</a>
