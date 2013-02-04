@@ -44,12 +44,13 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $payPalFee = $this->getPayPalFee();
     if (!$payPalFee) {
       $total = $this->getTotal();
-      $paypalFeeAmount = $total * .03;
 
+      $paypalFeeAmount = $total * .03;
       $family_id = $this->info['family_id'];
       $family = new TSM_REGISTRATION_FAMILY($family_id);
       $family_fee_id = $family->addFee("PayPal Convenience Fee", $paypalFeeAmount);
-      $this->addFee($family_fee_id);
+      $params = Array("family_fee_id" => $family_fee_id, "description" => "PayPal Convenience Fee", "amount" => $paypalFeeAmount);
+      $this->addFee($params);
       $this->updateTotal();
       $return = true;
     } else {

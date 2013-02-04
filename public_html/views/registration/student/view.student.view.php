@@ -98,7 +98,14 @@ require_once(__TSM_ROOT__."views/registration/sidebar.view.php");
 <script type="text/javascript">
     $(".bigItem .title").click(function () {
         $(this).parent().children(".itemDetails").slideToggle();
+        $(this).children(".summary").toggle(500);
+        if ($(this).children(".showDetails").html() == "show details") {
+            $(this).children(".showDetails").html("hide details");
+        } else {
+            $(this).children(".showDetails").html("show details");
+        }
     });
+    /*
     $(".showDetails").click(function () {
         if ($(this).html() == "Show Details") {
             $(this).parent().children(".bigItem").children(".itemDetails").show(500);
@@ -111,4 +118,5 @@ require_once(__TSM_ROOT__."views/registration/sidebar.view.php");
 
         return false;
     });
+    */
 </script>

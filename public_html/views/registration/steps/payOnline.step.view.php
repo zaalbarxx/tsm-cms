@@ -22,6 +22,7 @@
         var payNow = confirm("PayPal payments are charged a 3% convenience fee. Do you wish to continue?");
         if (payNow) {
             $.get('index.php?com=registration&ajax=addPayPalFeeToInvoice&family_invoice_id=<?php echo $firstInvoice['family_invoice_id']; ?>', function (data) {
+                //alert(data);
                 var response = JSON.parse(data);
                 if (response.alertMessage != null) {
                     alert(response.alertMessage);
