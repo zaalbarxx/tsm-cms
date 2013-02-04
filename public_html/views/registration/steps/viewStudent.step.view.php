@@ -1,11 +1,18 @@
 <div class="contentArea">
     <h1>
-      <?php echo $pageTitle; ?><!-- - <a href="index.php?com=registration&view=student&action=addEditStudent&student_id=<?php echo $studentInfo['student_id']; ?>" class="editButton" title="Edit Student"></a>--></h1>
+      <?php echo $pageTitle; ?> - <span style="font-size: 14px;"><?php echo $campusInfo['name']; ?></span></h1>
 
+    <div style="width: 100%; display: block; position: relative; top:-55px;  text-align: right; float: right;">
+        <a href="index.php?com=registration&reviewRegistration=1" class="submitButton"
+           style="margin-right: 20px;float: right; text-decoration: none;">Review Family Registration</a><a
+            href="index.php?com=registration&addAnotherStudent=1" class="submitButton"
+            style="margin-right: 20px;float: right; text-decoration: none;">Add Another Student</a>
+    </div>
     <div class="infoSection">
         <h2>Student Information - <a
                 href="index.php?com=registration&student_id=<?php echo $student_id; ?>&action=editStudent"
                 class="editButton" title="Edit Student"></a></h2>
+
 
         <div class="two-thirds">
             <span class="label">Nickname:</span> <?php if ($studentInfo['nickname'] == "") {

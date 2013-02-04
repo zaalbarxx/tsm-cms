@@ -3,6 +3,8 @@
     <div class="half">
         <form name="familyLoginForm" method="post" action="">
             <h3>Current Families</h3>
+
+            <p style="text-align: center;">You already created an account for the 2013-2014 school year.</p>
           <?php if (isset($error)) {
           echo "<span class=\"errorMessage\">".$error."</span><br /><br />";
         } ?>
@@ -38,6 +40,8 @@
     <div class="half">
         <h3>New Families</h3>
 
+        <p style="text-align: center;">You have not yet created an account for the 2013-2014 school year.</p>
+
         <form name="familyRegistrationForm" method="post" action="">
             <label for="campus_id">Campus: <select id="campus_id" name="campus_id" class="select">
                 <option value="">Select a Campus</option>
@@ -59,14 +63,36 @@
             <input type="submit" value="Register Now" class="small_button">
         </form>
     </div>
+
+
+</div>
+<br style="width: 100%; clear: both;"/>
+<br style="width: 100%; clear: both;"/>
+<br style="width: 100%; clear: both;"/>
+<br style="width: 100%; clear: both;"/>
+<br style="width: 100%; clear: both;"/>
+<br style="width: 100%; clear: both;"/>
+<div style="width: 33%; float: left; text-align:center;">
+    <img src="templates/100/images/art.png" style="width:240px;"/>
+</div>
+<div style="width: 33%; float: left; text-align:center;">
+    <img src="templates/100/images/heart.png" style="width:240px;"/>
+</div>
+<div style="width: 33%; float: left; text-align:center;">
+    <img src="templates/100/images/smart.png" style="width:240px;"/>
 </div>
 <style>
     .registrationLogin {
-        background: url(images/registration_background.png);
         margin-left: auto;
         margin-right: auto;
-        width: 566px;
+        width: 666px;
         height: 304px;
+        padding-left: 30px;
+    }
+
+    .registrationLogin .half {
+        width: 240px;
+        margin-right: 65px;
     }
 
     .registrationLogin .select {
@@ -84,7 +110,6 @@
         margin-bottom: 4px;
         font-weight: bold;
         font-size: 14px;
-        color: #000;
     }
 
     .registrationLogin .textbox {

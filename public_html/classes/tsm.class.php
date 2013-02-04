@@ -368,7 +368,12 @@ class TSM {
 
   public function getAdminHeaderHTML() {
     $this->adminHeaderHTML = "
-    <script src=\"../includes/jquery-1.8.3.min.js\" type=\"text/javascript\"></script>
+    <!--[if lt IE 9]>
+        <script src=\"../includes/jquery-1.5.1.min.js\" type=\"text/javascript\"></script>
+    <![endif]-->
+    <!--[if (gte IE 9) | (!IE)]><!-->
+        <script src=\"../includes/jquery-1.8.3.min.js\" type=\"text/javascript\"></script>
+    <!--<![endif]-->
     <link rel=\"stylesheet\" href=\"../includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"../includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
     <script type=\"text/javascript\" src=\"../includes/jquery.validate.min.js\"></script>
@@ -406,7 +411,12 @@ class TSM {
 
   public function getHeaderHTML() {
     $this->headerHTML = "
-    <script src=\"includes/jquery-1.8.3.min.js\" type=\"text/javascript\"></script>
+    <!--[if lt IE 9]>
+        <script src=\"includes/jquery-1.5.1.min.js\" type=\"text/javascript\"></script>
+    <![endif]-->
+    <!--[if (gte IE 9) | (!IE)]><!-->
+        <script src=\"includes/jquery-1.8.3.min.js\" type=\"text/javascript\"></script>
+    <!--<![endif]-->
     <link rel=\"stylesheet\" href=\"includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
     <script type=\"text/javascript\" src=\"includes/jquery.validate.min.js\"></script>

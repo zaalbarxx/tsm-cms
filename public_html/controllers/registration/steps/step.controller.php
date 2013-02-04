@@ -3,7 +3,7 @@
 if ($family->getCurrentStep() != 1) {
   if (isset($addAnotherStudent)) {
     $family->moveToStep(2);
-    header("Location: index.php?com=registration");
+    header("Location: index.php?com=registration&addingAdditional=1");
   }
   if (isset($addAnotherProgram)) {
     $family->moveToStep(3);
@@ -58,6 +58,14 @@ switch ($family->getCurrentStep()) {
     }
     break;
   case 4:
+    if (isset($action)) {
+      switch ($action) {
+        case "editStudent":
+          $family->moveToStep(2);
+          header("Location: index.php?".$_SERVER['QUERY_STRING']);
+          break;
+      }
+    }
     require_once(__TSM_ROOT__."controllers/registration/steps/reviewRegistration.step.controller.php");
     $activeView = __TSM_ROOT__."views/registration/steps/reviewRegistration.step.view.php";
     break;

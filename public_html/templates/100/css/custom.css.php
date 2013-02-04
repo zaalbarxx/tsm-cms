@@ -88,6 +88,16 @@ color: #454545;
 
 margin: 5px 5px 15px 0px;
 }
+input{
+margin-bottom: 5px;
+border: 1px solid #000 !important;
+}
+select{
+margin-bottom: 5px;
+}
+fieldset{
+padding: 10px;
+}
 #topMenuWrapper{
 position: absolute;
 top: 0px;
@@ -727,6 +737,9 @@ background: url(../images/fb_background.jpg) no-repeat center top fixed #3c1b0a;
 }
 .bigItem .itemDetails{
 width: 92%;
+}
+.supportLink{
+display: none;
 }
 
 <?php } ?>

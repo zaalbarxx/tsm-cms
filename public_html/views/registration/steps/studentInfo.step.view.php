@@ -6,14 +6,36 @@
     <form method="post" id="studentInfoForm" action="">
         <fieldset>
             <legend>Student Information</legend>
-            <label for="first_name">First Name: </label><input type="text" name="first_name"
+            <label for="first_name">First Name: </label><input type="text" name="first_name" autocomplete="off"
                                                                value="<?php echo $studentInfo['first_name']; ?>"/><br/>
-            <label for="last_name">Last Name: </label><input type="text" name="last_name"
+            <label for="last_name">Last Name: </label><input type="text" name="last_name" autocomplete="off"
                                                              value="<?php echo $studentInfo['last_name']; ?>"/><br/>
-            <label for="nickname">Nick Name: </label><input type="text" name="nickname"
+            <label for="nickname">Nick Name: </label><input type="text" name="nickname" autocomplete="off"
                                                             value="<?php echo $studentInfo['nickname']; ?>"/><br/>
-            <label for="email">E-mail Address: </label><input type="text" name="email"
+            <label for="email">E-mail Address: </label><input type="text" name="email" autocomplete="off"
                                                               value="<?php echo $studentInfo['email']; ?>"/><br/>
+            <label for="first_year">First Year: </label><select name="first_year">
+            <option value="">Choose Option</option>
+          <?php if (isset($student)) {
+          ?>
+            <option value="1" <?php if (1 == $student->getFirstYear()) {
+              echo "selected=selected";
+            } ?>>Yes
+            </option>
+            <option value="0" <?php if (0 == $student->getFirstYear()) {
+              echo "selected=selected";
+            } ?>>No
+            </option>
+          <?php
+        } else {
+          ?>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          <?php
+        }
+          ?>
+
+        </select><br/>
           <?php if (isset($shirtSizes)) { ?>
             <label for="shirt_size_id">Shirt Size: </label><select name="shirt_size_id" id="shirt_size_id">
             <?php
@@ -81,7 +103,9 @@
         <input type="hidden" name="campus_id" value="<?php echo $currentCampus->getCampusId(); ?>"/>
         <input type="hidden" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>"/>
         <input type="hidden" name="<?php echo $submitField; ?>" value="1"/>
-        <input type="submit" class="submitButton" style="float: right;" value="Next Step"/>
+      <?php if (isset($addingAdditional)) { ?>
+        <a href="index.php?com=registration&backToReview=1" class="submitButton">Cancel</a>
+      <?php } ?><input type="submit" class="submitButton" style="float: right;" value="Next Step"/>
         <br/><br/><br/>
     </form>
 </div>
@@ -95,7 +119,8 @@
             //age:"required",
             birthdate_day:"required",
             birthdate_month:"required",
-            birthdate_year:"required"
+            birthdate_year:"required",
+            first_year:"required"
         }
     });
     <?php if (isset($student_id)) { ?>

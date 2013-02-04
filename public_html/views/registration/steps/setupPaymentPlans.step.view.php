@@ -55,13 +55,24 @@
         <div style="width: 300px; margin-left: auto;margin-right: auto;text-align: center;">
             <b>Total Due:</b> $<?php echo $paymentPlanTotal; ?><br/>
             <b>Due Today:</b> $<?php echo $dueToday; ?><br/><br/>
-            <a href="index.php?action=payOnline&invoice_id=<?php echo $invoice_id; ?>" class="submitButton fb"
+            <a href="index.php?action=payOnline&invoice_id=<?php echo $invoice_id; ?>" class="med_button fb"
                style="text-decoration: none; margin-right: 30px;">Pay Online</a> <a
-                href="index.php?action=payByMail&invoice_id=<?php echo $invoice_id; ?>" class="submitButton fb"
+                href="index.php?action=payByMail&invoice_id=<?php echo $invoice_id; ?>" class="med_button fb"
                 style="text-decoration: none;">Pay By Mail</a>
         </div>
 
         <br/><br/>
     </div>
   <?php } ?>
+    <div style="margin-top: 80px;">
+        <div style="width: 33%; float: left; text-align:center;">
+            <img src="templates/100/images/art.png" style="width:240px;"/>
+        </div>
+        <div style="width: 33%; float: left; text-align:center;">
+            <img src="templates/100/images/heart.png" style="width:240px;"/>
+        </div>
+        <div style="width: 33%; float: left; text-align:center;">
+            <img src="templates/100/images/smart.png" style="width:240px;"/>
+        </div>
+    </div>
 </div>

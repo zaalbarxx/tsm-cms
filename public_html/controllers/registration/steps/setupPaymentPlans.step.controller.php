@@ -12,8 +12,9 @@ foreach ($paymentPlans as $family_payment_plan_id => $familyPaymentPlan) {
 }
 
 if ($plan_to_process == null) {
-  //$family->moveToStep(0);
-  //header("Location: index.php?com=registration");
+  $family->moveToStep(0);
+  $family->sendRegistrationConfirmation();
+  header("Location: index.php?com=registration");
 }
 
 $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($plan_to_process['payment_plan_id']);

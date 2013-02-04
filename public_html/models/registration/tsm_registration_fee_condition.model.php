@@ -271,24 +271,27 @@ class TSM_REGISTRATION_FEE_CONDITION extends TSM_REGISTRATION_CAMPUS {
         return $result;
         break;
       case "13":
-        if ($student->getUseRecordedFees() == false) {
-          $student->setUseRecordedFees(true);
-          $resetUseRecorded = true;
-        } else {
-          $resetUseRecorded = false;
-        }
-        $fees = $student->getFees();
-        if ($resetUseRecorded == true) {
-          $student->setUseRecordedFees(false);
-        }
+        $q = "SELECT * FROM tsm_reg_families_fees WHERE student_id = '".$student->studentId."' AND fee_id = '".$params['fee']['fee_id']."'";
+        $r = $this->db->runQuery($q);
+        $feeAssigned = mysql_num_rows($r);
         $result = true;
-        if (isset($fees)) {
-          foreach ($fees as $fee) {
-            if ($fee['fee_id'] == $params['fee']['fee_id']) {
+        if (!isset($params['course_id'])) {
+          $params['course_id'] = null;
+        }
+        if (!isset($params['program_id'])) {
+          $params['program_id'] = null;
+        }
+        if ($feeAssigned > 0) {
+          while ($a = mysql_fetch_assoc($r)) {
+            if ($a['program_id'] == $params['program_id'] && $a['course_id'] == $params['course_id']) {
+              $result = true;
+            } else {
               $result = false;
             }
           }
         }
+
+        //echo "AND THE RESULT IS: ".$result."<br />";
 
         return $result;
         break;

@@ -17,7 +17,7 @@
 
                 <div style="text-align: center; position: relative; top: 20px;">
                     <a href="index.php?com=registration&browseOfferings=1&campus_id=<?php echo $campus_id; ?>&action=viewCourses&program_id=<?php echo $program['program_id']; ?>"
-                       class="med_button" style="margin-left: -30px;">Browse Courses</a>
+                       class="med_button fb" style="margin-left: -30px;">Browse Courses</a>
                 </div>
 
             </div>

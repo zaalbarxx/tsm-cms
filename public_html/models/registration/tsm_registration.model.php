@@ -46,7 +46,10 @@ class TSM_REGISTRATION {
     if ($period['start_time'] == "00:00:00" and $period['end_time'] == "00:00:00") {
       $return = "TBD";
       if (isset($period['first_name']) && isset($period['last_name'])) {
-        $return .= ": ".$period['first_name']." ".$period['last_name'];
+        if ($period['first_name'] != "TBD" && $period['last_name'] != "TBD") {
+          $return .= ": ".$period['first_name']." ".$period['last_name'];
+        }
+        //$return .= ": ".$period['first_name']." ".$period['last_name'];
       }
     } else {
       $return = $this->tsm->intToDay($period['day']).". ".date("g:ia", strtotime($period['start_time']))." - ".date("g:ia", strtotime($period['end_time']));
@@ -89,8 +92,11 @@ class TSM_REGISTRATION {
     }
   }
 
-  public function getCampuses() {
+  public function getCampuses($regOpen = null) {
     $q = "SELECT * FROM tsm_reg_campuses WHERE website_id = '".$_SESSION['website_id']."'";
+    if ($regOpen == true) {
+      $q .= "AND registration_open = 1";
+    }
     $r = $this->db->runQuery($q);
     $campuses = null;
     while ($a = mysql_fetch_assoc($r)) {

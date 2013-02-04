@@ -16,6 +16,15 @@
                 <div class="description">
                   <?php echo html_entity_decode($course['description']); ?>
                 </div>
+                <h4>Available Periods</h4>
+              <?php
+              if (isset($course['periods'])) {
+                foreach ($course['periods'] as $period) {
+                  ?>
+                  <?php echo $reg->displayPeriod($period); ?><br/>
+                  <?php
+                }
+              }?>
                 <h4>Applicable Fees</h4>
 
                 <div class="half">
@@ -39,7 +48,7 @@
                   ?>
                   <?php echo $reg->displayPeriod($period); ?> - <a
                             href="index.php?com=registration&action=addCourse&student_id=<?php echo $studentInfo['student_id']; ?>&program_id=<?php echo $programInfo['program_id']; ?>&enrollInCourse=<?php echo $course['course_id']; ?>&course_period_id=<?php echo $period['course_period_id']; ?>"
-                            class="addCourse" ref="<?php echo $course['name']; ?>">Choose</a><br/>
+                            class="addCourse" ref="<?php echo $course['name']; ?>">Select</a><br/>
                   <?php
                 }
               }?>

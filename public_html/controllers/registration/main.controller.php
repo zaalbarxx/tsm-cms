@@ -47,7 +47,7 @@ if (isset($browseOfferings)) {
       $error = "Incorrect e-mail address and password.";
     }
   }
-  $campusList = $reg->getCampuses();
+  $campusList = $reg->getCampuses(true);
   if (isset($registerNow)) {
     require_once(__TSM_ROOT__."controllers/registration/steps/step.controller.php");
   } else {

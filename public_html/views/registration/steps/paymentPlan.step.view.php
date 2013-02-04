@@ -13,7 +13,9 @@
         foreach ($feeTypes as $feeType) {
           if ($feeType['total_amount'] > 0) {
             ?>
-              <div class="half">
+              <div class="half" <?php if (count($feeType['payment_plans']) == 1) {
+                echo "style='display: none;'";
+              } ?>>
                   <h2 style="text-align: center;"><?php echo $feeType['name']; ?></h2>
                   <label class="label" style="width: 200px;"><?php echo $feeType['name']; ?> Total:</label>
                   $<?php echo $feeType['total_amount']; ?>
@@ -23,11 +25,16 @@
                   <select name="payment_plan_id_for_fee_type_id:<?php echo $feeType['fee_type_id']; ?>">
                       <option value="">Choose a Plan</option>
                     <?php foreach ($feeType['payment_plans'] as $plan) {
-                    echo "<option value='".$plan['payment_plan_id']."'>".$plan['name']."</option>";
+                    if (count($feeType['payment_plans']) == 1) {
+                      $selected = "selected=selected";
+                    } else {
+                      $selected = "";
+                    }
+                    echo "<option value='".$plan['payment_plan_id']."' $selected>".$plan['name']."</option>";
                   } ?>
-                  </select> - <a
+                  </select><br/><a
                       href="index.php?com=registration&action=viewAvailablePaymentPlans&fee_type_id=<?php echo $feeType['fee_type_id']; ?>"
-                      class="fb paymentPlanHelp">what's this?</a>
+                      class="fb paymentPlanHelp" style="position: relative; left: 120px;">see details</a>
 
               </div>
             <?php

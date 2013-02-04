@@ -82,3 +82,5 @@
 
     </div>
     <div id="contentArea">
+        <div style="float: right; margin-top: -40px; font-weight: bold;" class="supportLink">Need help? Contact: <a
+                href="mailto:support@artiosacademies.com">support@artiosacademies.com</a></div>

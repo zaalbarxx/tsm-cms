@@ -1,6 +1,8 @@
 <div class="contentArea">
 
-    <h1 style="text-align: center;">Registration Review</h1>
+    <h1 style="text-align: center;">Registration Review<br/><span
+            style="font-size: 14px; position: relative; top: -15px;"><?php echo $campusInfo['name']; ?></h1>
+    </span>
 
     <p style="text-align: center;">Please review the registration information for your students below.</p>
 
@@ -48,11 +50,14 @@
         <a href="index.php?com=registration&reviseStudent=1&student_id=<?php echo $studentInfo['student_id']; ?>"
            class="right small_button">Revise Student</a>
 
+        <a href="index.php?com=registration&student_id=<?php echo $studentInfo['student_id']; ?>&action=editStudent&backToReview=1"
+           class="editButton" title="Edit Student" style="float: left;"></a>
+
         <h2 class="title"><?php echo $studentInfo['last_name'].", ".$studentInfo['first_name']; ?> - <span
                 class="showDetails" style="font-size: 14px; text-decoration: underline;">show details</span>
 
             <div class="summary">
-                <div class="icons">
+                <div class="icons" style="height: 45px;">
                   <?php
                   if (isset($studentInfo['programs'])) {
                     foreach ($studentInfo['programs'] as $program) {
@@ -98,6 +103,8 @@
                 <div class="bigItem">
                 <span class="title"><img src="<?php echo $program['icon_url']; ?>"
                                          style="width: 40px; margin-top: -25px; margin-bottom: -15px; margin-right: 20px; margin-left: -30px;"/><?php echo $program['name']; ?></span>
+                    <a href="index.php?com=registration&reviseStudent=1&student_id=<?php echo $studentInfo['student_id']; ?>"
+                       class="right small_button" style="margin-top: -25px;">Revise Student</a>
 
                     <div class="itemDetails" style="display: block;">
                       <?php if ($program['has_courses']) { ?>
@@ -158,6 +165,9 @@
         </div>
     </div>
   <?php } ?>
+  <?php if (isset($campusInfo['registration_review_footnote'])) {
+  echo $campusInfo['registration_review_footnote'];
+} ?>
     <br/>
     <a href="index.php?com=registration&choosePaymentPlan=1" class="submitButton"
        style="margin-right: 20px;float: right; text-decoration: none;">Finalize Registration</a><a

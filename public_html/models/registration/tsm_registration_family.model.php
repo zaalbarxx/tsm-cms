@@ -203,6 +203,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     }
 
     $r = $this->db->runQuery($q);
+    $paymentPlans = Array();
     while ($a = mysql_fetch_assoc($r)) {
       $paymentPlans[$a['family_payment_plan_id']] = $a;
       $paymentPlans[$a['family_payment_plan_id']]['fee_types'] = unserialize($a['fee_types']);
@@ -234,6 +235,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   public function savePaymentPlans() {
     if ($this->deletePaymentPlans()) {
       $paymentPlans = null;
+      //print_r($_POST);
       foreach ($_POST as $key => $value) {
         if ($value != "") {
           if (strstr($key, 'payment_plan_id_for_fee_type_id')) {
@@ -324,6 +326,28 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
 
   public function recordFee($fee) {
 
+  }
+
+  public function sendRegistrationConfirmation() {
+    $campus = new TSM_REGISTRATION_CAMPUS($this->info['campus_id']);
+    $campusInfo = $campus->getInfo();
+    $subject = $campusInfo['name']." Registration Confirmation";
+
+    $headers = "From: noreply@artiosacademies.com\r\n";
+    //$headers .= "Reply-To: ". strip_tags($_POST['req-email']) . "\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+    $message = $campusInfo['registration_confirmation_email'];
+    /*
+    $message = "
+    <h3>Registration Confirmation</h3>
+    <p>You have successfully registered for ".$campusInfo['name']."!</p>
+    <p>You can view your registration summary anytime by logging in to the registration portal</p>
+    <p style='text-align: center'><a href='http://sandbox.takesixmedia.com/' target='_blank'>View Summary</a></p>
+    <br /><br />
+    ";
+*/
+    mail($this->info['primary_email'], $subject, $message, $headers);
   }
 
   public function getFees($fee_type_id = null) {

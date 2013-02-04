@@ -86,6 +86,23 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
+  public function setFirstYear($first_year) {
+    $q = "UPDATE tsm_reg_students_school_years SET first_year = '$first_year' WHERE student_id = '".$this->studentId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
+  public function getFirstYear() {
+    $q = "SELECT first_year FROM tsm_reg_students_school_years WHERE student_id = '".$this->studentId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $first_year = $a['first_year'];
+    }
+
+    return $first_year;
+  }
+
   public function isApproved() {
     if (!isset($this->isApproved)) {
       $q = "SELECT approved FROM tsm_reg_students_school_years WHERE student_id = '".$this->studentId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
@@ -605,18 +622,26 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         }
 
         if (!$this->assignedFee($fee['fee_id'], $fee['program_id'], $fee['course_id'])) {
-          $addFees[] = $fee;
+          $params = Array('program_id' => $fee['program_id'], 'course_id' => $fee['course_id'], 'fee' => $fee);
+
+          $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
+          if (!is_null($fee['program_id'])) {
+            $programConditions = $feeObject->getConditionsForProgram($fee['program_id']);
+          } else {
+            $programConditions = null;
+          }
+          if (!is_null($fee['course_id'])) {
+            $courseConditions = $feeObject->getConditionsForCourse($fee['course_id'], $fee['program_id']);
+          } else {
+            $courseConditions = null;
+          }
+          if ($this->meetsConditions($programConditions, $params) && $this->meetsConditions($courseConditions, $params)) {
+            $this->assignFee($fee['fee_id'], $fee['program_id'], $fee['course_id']);
+          }
+          //$addFees[] = $fee;
         }
 
       }
-    }
-
-
-    if (isset($addFees)) {
-      foreach ($addFees as $fee) {
-        $this->assignFee($fee['fee_id'], $fee['program_id'], $fee['course_id']);
-      }
-
     }
 
     $assignedFees = $this->getFees();
@@ -632,37 +657,37 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
 
         if (isset($fees)) {
           foreach ($fees as $neededFee) {
+
+
             if (!isset($neededFee['course_id'])) {
               $neededFee['course_id'] = null;
             }
             if (!isset($neededFee['program_id'])) {
               $neededFee['program_id'] = null;
             }
+
             if ($neededFee['fee_id'] == $fee['fee_id'] &&
               $neededFee['program_id'] == $fee['program_id'] &&
               $neededFee['course_id'] == $fee['course_id']
             ) {
               $needed = true;
             }
+
+
           }
         }
 
         if ($needed == false) {
-          $removeFees[] = $fee;
-        }
-
-        if (isset($removeFees)) {
-          foreach ($removeFees as $fee) {
-            $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-            if (!$feeObject->isInvoiced()) {
-              $feeObject->delete();
-            }
+          //echo "deleteing: ".$fee['fee_id']."\r\n";
+          $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+          if (!$feeObject->isInvoiced()) {
+            $feeObject->delete();
           }
         }
       }
 
-      return true;
     }
+    return true;
   }
 
   public function enrollInProgram($program_id) {
@@ -729,7 +754,12 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getAllCourses() {
-    $q = "SELECT * FROM tsm_reg_student_course sc, tsm_reg_courses c, tsm_reg_periods p WHERE c.course_id = sc.course_id AND p.period_id = sc.period_id AND sc.student_id = '".$this->studentId."' ORDER BY day, start_time";
+    $q = "SELECT * FROM tsm_reg_student_course sc, tsm_reg_courses c, tsm_reg_periods p, tsm_reg_course_period cp
+    WHERE c.course_id = sc.course_id
+    AND p.period_id = cp.period_id
+    AND cp.course_period_id = sc.course_period_id
+    AND sc.student_id = '".$this->studentId."'
+    ORDER BY day, start_time";
     $r = $this->db->runQuery($q);
     $courses = null;
     while ($a = mysql_fetch_assoc($r)) {
