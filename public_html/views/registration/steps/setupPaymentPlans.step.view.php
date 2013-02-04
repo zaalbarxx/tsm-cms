@@ -55,10 +55,12 @@
         <div style="width: 300px; margin-left: auto;margin-right: auto;text-align: center;">
             <b>Total Due:</b> $<?php echo $paymentPlanTotal; ?><br/>
             <b>Due Today:</b> $<?php echo $dueToday; ?><br/><br/>
+          <?php if ($campusInfo['paypal_email'] != "") { ?>
             <a href="index.php?action=payOnline&invoice_id=<?php echo $invoice_id; ?>" class="med_button fb"
-               style="text-decoration: none; margin-right: 30px;">Pay Online</a> <a
-                href="index.php?action=payByMail&invoice_id=<?php echo $invoice_id; ?>" class="med_button fb"
-                style="text-decoration: none;">Pay By Mail</a>
+               style="text-decoration: none; margin-right: 30px;">Pay Online</a>
+          <?php } ?>
+            <a href="index.php?action=payByMail&invoice_id=<?php echo $invoice_id; ?>" class="med_button fb"
+               style="text-decoration: none;">Pay By Mail</a>
         </div>
 
         <br/><br/>

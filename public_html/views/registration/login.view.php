@@ -1,7 +1,7 @@
 <!--<h2>Registration Login</h2>-->
 <div class="registrationLogin">
     <div class="half">
-        <form name="familyLoginForm" method="post" action="">
+        <form name="familyLoginForm" id="familyLoginForm" method="post" action="">
             <h3>Current Families</h3>
 
             <p style="text-align: center;">You already created an account for the 2013-2014 school year.</p>
@@ -42,7 +42,7 @@
 
         <p style="text-align: center;">You have not yet created an account for the 2013-2014 school year.</p>
 
-        <form name="familyRegistrationForm" method="post" action="">
+        <form name="familyRegistrationForm" id="familyRegistrationForm" method="post" action="">
             <label for="campus_id">Campus: <select id="campus_id" name="campus_id" class="select">
                 <option value="">Select a Campus</option>
               <?php if (isset($campusList)) {
@@ -124,3 +124,20 @@
         background-color: white;
     }
 </style>
+<script type="text/javascript">
+    $("#familyRegistrationForm").validate({
+        rules:{
+            campus_id:"required",
+            primary_email:"required",
+            password:"required",
+            confirm_password:"required"
+        }
+    });
+    $("#familyLoginForm").validate({
+        rules:{
+            campus_id:"required",
+            primary_email:"required",
+            password:"required"
+        }
+    });
+</script>

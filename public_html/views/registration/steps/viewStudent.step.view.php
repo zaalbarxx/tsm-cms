@@ -98,6 +98,9 @@
                     </div>
 
                 </div>
+              <?php if (isset($campusInfo['registration_review_footnote'])) {
+              echo $campusInfo['registration_review_footnote'];
+            } ?>
             </div>
           <?php
         }
