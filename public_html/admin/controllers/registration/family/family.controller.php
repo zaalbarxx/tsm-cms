@@ -22,6 +22,10 @@ switch ($action) {
     require_once(__TSM_ROOT__."admin/controllers/registration/family/addEdit.family.controller.php");
     $activeView = __TSM_ROOT__."admin/views/registration/family/addEdit.family.view.php";
     break;
+  case "resetPassword":
+    require_once(__TSM_ROOT__."admin/controllers/registration/family/resetPassword.family.controller.php");
+    $activeView = __TSM_ROOT__."admin/views/registration/family/resetPassword.family.view.php";
+    break;
 }
 
 

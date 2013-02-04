@@ -9,6 +9,10 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     <div class="infoSection">
         <h2>Family Information</h2>
 
+        <div>
+            <a href="index.php?com=registration&view=family&action=resetPassword&family_id=<?php echo $familyInfo['family_id']; ?>"
+               class="fb">Reset Password</a>
+        </div>
         <div class="half">
             <span class="title">Father:</span> <?php echo $familyInfo['father_first']." ".$familyInfo['father_last']; ?>
             <br/>
