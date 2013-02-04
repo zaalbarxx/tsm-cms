@@ -18,6 +18,8 @@ extract($tsm->makeArraySafe($_REQUEST), EXTR_OVERWRITE);
 //INSTANTIATE THE DB CONNECTION
 require_once(__TSM_ROOT__.'tsm_db_conn.php');
 
+$tsm->logRequest();
+
 //INSTANTIATE THE ADMIN USER CLASS
 $tsm->adminUser = new AdminUser();
 

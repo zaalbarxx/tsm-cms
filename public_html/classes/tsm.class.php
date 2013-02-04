@@ -457,6 +457,44 @@ class TSM {
     return $this->headerHTML;
   }
 
+  public function logRequest() {
+
+    if (substr($_SERVER['REQUEST_URI'], 0, 5) == "/club" or substr($_SERVER['REQUEST_URI'], 0, 10) == "/scva/club" or substr($_SERVER['REQUEST_URI'], 0, 6) == "/admin" or substr($_SERVER['REQUEST_URI'], 0, 11) == "/scva/admin") {
+      $viewingAdminOrClub = 1;
+    }
+
+    $postArray = Array();
+    foreach ($_POST as $key => $value) {
+      $postArray[$key] = $this->makeVarSafe($_POST[$key], 1);
+    }
+
+    $sessionArray = Array();
+    if ($_SESSION) {
+      foreach ($_SESSION as $key => $value) {
+        $sessionArray[$key] = $this->makeVarSafe($_SESSION[$key], 1);
+      }
+    }
+    $getArray = Array();
+    foreach ($_GET as $key => $value) {
+      $getArray[$key] = $this->makeVarSafe($_GET[$key], 1);
+    }
+    $cookieArray = Array();
+    foreach ($_COOKIE as $key => $value) {
+      $cookieArray[$key] = $this->makeVarSafe($_COOKIE[$key], 1);
+    }
+    $postArray = serialize($postArray);
+    $sessionArray = serialize($sessionArray);
+    $getArray = serialize($getArray);
+    $cookieArray = serialize($cookieArray);
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $userAgent = $this->makeVarSafe($_SERVER['HTTP_USER_AGENT'], 1);
+    $curPath = $this->makeVarSafe($_SERVER['REQUEST_URI'], 1);
+    $q = "INSERT INTO system_requests (ip_address, current_path, user_agent, get_request, post_request, session_request, cookie_request)
+	VALUES('$ipAddress','$curPath','$userAgent','$getArray','$postArray','$sessionArray','$cookieArray')";
+    $this->db->runQuery($q);
+    //mysql_query($q) or die(mysql_error().$q);
+  }
+
 }
 
 ?>
