@@ -186,8 +186,8 @@
             $(this).children(".showDetails").html("show details");
         }
     });
-    /*
-    $(".showDetails").click(function () {
+
+    $(".itemDetails .showDetails").click(function () {
         if ($(this).html() == "Show Details") {
             $(this).parent().children(".bigItem").children(".itemDetails").show(500);
             $(this).html("Hide Details");
@@ -201,7 +201,6 @@
 
         return false;
     });
-    */
 </script>
 <style>
     .infoSection .title {
