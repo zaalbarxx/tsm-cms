@@ -1,12 +1,8 @@
 <?php
-if (isset($backToReview)) {
-  $family->moveToStep(4);
-  header("Location: index.php?com=registration");
-}
 
 if (isset($addStudent)) {
   if ($currentCampus->studentExists($first_name, $birth_date)) {
-    $headerMessage = "This student is already registered at this campus for this year. Please contact <a href='mailto:support@artiosacademies.com'>support@artiosacademies.com</a>";
+    $errorMessage = "This student is already registered at this campus for this year. Please contact <a href='mailto:support@artiosacademies.com'>support@artiosacademies.com</a>";
   } else {
     $student_id = $family->addStudent();
     if ($student_id) {

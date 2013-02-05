@@ -1,10 +1,12 @@
 <!--<h2>Registration Login</h2>-->
+<span style="position: relative; top: -40px;"><a href="index.php?browseOfferings=1">Preview Class Offerings</a></span>
 <div class="registrationLogin">
+    <div class="half" style="text-align: center;"><h3>Current Families</h3></div>
+    <div class="half" style="text-align: center;"><h3>New Families</h3></div>
+    <p style="margin-left: 60px;">Last year's login is not valid. Everyone must log in as a New Family first.</p>
+
     <div class="half">
         <form name="familyLoginForm" id="familyLoginForm" method="post" action="">
-            <h3>Current Families</h3>
-
-            <p style="text-align: center;">You already created an account for the 2013-2014 school year.</p>
           <?php if (isset($error)) {
           echo "<span class=\"errorMessage\">".$error."</span><br /><br />";
         } ?>
@@ -26,7 +28,7 @@
         </form>
         <br/>
 
-        <div class="forgotPassword">
+        <!--<div class="forgotPassword">
             <form action="http://www.artiosacademies.com/index.php?page=32&amp;resetpassword=1" method="POST">
                 <label for="email_check">Forgot Password? <input type="text" name="email_check"
                                                                  value="Your e-mail address..." class="textbox"
@@ -34,13 +36,10 @@
                 <input name="send_pass" value="1" type="hidden">
                 <input type="submit" value="Submit" class="small_button">
             </form>
-        </div>
+        </div>-->
     </div>
 
     <div class="half">
-        <h3>New Families</h3>
-
-        <p style="text-align: center;">You have not yet created an account for the 2013-2014 school year.</p>
 
         <form name="familyRegistrationForm" id="familyRegistrationForm" method="post" action="">
             <label for="campus_id">Campus: <select id="campus_id" name="campus_id" class="select">

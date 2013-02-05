@@ -1,6 +1,10 @@
 <div class="contentArea">
     <h1><?php echo $pageTitle; ?></h1>
 
+  <?php if (isset($errorMessage)) { ?>
+    <p style="text-align: center; margin: 30px; color: red; font-weight: bold;"><?php echo $errorMessage; ?></p>
+  <?php } ?>
+
     <p style="text-align: center; margin: 30px;"><?php echo $headerMessage; ?></p>
 
     <form method="post" id="studentInfoForm" action="">
@@ -94,7 +98,7 @@
             echo "<option value=\"$i\" $selected>$name</option>";
           }
           ?>
-        </select>
+        </select> <span style="margin-left: 10px; font-size: 13px;">*Grade for the 2013-14 school year</span>
         </fieldset>
 
         <br/>

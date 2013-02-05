@@ -60,7 +60,7 @@ switch ($family->getCurrentStep()) {
   case 4:
     if (isset($action)) {
       switch ($action) {
-        case "editStudent":
+        case "editStudentInfo":
           $family->moveToStep(2);
           header("Location: index.php?".$_SERVER['QUERY_STRING']);
           break;

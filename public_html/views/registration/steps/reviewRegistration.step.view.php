@@ -50,7 +50,7 @@
         <a href="index.php?com=registration&reviseStudent=1&student_id=<?php echo $studentInfo['student_id']; ?>"
            class="right small_button">Revise Student</a>
 
-        <a href="index.php?com=registration&student_id=<?php echo $studentInfo['student_id']; ?>&action=editStudent&backToReview=1"
+        <a href="index.php?com=registration&student_id=<?php echo $studentInfo['student_id']; ?>&action=editStudentInfo&backToReview=1"
            class="editButton" title="Edit Student" style="float: left;"></a>
 
         <h2 class="title"><?php echo $studentInfo['last_name'].", ".$studentInfo['first_name']; ?> - <span
