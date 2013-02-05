@@ -1,3 +1,3 @@
 <?php
-$campuses = $reg->getCampuses();
+$campuses = $reg->getCampuses(true);
 ?>
