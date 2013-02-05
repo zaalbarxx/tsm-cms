@@ -8,19 +8,20 @@ if (isset($program_id)) {
     foreach ($courseList as $course) {
       $courseObject = new TSM_REGISTRATION_COURSE($course['course_id']);
       $fees = $courseObject->getFees($program_id, $campusInfo['tuition_fee_type_id']);
+      $courseFees = $courseObject->getFees(null, null);
+      $displayTuition = 0;
       foreach ($fees as $fee) {
-        $showFees = null;
-        $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
-        $conditions = $feeObject->getConditionsForProgram($program_id);
-        $courseConditions = $feeObject->getConditionsForCourse($course['course_id'], $program_id);
-        if ($conditions == null && $courseConditions == null) {
-          $showFees[] = $fee;
-        } else {
-          $showFees = null;
+        if ($fee['amount'] > $displayTuition) {
+          $displayTuition = $fee['amount'];
         }
       }
-      if (isset($showFees)) {
-        $courseList[$course['course_id']]['tuition_total'] = $reg->addFees($showFees);
+      foreach ($courseFees as $fee) {
+        if ($fee['amount'] > $displayTuition) {
+          $displayTuition = $fee['amount'];
+        }
+      }
+      if ($displayTuition > 0) {
+        $courseList[$course['course_id']]['tuition_total'] = $displayTuition;
       }
       $courseList[$course['course_id']]['periods'] = $courseObject->getPeriods();
     }
