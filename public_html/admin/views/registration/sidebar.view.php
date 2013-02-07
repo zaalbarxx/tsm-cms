@@ -46,4 +46,46 @@
             } ?>>Periods</a>
         </li>
     </ul>
+  <?php if (stristr($_SERVER["REQUEST_URI"], "index.php?com=registration") && $view == null) { ?>
+    <div style="text-align: center; width: 100%;">
+        <form action="" method="post" id="selectSchoolYearForm" style="text-align: center;">
+            <select name="setSelectedSchoolYear" id="selectSchoolYear"
+                    style="font-size: 16px; padding: 10px; background: none; border: 1px solid #000;margin-left: 30px; ">
+                <option value="">Change School Year</option>
+              <?php for ($i = date('Y') - 1; $i < date('Y') + 5; $i++) {
+              $display = $i + 1;
+              echo "<option value='$i'>$i - ".$display."</option>";
+            } ?>
+            </select>
+        </form>
+        <script type="text/javascript">
+            $("#selectSchoolYearForm").change(function () {
+                $("#selectSchoolYearForm").submit();
+            });
+        </script>
+        <br/>
+
+        <form action="" method="post" id="selectCampusForm" style="text-align: center;">
+            <select name="setCurrentCampusId" id="selectCampusId"
+                    style="font-size: 16px; padding: 10px; background: none; border: 1px solid #000; margin-left: 30px;">
+                <option value="">Change Campus</option>
+              <?php
+              if ($campusList != NULL) {
+                foreach ($campusList as $array) {
+                  echo "  <option value='".$array['campus_id']."'>".$array['name']."</option>\n";
+                }
+              } else {
+
+              }
+              ?>
+            </select>
+        </form>
+        <script type="text/javascript">
+            $("#selectCampusId").change(function () {
+                $("#selectCampusForm").submit();
+            });
+        </script>
+        <br/><br/>
+    </div>
+  <?php } ?>
 </div>
