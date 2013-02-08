@@ -18,6 +18,10 @@ switch ($action) {
     break;
   case "paymentPlans":
     $paymentPlans = $currentCampus->getPaymentPlans();
+    foreach ($paymentPlans as $paymentPlan) {
+      $paymentPlanObject = new TSM_REGISTRATION_PAYMENT_PLAN($paymentPlan['payment_plan_id']);
+      $paymentPlans[$paymentPlan['payment_plan_id']]['num_families'] = $paymentPlanObject->getNumFamilies();
+    }
     $activeView = __TSM_ROOT__."admin/views/registration/paymentPlans.fees.view.php";
     break;
   case "addEditPaymentPlan":

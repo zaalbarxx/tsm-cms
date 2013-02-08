@@ -14,7 +14,7 @@ require_once(__TSM_ROOT__."admin/views/registration/fees.sidebar.view.php");
         foreach ($paymentPlans as $plan) {
           ?>
             <div class="smallItem">
-                <span class="title"><?php echo $plan['name']; ?></span>
+                <span class="title"><?php echo $plan['name']; ?> - <?php echo $plan['num_families']; ?></span>
           <span class="buttons">
           <a href="index.php?com=registration&view=fees&action=addEditPaymentPlan&payment_plan_id=<?php echo $plan['payment_plan_id']; ?>"
              class="editButton fb" title="Edit This Payment Plan"></a>
