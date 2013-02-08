@@ -1,5 +1,6 @@
 <!--<h2>Registration Login</h2>-->
-<span style="position: relative; top: -40px;"><a href="index.php?browseOfferings=1">Preview Class Offerings</a></span>
+<span style="position: relative; top: -40px;"><a href="index.php?browseOfferings=1">Preview Class Offerings</a> | <a
+        class="fb noext" href="http://player.vimeo.com/video/58812049">Registration Tutorial</a></span>
 <div class="registrationLogin">
     <div class="half" style="text-align: center;"><h3>Current Families</h3></div>
     <div class="half" style="text-align: center;"><h3>New Families</h3></div>

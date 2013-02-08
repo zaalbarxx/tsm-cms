@@ -433,7 +433,13 @@ class TSM {
     ";
     $this->headerHTML .= "<script type=\"text/javascript\">
 		$(document).ready( function(){
-		  $(\".fb\").attr('href', function() { return $(this).attr('href') + '&fb=1'; }).fancybox({
+		  $(\".fb\").attr('href', function() {
+		  if($(this).hasClass(\"noext\")){
+		    return $(this).attr('href');
+		  } else {
+		    return $(this).attr('href') + '&fb=1';
+		  }
+		  }).fancybox({
     	  'width'          : 785,
     	  'height'          : '85%',
     	  'padding'       : 5,
