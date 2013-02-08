@@ -716,6 +716,7 @@ text-shadow: 0px 0px 8px rgba(0,0,0,1);
 width: 730px;
 padding-left: 25px;
 background: none;
+color: #000;
 }
 #navigationWrapper{
 background: none;
