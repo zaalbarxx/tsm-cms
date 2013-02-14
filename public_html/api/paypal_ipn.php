@@ -43,7 +43,7 @@ foreach ($_POST as $key => $value) {
 
 // post back to PayPal system to validate
 $header .= "POST /cgi-bin/webscr HTTP/1.0\r\n";
-$header .= "Host: www.sandbox.paypal.com\r\n";
+$header .= "Host: www.paypal.com\r\n";
 $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
 $header .= "Content-Length: ".strlen($req)."\r\n\r\n";
 
@@ -56,7 +56,7 @@ $header .= "Content-Length: ".strlen($req)."\r\n\r\n";
 //$fp = fsockopen('www.paypal.com', 80, $errno, $errstr, 30);
 
 // or use port 443 for an SSL connection
-$fp = fsockopen('ssl://www.sandbox.paypal.com', 443, $errno, $errstr, 30);
+$fp = fsockopen('ssl://www.paypal.com', 443, $errno, $errstr, 30);
 
 if (!$fp) {
   // HTTP ERROR
@@ -113,16 +113,13 @@ if (!$fp) {
       //LOOK UP THE CAMPUS PAYMENT INFORMATION
       if ($family_id != null) {
 
-        //$piq = "SELECT c.payment_email, c.campuses_name
-        // FROM tsm_com_registration_campuses c, tsm_com_registration_parents p
-        // WHERE p.parents_id = $parents_id
-        //  AND p.campuses_id = c.campuses_id";
+        //$piq = "SELECT c.paypal_email FROM tsm_reg_campuses c, tsm_reg_families f WHERE f.family_id = '$family_id' AND c.campus_id = f.campus_id";
         // $pir = mysql_query($piq) or die(mysql_error());
         // while ($pia = mysql_fetch_assoc($pir)) {
-        //   $campus_email = $pia['payment_email'];
-        //   $campuses_name = $pia['campuses_name'];
+        //   $campus_email = $pia['paypal_email'];
+        //$campuses_name = $pia['name'];
         // }
-        $campus_email = "jlane_1225424090_biz@veritasproductions.net";
+        $campus_email = "jlane@artiosacademies.com";
         $campuses_name = "Jeremy Lane's Test Store";
       } else {
         //SEND THIS E-MAIL IF THERE IS NO PARENT ID AND THE SUBJECT IS APPLICATION
