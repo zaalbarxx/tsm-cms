@@ -242,6 +242,26 @@ switch ($ajax) {
       echo json_encode($response);
     }
     break;
+  case "changePeriodInCourse":
+    if (isset($course_period_id) && isset($new_period_id) && isset($new_teacher_id)) {
+      $course = new TSM_REGISTRATION_COURSE($course_id);
+      if ($course->changePeriod($course_period_id, $new_period_id, $new_teacher_id)) {
+        die("1");
+      } else {
+        die("2");
+      }
+    }
+    break;
+  case "changeStudentPeriodForCourse":
+    if (isset($course_period_id) && isset($student_id) && isset($program_id) && isset($course_id) && isset($new_course_period_id)) {
+      $student = new TSM_REGISTRATION_STUDENT($student_id);
+      if ($student->changePeriodForCourse($course_id, $program_id, $course_period_id, $new_course_period_id)) {
+        die("1");
+      } else {
+        die("2");
+      }
+    }
+    break;
 }
 die();
 ?>

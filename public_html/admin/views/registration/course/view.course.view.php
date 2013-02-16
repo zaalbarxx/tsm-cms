@@ -25,7 +25,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                           href="index.php?com=registration&ajax=deletePeriodFromCourse&course_id=<?php echo $courseInfo['course_id']; ?>&course_period_id=<?php echo $period['course_period_id']; ?>"
                           class="deleteButton" title="Delete Period"
                           ref="<?php echo $period['period_id']; ?>"></a><a
-                          href="index.php?com=registration&view=course&action=changePeriodInCourse&course_id=<?php echo $courseInfo['course_id']; ?>&course_period_id=<?php echo $period['course_period_id']; ?>"
+                          href="index.php?com=registration&view=courses&action=changePeriodInCourse&course_id=<?php echo $courseInfo['course_id']; ?>&course_period_id=<?php echo $period['course_period_id']; ?>"
                           class="exchangeButton fb" title="Change Period and Move Students"
                           ref="<?php echo $period['period_id']; ?>"></a></span>
           </div>

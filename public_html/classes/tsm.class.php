@@ -57,6 +57,44 @@ class TSM {
     return $day;
   }
 
+  public function arrayToCSV($array, $filename) {
+    $rowCount = 0;
+    $csv = "";
+    foreach ($array as $row) {
+      if ($rowCount == 0) {
+        foreach ($row as $key => $value) {
+          $csv .= $key.",";
+        }
+      }
+      if ($rowCount == 0) {
+        $csv = substr_replace($csv, "", -1);
+        $csv .= "\r\n";
+      }
+      foreach ($row as $key => $value) {
+        $csv .= $value.",";
+      }
+      $csv = substr_replace($csv, "", -1);
+      $csv .= "\r\n";
+      $rowCount++;
+    }
+    header("Content-type: text/csv");
+    header("Content-Disposition: attachment; filename=".$filename.".csv");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    echo $csv;
+    die();
+  }
+
+  public function getColumnsFor($tableName) {
+    $q = "SHOW columns FROM $tableName;";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $columns[] = $a;
+    }
+
+    return $columns;
+  }
+
   public function intToHour($int) {
     switch ($int) {
       case 0:

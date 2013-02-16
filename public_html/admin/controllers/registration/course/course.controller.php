@@ -35,9 +35,17 @@ switch ($action) {
     require_once(__TSM_ROOT__."admin/controllers/registration/course/view.course.controller.php");
     $activeView = __TSM_ROOT__."admin/views/registration/course/view.course.view.php";
     break;
+  case "viewRoster":
+    require_once(__TSM_ROOT__."admin/controllers/registration/course/roster.course.controller.php");
+    $activeView = __TSM_ROOT__."admin/views/registration/course/roster.course.view.php";
+    break;
   case "addEditCourse":
     require_once(__TSM_ROOT__."admin/controllers/registration/course/addEdit.course.controller.php");
     $activeView = __TSM_ROOT__."admin/views/registration/course/addEdit.course.view.php";
+    break;
+  case "changePeriodInCourse":
+    require_once(__TSM_ROOT__."admin/controllers/registration/course/changePeriod.course.controller.php");
+    $activeView = __TSM_ROOT__."admin/views/registration/course/changePeriod.course.view.php";
     break;
 }
 

@@ -279,6 +279,9 @@ font-size: 18px;
 cursor: pointer;
 font-weight: bold;
 }
+span.title{
+cursor: pointer;
+}
 .bigItem .buttons{
 float: right;
 }
@@ -298,6 +301,9 @@ top: 0px;
 }
 .bigItem .buttons .reviewButton{
 background: url(../images/icons/linedpaper24.png);
+}
+.bigItem .buttons .rosterButton{
+background: url(../images/icons/smile24.png);
 }
 .bigItem .buttons .editButton{
 background: url(../images/icons/pencil24.png);
@@ -420,7 +426,7 @@ margin-bottom: 15px;
 }
 .smallItem .title{
 margin-left: 30px;
-width: 500px;
+width: 475px;
 display: inline-block;
 font-size: 18px;
 font-weight: bold;
@@ -441,6 +447,9 @@ height: 24px;
 margin-left: 10px;
 background-repeat: no-repeat !important;
 }
+.button.downloadButton{
+background: url(../images/icons/boxdownload24.png);
+}
 .smallItem .buttons a:hover{
 top: -2px;
 }
@@ -449,6 +458,9 @@ top: 0px;
 }
 .smallItem .buttons .reviewButton{
 background: url(../images/icons/linedpaper24.png);
+}
+.smallItem .buttons .rosterButton{
+background: url(../images/icons/smile24.png);
 }
 .smallItem .buttons .editButton{
 background: url(../images/icons/pencil24.png);

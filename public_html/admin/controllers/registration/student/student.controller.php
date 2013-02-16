@@ -6,6 +6,7 @@ if (!isset($action)) {
 switch ($action) {
   case null:
     $students = $currentCampus->getStudents();
+    $numStudents = count($students);
 
     $activeView = __TSM_ROOT__."admin/views/registration/student/student.view.php";
     break;
@@ -20,6 +21,10 @@ switch ($action) {
   case "addCourse":
     require_once(__TSM_ROOT__."admin/controllers/registration/student/addCourse.student.controller.php");
     $activeView = __TSM_ROOT__."admin/views/registration/student/addCourse.student.view.php";
+    break;
+  case "changeStudentPeriodForCourse":
+    require_once(__TSM_ROOT__."admin/controllers/registration/student/changePeriod.student.controller.php");
+    $activeView = __TSM_ROOT__."admin/views/registration/student/changePeriod.student.view.php";
     break;
 }
 

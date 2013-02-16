@@ -11,9 +11,11 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     foreach ($programList as $program) {
       ?>
         <div class="smallItem">
-            <a class="title"
-               href="index.php?com=registration&view=programs&action=viewProgram&program_id=<?php echo $program['program_id']; ?>"><?php echo $program['name']; ?></a>
+            <span class="title"
+                  href="index.php?com=registration&view=programs&action=viewProgram&program_id=<?php echo $program['program_id']; ?>"><?php echo $program['name']; ?></span>
                 <span class="buttons"><a
+                        href="index.php?com=registration&view=programs&action=viewRoster&program_id=<?php echo $program['program_id']; ?>"
+                        class="rosterButton" title="Program Roster"></a><a
                         href="index.php?com=registration&view=programs&action=viewProgram&program_id=<?php echo $program['program_id']; ?>"
                         class="reviewButton" title="Review This Program"></a><a
                         href="index.php?com=registration&view=programs&action=addEditProgram&program_id=<?php echo $program['program_id']; ?>"
@@ -41,5 +43,8 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             }
         });
         return false;
+    });
+    $(".smallItem .title").click(function () {
+        $(this).parent().children(".itemDetails").slideToggle();
     });
 </script>

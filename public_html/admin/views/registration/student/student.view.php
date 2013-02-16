@@ -8,6 +8,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 </style>
 <div class="contentWithSideBar">
     <h1>Students</h2>
+        <p>There are <?php echo $numStudents; ?> students enrolled.</p>
       <?php
       foreach ($students as $student) {
         ?>

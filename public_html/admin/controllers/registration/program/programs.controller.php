@@ -34,6 +34,10 @@ switch ($action) {
     require_once(__TSM_ROOT__."admin/controllers/registration/program/view.program.controller.php");
     $activeView = __TSM_ROOT__."admin/views/registration/program/view.program.view.php";
     break;
+  case "viewRoster":
+    require_once(__TSM_ROOT__."admin/controllers/registration/program/roster.program.controller.php");
+    $activeView = __TSM_ROOT__."admin/views/registration/program/roster.program.view.php";
+    break;
   case "viewCourse":
     require_once(__TSM_ROOT__."admin/controllers/registration/program/view.course.program.controller.php");
     $activeView = __TSM_ROOT__."admin/views/registration/program/view.course.program.view.php";

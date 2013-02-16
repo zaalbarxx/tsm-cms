@@ -10,6 +10,7 @@ class TSM_REGISTRATION_COURSE extends TSM_REGISTRATION {
   private $requirements;
   private $periods;
   private $assignedPrograms;
+  private $enrolledStudents;
 
   public function __construct($courseId = null) {
     $tsm = TSM::getInstance();
@@ -49,6 +50,29 @@ class TSM_REGISTRATION_COURSE extends TSM_REGISTRATION {
     } else {
       return false;
     }
+  }
+
+  public function changePeriod($course_period_id, $new_period_id, $new_teacher_id) {
+    $q = "UPDATE tsm_reg_course_period SET teacher_id = '$new_teacher_id', period_id = '$new_period_id' WHERE course_period_id = '$course_period_id' AND course_id = '".$this->courseId."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
+  public function getEnrolledStudents($program_id = null) {
+    if ($program_id == null) {
+      $q = "SELECT * FROM tsm_reg_student_course WHERE course_id = '".$this->courseId."'";
+    } else {
+      $q = "SELECT * FROM tsm_reg_student_course WHERE course_id = '".$this->courseId."' AND program_id = '$program_id'";
+    }
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $student = new TSM_REGISTRATION_STUDENT($a['student_id']);
+      $studentInfo = $student->getInfo();
+      $this->enrolledStudents[$a['student_id']] = $studentInfo;
+    }
+
+    return $this->enrolledStudents;
   }
 
   public function getAssignedPrograms() {

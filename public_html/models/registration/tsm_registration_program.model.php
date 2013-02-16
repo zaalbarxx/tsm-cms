@@ -8,6 +8,7 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
   private $fees;
   private $requirements;
   private $courses;
+  private $enrolledStudents;
 
   public function __construct($programId = null) {
     $tsm = TSM::getInstance();
@@ -56,6 +57,18 @@ class TSM_REGISTRATION_PROGRAM extends TSM_REGISTRATION {
     } else {
       return false;
     }
+  }
+
+  public function getEnrolledStudents() {
+    $q = "SELECT * FROM tsm_reg_student_program WHERE program_id = '".$this->programId."'";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $student = new TSM_REGISTRATION_STUDENT($a['student_id']);
+      $studentInfo = $student->getInfo();
+      $this->enrolledStudents[$a['student_id']] = $studentInfo;
+    }
+
+    return $this->enrolledStudents;
   }
 
   public function getNumStudentsEnrolled($programId = null) {

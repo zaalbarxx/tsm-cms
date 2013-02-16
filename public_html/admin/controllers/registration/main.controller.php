@@ -85,6 +85,9 @@ if ($campusList == NULL) {
     case "quickbooks":
       require_once(__TSM_ROOT__."admin/controllers/registration/quickbooks/quickbooks.controller.php");
       break;
+    case "reports":
+      require_once(__TSM_ROOT__."admin/controllers/registration/reports/reports.controller.php");
+      break;
 
   }
 }

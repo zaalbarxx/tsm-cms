@@ -135,6 +135,13 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
+  public function changePeriodForCourse($course_id, $program_id, $course_period_id, $new_course_period_id) {
+    $q = "UPDATE tsm_reg_student_course SET course_period_id = '$new_course_period_id' WHERE course_period_id = '$course_period_id' AND student_id = '".$this->studentId."' AND course_id = '$course_id' AND program_id = '$program_id'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
   public function getEnrolledPrograms() {
     $q = "SELECT * FROM tsm_reg_student_program sp, tsm_reg_programs p WHERE p.program_id = sp.program_id AND sp.student_id = ".$this->studentId." AND p.school_year = ".$this->getSelectedSchoolYear()."";
     $r = $this->db->runQuery($q);

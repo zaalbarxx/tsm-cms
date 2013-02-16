@@ -6,6 +6,7 @@ if (!isset($action)) {
 switch ($action) {
   case null:
     $families = $currentCampus->getFamilies();
+    $numFamilies = count($families);
     //foreach($families as $family){
     //$familyObject = new TSM_REGISTRATION_FAMILY($family['family_id']);
     //$families[$family['family_id']]['students'] = $familyObject->getStudents($reg->getSelectedSchoolYear());

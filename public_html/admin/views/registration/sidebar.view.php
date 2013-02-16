@@ -45,6 +45,11 @@
               echo "class='active'";
             } ?>>Periods</a>
         </li>
+        <li>
+            <a href="index.php?com=registration&view=reports" <?php if (stristr($_SERVER["REQUEST_URI"], "index.php?com=registration&view=reports")) {
+              echo "class='active'";
+            } ?>>Reports</a>
+        </li>
     </ul>
   <?php if (stristr($_SERVER["REQUEST_URI"], "index.php?com=registration") && $view == null) { ?>
     <div style="text-align: center; width: 100%;">

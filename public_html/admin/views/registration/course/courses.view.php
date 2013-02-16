@@ -17,6 +17,8 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             <a class="title"
                href="index.php?com=registration&view=courses&action=viewCourse&course_id=<?php echo $course['course_id']; ?>"><?php echo $course['name']; ?></a>
                 <span class="buttons"><a
+                        href="index.php?com=registration&view=courses&action=viewRoster&course_id=<?php echo $course['course_id']; ?>"
+                        class="rosterButton" title="Course Roster"></a><a
                         href="index.php?com=registration&view=courses&action=viewCourse&course_id=<?php echo $course['course_id']; ?>"
                         class="reviewButton" title="Review This Course"></a><a
                         href="index.php?com=registration&view=courses&action=addEditCourse&course_id=<?php echo $course['course_id']; ?>"
