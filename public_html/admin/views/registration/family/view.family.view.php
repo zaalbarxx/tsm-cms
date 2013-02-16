@@ -12,6 +12,11 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         <div>
             <a href="index.php?com=registration&view=family&action=resetPassword&family_id=<?php echo $familyInfo['family_id']; ?>"
                class="fb">Reset Password</a>
+          <?php if ($currentCampus->usesQuickbooks() && $familyInfo['quickbooks_customer_id'] == "") { ?>
+            |
+            <a href="index.php?com=registration&view=family&action=linkToQuickbooks&family_id=<?php echo $familyInfo['family_id']; ?>"
+               class="fb">Link To Quickbooks</a>
+          <?php } ?>
         </div>
         <div class="half">
             <span class="title">Father:</span> <?php echo $familyInfo['father_first']." ".$familyInfo['father_last']; ?>
@@ -70,7 +75,23 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       ?>
     </div>
     <div class="infoSection">
-        <h2>Billing Summary</h2>
+        <h2>Recent Invoices</h2>
+        <table style="width: 100%;">
+            <tr style="font-weight: bold;">
+                <td>ID</td>
+                <td>Description</td>
+                <td>Date</td>
+                <td>Total</td>
+                <td>Amount Paid</td>
+                <td>Amount Due</td>
+            </tr>
+
+          <?php
+          foreach ($invoices as $invoice) {
+            echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['name']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td></tr>";
+          }
+          ?>
+        </table>
     </div>
 
 </div>

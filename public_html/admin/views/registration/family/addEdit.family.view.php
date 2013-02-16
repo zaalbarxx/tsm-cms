@@ -31,7 +31,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                 <label for="secondary_email">Secondary E-mail: </label><input type="text" name="secondary_email"
                                                                               value="<?php echo $familyInfo['secondary_email']; ?>"/><br/>
             </fieldset>
-          <?php if ($currentCampus->usesQuickbooks()) { ?>
+          <?php
+          /*
+          if ($currentCampus->usesQuickbooks()) { ?>
             <fieldset>
                 <legend>Quickbook Information</legend>
                 <label for="quickbooks_customer_id">Customer: </label><select name="quickbooks_customer_id">
@@ -51,7 +53,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
               ?>
             </select>
             </fieldset>
-          <?php } ?>
+          <?php }
+          */
+          ?>
             <fieldset>
                 <legend>General Information</legend>
                 <label for="primary_phone">Primary Phone: </label><input type="text" name="primary_phone"

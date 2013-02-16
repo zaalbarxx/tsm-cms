@@ -272,12 +272,30 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
 
   }
 
-  public function addFee($name, $amount) {
-    $q = "INSERT INTO tsm_reg_families_fees (family_id,name,amount,school_year) VALUES('".$this->familyId."','$name','$amount','".$this->getSelectedSchoolYear()."')";
+  public function addFee($name, $amount, $fee_id = null) {
+    if ($fee_id == null) {
+      $q = "INSERT INTO tsm_reg_families_fees (family_id,name,amount,school_year) VALUES('".$this->familyId."','$name','$amount','".$this->getSelectedSchoolYear()."')";
+    } else {
+      $q = "INSERT INTO tsm_reg_families_fees (family_id,name,amount,fee_id,school_year) VALUES('".$this->familyId."','$name','$amount','$fee_id','".$this->getSelectedSchoolYear()."')";
+    }
     $this->db->runQuery($q);
     $id = mysql_insert_id($this->db->conn);
 
     return $id;
+  }
+
+  public function getInvoices() {
+    $q = "SELECT * FROM tsm_reg_families_invoices fi, tsm_reg_families_payment_plans fpp, tsm_reg_fee_payment_plans pp
+    WHERE fi.family_payment_plan_id = fpp.family_payment_plan_id
+    AND pp.payment_plan_id = fpp.payment_plan_id
+    AND fi.family_id = '".$this->familyId."'";
+    $r = $this->db->runQuery($q);
+    $returnInvoices = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $returnInvoices[$a['family_invoice_id']] = $a;
+    }
+
+    return $returnInvoices;
   }
 
   public function getInvoicesByPaymentPlan($family_payment_plan_id) {
@@ -292,6 +310,35 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     }
 
     return $returnInvoices;
+  }
+
+  public function inQuickbooks() {
+    $inQuickbooks = $this->getQuickbooksCustomerId();
+    if (isset($inQuickbooks)) {
+      $inQuickbooks = true;
+    } else {
+      $inQuickbooks = false;
+    }
+
+    return $inQuickbooks;
+  }
+
+  public function setQuickbooksCustomerId($quickbooks_customer_id) {
+    $q = "UPDATE tsm_reg_families SET quickbooks_customer_id = '$quickbooks_customer_id' WHERE family_id = '".$this->familyId."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
+  public function getQuickbooksCustomerId() {
+    $q = "SELECT quickbooks_customer_id FROM tsm_reg_families WHERE family_id = '".$this->familyId."'";
+    $r = $this->db->runQuery($q);
+    $quickbooks_customer_id = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $quickbooks_customer_id = $a['quickbooks_customer_id'];
+    }
+
+    return $quickbooks_customer_id;
   }
 
   public function createInvoice($family_payment_plan_id = null) {

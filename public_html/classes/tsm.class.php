@@ -148,7 +148,9 @@ class TSM {
     if (get_magic_quotes_gpc()) {
       $value = stripslashes($value);
     } else {
-      $value = addslashes($value);
+      if (is_string($value)) {
+        $value = addslashes($value);
+      }
     }
 
     return $value;

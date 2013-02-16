@@ -107,11 +107,5 @@ if ($invoices == null) {
   }
   $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
   $dueToday = $invoice->getTotal();
-  //$invoiceInfo = $invoice->getInfo();
-  //$invoiceService = new QuickBooks_IPP_Service_Invoice();
-  //$qbInvoice = $invoiceService->findById($quickbooks->Context,$quickbooks->creds['qb_realm'],$invoiceInfo['quickbooks_invoice_id']);
-  //echo $invoiceService->lastResponse();
-
-  //die();
 }
 ?>

@@ -44,11 +44,14 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $payPalFee = $this->getPayPalFee();
     if (!$payPalFee) {
       $total = $this->getTotal();
+      $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
+      $campusInfo = $campus->getInfo();
+      $paypal_fee_id = $campusInfo['paypal_convenience_fee_id'];
 
       $paypalFeeAmount = $total * .03;
       $family_id = $this->info['family_id'];
       $family = new TSM_REGISTRATION_FAMILY($family_id);
-      $family_fee_id = $family->addFee("PayPal Convenience Fee", $paypalFeeAmount);
+      $family_fee_id = $family->addFee("PayPal Convenience Fee", $paypalFeeAmount, $paypal_fee_id);
       $params = Array("family_fee_id" => $family_fee_id, "description" => "PayPal Convenience Fee", "amount" => $paypalFeeAmount);
       $this->addFee($params);
       $this->updateTotal();
@@ -99,9 +102,22 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
+  public function getPayments() {
+    $q = "SELECT * FROM tsm_reg_families_invoice_payments WHERE family_invoice_id = '".$this->invoiceId."'";
+    $r = $this->db->runQuery($q);
+    $payments = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $payments[$a['invoice_payment_id']] = $a;
+    }
+
+    return $payments;
+  }
+
   public function getFees() {
     //$q = "SELECT * FROM tsm_reg_families_fees ff, tsm_reg_families_invoice_fees invf WHERE (invf.family_fee_id = ff.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."') OR invf.family_fee_id IS NULL";
-    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."'";
+    $q = "SELECT invf.*, ff.fee_id, ff.name FROM tsm_reg_families_invoice_fees invf, tsm_reg_families_fees ff
+    WHERE ff.family_fee_id = invf.family_fee_id
+    AND invf.family_invoice_id = '".$this->invoiceId."'";
     $r = $this->db->runQuery($q);
     while ($a = mysql_fetch_assoc($r)) {
       $returnFees[] = $a;
@@ -113,46 +129,86 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   public function addToQuickbooks() {
     global $quickbooks;
 
-    if (isset($this->info['quickbooks_invoice_id'])) {
-      $doNotProcess = 1;
+    $doNotProcess = false;
+    $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
+    $quickbooks_customer_id = $family->getQuickbooksCustomerId();
+
+    if ($this->info['quickbooks_invoice_id'] != "") {
+      $doNotProcess = true;
     }
 
     $fees = $this->getFees();
 
     $quickbooksInvoice = new QuickBooks_IPP_Object_Invoice();
     $invoiceHeader = new QuickBooks_IPP_Object_Header();
-    $invoiceHeader->setCustomerId("{QB-988}");
+    $invoiceHeader->setCustomerId($quickbooks_customer_id);
     $quickbooksInvoice->addHeader($invoiceHeader);
 
     foreach ($fees as $fee) {
       $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
-      $feeInfo = $feeObject->getInfo();
+      if (isset($fee['fee_id'])) {
+        $feeInfo = $feeObject->getInfo();
+      }
 
+      /*
       if (!isset($feeInfo['quickbooks_item_id'])) {
         $doNotProcess = true;
       }
+      */
 
 
     }
 
-    if (!isset($doNotProcess)) {
+    if (!$doNotProcess) {
       foreach ($fees as $fee) {
-        $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
-        $feeInfo = $feeObject->getInfo();
+        if (isset($fee['fee_id'])) {
+          $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
+          $feeInfo = $feeObject->getInfo();
 
-        $Line = new QuickBooks_IPP_Object_Line();
-        $Line->setItemId($feeInfo['quickbooks_item_id']);
-        $Line->setQty(1);
-        $quickbooksInvoice->addLine($Line);
+          $Line = new QuickBooks_IPP_Object_Line();
+          $Line->setItemId($feeInfo['quickbooks_item_id']);
+          $Line->setAmount($fee['amount']);
+          $Line->setDescription($fee['name']);
+          $Line->setQty(1);
+          $quickbooksInvoice->addLine($Line);
+        } else {
+          $Line = new QuickBooks_IPP_Object_Line();
+          $Line->setAmount($fee['amount']);
+          $Line->setDescription($fee['name']);
+          $Line->setQty(1);
+          $quickbooksInvoice->addLine($Line);
+        }
       }
 
       $service = new QuickBooks_IPP_Service_Invoice();
       $quickbooks_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooksInvoice);
-
       $this->setQuickbooksId($quickbooks_id);
+      $invoice = $service->findById($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooks_id);
+      $txnId = $invoice->getExternalKey();
+
+      $payments = $this->getPayments();
+      if (isset($payments)) {
+        foreach ($payments as $payment) {
+          $paymentObject = new QuickBooks_IPP_Object_Payment();
+          $paymentHeader = new QuickBooks_IPP_Object_Header();
+          $paymentHeader->setCustomerId($quickbooks_customer_id);
+          $paymentHeader->setTotalAmt($payment['amount']);
+          $paymentObject->addHeader($paymentHeader);
+          $Line = new QuickBooks_IPP_Object_Line();
+          $Line->setTxnId($txnId);
+          $Line->setAmount($payment['amount']);
+          $paymentObject->addLine($Line);
+          $service = new QuickBooks_IPP_Service_Payment();
+          $quickbooks_payment_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $paymentObject);
+          //todo: create payment object and add the quickbooks_payment_id to the payment
+
+
+        }
+      }
 
       return true;
     } else {
+      die("doNotProcess");
       return false;
     }
   }
@@ -172,6 +228,28 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     }
 
     return $total;
+  }
+
+  public function getAmountPaid() {
+    $q = "SELECT * FROM tsm_reg_families_invoice_payments WHERE family_invoice_id = '".$this->invoiceId."'";
+    $r = $this->db->runQuery($q);
+    $amountPaid = 0;
+    while ($a = mysql_fetch_assoc($r)) {
+      $amountPaid = $amountPaid + $a['amount'];
+    }
+
+    return $amountPaid;
+  }
+
+  public function getAmountDue() {
+    $q = "SELECT * FROM tsm_reg_families_invoice_payments WHERE family_invoice_id = '".$this->invoiceId."'";
+    $r = $this->db->runQuery($q);
+    $amountDue = $this->getTotal();
+    while ($a = mysql_fetch_assoc($r)) {
+      $amountDue = $amountDue - $a['amount'];
+    }
+
+    return $amountDue;
   }
 
   public function updateTotal() {

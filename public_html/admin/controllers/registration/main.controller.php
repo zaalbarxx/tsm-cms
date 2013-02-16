@@ -5,6 +5,7 @@ require_once(__TSM_ROOT__."models/registration/tsm_registration_program.model.ph
 require_once(__TSM_ROOT__."models/registration/tsm_registration_course.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_fee.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_family.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_invoice.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_family_fee.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_student.model.php");
 require_once(__TSM_ROOT__."models/registration/tsm_registration_teacher.model.php");

@@ -21,16 +21,15 @@ if (isset($family_id)) {
   $programInfo = null;
 }
 
+/*
 if ($currentCampus->usesQuickbooks() == true) {
   $CustomerService = new QuickBooks_IPP_Service_Customer();
-  //$id = "{QB-459}";
   $query = '<FirstLastInside>'.$familyInfo['father_last'].'</FirstLastInside>';
   $quickbooksCustomers = $CustomerService->findAll($quickbooks->Context, $quickbooks->creds['qb_realm'], $query, 1, 999);
   if ($quickbooksCustomers == null) {
     $query = '<FirstLastInside>'.$familyInfo['mother_last'].'</FirstLastInside>';
     $quickbooksCustomers = $CustomerService->findAll($quickbooks->Context, $quickbooks->creds['qb_realm'], $query, 1, 999);
   }
-  //print_r($quickbooksCustomers); die();
-  //$quickbooksCustomers = $CustomerService->findByName($quickbooks->Context,$quickbooks->creds['qb_realm'],"Lane");
 }
+*/
 ?>
