@@ -6,6 +6,10 @@ if (!isset($action)) {
 switch ($action) {
   case null:
     $families = $currentCampus->getFamilies();
+
+    if (isset($downloadCSV)) {
+      $tsm->arrayToCSV($families, $campusInfo['name']." - Families");
+    }
     $numFamilies = count($families);
     //foreach($families as $family){
     //$familyObject = new TSM_REGISTRATION_FAMILY($family['family_id']);

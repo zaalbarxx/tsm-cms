@@ -63,7 +63,9 @@ class TSM {
     foreach ($array as $row) {
       if ($rowCount == 0) {
         foreach ($row as $key => $value) {
-          $csv .= $key.",";
+          if ($key != 'password') {
+            $csv .= $key.",";
+          }
         }
       }
       if ($rowCount == 0) {
@@ -71,7 +73,9 @@ class TSM {
         $csv .= "\r\n";
       }
       foreach ($row as $key => $value) {
-        $csv .= $value.",";
+        if ($key != 'password') {
+          $csv .= $value.",";
+        }
       }
       $csv = substr_replace($csv, "", -1);
       $csv .= "\r\n";
