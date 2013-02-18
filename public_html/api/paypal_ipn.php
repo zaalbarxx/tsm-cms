@@ -93,6 +93,9 @@ if (!$fp) {
       $payment_status = $_POST['payment_status'];
       $payment_amount = $_POST['mc_gross']; //full amount of payment. payment_gross in US
       $payment_currency = $_POST['mc_currency'];
+      $payment_date = $_POST['payment_date'];
+      $payment_date = strtotime($payment_date);
+      $payment_date = date('Y-m-d H:i:s', $payment_date);
       $txn_id = $_POST['txn_id']; //unique transaction id
       $receiver_email = $_POST['receiver_email'];
       $payer_email = $_POST['payer_email'];
@@ -105,7 +108,7 @@ if (!$fp) {
       $invoice_num = $_POST['invoice'];
       $last_name = $_POST['last_name'];
       $first_name = $_POST['first_name'];
-      $payment_date = $_POST['payment_date'];
+      //$payment_date = $_POST['payment_date'];
 
       // use the above params to look up what the price of "item_name" should be.
 
@@ -154,9 +157,9 @@ if (!$fp) {
         //mail("jlane@veritasproductions.net","About to Log Payment","Logging Payment...$checkq");
         $checkr = $tsm->db->runQuery($checkq);
         if (mysql_num_rows($checkr) == 0) {
-          $log_payment_q = "INSERT INTO tsm_reg_families_invoice_payments (family_id, family_invoice_id, paypal_transaction_id,amount)
-          VALUES ($family_id, $invoice_num, '$txn_id','$payment_amount')";
-          //mail("jlane@veritasproductions.net","About to Log Payment","Logging Payment...$log_payment_q");
+          $log_payment_q = "INSERT INTO tsm_reg_families_invoice_payments (family_invoice_id, paypal_transaction_id,amount,payment_time)
+          VALUES ($invoice_num, '$txn_id','$payment_amount','$payment_date')";
+          mail("jlane@veritasproductions.net", "About to Log Payment", "Logging Payment...$log_payment_q");
           mysql_query($log_payment_q) or die(mysql_error());
           $logged = 1;
 
