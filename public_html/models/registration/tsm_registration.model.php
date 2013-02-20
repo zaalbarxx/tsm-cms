@@ -13,10 +13,36 @@ class TSM_REGISTRATION {
     $this->db = $tsm->db;
   }
 
+  public function userCanAccessCampus($campus_id) {
+    if (isset($this->tsm->adminUser)) {
+      $q = "SELECT * FROM tsm_reg_users WHERE user_id = '".$_SESSION['adminUser']['id']."'";
+      $r = $this->db->runQuery($q);
+      while ($a = mysql_fetch_assoc($r)) {
+        $super_user = $a['super_user'];
+        $allowed_campues = unserialize($a['allowed_campuses']);
+      }
+      if ($super_user == 1) {
+        return true;
+      } else {
+        $access = false;
+        foreach ($allowed_campues as $allowed_campus_id) {
+          if ($allowed_campus_id == $campus_id) {
+            $access = true;
+          }
+        }
+
+        return $access;
+      }
+    } else {
+      return true;
+    }
+  }
+
   public function setCurrentCampusId($campus_id) {
-    //echo "set campusId to: ".$campus_id;
-    $_SESSION['reg']['currentCampusId'] = $campus_id;
-    $this->currentCampusId = $_SESSION['reg']['currentCampusId'];
+    if ($this->userCanAccessCampus($campus_id)) {
+      $_SESSION['reg']['currentCampusId'] = $campus_id;
+      $this->currentCampusId = $_SESSION['reg']['currentCampusId'];
+    }
 
     return true;
   }
@@ -100,7 +126,9 @@ class TSM_REGISTRATION {
     $r = $this->db->runQuery($q);
     $campuses = null;
     while ($a = mysql_fetch_assoc($r)) {
-      $campuses[$a['campus_id']] = $a;
+      if ($this->userCanAccessCampus($a['campus_id'])) {
+        $campuses[$a['campus_id']] = $a;
+      }
     }
     return $campuses;
   }

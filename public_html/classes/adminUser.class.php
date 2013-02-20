@@ -33,7 +33,7 @@ class AdminUser {
       $a = mysql_fetch_assoc($r);
       if (TSM::getInstance()->checkPassword($a['password'], $password)) {
         $_SESSION['adminUser']['id'] = $a['user_id'];
-        header("location: index.php");
+        header("location: index.php?com=registration");
         $success = 1;
       } else {
         $success = 0;
