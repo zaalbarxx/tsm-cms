@@ -17,13 +17,13 @@ if (isset($addStudent)) {
   $student = new TSM_REGISTRATION_STUDENT($student_id);
   $student->saveStudent();
   $student->setFirstYear($first_year);
-  if (isset($backToReview)) {
-    $family->moveToStep(4);
-    header("Location: index.php?com=registration");
-  } else {
-    $family->moveToStep(3);
-    header('Location: index.php?com=registration&student_id='.$student_id);
-  }
+  $family->moveToStep(3);
+  header('Location: index.php?com=registration&student_id='.$student_id);
+}
+
+if (isset($backToReview)) {
+  $family->moveToStep(4);
+  header("Location: index.php?com=registration");
 }
 
 if (isset($student_id)) {
