@@ -1,0 +1,24 @@
+<?php
+require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
+?>
+<div class="contentWithSideBar">
+    <h2>Finalized Families</h2>
+  <?php
+  if (isset($families)) {
+    foreach ($families as $family) {
+      ?>
+        <div class="smallItem">
+            <a class="title"
+               href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"><?php echo $family['father_last']; ?></a>
+              <span class="buttons"><a
+                      href="index.php?com=registration&view=student&action=viewStudent&student_id=<?php echo $family['family_id']; ?>"
+                      class="reviewButton" title="Review This Student"></a></span>
+
+            <div class="itemDetails">
+            </div>
+        </div>
+      <?php
+    }
+  }
+  ?>
+</div>
