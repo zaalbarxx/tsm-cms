@@ -112,18 +112,17 @@ if (!$fp) {
 
       // use the above params to look up what the price of "item_name" should be.
 
-      //mail("jlane@veritasproductions.net","Campus Info","Looking up campus info");
+      mail("jlane@veritasproductions.net", "Campus Info", "Looking up campus info. Family ID: ".$family_id." - Invoice Num: ".$invoice_num." - Amount: ".$payment_amount." - Status: ".$payment_status);
       //LOOK UP THE CAMPUS PAYMENT INFORMATION
       if ($family_id != null) {
-
-        //$piq = "SELECT c.paypal_email FROM tsm_reg_campuses c, tsm_reg_families f WHERE f.family_id = '$family_id' AND c.campus_id = f.campus_id";
-        // $pir = mysql_query($piq) or die(mysql_error());
-        // while ($pia = mysql_fetch_assoc($pir)) {
-        //   $campus_email = $pia['paypal_email'];
-        //$campuses_name = $pia['name'];
-        // }
-        $campus_email = "jlane@artiosacademies.com";
-        $campuses_name = "Jeremy Lane's Test Store";
+        $piq = "SELECT c.paypal_email, c.name FROM tsm_reg_campuses c, tsm_reg_families f WHERE f.family_id = '$family_id' AND c.campus_id = f.campus_id";
+        $pir = $tsm->db->runQuery($piq);
+        while ($pia = mysql_fetch_assoc($pir)) {
+          $campus_email = $pia['paypal_email'];
+          $campuses_name = $pia['name'];
+        }
+        //$campus_email = "jlane@artiosacademies.com";
+        //$campuses_name = "Jeremy Lane's Test Store";
       } else {
         //SEND THIS E-MAIL IF THERE IS NO PARENT ID AND THE SUBJECT IS APPLICATION
         if (stristr($item_name, 'application')) {
