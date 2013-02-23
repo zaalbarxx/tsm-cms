@@ -10,10 +10,12 @@ if (isset($students)) {
   }
 }
 $invoices = $family->getInvoices();
-foreach ($invoices as $invoice) {
-  $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
-  $invoices[$invoice['family_invoice_id']]['amountPaid'] = $invoiceObject->getAmountPaid();
-  $invoices[$invoice['family_invoice_id']]['amountDue'] = $invoiceObject->getAmountDue();
+if (isset($invoices)) {
+  foreach ($invoices as $invoice) {
+    $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
+    $invoices[$invoice['family_invoice_id']]['amountPaid'] = $invoiceObject->getAmountPaid();
+    $invoices[$invoice['family_invoice_id']]['amountDue'] = $invoiceObject->getAmountDue();
+  }
 }
 
 $pageTitle = $familyInfo['father_last'];

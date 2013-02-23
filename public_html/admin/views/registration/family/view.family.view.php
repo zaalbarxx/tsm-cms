@@ -87,8 +87,10 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             </tr>
 
           <?php
-          foreach ($invoices as $invoice) {
-            echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['name']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td></tr>";
+          if (isset($invoices)) {
+            foreach ($invoices as $invoice) {
+              echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['name']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td></tr>";
+            }
           }
           ?>
         </table>
