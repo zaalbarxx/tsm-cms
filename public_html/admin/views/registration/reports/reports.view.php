@@ -11,6 +11,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             <option value="unenrolledStudents">Unenrolled Students</option>
             <option value="unfinalizedFamilies">Unfinalized Families</option>
             <option value="finalizedFamilies">Finalized Families</option>
+            <option value="totalRevenue">Total Revenue</option>
         </select>
     </form>
 </div>

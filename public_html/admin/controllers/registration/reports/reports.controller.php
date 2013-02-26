@@ -25,6 +25,10 @@ switch ($action) {
     require_once(__TSM_ROOT__."admin/controllers/registration/reports/finalizedFamilies.reports.controller.php");
     $activeView = __TSM_ROOT__."admin/views/registration/reports/finalizedFamilies.reports.view.php";
     break;
+  case "totalRevenue":
+    require_once(__TSM_ROOT__."admin/controllers/registration/reports/totalRevenue.reports.controller.php");
+    $activeView = __TSM_ROOT__."admin/views/registration/reports/totalRevenue.reports.view.php";
+    break;
 }
 
 ?>

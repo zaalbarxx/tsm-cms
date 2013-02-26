@@ -67,6 +67,19 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $this->info['current_school_year'];
   }
 
+  public function getTotalExpectedRevenue($fee_type_id) {
+    $q = "SELECT SUM(amount) as total_rev FROM tsm_reg_families_fees ff, tsm_reg_families f
+    WHERE f.family_id = ff.family_id
+    AND f.campus_id = '".$this->campusId."'
+    AND ff.fee_type_id = '".$fee_type_id."'";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $amount = $a['total_rev'];
+    }
+
+    return $amount;
+  }
+
   public function getFeeTypes() {
     $q = "SELECT * FROM tsm_reg_fee_types WHERE campus_id = '".$this->campusId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
     $r = $this->db->runQuery($q);
