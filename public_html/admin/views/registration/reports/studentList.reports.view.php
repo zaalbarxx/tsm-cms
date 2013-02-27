@@ -4,10 +4,10 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 <div class="contentWithSideBar">
     <h2>Student Report</h2>
 
-    <form id="studentReport">
+    <form id="studentReport" method="post" action="">
         <p>Display students who meet the following conditions:</p>
-        <label>Status: </label><select>
-        <option>Any</option>
+        <label>Status: </label><select name="student_status">
+        <option value="">Any</option>
         <option value="0">Unapproved</option>
         <option value="1">Approved</option>
     </select><br/>
@@ -59,7 +59,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                     ?>
                       <span style="display: inline-block; margin: 5px; 10px; width: 45%;"><input type="checkbox"
                                                                                                  value="<?php echo $course['course_id']; ?>"
-                                                                                                 name="program:<?php $program['program_id']; ?>_courses[]"
+                                                                                                 name="program:<?php echo $program['program_id']; ?>:courses[]"
                                                                                                  class="programCheckBox"/> - <?php echo $course['name']; ?></span>
                     <?php
                   }
@@ -71,15 +71,20 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       }
     }
       ?>
+        <!--
         <label>Include Columns: </label><br/>
       <?php foreach ($studentColumns as $column) {
-      ?>
+          ?>
         <input type="checkbox" value="<?php echo $column['Field']; ?>" name="includeStudentColumns[]"
                class="programCheckBox"/> - <?php echo $column['Field']; ?><br/>
 
       <?php
 
-    } ?>
+        } ?>
+    -->
+        <br/><br/>
+        <input type="hidden" name="generateReport" value="1"/>
+        <input type="submit" class="submitButton" value="Generate Report"/>
     </form>
 </div>
 <script type="text/javascript">
