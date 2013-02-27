@@ -9,4 +9,8 @@ if (isset($families)) {
   }
 
 }
+
+if (isset($downloadCSV)) {
+  $tsm->arrayToCSV($families, $campusInfo['name']." - Finalized Families");
+}
 ?>

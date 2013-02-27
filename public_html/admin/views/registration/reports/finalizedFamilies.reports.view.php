@@ -2,7 +2,9 @@
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 <div class="contentWithSideBar">
-    <h2>Finalized Families</h2>
+    <h2>Finalized Families - <a
+            href="index.php?com=registration&view=reports&action=finalizedFamilies&downloadCSV=1"
+            class="button downloadButton" title="Download CSV"></a></h2>
   <?php
   if (isset($families)) {
     foreach ($families as $family) {

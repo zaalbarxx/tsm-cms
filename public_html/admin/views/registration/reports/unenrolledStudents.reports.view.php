@@ -2,7 +2,9 @@
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 <div class="contentWithSideBar">
-    <h2>Unenrolled Students</h2>
+    <h2>Unenrolled Students - <a
+            href="index.php?com=registration&view=reports&action=unenrolledStudents&downloadCSV=1"
+            class="button downloadButton" title="Download CSV"></a></h2>
   <?php
   if (isset($students)) {
     foreach ($students as $student) {

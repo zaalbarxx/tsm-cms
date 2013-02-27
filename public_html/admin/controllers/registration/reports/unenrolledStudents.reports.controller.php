@@ -9,4 +9,8 @@ if (isset($students)) {
     }
   }
 }
+
+if (isset($downloadCSV)) {
+  $tsm->arrayToCSV($students, $campusInfo['name']." - Unenrolled Students");
+}
 ?>
