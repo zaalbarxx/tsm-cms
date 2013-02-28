@@ -18,5 +18,9 @@ if (isset($invoices)) {
   }
 }
 
+if (isset($loginAs)) {
+  $reg->loginAs($familyInfo['family_id']);
+}
+
 $pageTitle = $familyInfo['father_last'];
 ?>

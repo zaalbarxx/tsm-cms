@@ -7,7 +7,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             class="editButton" title="Edit Family"></a></h1>
 
     <div class="infoSection">
-        <h2>Family Information</h2>
+        <h2>Family Information - <a target="_blank"
+                                    href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $familyInfo['family_id']; ?>&loginAs=1">Login</a>
+        </h2>
 
         <div>
             <a href="index.php?com=registration&view=family&action=resetPassword&family_id=<?php echo $familyInfo['family_id']; ?>"

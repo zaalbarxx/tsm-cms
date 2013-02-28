@@ -22,6 +22,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     }
 
     if ($logout == 1) {
+      //unset($_SESSION['family']['id']);
       session_destroy();
       header("Location: index.php");
     }

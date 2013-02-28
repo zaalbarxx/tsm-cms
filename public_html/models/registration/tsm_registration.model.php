@@ -13,6 +13,12 @@ class TSM_REGISTRATION {
     $this->db = $tsm->db;
   }
 
+  public function loginAs($family_id) {
+    $_SESSION['family']['id'] = $family_id;
+
+    header("Location: ../index.php");
+  }
+
   public function userCanAccessCampus($campus_id) {
     if (isset($this->tsm->adminUser)) {
       $q = "SELECT * FROM tsm_reg_users WHERE user_id = '".$_SESSION['adminUser']['id']."'";
