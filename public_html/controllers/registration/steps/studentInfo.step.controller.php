@@ -33,6 +33,10 @@ if (isset($student_id)) {
   $pageTitle = "Edit Student";
   $headerMessage = "Please edit the student by entering their information below.";
 } else {
+  $students = $family->getStudents($currentCampus->getCurrentSchoolYear());
+  if (isset($students)) {
+    $addingAdditional = 1;
+  }
   $studentInfo = null;
   $submitField = "addStudent";
   $pageTitle = "Add A Student";
