@@ -155,6 +155,27 @@
     <br/>
 
     <div class="infoSection">
+        <h2>Recent Invoices</h2>
+        <table style="width: 100%;">
+            <tr style="font-weight: bold;">
+                <td>ID</td>
+                <td>Description</td>
+                <td>Date</td>
+                <td>Total</td>
+                <td>Amount Paid</td>
+                <td>Amount Due</td>
+            </tr>
+
+          <?php
+          if (isset($familyInvoices)) {
+            foreach ($familyInvoices as $invoice) {
+              echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['name']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td></tr>";
+            }
+          }
+          ?>
+        </table>
+    </div>
+    <div class="infoSection">
         <h2 class="title">
             Family Billing Summary
         </h2>
@@ -174,6 +195,7 @@
             </div>
         </div>
     </div>
+
     <br style="width: 100%; clear: both;"/>
 </div>
 <script type="text/javascript">

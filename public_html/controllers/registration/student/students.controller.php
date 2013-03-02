@@ -39,5 +39,13 @@ $feeTypes = $currentCampus->getFeeTypes();
 
 //print_r($students);die();
 $familyInfo = $family->getInfo();
+$familyInvoices = $family->getInvoices();
+if (isset($familyInvoices)) {
+  foreach ($familyInvoices as $invoice) {
+    $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
+    $familyInvoices[$invoice['family_invoice_id']]['amountPaid'] = $invoiceObject->getAmountPaid();
+    $familyInvoices[$invoice['family_invoice_id']]['amountDue'] = $invoiceObject->getAmountDue();
+  }
+}
 $pageTitle = $studentInfo['last_name'].", ".$studentInfo['first_name'];
 ?>
