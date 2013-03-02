@@ -47,12 +47,18 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
       $campusInfo = $campus->getInfo();
       $paypal_fee_id = $campusInfo['paypal_convenience_fee_id'];
+      $paypalFee = new TSM_REGISTRATION_FEE($paypal_fee_id);
+      $paypalFeeInfo = $paypalFee->getInfo();
 
       $paypalFeeAmount = $total * .03;
       $family_id = $this->info['family_id'];
       $family = new TSM_REGISTRATION_FAMILY($family_id);
-      $family_fee_id = $family->addFee("PayPal Convenience Fee", $paypalFeeAmount, $paypal_fee_id);
-      $params = Array("family_fee_id" => $family_fee_id, "description" => "PayPal Convenience Fee", "amount" => $paypalFeeAmount);
+      $family_fee_id = $family->addFee($paypalFeeInfo['name'], $paypalFeeAmount, $paypal_fee_id, $paypalFeeInfo['fee_type_id']);
+      /* WE SHOULDN'T SET THE PAYMENT PLAN ID FOR A PAYPAL FEE BECAUSE IT COULD THROW OFF THE CALCUALTED TOTAL FOR THE PAYMENT PLAN
+      $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+      $familyFee->setPaymentPlan($this->info['family_payment_plan_id']);
+      */
+      $params = Array("family_fee_id" => $family_fee_id, "description" => $paypalFeeInfo['name'], "amount" => $paypalFeeAmount);
       $this->addFee($params);
       $this->updateTotal();
       $return = true;
@@ -114,11 +120,11 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getFees() {
-    //$q = "SELECT * FROM tsm_reg_families_fees ff, tsm_reg_families_invoice_fees invf WHERE (invf.family_fee_id = ff.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."') OR invf.family_fee_id IS NULL";
-    $q = "SELECT invf.*, ff.fee_id, ff.name FROM tsm_reg_families_invoice_fees invf, tsm_reg_families_fees ff
-    WHERE ff.family_fee_id = invf.family_fee_id
-    AND invf.family_invoice_id = '".$this->invoiceId."'";
+    //$q = "SELECT invf.*, ff.fee_id, ff.name FROM tsm_reg_families_invoice_fees invf, tsm_reg_families_fees ff WHERE ff.family_fee_id = invf.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."'";
+    $q = "SELECT invf.*, ff.fee_id, ff.name FROM tsm_reg_families_invoice_fees invf, tsm_reg_families_fees ff WHERE ff.family_fee_id = invf.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."'";
+
     $r = $this->db->runQuery($q);
+    $returnFees = null;
     while ($a = mysql_fetch_assoc($r)) {
       $returnFees[] = $a;
     }
@@ -129,9 +135,13 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   public function addToQuickbooks() {
     global $quickbooks;
 
+    $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
+    $campusInfo = $campus->getInfo();
+
     $doNotProcess = false;
     $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
     $quickbooks_customer_id = $family->getQuickbooksCustomerId();
+    $invoiceTotal = $this->getTotal();
 
     if ($this->info['quickbooks_invoice_id'] != "") {
       $doNotProcess = true;
@@ -139,60 +149,103 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
     $fees = $this->getFees();
 
-    $quickbooksInvoice = new QuickBooks_IPP_Object_Invoice();
     $invoiceHeader = new QuickBooks_IPP_Object_Header();
     $invoiceHeader->setCustomerId($quickbooks_customer_id);
-    $quickbooksInvoice->addHeader($invoiceHeader);
 
-    foreach ($fees as $fee) {
-      $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
-      if (isset($fee['fee_id'])) {
-        $feeInfo = $feeObject->getInfo();
-      }
-
-      /*
-      if (!isset($feeInfo['quickbooks_item_id'])) {
-        $doNotProcess = true;
-      }
-      */
-
-
+    if ($invoiceTotal > 0) {
+      $quickbooksInvoice = new QuickBooks_IPP_Object_Invoice();
+      $quickbooksInvoice->addHeader($invoiceHeader);
+    } elseif ($invoiceTotal < 0) {
+      $quickbooksInvoice = new QuickBooks_IPP_Object_CreditMemo();
+      $creditMemoTotal = $invoiceTotal * -1;
+      $invoiceHeader->setTotalAmt($creditMemoTotal);
+      $invoiceHeader->setARAccountName("Accounts Receivable");
+      $quickbooksInvoice->addHeader($invoiceHeader);
     }
 
-    if (!$doNotProcess) {
+    /*
+    if(isset($fees)){
       foreach ($fees as $fee) {
+        $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
         if (isset($fee['fee_id'])) {
-          $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
           $feeInfo = $feeObject->getInfo();
+        }
 
-          $Line = new QuickBooks_IPP_Object_Line();
-          $Line->setItemId($feeInfo['quickbooks_item_id']);
-          $Line->setAmount($fee['amount']);
-          $Line->setDescription($fee['name']);
-          $Line->setQty(1);
-          $quickbooksInvoice->addLine($Line);
-        } else {
-          $Line = new QuickBooks_IPP_Object_Line();
-          $Line->setAmount($fee['amount']);
-          $Line->setDescription($fee['name']);
-          $Line->setQty(1);
-          $quickbooksInvoice->addLine($Line);
+
+        if (!isset($feeInfo['quickbooks_item_id'])) {
+          $doNotProcess = true;
+        }
+
+
+      }
+    }
+    */
+
+    if (!$doNotProcess) {
+      if (isset($fees)) {
+        foreach ($fees as $fee) {
+          if (isset($fee['fee_id'])) {
+            $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
+            $feeInfo = $feeObject->getInfo();
+
+            $Line = new QuickBooks_IPP_Object_Line();
+            $Line->setItemId($feeInfo['quickbooks_item_id']);
+
+            //we need to make the negative charge positive if this is a credit to their account.
+            if ($invoiceTotal > 0) {
+              $Line->setAmount($fee['amount']);
+            } else {
+              $Line->setAmount($fee['amount'] * -1);
+            }
+
+            $Line->setDescription($fee['name']);
+            $Line->setQty(1);
+            $quickbooksInvoice->addLine($Line);
+          } else {
+            $Line = new QuickBooks_IPP_Object_Line();
+            $Line->setAmount($fee['amount']);
+            $Line->setDescription($fee['name']);
+            $Line->setQty(1);
+            $quickbooksInvoice->addLine($Line);
+          }
         }
       }
 
-      $service = new QuickBooks_IPP_Service_Invoice();
+      if ($invoiceTotal > 0) {
+        $service = new QuickBooks_IPP_Service_Invoice();
+      } elseif ($invoiceTotal < 0) {
+
+        /*
+        $Line = new QuickBooks_IPP_Object_Line();
+        $Line->setAmount($creditMemoTotal);
+        $Line->setDesc("Tuition Installment");
+        $Line->setItemId("{QB-398}");
+        $Line->setQty(1);
+        $quickbooksInvoice->addLine($Line);
+        */
+
+        $service = new QuickBooks_IPP_Service_CreditMemo();
+      }
+
       $quickbooks_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooksInvoice);
+      if ($quickbooks_id == null) {
+        die($service->lastResponse()."<br /><br />".$service->lastRequest());
+      }
+      echo "Setting Quickbooks ID: ".$quickbooks_id."...";
       $this->setQuickbooksId($quickbooks_id);
+      echo "set!";
       $invoice = $service->findById($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooks_id);
-      $txnId = $invoice->getExternalKey();
 
       $payments = $this->getPayments();
       if (isset($payments)) {
+        $txnId = $invoice->getExternalKey();
         foreach ($payments as $payment) {
           $paymentObject = new QuickBooks_IPP_Object_Payment();
           $paymentHeader = new QuickBooks_IPP_Object_Header();
           $paymentHeader->setCustomerId($quickbooks_customer_id);
           $paymentHeader->setTotalAmt($payment['amount']);
+          $paymentHeader->setDocNumber($payment['paypal_transaction_id']);
+          $paymentHeader->setPaymentMethodId($campusInfo['qb_paypal_payment_method_id']);
           $paymentObject->addHeader($paymentHeader);
           $Line = new QuickBooks_IPP_Object_Line();
           $Line->setTxnId($txnId);
@@ -201,7 +254,6 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
           $service = new QuickBooks_IPP_Service_Payment();
           $quickbooks_payment_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $paymentObject);
           //todo: create payment object and add the quickbooks_payment_id to the payment
-
 
         }
       }
