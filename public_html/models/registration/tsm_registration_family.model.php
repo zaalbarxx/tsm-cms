@@ -288,12 +288,8 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
 
   }
 
-  public function addFee($name, $amount, $fee_id = null) {
-    if ($fee_id == null) {
-      $q = "INSERT INTO tsm_reg_families_fees (family_id,name,amount,school_year) VALUES('".$this->familyId."','$name','$amount','".$this->getSelectedSchoolYear()."')";
-    } else {
-      $q = "INSERT INTO tsm_reg_families_fees (family_id,name,amount,fee_id,school_year) VALUES('".$this->familyId."','$name','$amount','$fee_id','".$this->getSelectedSchoolYear()."')";
-    }
+  public function addFee($name, $amount, $fee_id = null, $fee_type_id = null) {
+    $q = "INSERT INTO tsm_reg_families_fees (family_id,name,amount,fee_id,fee_type_id,school_year) VALUES('".$this->familyId."','$name','$amount','$fee_id','$fee_type_id','".$this->getSelectedSchoolYear()."')";
     $this->db->runQuery($q);
     $id = mysql_insert_id($this->db->conn);
 
