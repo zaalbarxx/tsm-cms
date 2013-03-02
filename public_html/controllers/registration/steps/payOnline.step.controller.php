@@ -18,7 +18,11 @@ $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($plan_to_process['payment_plan_
 $planInfo = $paymentPlan->getInfo();
 $planFeeTypes = $plan_to_process['fee_types'];
 $invoices = $family->getInvoicesByPaymentPlan($plan_to_process['family_payment_plan_id']);
-$firstInvoice = $invoices[0];
+if ($plan_to_process['payment_plan_type_id'] == 1) {
+  $firstInvoice = $invoices[0];
+} else {
+  $firstInvoice = $invoices[2];
+}
 $campusInfo = $currentCampus->getInfo();
 
 
