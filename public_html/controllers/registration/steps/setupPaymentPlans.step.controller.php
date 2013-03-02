@@ -28,19 +28,21 @@ foreach ($students as $student) {
   foreach ($planFeeTypes as $fee_type_id) {
     $students[$student['student_id']]['planFeeTypes'][$fee_type_id] = $studentObject->getFees($fee_type_id);
     $students[$student['student_id']]['planFeeTotals'][$fee_type_id] = $reg->addFees($students[$student['student_id']]['planFeeTypes'][$fee_type_id]);
-    foreach ($students[$student['student_id']]['planFeeTypes'][$fee_type_id] as $key => $fee) {
-      if (isset($fee['program_id'])) {
-        $program = new TSM_REGISTRATION_PROGRAM($fee['program_id']);
-        $program = $program->getInfo();
-        $students[$student['student_id']]['planFeeTypes'][$fee_type_id][$key]['program_name'] = $program['name'];
-      }
+    if (isset($students[$student['student_id']]['planFeeTypes'][$fee_type_id])) {
+      foreach ($students[$student['student_id']]['planFeeTypes'][$fee_type_id] as $key => $fee) {
+        if (isset($fee['program_id'])) {
+          $program = new TSM_REGISTRATION_PROGRAM($fee['program_id']);
+          $program = $program->getInfo();
+          $students[$student['student_id']]['planFeeTypes'][$fee_type_id][$key]['program_name'] = $program['name'];
+        }
 
-      if (isset($fee['course_id'])) {
-        $course = new TSM_REGISTRATION_COURSE($fee['course_id']);
-        $course = $course->getInfo();
-        $students[$student['student_id']]['planFeeTypes'][$fee_type_id][$key]['course_name'] = $course['name'];
-      }
+        if (isset($fee['course_id'])) {
+          $course = new TSM_REGISTRATION_COURSE($fee['course_id']);
+          $course = $course->getInfo();
+          $students[$student['student_id']]['planFeeTypes'][$fee_type_id][$key]['course_name'] = $course['name'];
+        }
 
+      }
     }
   }
 }
@@ -85,19 +87,34 @@ if ($invoices == null) {
   $dueToday = $planTotal;
 
   if ($plan_to_process['payment_plan_type_id'] == 4) {
-    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
-    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
-    $invoice->addFee(Array("family_fee_id" => null, "description" => "Offset annual tuition to invoice according to payment plan selected.", "amount" => -$planTotal));
-    $invoice->updateTotal();
-
-    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
-    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+    $installmentFee = new TSM_REGISTRATION_FEE($plan_to_process['installment_fee_id']);
+    $installmentFeeInfo = $installmentFee->getInfo();
     $percentage = $plan_to_process['immediate_invoice_percentage'] / 100;
-    $initialAmount = $planTotal * $percentage;
-    $invoice->addFee(Array("family_fee_id" => null, "description" => "".$plan_to_process['immediate_invoice_percentage']."% of Payment Plan Total", "amount" => $initialAmount));
+    $installmentFeeAmount = $planTotal * $percentage;
+
+    $creditFee = new TSM_REGISTRATION_FEE($plan_to_process['credit_fee_id']);
+    $creditFeeInfo = $creditFee->getInfo();
+    $creditFeeAmount = -$planTotal;
+
+    //Credit intial invoice back to account so we can bill in installments.
+    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
+    $family_fee_id = $family->addFee($plan_to_process['credit_description'], $creditFeeAmount, $plan_to_process['credit_fee_id'], $creditFeeInfo['fee_type_id']);
+    $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+    $familyFee->setPaymentPlan($plan_to_process['family_payment_plan_id']);
+    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+    $invoice->addFee(Array("family_fee_id" => $family_fee_id, "description" => $plan_to_process['credit_description'], "amount" => $creditFeeAmount));
     $invoice->updateTotal();
 
-    $dueToday = $initialAmount;
+    //Invoice first installment
+    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
+    $family_fee_id = $family->addFee($plan_to_process['installment_description'], $installmentFeeAmount, $plan_to_process['installment_fee_id'], $installmentFeeInfo['fee_type_id']);
+    $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+    $familyFee->setPaymentPlan($plan_to_process['family_payment_plan_id']);
+    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+    $invoice->addFee(Array("family_fee_id" => $family_fee_id, "description" => $plan_to_process['installment_description'], "amount" => $installmentFeeAmount));
+    $invoice->updateTotal();
+
+    $dueToday = $installmentFeeAmount;
   }
 } else {
   if ($plan_to_process['payment_plan_type_id'] == 1) {

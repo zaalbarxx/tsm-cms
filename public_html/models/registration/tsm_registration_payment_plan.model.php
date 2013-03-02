@@ -26,12 +26,11 @@ class TSM_REGISTRATION_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
-
   public function getNumFamilies() {
     $q = "SELECT COUNT(family_id) AS num_families FROM tsm_reg_families_payment_plans WHERE payment_plan_id = '".$this->paymentPlanId."'";
     $r = $this->db->runQuery($q);
-    while ($r = mysql_fetch_assoc($r)) {
-      $numFamiles = $r['num_families'];
+    while ($a = mysql_fetch_assoc($r)) {
+      $numFamiles = $a['num_families'];
     }
 
     return $numFamiles;

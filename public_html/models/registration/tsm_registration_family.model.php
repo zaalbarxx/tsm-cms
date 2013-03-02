@@ -209,7 +209,8 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getPaymentPlans($payment_plan_type_id = null) {
-    $q = "SELECT pp.*, fpp.payment_plan_type_id, fpp.name, fpp.immediate_invoice_percentage, fpp.fee_type_id AS payment_plan_fee_type_id
+    $q = "SELECT pp.*, fpp.payment_plan_type_id, fpp.name, fpp.immediate_invoice_percentage, fpp.fee_type_id AS payment_plan_fee_type_id,
+    fpp.installment_fee_id, fpp.installment_description, fpp.credit_fee_id, fpp.credit_description, fpp.invoice_and_credit
     FROM tsm_reg_families_payment_plans pp, tsm_reg_fee_payment_plans fpp
     WHERE fpp.payment_plan_id = pp.payment_plan_id
     AND pp.family_id = '".$this->familyId."'

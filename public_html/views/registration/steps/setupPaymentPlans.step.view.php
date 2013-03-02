@@ -24,26 +24,28 @@
               <?php
               $i = 0;
               $odd = 1;
-              foreach ($fees as $fee) {
-                if ($odd == $i % 2) {
-                  $style = "background: #ccc;";
-                } else {
-                  $style = "background: #fff;";
+              if (isset($fees)) {
+                foreach ($fees as $fee) {
+                  if ($odd == $i % 2) {
+                    $style = "background: #ccc;";
+                  } else {
+                    $style = "background: #fff;";
+                  }
+                  ?>
+                    <tr style="<?php echo $style; ?>">
+                        <td><?php if (isset($fee['program_name'])) {
+                          echo $fee['program_name'];
+                        } ?></td>
+                        <td><?php if (isset($fee['course_name'])) {
+                          echo $fee['course_name'];
+                        } ?></td>
+                        <td><?php echo $fee['name']; ?></td>
+                        <td>$<?php echo $fee['amount']; ?></td>
+                    </tr>
+                  <?php
+                  $i++;
                 }
-                ?>
-                  <tr style="<?php echo $style; ?>">
-                      <td><?php if (isset($fee['program_name'])) {
-                        echo $fee['program_name'];
-                      } ?></td>
-                      <td><?php if (isset($fee['course_name'])) {
-                        echo $fee['course_name'];
-                      } ?></td>
-                      <td><?php echo $fee['name']; ?></td>
-                      <td>$<?php echo $fee['amount']; ?></td>
-                  </tr>
-                <?php
-                $i++;
-              } ?>
+              }?>
               <?php echo "<tr><td colspan=3 align=right style=\"font-weight: bold;\">Student Total: </td><td>$".$student['planFeeTotals'][$fee_type_id]."</td></tr>"; ?>
             </table>
           <?php
