@@ -1,6 +1,7 @@
 <?php
 $family = new TSM_REGISTRATION_FAMILY($family_id);
 $familyInfo = $family->getInfo();
+$familyInfo['school_year_info'] = $family->getSchoolYearInfo();
 $students = $family->getStudents($reg->getSelectedSchoolYear());
 if (isset($students)) {
   foreach ($students as $student) {

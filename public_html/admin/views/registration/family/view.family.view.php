@@ -31,6 +31,8 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         <div class="half">
             <span class="title">Billing Address</span><br/>
           <?php echo $familyInfo['address']."<br />".$familyInfo['city'].", ".$familyInfo['state']." ".$familyInfo['zip']; ?>
+            <br/><br/>
+            <span class="title">Registered: </span><?php echo date('D, M d, Y', strtotime($familyInfo['school_year_info']['registration_time'])); ?>
         </div>
 
     </div>
