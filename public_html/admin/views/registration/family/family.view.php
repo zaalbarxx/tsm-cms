@@ -17,7 +17,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     ?>
       <div class="smallItem">
           <a href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"
-             class="title"><?php echo $family['father_last']; ?> Family</a>
+             class="title"><?php echo $family['father_last']; ?> Family <?php echo $family['status']; ?></a>
               <span class="buttons"><a
                       href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"
                       class="reviewButton" title="Review This Family"></a></span>

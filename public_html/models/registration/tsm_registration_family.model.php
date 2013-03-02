@@ -6,6 +6,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   private $isLoggedIn;
   private $currentStep;
   private $students;
+  private $schoolYearInfo;
 
   public function __construct($familyId = null) {
     global $logout;
@@ -180,6 +181,20 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     }
 
     return $this->info;
+  }
+
+  public function getSchoolYearInfo($school_year = null) {
+    if ($school_year != null) {
+      $q = "SELECT * FROM tsm_reg_families_school_years fsy WHERE fsy.family_id = '".$this->familyId."' AND fsy.school_year = '".$school_year."'";
+    } else {
+      $q = "SELECT * FROM tsm_reg_families_school_years fsy WHERE fsy.family_id = '".$this->familyId."' AND fsy.school_year = '".$this->getSelectedSchoolYear()."'";
+    }
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $this->schoolYearInfo = $a;
+    }
+
+    return $this->schoolYearInfo;
   }
 
   public function getStudents($school_year = null) {

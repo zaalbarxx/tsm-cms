@@ -6,6 +6,17 @@ if (!isset($action)) {
 switch ($action) {
   case null:
     $families = $currentCampus->getFamilies();
+    if (isset($families)) {
+      foreach ($families as $family) {
+        $families[$family['family_id']]['status'] = null;
+        switch ($family['current_step']) {
+          case 0:
+            $families[$family['family_id']]['status'] = " - Finalized";
+            break;
+
+        }
+      }
+    }
 
     if (isset($downloadCSV)) {
       $tsm->arrayToCSV($families, $campusInfo['name']." - Families");
