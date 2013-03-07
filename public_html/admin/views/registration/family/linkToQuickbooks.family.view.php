@@ -42,7 +42,16 @@
     $("#linkToQuickbooks").submit(function () {
         var submitNow = confirm("Are you sure you would like to link this family to quickbooks? This will create new invoices in quickbooks for all invoices created on the registration system.");
         if (submitNow) {
-            return true;
+            var data = $("#linkToQuickbooks").serialize();
+            $.post(window.location, data, function (data) {
+                if (data == "1") {
+                    alert("This family was successfully linked to Quickbooks.");
+                    parent.window.location.reload();
+                } else {
+                    alert("There was a problem adding this family to Quickbooks.");
+                }
+            });
+            return false;
         } else {
             return false;
         }

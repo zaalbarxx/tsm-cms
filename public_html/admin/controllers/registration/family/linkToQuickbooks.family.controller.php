@@ -14,7 +14,7 @@ if (isset($linkToQuickbooks)) {
       }
     }
   }
-  die("linking".$linkToQuickbooks);
+  die("1");
 }
 
 if ($currentCampus->usesQuickbooks() == true) {
