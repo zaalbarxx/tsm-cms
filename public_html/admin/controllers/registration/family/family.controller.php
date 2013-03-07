@@ -13,7 +13,9 @@ switch ($action) {
           case 0:
             $families[$family['family_id']]['status'] = " - Finalized";
             break;
-
+          case 6:
+            $families[$family['family_id']]['status'] = " - Finalized";
+            break;
         }
       }
     }
