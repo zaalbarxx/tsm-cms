@@ -151,6 +151,8 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
     $invoiceHeader = new QuickBooks_IPP_Object_Header();
     $invoiceHeader->setCustomerId($quickbooks_customer_id);
+    $txnDate = date('Y-m-d', strtotime($this->info['invoice_time']));
+    $invoiceHeader->setTxnDate($txnDate);
 
     if ($invoiceTotal > 0) {
       $quickbooksInvoice = new QuickBooks_IPP_Object_Invoice();
@@ -160,6 +162,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       $creditMemoTotal = $invoiceTotal * -1;
       $invoiceHeader->setTotalAmt($creditMemoTotal);
       $invoiceHeader->setARAccountName("Accounts Receivable");
+      //todo: need to set the account to whatever account the campus is set to.
       $quickbooksInvoice->addHeader($invoiceHeader);
     }
 
@@ -210,20 +213,20 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
           }
         }
       }
-
-      if ($invoiceTotal > 0) {
-        $service = new QuickBooks_IPP_Service_Invoice();
-      } elseif ($invoiceTotal < 0) {
-
-        /*
+      /*
+      else {
         $Line = new QuickBooks_IPP_Object_Line();
         $Line->setAmount($creditMemoTotal);
         $Line->setDesc("Tuition Installment");
         $Line->setItemId("{QB-398}");
         $Line->setQty(1);
         $quickbooksInvoice->addLine($Line);
-        */
+      }
+      */
 
+      if ($invoiceTotal > 0) {
+        $service = new QuickBooks_IPP_Service_Invoice();
+      } elseif ($invoiceTotal < 0) {
         $service = new QuickBooks_IPP_Service_CreditMemo();
       }
 
@@ -231,30 +234,32 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       if ($quickbooks_id == null) {
         die($service->lastResponse()."<br /><br />".$service->lastRequest());
       }
-      echo "Setting Quickbooks ID: ".$quickbooks_id."...";
       $this->setQuickbooksId($quickbooks_id);
-      echo "set!";
       $invoice = $service->findById($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooks_id);
 
       $payments = $this->getPayments();
       if (isset($payments)) {
         $txnId = $invoice->getExternalKey();
         foreach ($payments as $payment) {
-          $paymentObject = new QuickBooks_IPP_Object_Payment();
-          $paymentHeader = new QuickBooks_IPP_Object_Header();
-          $paymentHeader->setCustomerId($quickbooks_customer_id);
-          $paymentHeader->setTotalAmt($payment['amount']);
-          $paymentHeader->setDocNumber($payment['paypal_transaction_id']);
-          $paymentHeader->setPaymentMethodId($campusInfo['qb_paypal_payment_method_id']);
-          $paymentObject->addHeader($paymentHeader);
-          $Line = new QuickBooks_IPP_Object_Line();
-          $Line->setTxnId($txnId);
-          $Line->setAmount($payment['amount']);
-          $paymentObject->addLine($Line);
-          $service = new QuickBooks_IPP_Service_Payment();
-          $quickbooks_payment_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $paymentObject);
-          //todo: create payment object and add the quickbooks_payment_id to the payment
-
+          if ($payment['quickbooks_payment_id'] == "") {
+            $paymentObject = new QuickBooks_IPP_Object_Payment();
+            $paymentHeader = new QuickBooks_IPP_Object_Header();
+            $paymentHeader->setCustomerId($quickbooks_customer_id);
+            $paymentHeader->setTotalAmt($payment['amount']);
+            $paymentHeader->setDocNumber($payment['paypal_transaction_id']);
+            $paymentHeader->setPaymentMethodId($campusInfo['qb_paypal_payment_method_id']);
+            $txnDate = date('Y-m-d', strtotime($payment['payment_time']));
+            $paymentHeader->setTxnDate($txnDate);
+            $paymentObject->addHeader($paymentHeader);
+            $Line = new QuickBooks_IPP_Object_Line();
+            $Line->setTxnId($txnId);
+            $Line->setAmount($payment['amount']);
+            $paymentObject->addLine($Line);
+            $service = new QuickBooks_IPP_Service_Payment();
+            $quickbooks_payment_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $paymentObject);
+            $paymentObject = new TSM_REGISTRATION_PAYMENT($payment['invoice_payment_id']);
+            $paymentObject->setQuickbooksId($quickbooks_payment_id);
+          }
         }
       }
 
@@ -263,6 +268,13 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       die("doNotProcess");
       return false;
     }
+  }
+
+  public function hide() {
+    $q = "UPDATE tsm_reg_families_invoices SET displayed = false WHERE family_invoice_id = '".$this->invoiceId."'";
+    $this->db->runQuery($q);
+
+    return true;
   }
 
   public function setQuickbooksId($id) {

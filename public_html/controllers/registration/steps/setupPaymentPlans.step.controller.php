@@ -87,6 +87,8 @@ if ($invoices == null) {
   $dueToday = $planTotal;
 
   if ($plan_to_process['payment_plan_type_id'] == 4) {
+    $invoice->hide();
+
     $installmentFee = new TSM_REGISTRATION_FEE($plan_to_process['installment_fee_id']);
     $installmentFeeInfo = $installmentFee->getInfo();
     $percentage = $plan_to_process['immediate_invoice_percentage'] / 100;
@@ -104,6 +106,7 @@ if ($invoices == null) {
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
     $invoice->addFee(Array("family_fee_id" => $family_fee_id, "description" => $plan_to_process['credit_description'], "amount" => $creditFeeAmount));
     $invoice->updateTotal();
+    $invoice->hide();
 
     //Invoice first installment
     $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
