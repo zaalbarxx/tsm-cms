@@ -297,11 +297,14 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $id;
   }
 
-  public function getInvoices() {
+  public function getInvoices($displayed = null) {
     $q = "SELECT * FROM tsm_reg_families_invoices fi, tsm_reg_families_payment_plans fpp, tsm_reg_fee_payment_plans pp
     WHERE fi.family_payment_plan_id = fpp.family_payment_plan_id
     AND pp.payment_plan_id = fpp.payment_plan_id
     AND fi.family_id = '".$this->familyId."'";
+    if ($displayed) {
+      $q .= " AND fi.displayed = '$displayed'";
+    }
     $r = $this->db->runQuery($q);
     $returnInvoices = null;
     while ($a = mysql_fetch_assoc($r)) {
