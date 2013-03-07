@@ -89,6 +89,9 @@ if (isset($browseOfferings)) {
       case "periods":
         require_once(__TSM_ROOT__."controllers/registration/period/period.controller.php");
         break;
+      case "invoice":
+        require_once(__TSM_ROOT__."controllers/registration/invoice/invoice.controller.php");
+        break;
 
     }
   }
