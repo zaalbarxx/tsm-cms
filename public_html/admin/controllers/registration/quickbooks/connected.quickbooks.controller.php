@@ -6,6 +6,8 @@ if (isset($saveQuickbooksStatus)) {
 
 $service = new QuickBooks_IPP_Service_PaymentMethod();
 $paymentMethods = $service->findAll($quickbooks->Context, $quickbooks->creds['qb_realm']);
+$service = new QuickBooks_IPP_Service_Account();
+$quickbooksAccounts = $service->findAll($quickbooks->Context, $quickbooks->creds['qb_realm']);
 $campusInfo = $currentCampus->getInfo();
 
 //$ItemService = new QuickBooks_IPP_Service_Item();

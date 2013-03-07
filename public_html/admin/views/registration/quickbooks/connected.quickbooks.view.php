@@ -33,6 +33,18 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         <?php
       }
       ?>
+    </select><br/><label for="qb_creditmemo_account_id" style="width: 200px;">Credit Memo Account:</label><select
+            name="qb_creditmemo_account_id">
+      <?php
+      foreach ($quickbooksAccounts as $account) {
+        ?>
+          <option value="<?php echo $account->getId(); ?>" <?php if ($campusInfo['qb_creditmemo_account_id'] == $account->getId()) {
+            echo "selected=selected";
+          } ?>><?php echo $account->getName(); ?>
+          </option>
+        <?php
+      }
+      ?>
     </select><br/><br/>
         <input type="hidden" name="saveQuickbooksStatus" value="1"/>
         <input type="submit" class="submitButton" value="Save Configuration"/>
