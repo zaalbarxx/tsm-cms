@@ -507,8 +507,11 @@ z-index: 9;
 }
 .span9 #searchItems{
 width: 150px;
-margin-right: 70px;
+margin-right: 0px;
 margin-top: 3px;
+float: right;
+position: relative;
+top: 10px;
 }
 <?php if ($_GET['fb'] == "1") { ?>
 body{
@@ -521,8 +524,8 @@ display:none;
 display: none;
 }
 .span9{
-margin-left: 150px;
-width: 700px;
+margin-left: 150px !important;
+width: 700px !important;
 }
 #mainBodyWrapper{
 margin-top: 0px !important;

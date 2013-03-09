@@ -1,5 +1,5 @@
 <?php
-require_once(__TSM_ROOT__."admin/views/registration/fees.sidebar.view.php");
+require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 <div class="span9">
     <h1><?php echo $pageTitle; ?></h1>
@@ -7,13 +7,14 @@ require_once(__TSM_ROOT__."admin/views/registration/fees.sidebar.view.php");
     <p>Please use the list below to select which QuickBooks item each fee should be associated with. Each fee can only
         be associated with one item.</p>
 
-    <form action="" method="post" id="qbInfo">
+    <form action="" method="post" id="qbInfo" class="form-inline">
       <?php
       if (isset($fees)) {
         foreach ($fees as $fee) {
           ?>
-            <div style="margin-top: 10px;">
-              <?php echo $fee['name']; ?>: <select name="fee_id:<?php echo $fee['fee_id']; ?>:quickbooks_item_id">
+            <div class="well well-small">
+                <label><strong><?php echo $fee['name']; ?>:</strong></label> <select class="pull-right"
+                                                                                     name="fee_id:<?php echo $fee['fee_id']; ?>:quickbooks_item_id">
               <?php
               foreach ($quickbooksItems2 as $item) {
                 //$item = new QuickBooks_IPP_Object_Item();

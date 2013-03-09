@@ -34,8 +34,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 
                 <div class="itemDetails" style="display: block;">
                     <br/>
-                    <table class="dataTable">
-                        <tr class="header">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
                             <td>Course Name</td>
                             <td>Period</td>
                             <td>Teacher</td>
@@ -43,17 +44,20 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                             <td>Registration</td>
                             <td></td>
                         </tr>
-                      <?php
-                      $i = 1;
-                      if ($program['courses']) {
-                        foreach ($program['courses'] as $course) {
-                          echo "<tr><td>".$i.". ".$course['name']."</td><td><a href='index.php?com=registration&view=student&action=changeStudentPeriodForCourse&course_period_id=".$course['course_period_id']."&student_id=".$student_id."&course_id=".$course['course_id']."&program_id=".$program['program_id']."' class='fb'>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</a></td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?com=registration&ajax=unenrollStudentFromCourse&course_id=".$course['course_id']."&student_id=".$student_id."&program_id=".$course['program_id']."\" title=\"Unenroll From This Course\" class=\"button deleteButton\"></a></td></tr>";
-                          $i++;
-                        }
-                      } else {
-                        echo "<tr><td colspan=5 align=center>This student is not in any courses for ".$program['name'].".</td></tr>";
-                      }
-                      ?>
+                        </thead>
+                        <tbody>
+                          <?php
+                          $i = 1;
+                          if ($program['courses']) {
+                            foreach ($program['courses'] as $course) {
+                              echo "<tr><td>".$i.". ".$course['name']."</td><td><a href='index.php?com=registration&view=student&action=changeStudentPeriodForCourse&course_period_id=".$course['course_period_id']."&student_id=".$student_id."&course_id=".$course['course_id']."&program_id=".$program['program_id']."' class='fb'>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</a></td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?com=registration&ajax=unenrollStudentFromCourse&course_id=".$course['course_id']."&student_id=".$student_id."&program_id=".$course['program_id']."\" title=\"Unenroll From This Course\" class=\"deleteButton btn btn-danger btn-small\">Unenroll</a></td></tr>";
+                              $i++;
+                            }
+                          } else {
+                            echo "<tr class='warning'><td colspan=6 align=center style='text-align: center;'>This student is not in any courses for ".$program['name'].".</td></tr>";
+                          }
+                          ?>
+                        </tbody>
                     </table>
                     <br/>
                     <span class="center"><a

@@ -1,5 +1,5 @@
 <?php
-require_once(__TSM_ROOT__."admin/views/registration/fees.sidebar.view.php");
+require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 <div class="span9">
     <input id="searchItems" rel="smallItem" class="search-query" style="float: right; position: relative; top: 10px;"

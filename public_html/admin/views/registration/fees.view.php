@@ -1,14 +1,12 @@
 <?php
-require_once(__TSM_ROOT__."admin/views/registration/fees.sidebar.view.php");
+require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 <div class="span9">
-    <input id="searchItems" rel="smallItem" class="search-query" style="float: right; position: relative; top: 10px;"
-           value="Search..."/>
+    <input id="searchItems" rel="smallItem" class="search-query" value="Search..."/>
 
-    <h1>Fees</h1>
-        <span style="float: right; margin-top: -45px; right: 20px; position: relative;"><a
-                href="index.php?com=registration&view=fees&action=addEditFee" class="addButton"
-                title="Add a Fee"></a></span>
+    <h1>Fees - <a href="index.php?com=registration&view=fees&action=addEditFee" class="btn btn-primary"
+                  title="Add a Fee">Add</a></h1>
+
   <?php
   if ($feesList) {
     foreach ($feesList as $fee) {

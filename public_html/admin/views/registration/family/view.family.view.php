@@ -24,17 +24,19 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             </address>
             <strong>Registered: </strong><?php echo date('D, M d, Y', strtotime($familyInfo['school_year_info']['registration_time'])); ?>
         </div>
-        <div class="btn-group center clearfix" style="top: 10px;">
-            <a href="index.php?com=registration&view=family&action=resetPassword&family_id=<?php echo $familyInfo['family_id']; ?>"
-               class="btn fb">Reset
-                Password</a><?php if ($currentCampus->usesQuickbooks() && $familyInfo['quickbooks_customer_id'] == "") { ?>
-            <a href="index.php?com=registration&view=family&action=linkToQuickbooks&family_id=<?php echo $familyInfo['family_id']; ?>"
-               class="btn fb">Link To Quickbooks</a>
+        <div class="center">
+            <div class="btn-group clearfix" style="top: 10px;">
+                <a href="index.php?com=registration&view=family&action=resetPassword&family_id=<?php echo $familyInfo['family_id']; ?>"
+                   class="btn fb">Reset
+                    Password</a><?php if ($currentCampus->usesQuickbooks() && $familyInfo['quickbooks_customer_id'] == "") { ?>
+                <a href="index.php?com=registration&view=family&action=linkToQuickbooks&family_id=<?php echo $familyInfo['family_id']; ?>"
+                   class="btn fb">Link To Quickbooks</a>
 
-          <?php } ?>
-            <a class="btn" target="_blank"
-               href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $familyInfo['family_id']; ?>&loginAs=1">Login
-                As</a>
+              <?php } ?>
+                <a class="btn" target="_blank"
+                   href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $familyInfo['family_id']; ?>&loginAs=1">Login
+                    As</a>
+            </div>
         </div>
     </div>
     <div class="infoSection well clearfix">
@@ -81,7 +83,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     </div>
     <div class="infoSection well">
         <h2>Recent Invoices</h2>
-        <table style="width: 100%;">
+        <table style="width: 100%;" class="table table-striped table-bordered ">
             <tr style="font-weight: bold;">
                 <td>ID</td>
                 <td>Description</td>

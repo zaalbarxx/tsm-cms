@@ -53,7 +53,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 
     <?php } ?>
   <?php } else { ?>
-    <span>This student is not eligible for any courses in <?php echo $programInfo['name']; ?>.</span><br/><br/>
+    <div class="alert text-center">This student is not eligible for any courses in <?php echo $programInfo['name']; ?>
+        .
+    </div><br/><br/>
   <?php } ?>
 </div>
 <script type="text/javascript">
