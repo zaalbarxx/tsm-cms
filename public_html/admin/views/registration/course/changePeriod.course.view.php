@@ -1,8 +1,8 @@
-<div class="contentWithSideBar">
+<div class="span9">
     <h1><?php echo $pageTitle; ?></h1>
   <?php if ($periods) { ?>
   <?php foreach ($periods as $period) { ?>
-        <div class="smallItem">
+        <div class="smallItem well well-small">
             <span class="title"><?php echo $reg->displayPeriod($period); ?></span>
 				<span class="buttons">
 				<a href="#" class="addButton24" title="Add Period"></a>

@@ -1,7 +1,7 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/fees.sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
+<div class="span9">
     <h1><?php echo $pageTitle; ?></h1>
 
     <p>Please use the list below to select which QuickBooks item each fee should be associated with. Each fee can only
@@ -35,7 +35,7 @@ require_once(__TSM_ROOT__."admin/views/registration/fees.sidebar.view.php");
       }
       ?>
         <input type="hidden" name="saveAll" value="1"/>
-        <input type="submit" class="submitButton" style="margin-top: 20px; float: right;" value="Save All"/>
+        <input type="submit" class="btn btn-primary" style="margin-top: 20px; float: right;" value="Save All"/>
         <br/><br/>
     </form>
 </div>

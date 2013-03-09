@@ -1,14 +1,14 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
+<div class="span9">
     <h1><?php echo $pageTitle; ?></h1>
     <!--<div class="availablePeriods">
   	<h3>Available Periods - <a href="index.php?com=registration&view=courses&action=addPeriod&course_id=<?php echo $course_id; ?>" class="addButton24 fb" style="bottom:-5px" title="Add a Period"></a></h3> 
   	<?php if (isset($coursePeriods)) {
       foreach ($coursePeriods as $period) {
         ?>
-  		<div class="smallItem">
+  		<div class="smallItem well well-small">
   		<span class="title"><?php echo $tsm->intToDay($period['day']).". ".date("g:ia", strtotime($period['start_time']))." - ".date("g:ia", strtotime($period['end_time'])); ?>: <?php echo $period['first_name']." ".$period['last_name']; ?></span>
 				<span class="buttons"><a href="#" class="deleteButton deletePeriod" title="Delete Period" ref="<?php echo $period['period_id']; ?>"></a></span>
 			</div>
@@ -24,7 +24,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       if (isset($courseRequirements)) {
         foreach ($courseRequirements as $requirement) {
           ?>
-            <div class="smallItem">
+            <div class="smallItem well well-small">
                 <span class="title"><?php echo $requirement['name']; ?></span>
                 <span class="buttons"><a
                         href="index.php?com=registration&ajax=deleteRequirementFromCourse&course_id=<?php echo $course_id; ?>&course_requirement_id=<?php echo $requirement['course_requirement_id']; ?>"
@@ -79,7 +79,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       if (isset($courseStudents)) {
         foreach ($courseStudents as $student) {
           ?>
-            <div class="smallItem">
+            <div class="smallItem well well-small">
                 <span class="title"
                       style="cursor: pointer;"><?php echo $student['first_name']." ".$student['last_name']; ?>
                     , Grade: <?php echo $student['grade']; ?></span>

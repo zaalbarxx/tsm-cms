@@ -1,7 +1,7 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
+<div class="span9">
     <h1>Quickbooks Connection</h1>
   <?php if (isset($message)) { ?>
     <p style="text-align: center; color: red; font-weight: bold;"><?php echo $message; ?></p>
@@ -47,7 +47,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       ?>
     </select><br/><br/>
         <input type="hidden" name="saveQuickbooksStatus" value="1"/>
-        <input type="submit" class="submitButton" value="Save Configuration"/>
+        <input type="submit" class="btn btn-primary" value="Save Configuration"/>
     </form>
     <p style="text-align: center;">
     </p>

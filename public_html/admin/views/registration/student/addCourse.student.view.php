@@ -1,14 +1,14 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
-    <input id="searchItems" rel="bigItem" style="float: right; position: relative; right: 75px; top: 10px;"
+<div class="span9">
+    <input id="searchItems" rel="bigItem" class="search-query" style="float: right; position: relative; top: 10px;"
            value="Search..."/>
 
     <h1><?php echo $pageTitle; ?></h1>
   <?php if ($eligibleCourses) { ?>
   <?php foreach ($eligibleCourses as $course) { ?>
-        <div class="bigItem">
+        <div class="bigItem well well-small">
           <span class="title"><?php echo $course['name']; ?> - <span
                   style="font-size: 12px; position: relative; top: -1px;">Click for Details</span></span>
           <span class="buttons">
@@ -22,15 +22,15 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                 <h4>Applicable Fees</h4>
 
                 <div class="half">
-                    <span class="label">Registration Fee:</span>
+                    <strong>Registration Fee:</strong>
                     $<?php echo $reg->addFees($student->getFeesForCourse($course['course_id'], $program_id, $campusInfo['registration_fee_type_id'])); ?>
                 </div>
                 <div class="half">
-                    <span class="label">Course Tuition:</span>
+                    <strong>Course Tuition:</strong>
                     $<?php echo $reg->addFees($student->getFeesForCourse($course['course_id'], $program_id, $campusInfo['tuition_fee_type_id'])); ?>
                 </div>
                 <div style="text-align: center; position: relative; top: 20px;">
-                    <a href="#" class="med_button enrollNow" style="margin-left: -30px;">Enroll in Course</a>
+                    <a href="#" class="btn btn-primary enrollNow" style="margin-left: -30px;">Enroll in Course</a>
                 </div>
 
             </div>

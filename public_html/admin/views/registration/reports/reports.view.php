@@ -1,7 +1,7 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
+<div class="span9">
     <h2>Report Generator</h2>
 
     <form id="reportChooserForm">

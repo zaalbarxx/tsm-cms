@@ -1,8 +1,8 @@
-<div class="contentWithSideBar">
+<div class="span9">
     <h1><?php echo $pageTitle; ?></h1>
   <?php if ($periods) { ?>
   <?php foreach ($periods as $period) { ?>
-        <div class="smallItem">
+        <div class="smallItem well well-small">
             <span class="title"><?php echo $reg->displayPeriod($period); ?></span>
 				<span class="buttons">
 				<a href="index.php?com=registration&ajax=changeStudentPeriodForCourse&course_period_id=<?php echo $course_period_id; ?>&student_id=<?php echo $student_id; ?>&course_id=<?php echo $courseInfo['course_id']; ?>&program_id=<?php echo $program_id; ?>&new_course_period_id=<?php echo $period['course_period_id']; ?>"

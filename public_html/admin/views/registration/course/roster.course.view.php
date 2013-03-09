@@ -1,8 +1,8 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
-    <input id="searchItems" rel="smallItem" style="float: right; position: relative; right: 75px; top: 10px;"
+<div class="span9">
+    <input id="searchItems" rel="smallItem" class="search-query" style="float: right; position: relative; top: 10px;"
            value="Search..."/>
 
     <h1><?php echo $pageTitle; ?> - <a
@@ -14,7 +14,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       <?php if (isset($courseStudents)) {
       foreach ($courseStudents as $student) {
         ?>
-          <div class="smallItem">
+          <div class="smallItem well well-small">
               <span class="title"
                     style="cursor: pointer;"><?php echo $student['first_name']." ".$student['last_name']; ?>
                   , Grade: <?php echo $student['grade']; ?></span>

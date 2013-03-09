@@ -1,22 +1,29 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
     <title><?php echo $tsm->website->getTitle(); ?></title>
   <?php echo $tsm->getAdminHeaderHTML(); ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
 </head>
 <body>
-<div id="headerWrapper"></div>
-<div id="topMenuWrapper">
-    <div id="topMenu">
-      <?php
-      if ($tsm->adminUser->isLoggedIn()) {
-        $tsm->website->generateMenuHTML($tsm->website->getAdminTopMenu());
-        ?>
-          <a class="logoutButton" href="index.php?logout=1">Logout</a>
-        <?php
-      }
-      ?>
+<div class="navbar navbar-inverse navbar-fixed-top" id="topMenuWrapper">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand">Artios Registration</a>
+          <?php
+          if ($tsm->adminUser->isLoggedIn()) {
+            $tsm->website->generateMenuHTML($tsm->website->getAdminTopMenu());
+            ?>
+              <a class="btn pull-right" href="index.php?logout=1">Logout</a>
+            <?php
+          }
+          ?>
+        </div>
     </div>
 </div>
-<div id="contentWrapper">
-    <div id="contentArea">
+<div class="container" id="mainBodyWrapper" style="margin-top: 60px;">
+    <div class="row">

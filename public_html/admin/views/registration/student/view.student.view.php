@@ -1,27 +1,21 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
+<div class="span9">
     <h1><?php echo $pageTitle; ?> - <a
             href="index.php?com=registration&view=student&action=addEditStudent&student_id=<?php echo $studentInfo['student_id']; ?>"
             class="editButton" title="Edit Student"></a></h1>
 
-    <div class="infoSection">
+    <div class="well well-large">
         <h2>Student Information</h2>
-
-        <div class="two-thirds">
-            <span class="label">Nickname:</span> <?php echo $studentInfo['nickname']; ?><br/>
-            <span class="label">Age:</span> <?php echo $student->getAge(); ?><br/>
-            <span class="label">Grade:</span> <?php echo $studentInfo['grade']; ?><br/>
-            <span class="label">E-mail Address:</span> <?php echo $studentInfo['email']; ?>
-        </div>
-        <div class="one-third">
-            <span class="label">Status: </span><?php echo $studentStatus; ?>
-        </div>
-
+        <strong>Nickname:</strong> <?php echo $studentInfo['nickname']; ?><br/>
+        <strong>Age:</strong> <?php echo $student->getAge(); ?><br/>
+        <strong>Grade:</strong> <?php echo $studentInfo['grade']; ?><br/>
+        <strong>E-mail Address:</strong> <?php echo $studentInfo['email']; ?><br/>
+        <strong>Status: </strong><?php echo $studentStatus; ?><br/>
     </div>
-    <div class="infoSection">
-        <a href="" class="showDetails right small_button">Hide Details</a>
+    <div class="well well-large">
+        <a href="" class="showDetails right btn">Hide Details</a>
 
         <h2>Enrollment Summary</h2>
         <br/>
@@ -29,7 +23,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       if (isset($programs)) {
         foreach ($programs as $program) {
           ?>
-            <div class="bigItem">
+            <div class="bigItem well">
                 <span class="title"><?php echo $program['name']; ?></span>
 				<span class="buttons">
 					<!--<a href="#" class="reviewButton" title="Review This Program"></a>
@@ -64,17 +58,17 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                     <br/>
                     <span class="center"><a
                             href="index.php?com=registration&view=student&action=addCourse&student_id=<?php echo $studentInfo['student_id']; ?>&program_id=<?php echo $program['program_id']; ?>"
-                            class="small_button fb">Add Course</a></span>
+                            class="btn btn-primary fb">Add Course</a></span>
                     <hr class="divider"/>
                     <h3>Program Fee Summary</h3>
 
                     <div class="half">
-                        <span class="label">Registration Fees:</span> $<?php echo $program['registration_total']; ?>
+                        <strong>Registration Fees:</strong> $<?php echo $program['registration_total']; ?>
                         <br/>
                     </div>
                     <div class="half">
-                        <span class="label">Program Tuition:</span> $<?php echo $program['tuition_total']; ?><br/>
-                        <span class="label">Yearly Tuition:</span> $<?php echo $program['tuition_total']; ?><br/>
+                        <strong>Program Tuition:</strong> $<?php echo $program['tuition_total']; ?><br/>
+                        <strong>Yearly Tuition:</strong> $<?php echo $program['tuition_total']; ?><br/>
                     </div>
 
                 </div>
@@ -85,9 +79,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       ?>
         <span class="center"><a
                 href="index.php?com=registration&view=student&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>"
-                class="med_button fb">Enroll in Additional Programs</a></span>
+                class="btn btn-large fb">Enroll in Additional Programs</a></span>
     </div>
-    <div class="infoSection">
+    <div class="well well-large">
         <h2>Billing Summary</h2>
         Registration Total: $<?php echo $registrationTotal; ?><br/>
         Tuition Total: $<?php echo $tuitionTotal; ?><br/>

@@ -1,11 +1,11 @@
-<br style="width: 1000px; clear: both;"/>
 </div>
-<div id="footerWrapper">
+<div class="container">
     <div id="footerContents">
         &copy; <?php echo date("Y"); ?> <a href="http://www.takesixmedia.com/" target="_blank">Take Six Media</a>
       <?php echo "Peak Memory: ".memory_get_peak_usage(true); ?> - <?php echo $tsm->db->getNumQueries(); ?>
     </div>
 </div>
+
 <div style="clear: both; width: 100%;">
   <?php
   /*

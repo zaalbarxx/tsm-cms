@@ -3,7 +3,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 <script src="../includes/ckeditor/ckeditor.js" type="text/javascript"></script>
 <script type="text/javascript" src="../includes/ckeditor/adapters/jquery.js"></script>
-<div class="contentWithSideBar">
+<div class="span9">
 <h1><?php echo $pageTitle; ?></h1>
 
 <form method="post" action="index.php?com=registration&ajax=formSubmission">
@@ -269,7 +269,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 <input type="hidden" class="nodelete" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>"/>
 <input type="hidden" class="nodelete" name="school_year" value="<?php echo $reg->getSelectedSchoolYear(); ?>"/>
 <input type="hidden" class="nodelete" name="formAction" value="<?php echo $formAction; ?>"/>
-<input type="submit" class="submitButton" style="margin-top: 20px; float: right;"
+<input type="submit" class="btn btn-primary" style="margin-top: 20px; float: right;"
        value="Save Payment Plan"/>
 <br/><br/><br/>
 </form>
@@ -295,7 +295,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         $(".start-month").val(parseInt(startDates[1]));
         $(".start-day").val(parseInt(startDates[2]));
     });
-    $(".submitButton").click(function () {
+    $(".btn btn-primary").click(function () {
         if ($("#monthly_plan").is(":hidden")) {
             $("#monthly_plan").remove();
         } else if ($("#partNow_partLater").is(":hidden")) {

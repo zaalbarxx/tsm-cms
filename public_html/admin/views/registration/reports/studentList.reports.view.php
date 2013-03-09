@@ -1,7 +1,7 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
+<div class="span9">
     <h2>Student Report</h2>
 
     <form id="studentReport" method="post" action="">
@@ -84,7 +84,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     -->
         <br/><br/>
         <input type="hidden" name="generateReport" value="1"/>
-        <input type="submit" class="submitButton" value="Generate Report"/>
+        <input type="submit" class="btn btn-primary" value="Generate Report"/>
     </form>
 </div>
 <script type="text/javascript">

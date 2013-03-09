@@ -1,7 +1,7 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
+<div class="span9">
     <h1><?php echo $pageTitle; ?></h1>
 
     <form method="post" action="index.php?com=registration&ajax=formSubmission">
@@ -56,12 +56,12 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         <input type="hidden" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>"/>
         <input type="hidden" name="school_year" value="<?php echo $reg->getSelectedSchoolYear(); ?>"/>
         <input type="hidden" name="formAction" value="<?php echo $formAction; ?>"/>
-        <input type="submit" class="submitButton" style="margin-top: 20px; float: right;" value="Save Fee"/>
+        <input type="submit" class="btn btn-primary" style="margin-top: 20px; float: right;" value="Save Fee"/>
         <br/><br/><br/>
     </form>
 </div>
 <script type="text/javascript">
-    $(".submitButton").click(function () {
+    $(".btn btn-primary").click(function () {
         form = $(this).parent();
         submitData = form.serialize();
         $.post(form.attr('action'), submitData, function (data) {

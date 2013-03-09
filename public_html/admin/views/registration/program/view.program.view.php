@@ -1,7 +1,7 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
+<div class="span9">
     <h1><?php echo $pageTitle; ?> - <a
             href="index.php?com=registration&view=programs&action=addEditProgram&program_id=<?php echo $programInfo['program_id']; ?>"
             class="editButton" title="Edit Program"></a></h1>
@@ -20,7 +20,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
           <?php if (isset($programCourses)) {
           foreach ($programCourses as $course) {
             ?>
-              <div class="smallItem">
+              <div class="smallItem well well-small">
                   <a href="index.php?com=registration&view=programs&action=viewCourse&course_id=<?php echo $course['course_id']; ?>&program_id=<?php echo $program_id; ?>"
                      class="title"><?php echo $course['name']; ?></a>
                   <span class="buttons"><a
@@ -37,7 +37,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
           echo "There are no courses available for this Program.";
         }?>
             <input type="hidden" name="removeCourses" value="1"/>
-            <input type="submit" style="float: right; margin-right: 20px;" class="submitButton"
+            <input type="submit" style="float: right; margin-right: 20px;" class="btn btn-primary"
                    value="Remove Selected"/>
         </form>
         <br/>
@@ -50,7 +50,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       if (isset($programRequirements)) {
         foreach ($programRequirements as $requirement) {
           ?>
-            <div class="smallItem">
+            <div class="smallItem well well-small">
                 <span class="title"><?php echo $requirement['name']; ?></span>
                 <span class="buttons"><a
                         href="index.php?com=registration&ajax=deleteRequirementFromProgram&program_id=<?php echo $program_id; ?>&requirement_id=<?php echo $requirement['requirement_id']; ?>"
@@ -71,24 +71,24 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       <?php if (isset($programFees)) {
       foreach ($programFees as $fee) {
         ?>
-          <div class="bigItem">
+          <div class="bigItem well">
               <span class="title"><?php echo $fee['name']; ?> - $<?php echo $fee['amount']; ?></span>
               <span class="buttons"><a
                       href="index.php?com=registration&ajax=deleteFeeFromProgram&program_id=<?php echo $program_id; ?>&fee_id=<?php echo $fee['fee_id']; ?>"
                       class="deleteButton deleteFee" title="Delete Fee"></a></span>
 
-              <div class="itemDetails">
-                  <b><span class="tooltip"
-                           title="This fee is applied only if applicant matches the condition(s) below.">Conditions:</span></b>
+              <div class="itemDetails well">
+                  <b><span
+                          title="This fee is applied only if applicant matches the condition(s) below.">Conditions:</span></b>
                   - <a
                       href="index.php?com=registration&view=programs&action=addCondition&program_id=<?php echo $program_id; ?>&fee_id=<?php echo $fee['fee_id'] ?>"
-                      class="fb">Add</a>
+                      class="btn btn-small btn-primary fb">Add</a>
                   <br/>
                 <?php
                 if ($fee['conditions']) {
                   $i = 1;
                   foreach ($fee['conditions'] as $condition) {
-                    echo "<span id=\"condition_".$condition['program_fee_condition_id']."\">".$i.". ".$condition['name']." - <a href=\"index.php?com=registration&ajax=deleteFeeConditionFromProgram&program_id=".$program_id."&program_fee_condition_id=".$condition['program_fee_condition_id']."\" class=\"deleteButton button\" ref=\"".$condition['program_fee_condition_id']."\" title=\"Delete this condition.\"></a></span><br />";
+                    echo "<span id=\"condition_".$condition['program_fee_condition_id']."\">".$i.". ".$condition['name']." - <a href=\"index.php?com=registration&ajax=deleteFeeConditionFromProgram&program_id=".$program_id."&program_fee_condition_id=".$condition['program_fee_condition_id']."\" class=\"deleteButton btn btn-small btn-danger\" ref=\"".$condition['program_fee_condition_id']."\" title=\"Delete this condition.\">Remove</a></span><br />";
                     $i++;
                   }
                 }

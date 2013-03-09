@@ -2,7 +2,7 @@
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 
-<div class="contentWithSideBar">
+<div class="span9">
     <h1><?php echo $pageTitle; ?></h2>
         <form method="post" style="" action="">
             <fieldset>
@@ -32,7 +32,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             <input type="hidden" name="campus_id" value="<?php echo $reg->getCurrentCampusId(); ?>"/>
             <input type="hidden" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>"/>
             <input type="hidden" name="<?php echo $submitField; ?>" value="1"/>
-            <input type="submit" class="submitButton" style="margin-top: 20px;" value="Save Condition"/>
+            <input type="submit" class="btn btn-primary" style="margin-top: 20px;" value="Save Condition"/>
         </form>
 </div>
 <script type="text/javascript">

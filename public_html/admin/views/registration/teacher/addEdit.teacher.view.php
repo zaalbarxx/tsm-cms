@@ -1,7 +1,7 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
+<div class="span9">
     <h1><?php echo $pageTitle; ?></h2>
       <?php if (isset($errorMessage)) {
         echo "<span style='text-align: center; font-weight:bold; margin-bottom: 20px; display: block; color: red;'>".$errorMessage."</span>";
@@ -37,7 +37,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             <input type="hidden" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>"/>
             <input type="hidden" name="school_year" value="<?php echo $reg->getSelectedSchoolYear(); ?>"/>
             <input type="hidden" name="<?php echo $formAction; ?>" value="1"/>
-            <input type="submit" class="submitButton" style="margin-top: 20px; float: right;" value="Save Teacher"/>
+            <input type="submit" class="btn btn-primary" style="margin-top: 20px; float: right;" value="Save Teacher"/>
             <br/><br/><br/>
         </form>
 </div>

@@ -2,15 +2,15 @@
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 
-<div class="contentWithSideBar">
-    <input id="searchItems" rel="smallItem" style="float: right; position: relative; right: 75px; top: 10px;"
+<div class="span9">
+    <input id="searchItems" rel="smallItem" class="search-query" style="float: right; position: relative; top: 10px;"
            value="Search..."/>
 
     <h1><?php echo $pageTitle; ?></h1>
   <?php if (isset($campusRequirements)) {
   foreach ($campusRequirements as $requirement) {
     ?>
-      <div class="smallItem">
+      <div class="smallItem well well-small">
           <span class="title"><?php echo $requirement['name']; ?></span>
       <span class="buttons">
       <a href="index.php?com=registration&view=programs&action=addRequirement&program_id=<?php echo $program_id; ?>&addRequirement=<?php echo $requirement['requirement_id']; ?>"

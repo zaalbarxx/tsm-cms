@@ -8,7 +8,7 @@
         <input type="hidden" name="campus_id" value="<?php echo $campusInfo['campus_id']; ?>"/>
         <input type="hidden" name="family_id" value="<?php echo $familyInfo['family_id']; ?>"/>
         <input type="hidden" name="resetPassword" value="1"/>
-        <input type="submit" class="submitButton" value="Save Password"/>
+        <input type="submit" class="btn btn-primary" value="Save Password"/>
     </form>
 </div>
 <script type="text/javascript">

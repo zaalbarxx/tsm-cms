@@ -1,8 +1,8 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/fees.sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
-    <input id="searchItems" rel="smallItem" style="float: right; position: relative; right: 75px; top: 10px;"
+<div class="span9">
+    <input id="searchItems" rel="smallItem" class="search-query" style="float: right; position: relative; top: 10px;"
            value="Search..."/>
 
     <h1>Payment Plans</h2>
@@ -13,7 +13,7 @@ require_once(__TSM_ROOT__."admin/views/registration/fees.sidebar.view.php");
       if ($paymentPlans) {
         foreach ($paymentPlans as $plan) {
           ?>
-            <div class="smallItem">
+            <div class="smallItem well well-small">
                 <span class="title"><?php echo $plan['name']; ?> - <?php echo $plan['num_families']; ?></span>
           <span class="buttons">
           <a href="index.php?com=registration&view=fees&action=addEditPaymentPlan&payment_plan_id=<?php echo $plan['payment_plan_id']; ?>"

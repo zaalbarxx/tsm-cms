@@ -6,7 +6,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         cursor: pointer;
     }
 </style>
-<div class="contentWithSideBar">
+<div class="span9">
     <h1>Teachers</h1>
       <span style="float: right; margin-top: -45px; right: 20px; position: relative;"><a
               href="index.php?com=registration&view=teacher&action=addEditTeacher" class="addButton"
@@ -14,7 +14,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
   <?php
   foreach ($teachers as $teacher) {
     ?>
-      <div class="smallItem">
+      <div class="smallItem well well-small">
           <a class="title"
              href="index.php?com=registration&view=student&action=viewTeacher&teacher_id=<?php echo $teacher['teacher_id']; ?>"><?php echo $teacher['last_name'].", ".$teacher['first_name']; ?></a>
               <span class="buttons"><!--<a

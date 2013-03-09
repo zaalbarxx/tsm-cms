@@ -1,10 +1,10 @@
-<div id="sideBar">
-    <ul>
+<div id="sideBar" class="well span2">
+    <ul class="nav nav-list">
         <li>
             <a href="index.php?com=registration" <?php if ($tsm->stringEndsWith($_SERVER["REQUEST_URI"], "index.php?com=registration")) {
               echo "class='active'";
             } ?>>Registration</a>
-            <ul>
+            <ul class="nav nav-list">
                 <li>
                     <a href="index.php?com=registration&view=fees" <?php if ($tsm->stringEndsWith($_SERVER["REQUEST_URI"], "index.php?com=registration&view=fees")) {
                       echo "class='active'";

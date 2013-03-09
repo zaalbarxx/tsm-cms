@@ -119,12 +119,22 @@ class Website {
     return $this->adminTopMenu;
   }
 
-  public function generateMenuHTML($menuArray) {
-    echo "<ul>";
+  public function generateMenuHTML($menuArray, $isDropDown = false) {
+    if ($isDropDown) {
+      echo "<ul class='dropdown-menu'>";
+    } else {
+      echo "<ul class='nav'>";
+    }
+
     foreach ($menuArray as $menuItem) {
-      echo "<li><a href='".$menuItem['url']."'>".$menuItem['title']."</a>";
       if (isset($menuItem['children'])) {
-        $this->generateMenuHTML($menuItem['children']);
+        echo "<li class='dropdown'><a class='dropdown-toggle' href='".$menuItem['url']."'>".$menuItem['title']."<b class='caret'></b></a>";
+      } else {
+        echo "<li><a href='".$menuItem['url']."'>".$menuItem['title']."</a>";
+      }
+
+      if (isset($menuItem['children'])) {
+        $this->generateMenuHTML($menuItem['children'], true);
       }
     }
     echo "</ul>";

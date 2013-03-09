@@ -1,7 +1,7 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
+<div class="span9">
     <h1>Available Programs</h1>
         <span style="float: right; margin-top: -45px; right: 20px; position: relative;"><a
                 href="index.php?com=registration&view=programs&action=addEditProgram" class="addButton"
@@ -10,7 +10,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
   if ($programList) {
     foreach ($programList as $program) {
       ?>
-        <div class="smallItem">
+        <div class="smallItem well well-small">
             <span class="title"
                   href="index.php?com=registration&view=programs&action=viewProgram&program_id=<?php echo $program['program_id']; ?>"><?php echo $program['name']; ?></span>
                 <span class="buttons"><a

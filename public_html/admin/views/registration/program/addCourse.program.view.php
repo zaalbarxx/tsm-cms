@@ -2,15 +2,15 @@
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 
-<div class="contentWithSideBar">
-    <input id="searchItems" rel="smallItem" style="float: right; position: relative; right: 75px; top: 10px;"
+<div class="span9">
+    <input id="searchItems" rel="smallItem" class="search-query" style="float: right; position: relative; top: 10px;"
            value="Search..."/>
 
     <h1><?php echo $pageTitle; ?></h1>
   <?php if ($courses) { ?>
   <form id="addCourses" method="post">
   <?php foreach ($courses as $course) { ?>
-        <div class="smallItem">
+        <div class="smallItem well well-small">
             <span class="title"><?php echo $course['name']; ?></span>
 				<span class="buttons">
 				<a href="index.php?com=registration&view=programs&action=addCourse&program_id=<?php echo $programInfo['program_id']; ?>&addCourse=<?php echo $course['course_id']; ?>"
@@ -24,7 +24,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     <span>There are no courses available.</span><br/><br/>
   <?php } ?>
     <input type="hidden" name="addCourses" value="1"/>
-    <input type="submit" style="float: right;" class="submitButton" value="Add Selected"/>
+    <input type="submit" style="float: right;" class="btn btn-primary" value="Add Selected"/>
 </form>
 </div>
 <script type="text/javascript">

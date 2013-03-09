@@ -25,5 +25,5 @@ if (isset($enrollInCourse)) {
   }
 }
 
-$pageTitle = "Add Course for ".$studentInfo['first_name']." in ".$programInfo['name'];
+$pageTitle = "Add Course";
 ?>

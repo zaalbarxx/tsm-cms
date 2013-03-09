@@ -17,5 +17,5 @@ if ($campuses == NULL) {
     </fieldset>
     <input type="hidden" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>"/>
     <input type="hidden" name="createCampus" value="1"/>
-    <input type="submit" class="submitButton" style="margin-top: 20px;" value="Save Campus"/>
+    <input type="submit" class="btn btn-primary" style="margin-top: 20px;" value="Save Campus"/>
 </form>

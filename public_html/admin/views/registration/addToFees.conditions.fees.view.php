@@ -6,7 +6,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         top: 2px;
     }
 </style>
-<div class="contentWithSideBar">
+<div class="span9">
     <h1><?php echo $pageTitle; ?></h1>
   <?php if (isset($programs)) { ?>
   <form id="addToFees" method="post">
@@ -18,7 +18,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     if (isset($program['fees'])) {
       foreach ($program['fees'] as $fee) {
         ?>
-          <div class="smallItem">
+          <div class="smallItem well well-small">
               <span class="title"><?php echo $fee['name']." - $".$fee['amount']; ?></span>
           <span class="buttons">
               <input type="checkbox"
@@ -36,7 +36,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
           if (isset($course['fees'])) {
             foreach ($course['fees'] as $fee) {
               ?>
-                <div class="smallItem" style="width: 610px;">
+                <div class="smallItem well well-small" style="width: 610px;">
                     <span class="title"><?php echo $fee['name']." - $".$fee['amount']; ?></span>
               <span class="buttons">
                   <input type="checkbox"
@@ -52,7 +52,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
           if (isset($course['courseOnlyFees'])) {
             foreach ($course['courseOnlyFees'] as $fee) {
               ?>
-                <div class="smallItem" style="width: 610px;">
+                <div class="smallItem well well-small" style="width: 610px;">
                     <span class="title"><?php echo $fee['name']." - $".$fee['amount']; ?> - All Programs</span>
               <span class="buttons">
                   <input type="checkbox"
@@ -71,7 +71,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     <span>There are no fees available.</span><br/><br/>
   <?php } ?>
     <input type="hidden" name="addToFees" value="1"/>
-    <input type="submit" style="float: right;" class="submitButton" value="Add To Selected"/>
+    <input type="submit" style="float: right;" class="btn btn-primary" value="Add To Selected"/>
     <br/><br/>
 </form>
 </div>

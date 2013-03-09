@@ -419,8 +419,10 @@ class TSM {
         <script src=\"../includes/jquery-1.8.3.min.js\" type=\"text/javascript\"></script>
     <!--<![endif]-->
     <link rel=\"stylesheet\" href=\"../includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
+    <link href=\"../includes/bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\" media=\"screen\">
     <script type=\"text/javascript\" src=\"../includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
     <script type=\"text/javascript\" src=\"../includes/jquery.validate.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../includes/bootstrap/js/bootstrap.min.js\"></script>
     <script type=\"text/javascript\" src=\"../includes/jquery.maskedinput.js\"></script>";
     if (isset($_GET['fb'])) {
       $this->adminHeaderHTML .= "<link href=\"templates/admin/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";

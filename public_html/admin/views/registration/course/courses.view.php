@@ -1,8 +1,8 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<div class="contentWithSideBar">
-    <input id="searchItems" rel="smallItem" style="float: right; position: relative; right: 75px; top: 10px;"
+<div class="span9">
+    <input id="searchItems" rel="smallItem" class="search-query" style="float: right; position: relative; top: 10px;"
            value="Search..."/>
 
     <h1>Available Courses</h1>
@@ -13,7 +13,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
   if ($courseList) {
     foreach ($courseList as $course) {
       ?>
-        <div class="smallItem">
+        <div class="smallItem well well-small">
             <a class="title"
                href="index.php?com=registration&view=courses&action=viewCourse&course_id=<?php echo $course['course_id']; ?>"><?php echo $course['name']; ?></a>
                 <span class="buttons"><a

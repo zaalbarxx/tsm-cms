@@ -2,14 +2,14 @@
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
 
-<div class="contentWithSideBar">
-    <input id="searchItems" rel="bigItem" style="float: right; position: relative; right: 75px; top: 10px;"
+<div class="span9">
+    <input id="searchItems" class="search-query" rel="bigItem" style="float: right; position: relative; top: 10px;"
            value="Search..."/>
 
     <h1><?php echo $pageTitle; ?></h1>
   <?php if ($eligiblePrograms) { ?>
   <?php foreach ($eligiblePrograms as $program) { ?>
-        <div class="bigItem">
+        <div class="bigItem well">
             <span class="title"><?php echo $program['name']; ?> - <span
                     style="font-size: 12px; position: relative; top: -1px;">Click for Details</span></span>
 				<span class="buttons">
@@ -24,16 +24,16 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                 <h4>Applicable Fees</h4>
 
                 <div class="half">
-                    <span class="label">Registration Fee:</span>
+                    <strong>Registration Fee:</strong>
                     $<?php echo $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], $campusInfo['registration_fee_type_id'])); ?>
                 </div>
                 <div class="half">
-                    <span class="label">Tuition:</span>
+                    <strong>Tuition:</strong>
                     $<?php echo $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], $campusInfo['tuition_fee_type_id'])); ?>
                 </div>
                 <div style="text-align: center; position: relative; top: 20px;">
                     <a href="index.php?com=registration&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
-                       class="med_button enrollNow" style="margin-left: -30px;">Enroll in Program</a>
+                       class="btn btn-primary enrollNow" style="margin-left: -30px;">Enroll in Program</a>
                 </div>
 
             </div>
