@@ -26,6 +26,13 @@ class TSM_REGISTRATION_FEE extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
+  public function setQuickBooksItemId($quickbooks_item_id) {
+    $q = "UPDATE tsm_reg_fees SET quickbooks_item_id = '$quickbooks_item_id' WHERE fee_id = '".$this->feeId."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
   public function getConditionsForCourse($course_id, $program_id = null) {
     $q = "SELECT * FROM tsm_reg_course_fee_condition cfc, tsm_reg_fee_conditions fc 
     WHERE cfc.fee_condition_id = fc.fee_condition_id 

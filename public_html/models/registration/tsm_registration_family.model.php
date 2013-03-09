@@ -314,6 +314,124 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $returnInvoices;
   }
 
+  public function createQuickbooksInfo() {
+    $this->updateQuickbooksInfo(true);
+  }
+
+  public function updateQuickbooksInfo($create = false) {
+    global $quickbooks;
+
+    $father_first = $this->info['father_first'];
+    $father_last = $this->info['father_last'];
+    $mother_first = $this->info['mother_first'];
+    $mother_last = $this->info['mother_last'];
+
+    $service = new QuickBooks_IPP_Service_Customer();
+    if ($create == false) {
+      $customer = $service->findById($quickbooks->Context, $quickbooks->creds['qb_realm'], $this->info['quickbooks_customer_id']);
+    } elseif ($create == true) {
+      $customer = new QuickBooks_IPP_Object_Customer();
+    }
+
+
+    if ($father_first != "" && $mother_first != "") {
+      $givenName = $father_first." & ".$mother_first;
+    } elseif ($father_first == "") {
+      $givenName = $mother_first;
+    } elseif ($mother_first == "") {
+      $givenName = $fatherFirst;
+    }
+
+    if ($father_last != "" && $mother_last != "") {
+      $familyName = $father_last;
+    } elseif ($father_last == "") {
+      $familyName = $mother_last;
+    } elseif ($mother_last == "") {
+      $familyName = $father_last;
+    }
+
+    $customer->setGivenName($givenName);
+    $customer->setFamilyName($familyName);
+    $customer->setName($familyName.", ".$givenName);
+    $customer->setShowAs($familyName.", ".$givenName);
+
+
+    if ($create == true) {
+      $address = new QuickBooks_IPP_Object_Address();
+      $address->setTag("Billing");
+    } else {
+      $address = $customer->getAddress();
+    }
+    $address->setLine1($givenName." ".$familyName);
+    $address->setLine2($this->info['address']);
+    $address->setCity($this->info['city']);
+    $address->setCountrySubDivisionCode($this->info['state']);
+    $address->setPostalCode($this->info['zip']);
+    $customer->setAddress($address);
+
+    $customer->remove("Phone");
+
+    $phoneArray = Array("primary_phone" => $this->info['primary_phone'], "father_cell" => $this->info['father_cell'], "mother_cell" => $this->info['mother_cell'], "seconday_phone" => $this->info['secondary_phone']);
+    $i = 1;
+    foreach ($phoneArray as $key => $number) {
+      if ($number != "") {
+        $phone = new QuickBooks_IPP_Object_Phone();
+        $phone->setFreeFormNumber($number);
+        switch ($i) {
+          case 1:
+            $phone->setDefault(1);
+            $phone->setTag("Business");
+            break;
+          case 2:
+            $phone->setTag("Home");
+            break;
+          case 3:
+            $phone->setTag("Mobile");
+            break;
+          case 4:
+            $phone->setTag("Pager");
+            break;
+        }
+        $customer->addPhone($phone);
+        $i++;
+      }
+    }
+    $customer->remove("Email");
+
+
+    $emailArray = Array("primary_email" => $this->info['primary_email'], "secondary_email" => $this->info['secondary_email']);
+    $i = 1;
+    foreach ($emailArray as $key => $email) {
+      if ($email != "") {
+        $email = new QuickBooks_IPP_Object_Email();
+        $email->setAddress($this->info['primary_email']);
+        switch ($i) {
+          case 1:
+            $email->setTag("Business");
+            break;
+          case 2:
+            $email->setTag("Home");
+            break;
+        }
+        $customer->addEmail($email);
+        $i++;
+      }
+    }
+
+    if ($create == false) {
+      $service->update($quickbooks->Context, $quickbooks->creds['qb_realm'], $customer->getId(), $customer);
+    } elseif ($create == true) {
+      $quickbooks_customer_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $customer);
+      if (!$quickbooks_customer_id) {
+        die("THERE WAS A PROBLEM! EXITING!");
+      }
+      $this->setQuickbooksCustomerId($quickbooks_customer_id);
+    }
+
+
+    return true;
+  }
+
   public function getInvoicesByPaymentPlan($family_payment_plan_id) {
     $q = "SELECT * FROM tsm_reg_families_invoices
     WHERE family_payment_plan_id = '".$family_payment_plan_id."'
@@ -342,6 +460,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   public function setQuickbooksCustomerId($quickbooks_customer_id) {
     $q = "UPDATE tsm_reg_families SET quickbooks_customer_id = '$quickbooks_customer_id' WHERE family_id = '".$this->familyId."'";
     $this->db->runQuery($q);
+    $this->info['quickbooks_customer_id'] = $quickbooks_customer_id;
 
     return true;
   }

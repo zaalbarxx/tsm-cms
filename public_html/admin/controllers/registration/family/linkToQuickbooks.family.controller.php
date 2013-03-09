@@ -4,7 +4,13 @@ $familyInfo = $family->getInfo();
 
 
 if (isset($linkToQuickbooks)) {
-  $family->setQuickbooksCustomerId($linkToQuickbooks);
+  if ($createNewCustomer == 1) {
+    $family->createQuickbooksInfo();
+  } else {
+    $family->setQuickbooksCustomerId($linkToQuickbooks);
+    $family->updateQuickbooksInfo();
+  }
+
   if ($family->inQuickbooks()) {
     $invoices = $family->getInvoices();
     if (isset($invoices)) {
