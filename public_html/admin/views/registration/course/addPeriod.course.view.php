@@ -7,17 +7,29 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
   <?php foreach ($periods as $period) { ?>
         <div class="smallItem well well-small">
             <span class="title"><?php echo $reg->displayPeriod($period); ?></span>
-				<span class="buttons">
-				<a href="#" class="addButton24" title="Add Period"></a>
-				</span>
+            <a href="#myModal<?php echo $period['period_id']; ?>" class="btn btn-primary pull-right" title="Add Period"
+               data-toggle="modal">Select</a>
 
-            <div class="periods" style="display: none;">
-                <h3>Select a Teacher for this Period</h3>
-              <?php foreach ($teachers as $teacher) { ?>
-              <?php echo $teacher['first_name']." ".$teacher['last_name']; ?> - <a
-                        href="index.php?com=registration&view=courses&action=addPeriod&course_id=<?php echo $courseInfo['course_id']; ?>&teacher_id=<?php echo $teacher['teacher_id']; ?>&addPeriod=<?php echo $period['period_id']; ?>"
-                        class="addPeriod">Choose</a><br/>
-              <?php } ?>
+            <div id="myModal<?php echo $period['period_id']; ?>" class="modal hide fade" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 id="myModalLabel">Select a Teacher</h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <caption>You must select a teacher for the period to continue.</caption>
+                      <?php foreach ($teachers as $teacher) { ?>
+                        <tr>
+                            <td>
+                              <?php echo $teacher['first_name']." ".$teacher['last_name']; ?></td>
+                            <td><a
+                                    href="index.php?com=registration&view=courses&action=addPeriod&course_id=<?php echo $courseInfo['course_id']; ?>&teacher_id=<?php echo $teacher['teacher_id']; ?>&addPeriod=<?php echo $period['period_id']; ?>"
+                                    class="addPeriod btn btn-small btn-primary pull-right">Choose</a></td>
+                        </tr>
+                      <?php } ?>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -28,15 +40,6 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $(".addButton24").click(function () {
-            var docHeight = $(document).height();
-            $("body").append("<div id='overlay'></div>");
-            $("#overlay").height(docHeight);
-            var offset = $(this).offset();
-            $(this).parent().parent().children(".periods").clone().addClass("activePeriod").prependTo("body").css({left:$(window).width() / 2 - 180, top:(($(window).height() - $(this).height()) / 2) + $(window).scrollTop()}).show();
-
-            return false;
-        });
         $(".addPeriod").live('click', function () {
             $.get($(this).attr('href'), function (data) {
                 if (data == "0") {
@@ -48,13 +51,6 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             });
 
             return false;
-        });
-        $(document).mouseup(function (e) {
-            var container = $("body .activePeriod");
-            if (container.has(e.target).length === 0) {
-                container.remove();
-                $("#overlay").remove();
-            }
         });
     });
 </script>

@@ -18,7 +18,7 @@ switch ($requirement_type_id) {
       } ?>>Greater Than
       </option>
   </select>
-  <select name="config_2">
+  <select name="config_2" class="input-small">
     <?php
 
     for ($i = 1; $i <= 30; $i++) {
@@ -46,7 +46,7 @@ switch ($requirement_type_id) {
       } ?>>Greater Than or Equal To
       </option>
   </select>
-  <select name="config_2">
+  <select name="config_2" class="input-small">
     <?php
     if ($requirement['config_2'] == "") {
       unset($requirement['config_2']);
@@ -79,7 +79,7 @@ switch ($requirement_type_id) {
       } ?>>Greater Than or Equal To
       </option>
   </select>
-  <select name="config_4">
+  <select name="config_4" class="input-small">
       <option value="">N/A</option>
     <?php
     if ($requirement['config_4'] == "") {
@@ -107,7 +107,7 @@ switch ($requirement_type_id) {
   case "3":
     ?>
   <label for="config_1">Registers Between: </label>
-  <select name="config_1">
+  <select name="config_1" class="input-medium">
     <?php
     for ($i = 1; $i <= 12; $i++) {
       if ($requirement['config_1'] == $i) {
@@ -120,7 +120,7 @@ switch ($requirement_type_id) {
     }
     ?>
   </select>/
-  <select name="config_2">
+  <select name="config_2" class="input-small">
     <?php
     for ($i = 1; $i <= 31; $i++) {
       if ($requirement['config_2'] == $i) {
@@ -133,7 +133,7 @@ switch ($requirement_type_id) {
     }
     ?>
   </select> and
-  <select name="config_3">
+  <select name="config_3" class="input-medium">
     <?php
     for ($i = 1; $i <= 12; $i++) {
       if ($requirement['config_3'] == $i) {
@@ -146,7 +146,7 @@ switch ($requirement_type_id) {
     }
     ?>
   </select>/
-  <select name="config_4">
+  <select name="config_4" class="input-small">
     <?php
     for ($i = 1; $i <= 31; $i++) {
       if ($requirement['config_4'] == $i) {
@@ -163,7 +163,7 @@ switch ($requirement_type_id) {
     break;
   case "4":
     ?>
-  <label for="config_1">Enrolled in: </label><select name="config_1">
+  <label for="config_1">Enrolled in: </label><select name="config_1" class="input-small">
       <option value="">#</option>
     <?php for ($i = 0; $i < 41; $i++) { ?>
       <option value="<?php echo $i; ?>" <?php if ($requirement['config_1'] == $i) {

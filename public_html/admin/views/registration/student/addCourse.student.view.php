@@ -11,9 +11,8 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         <div class="bigItem well well-small">
           <span class="title"><?php echo $course['name']; ?> - <span
                   style="font-size: 12px; position: relative; top: -1px;">Click for Details</span></span>
-          <span class="buttons">
-          <a href="#" class="addButton24" title="Add to <?php echo $studentInfo['first_name']; ?>"></a>
-          </span>
+            <a href="#myModal<?php echo $course['course_id']; ?>" class="btn btn-primary pull-right" title="Add Course"
+               data-toggle="modal">Select</a>
 
             <div class="itemDetails">
                 <div class="description">
@@ -35,19 +34,39 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 
             </div>
 
-            <div class="periods" style="display: none;">
-                <h3>Select a Period</h3>
-              <?php
-              if (isset($course['periods'])) {
-                foreach ($course['periods'] as $period) {
-                  ?>
-                  <?php echo $tsm->intToDay($period['day']).". ".date("g:ia", strtotime($period['start_time']))." - ".date("g:ia", strtotime($period['end_time'])); ?>
-                    : <?php echo $period['first_name']." ".$period['last_name']; ?> - <a
-                            href="index.php?com=registration&view=student&action=addCourse&student_id=<?php echo $studentInfo['student_id']; ?>&program_id=<?php echo $programInfo['program_id']; ?>&enrollInCourse=<?php echo $course['course_id']; ?>&course_period_id=<?php echo $period['course_period_id']; ?>"
-                            class="addCourse">Choose</a><br/>
-                  <?php
-                }
-              }?>
+
+            <div id="myModal<?php echo $course['course_id']; ?>" class="modal hide fade" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 id="myModalLabel">Select a Period</h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <caption>You must select a period to continue.</caption>
+                        <tr>
+                            <th>Period</th>
+                            <th>Teacher</th>
+                            <th></th>
+                        </tr>
+                      <?php
+                      if (isset($course['periods'])) {
+                        foreach ($course['periods'] as $period) {
+
+                          ?>
+                          <tr><td>
+                            <?php echo $tsm->intToDay($period['day']).". ".date("g:ia", strtotime($period['start_time']))." - ".date("g:ia", strtotime($period['end_time'])); ?>
+                            </td>
+                            <td><?php echo $period['first_name']." ".$period['last_name']; ?></td>
+                            <td><a
+                                    href="index.php?com=registration&view=student&action=addCourse&student_id=<?php echo $studentInfo['student_id']; ?>&program_id=<?php echo $programInfo['program_id']; ?>&enrollInCourse=<?php echo $course['course_id']; ?>&course_period_id=<?php echo $period['course_period_id']; ?>"
+                                    class="addCourse btn btn-primary pull-right">Choose</a></td>
+                          <?php
+                        } ?>
+                        </tr>
+                      <?php } ?>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -63,15 +82,6 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         $(".bigItem .title").click(function () {
             $(this).parent().children(".itemDetails").slideToggle();
         });
-        $(".addButton24,.enrollNow").click(function () {
-            var docHeight = $(document).height();
-            $("body").append("<div id='overlay'></div>");
-            $("#overlay").height(docHeight);
-            var curPosition = $(this).offset();
-            $(this).parents(".bigItem").children(".periods").clone().addClass("activePeriod").prependTo("body").css({left:$(window).width() / 2 - 170, top:curPosition.top - 30}).show();
-
-            return false;
-        });
         $(".addCourse").live('click', function () {
             $.get($(this).attr('href'), function (data) {
                 if (data == "0") {
@@ -83,13 +93,6 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
             });
 
             return false;
-        });
-        $(document).mouseup(function (e) {
-            var container = $("body .activePeriod");
-            if (container.has(e.target).length === 0) {
-                container.remove();
-                $("#overlay").remove();
-            }
         });
     });
 </script>

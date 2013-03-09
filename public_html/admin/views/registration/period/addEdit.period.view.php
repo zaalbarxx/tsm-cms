@@ -6,7 +6,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     <h1><?php echo $pageTitle; ?></h2>
         <form method="post" id="periodForm" style="" action="">
             <fieldset>
-                <label for="day">Period Day: </label><select name="day" id="day">
+                <label for="day">Period Day: </label><select name="day" id="day" class="input-small">
                 <option value="">Choose a Day</option>
               <?php for ($i = 1; $i < 8; $i++) { ?>
                 <option value="<?php echo $i; ?>" <?php if ($period['day'] == $i) {
@@ -14,36 +14,37 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                 } ?>><?php echo $tsm->intToDay($i); ?></option>
               <?php } ?>
             </select><br/>
-                <label for="start_time">Start Time: </label><select name="start_hour" id="start_hour">
+                <label for="start_time">Start Time: </label><select name="start_hour" id="start_hour"
+                                                                    class="input-small">
                 <option value="">Hour</option>
               <?php for ($i = 1; $i < 13; $i++) { ?>
                 <option value="<?php echo $i; ?>"><?php echo $i ?></option>
               <?php } ?>
             </select>
-                <select name="start_minute" id="start_minute">
+                <select name="start_minute" id="start_minute" class="input-small">
                     <option value="">Minute</option>
                   <?php for ($i = 0; $i < 60; $i++) { ?>
                     <option value="<?php echo str_pad($i, 2, '0', STR_PAD_LEFT); ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
                   <?php } ?>
                 </select>
-                <select name="start_am_pm" id="start_am_pm">
+                <select name="start_am_pm" id="start_am_pm" class="input-small">
                     <option value="AM">AM</option>
                     <option value="PM">PM</option>
                 </select>
                 <br/>
-                <label for="end_time">End Time: </label><select name="end_hour" id="end_hour">
+                <label for="end_time">End Time: </label><select name="end_hour" id="end_hour" class="input-small">
                 <option value="">Hour</option>
               <?php for ($i = 1; $i < 13; $i++) { ?>
                 <option value="<?php echo $i; ?>"><?php echo $i ?></option>
               <?php } ?>
             </select>
-                <select name="end_minute" id="end_minute">
+                <select name="end_minute" id="end_minute" class="input-small">
                     <option value="">Minute</option>
                   <?php for ($i = 0; $i < 60; $i++) { ?>
                     <option value="<?php echo str_pad($i, 2, '0', STR_PAD_LEFT); ?>"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT); ?></option>
                   <?php } ?>
                 </select>
-                <select name="end_am_pm" id="end_am_pm">
+                <select name="end_am_pm" id="end_am_pm" class="input-small">
                     <option value="AM">AM</option>
                     <option value="PM">PM</option>
                 </select>

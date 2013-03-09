@@ -13,7 +13,7 @@
 <div class="navbar navbar-inverse navbar-fixed-top" id="topMenuWrapper">
     <div class="navbar-inner">
         <div class="container">
-            <a class="brand">Artios Registration</a>
+            <a class="brand">Site Administration</a>
           <?php
           if ($tsm->adminUser->isLoggedIn()) {
             $tsm->website->generateMenuHTML($tsm->website->getAdminTopMenu());

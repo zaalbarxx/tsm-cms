@@ -18,7 +18,7 @@ switch ($fee_condition_type_id) {
       } ?>>Greater Than
       </option>
   </select>
-  <select name="config_2" id="config_2">
+  <select name="config_2" id="config_2" class="input-small">
     <?php
     for ($i = 1; $i <= 30; $i++) {
       if ($condition['config_2'] == $i) {
@@ -45,7 +45,7 @@ switch ($fee_condition_type_id) {
       } ?>>Greater Than or Equal To
       </option>
   </select>
-  <select name="config_2" id="config_2">
+  <select name="config_2" id="config_2" class="input-small">
     <?php
     if ($condition['config_2'] == "") {
       unset($condition['config_2']);
@@ -79,7 +79,7 @@ switch ($fee_condition_type_id) {
       } ?>>Greater Than or Equal To
       </option>
   </select>
-  <select name="config_4" id="config_4">
+  <select name="config_4" id="config_4" class="input-small">
       <option value="">N/A</option>
     <?php
     if ($condition['config_4'] == "") {
@@ -107,7 +107,7 @@ switch ($fee_condition_type_id) {
   case "3":
     ?>
   <label for="config_1">Registers Between: </label>
-  <select name="config_1" id="config_1">
+  <select name="config_1" id="config_1" class="input-medium">
     <?php
     for ($i = 1; $i <= 12; $i++) {
       if ($condition['config_1'] == $i) {
@@ -120,7 +120,7 @@ switch ($fee_condition_type_id) {
     }
     ?>
   </select>/
-  <select name="config_2" id="config_2">
+  <select name="config_2" id="config_2" class="input-small">
     <?php
     for ($i = 1; $i <= 31; $i++) {
       if ($condition['config_2'] == $i) {
@@ -133,7 +133,7 @@ switch ($fee_condition_type_id) {
     }
     ?>
   </select>/
-  <select name="config_3" id="config_3">
+  <select name="config_3" id="config_3" class="input-small">
     <?php
     for ($i = date('Y') - 5; $i <= date('Y') + 5; $i++) {
       if ($condition['config_3'] == $i) {
@@ -148,7 +148,7 @@ switch ($fee_condition_type_id) {
     }
     ?>
   </select> and
-  <select name="config_4" id="config_4">
+  <select name="config_4" id="config_4" class="input-medium">
     <?php
     for ($i = 1; $i <= 12; $i++) {
       if ($condition['config_4'] == $i) {
@@ -161,7 +161,7 @@ switch ($fee_condition_type_id) {
     }
     ?>
   </select>/
-  <select name="config_5" id="config_5">
+  <select name="config_5" id="config_5" class="input-small">
     <?php
     for ($i = 1; $i <= 31; $i++) {
       if ($condition['config_5'] == $i) {
@@ -174,7 +174,7 @@ switch ($fee_condition_type_id) {
     }
     ?>
   </select>/
-  <select name="config_6" id="config_6">
+  <select name="config_6" id="config_6" class="input-small">
     <?php
     for ($i = date('Y') - 5; $i <= date('Y') + 5; $i++) {
       if ($condition['config_6'] == $i) {
