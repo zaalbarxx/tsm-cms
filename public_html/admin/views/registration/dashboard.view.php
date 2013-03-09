@@ -4,7 +4,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 <div class="span8">
     <h1><?php echo $campusInfo['name']; ?> Dashboard</h1>
 
-    <p>Something should be here about registration stats, etc.</p>
+    <p>You can use the links on the left to manage this campus.</p>
 
     <div style="margin-top: 20px;">
         <form action="" method="post" id="selectSchoolYearForm">

@@ -7,6 +7,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     }
 </style>
 <div class="span9">
+    <input id="searchItems" rel="smallItem" class="search-query" style="float: right; position: relative; top: 10px;"
+           value="Search..."/>
+
     <h1>Families - <a
             href="index.php?com=registration&view=family&downloadCSV=1"
             class="button downloadButton" title="Download CSV"></a></h1>

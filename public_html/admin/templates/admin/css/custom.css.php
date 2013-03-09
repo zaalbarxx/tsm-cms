@@ -508,6 +508,7 @@ z-index: 9;
 .span9 #searchItems{
 width: 150px;
 margin-right: 70px;
+margin-top: 3px;
 }
 <?php if ($_GET['fb'] == "1") { ?>
 body{
