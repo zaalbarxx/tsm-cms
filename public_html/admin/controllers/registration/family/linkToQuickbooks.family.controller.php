@@ -4,7 +4,7 @@ $familyInfo = $family->getInfo();
 
 
 if (isset($linkToQuickbooks)) {
-  if ($createNewCustomer == 1) {
+  if (isset($createNewCustomer)) {
     $family->createQuickbooksInfo();
   } else {
     $family->setQuickbooksCustomerId($linkToQuickbooks);
