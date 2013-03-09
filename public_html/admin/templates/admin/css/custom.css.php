@@ -190,7 +190,7 @@ margin-bottom: 30px;
 }
 .bigItem .title{
 margin-left: 30px;
-width: 500px;
+width: 50%;
 display: inline-block;
 font-size: 18px;
 cursor: pointer;
@@ -346,7 +346,7 @@ margin-bottom: 15px;*/
 }
 .smallItem .title{
 margin-left: 30px;
-width: 475px;
+width: 50%;
 display: inline-block;
 font-size: 18px;
 font-weight: bold;
