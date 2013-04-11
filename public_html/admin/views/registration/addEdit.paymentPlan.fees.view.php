@@ -269,7 +269,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 <input type="hidden" class="nodelete" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>"/>
 <input type="hidden" class="nodelete" name="school_year" value="<?php echo $reg->getSelectedSchoolYear(); ?>"/>
 <input type="hidden" class="nodelete" name="formAction" value="<?php echo $formAction; ?>"/>
-<input type="submit" class="btn btn-primary" style="margin-top: 20px; float: right;"
+<input type="submit" class="btn btn-primary savePlan" style="margin-top: 20px; float: right;"
        value="Save Payment Plan"/>
 <br/><br/><br/>
 </form>
@@ -295,7 +295,7 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         $(".start-month").val(parseInt(startDates[1]));
         $(".start-day").val(parseInt(startDates[2]));
     });
-    $(".btn btn-primary").click(function () {
+    $(".savePlan").click(function () {
         if ($("#monthly_plan").is(":hidden")) {
             $("#monthly_plan").remove();
         } else if ($("#partNow_partLater").is(":hidden")) {

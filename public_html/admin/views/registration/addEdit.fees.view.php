@@ -56,12 +56,12 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
         <input type="hidden" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>"/>
         <input type="hidden" name="school_year" value="<?php echo $reg->getSelectedSchoolYear(); ?>"/>
         <input type="hidden" name="formAction" value="<?php echo $formAction; ?>"/>
-        <input type="submit" class="btn btn-primary" style="margin-top: 20px; float: right;" value="Save Fee"/>
+        <input type="submit" class="btn btn-primary saveFee" style="margin-top: 20px; float: right;" value="Save Fee"/>
         <br/><br/><br/>
     </form>
 </div>
 <script type="text/javascript">
-    $(".btn btn-primary").click(function () {
+    $(".saveFee").click(function () {
         form = $(this).parent();
         submitData = form.serialize();
         $.post(form.attr('action'), submitData, function (data) {
