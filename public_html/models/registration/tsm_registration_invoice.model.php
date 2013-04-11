@@ -26,6 +26,152 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
+  public function generatePDF($forEmail = false) {
+    $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
+    $familyInfo = $family->getInfo();
+
+    $campus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
+    $campusInfo = $campus->getInfo();
+
+    $mpdf = new mPDF('win-1252', 'A4', '', '', 20, 15, 48, 25, 10, 10);
+    $mpdf->useOnlyCoreFonts = true; // false is default
+    $mpdf->SetProtection(array('print'));
+    $mpdf->SetTitle($familyInfo['father_last']." - Invoice");
+    $mpdf->SetAuthor($campusInfo['name']);
+    if ($this->getPayments()) {
+      $mpdf->SetWatermarkText("Paid");
+      $mpdf->showWatermarkText = true;
+      $mpdf->watermark_font = 'DejaVuSansCondensed';
+      $mpdf->watermarkTextAlpha = 0.1;
+    }
+    $mpdf->SetDisplayMode('fullpage');
+
+    $html = '
+    <html>
+    <head>
+    <style>
+    body {font-family: sans-serif;
+        font-size: 10pt;
+    }
+    p {    margin: 0pt;
+    }
+    td { vertical-align: top; }
+    .items td {
+        border-left: 0.1mm solid #000000;
+        border-right: 0.1mm solid #000000;
+    }
+    table thead td { background-color: #EEEEEE;
+        text-align: center;
+        border: 0.1mm solid #000000;
+    }
+    .items td.blanktotal {
+        background-color: #FFFFFF;
+        border: 0mm none #000000;
+        border-top: 0.1mm solid #000000;
+        border-right: 0.1mm solid #000000;
+    }
+    .items td.totals {
+        text-align: right;
+        border: 0.1mm solid #000000;
+    }
+    </style>
+    </head>
+    <body>
+
+    <!--mpdf
+    <htmlpageheader name="myheader">
+    <table width="100%"><tr>
+    <td width="50%" style="color:#0000BB;"><span style="font-weight: bold; font-size: 14pt;">'.$campusInfo['name'].'</span><br />'.$campusInfo['payment_address_attn'].'<br />'.$campusInfo['payment_address'].' '.$campusInfo['payment_address2'].'<br />'.$campusInfo['payment_city'].', '.$campusInfo['payment_state'].' '.$campusInfo['payment_zip'].'</td>
+    <td width="50%" style="text-align: right;">Invoice No.<br /><span style="font-weight: bold; font-size: 12pt;">'.$this->info['family_invoice_id'].'</span></td>
+    </tr></table>
+    </htmlpageheader>
+
+    <htmlpagefooter name="myfooter">
+    <div style="border-top: 1px solid #000000; font-size: 9pt; text-align: center; padding-top: 3mm; ">
+    Page {PAGENO} of {nb}
+    </div>
+    </htmlpagefooter>
+
+    <sethtmlpageheader name="myheader" value="on" show-this-page="1" />
+    <sethtmlpagefooter name="myfooter" value="on" />
+    mpdf-->
+
+    <div style="text-align: right; margin-top: -50px;">Date: '.date('jS F Y', strtotime($this->info['invoice_time'])).'</div>
+    <br /><br />
+
+    <table width="100%" style="font-family: serif;" cellpadding="10">
+    <tr>
+    <td width="45%" style="border: 0.1mm solid #888888;">
+    <span style="font-size: 7pt; color: #555555; font-family: sans;">BILL TO:</span>
+    <br /><br />'.$familyInfo['father_first'].' '.$familyInfo['father_last'].'
+    <br />'.$familyInfo['address'].'
+    <br />'.$familyInfo['city'].', '.$familyInfo['state'].' '.$familyInfo['zip'].'
+    </td>
+    <td width="10%">&nbsp;</td>
+    <td width="45%" style="border: 0mm solid #888888;"></td>
+    </tr>
+    </table>
+    <br /><br />
+
+
+    <table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse;" cellpadding="8">
+    <thead>
+    <tr>
+    <td width="15%">REF. NO.</td>
+    <td width="55%">DESCRIPTION</td>
+    <td width="15%">UNIT PRICE</td>
+    <td width="15%">AMOUNT</td>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- ITEMS HERE -->';
+
+    foreach ($this->getFees() as $fee) {
+      $html .= '
+    <tr>
+    <td align="center">'.$fee['family_fee_id'].'</td>
+    <td>'.$fee['description'].'</td>
+    <td align="right">$'.$fee['amount'].'</td>
+    <td align="right">$'.$fee['amount'].'</td>
+    </tr>';
+    }
+
+
+    $html .= '
+
+    <!-- END ITEMS HERE -->
+    <tr>
+    <td class="blanktotal" colspan="2" rowspan="6"></td>
+    <td class="totals"><b>TOTAL:</b></td>
+    <td class="totals"><b>$'.$this->getTotal().'</b></td>
+    </tr>
+    <tr>
+    <td class="totals">Amount Paid:</td>
+    <td class="totals">$'.$this->getAmountPaid().'</td>
+    </tr>
+    <tr>
+    <td class="totals"><b>Balance due:</b></td>
+    <td class="totals"><b>$'.$this->getAmountDue().'</b></td>
+    </tr>
+    </tbody>
+    </table>
+    <br /><br />
+    <div style="text-align: center; font-style: italic;">Payment terms: payment due in 30 days</div>
+    </body>
+    </html>
+    ';
+
+    $mpdf->WriteHTML($html);
+
+    if($forEmail == true){
+      $mpdf->Output();
+      exit;
+    } else{
+      $content = $mpdf->Output('','S');
+      return $content;
+    }
+  }
+
   public function getPayPalFee() {
     $q = "SELECT * FROM tsm_reg_families_fees ff, tsm_reg_families_invoice_fees fif
     WHERE fif.family_fee_id = ff.family_fee_id

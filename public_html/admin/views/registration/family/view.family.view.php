@@ -91,13 +91,16 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                 <td>Total</td>
                 <td>Amount Paid</td>
                 <td>Amount Due</td>
+                <td></td>
             </tr>
 
           <?php
           if (isset($invoices)) {
             foreach ($invoices as $invoice) {
-              echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['name']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td></tr>";
+              echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['name']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td><td><a href='index.php?com=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>View</a></td></tr>";
             }
+          } else {
+            echo "<tr class='warning'><td colspan=7>There are no recent invoices for this family.</td></tr>";
           }
           ?>
         </table>
