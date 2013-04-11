@@ -137,8 +137,13 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $this->teachers;
   }
 
-  public function getPrograms() {
-    $q = "SELECT * FROM tsm_reg_programs WHERE campus_id = ".$this->campusId." AND school_year = '".$this->getSelectedSchoolYear()."' ORDER BY name";
+  public function getPrograms($includeInactive = false) {
+    $q = "SELECT * FROM tsm_reg_programs WHERE campus_id = ".$this->campusId."
+    AND school_year = '".$this->getSelectedSchoolYear()."'";
+    if(!$includeInactive){
+      $q .= " AND active = '1' ";
+    }
+    $q .= " ORDER BY name";
     $r = $this->db->runQuery($q);
     $this->programs = null;
     while ($a = mysql_fetch_assoc($r)) {

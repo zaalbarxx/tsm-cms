@@ -5,7 +5,7 @@ if (!isset($action)) {
 
 switch ($action) {
   case null:
-    $programList = $currentCampus->getPrograms();
+    $programList = $currentCampus->getPrograms(true);
     if ($programList) {
       foreach ($programList as $program) {
         $programObject = new TSM_REGISTRATION_PROGRAM($program['program_id']);
