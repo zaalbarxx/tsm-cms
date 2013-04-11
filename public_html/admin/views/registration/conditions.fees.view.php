@@ -5,10 +5,10 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     <input id="searchItems" rel="smallItem" class="search-query" style="float: right; position: relative; top: 10px;"
            value="Search..."/>
 
-    <h1>Fee Conditions</h1>
-        <span style="float: right; margin-top: -45px; right: 20px; position: relative;"><a
-                href="index.php?com=registration&view=fees&action=addEditCondition" class="addButton"
-                title="Add a Condition"></a></span>
+    <h1>Fee Conditions - <a class="btn btn-primary"
+                            href="index.php?com=registration&view=fees&action=addEditCondition" class="addButton"
+                            title="Add a Condition">Add</a></h1>
+    <span style="float: right; margin-top: -45px; right: 20px; position: relative;"></span>
   <?php
   if ($conditionsList) {
     foreach ($conditionsList as $condition) {

@@ -5,10 +5,9 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
     <input id="searchItems" rel="smallItem" class="search-query" style="float: right; position: relative; top: 10px;"
            value="Search..."/>
 
-    <h1>Payment Plans</h1>
-        <span style="float: right; margin-top: -45px; right: 20px; position: relative;"><a
-                href="index.php?com=registration&view=fees&action=addEditPaymentPlan" class="addButton"
-                title="Add a Payment Plan"></a></span>
+    <h1>Payment Plans - <a class="btn btn-primary"
+                           href="index.php?com=registration&view=fees&action=addEditPaymentPlan" class="addButton"
+                           title="Add a Payment Plan">Add</a></h1>
   <?php
   if ($paymentPlans) {
     foreach ($paymentPlans as $plan) {
