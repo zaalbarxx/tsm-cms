@@ -152,12 +152,6 @@ box-shadow: 0px 0px 9px rgba(0,0,0,0.5);
 border-radius: 5px;
 }
 
-input{
-border: 1px solid #ccc;
-padding: 5px;
-display: inline-block;
-}
-
 
 .errorMessage{
 color: red;
@@ -512,7 +506,16 @@ margin-top: 3px;
 float: right;
 position: relative;
 top: 10px;
+-webkit-appearance: none;
+outline: none;
+border: 1px solid #ccc;
+padding: 5px 10px;
+display: inline-block;
 }
+.warning td{
+text-align:center;
+}
+
 <?php if ($_GET['fb'] == "1") { ?>
 body{
 background: #f5f5f5;
