@@ -89,6 +89,9 @@ if ($campusList == NULL) {
     case "reports":
       require_once(__TSM_ROOT__."admin/controllers/registration/reports/reports.controller.php");
       break;
+    case "invoice":
+      require_once(__TSM_ROOT__."admin/controllers/registration/invoice/invoice.controller.php");
+      break;
 
   }
 }

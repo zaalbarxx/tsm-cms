@@ -29,7 +29,8 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
                     $<?php echo $reg->addFees($student->getFeesForCourse($course['course_id'], $program_id, $campusInfo['tuition_fee_type_id'])); ?>
                 </div>
                 <div style="text-align: center; position: relative; top: 20px;">
-                    <a href="#" class="btn btn-primary enrollNow" style="margin-left: -30px;">Enroll in Course</a>
+                    <a href="#myModal<?php echo $course['course_id']; ?>" class="btn btn-primary"
+                       style="margin-left: -30px;" data-toggle="modal">Enroll in Course</a>
                 </div>
 
             </div>
