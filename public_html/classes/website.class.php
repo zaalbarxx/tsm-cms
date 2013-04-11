@@ -80,6 +80,14 @@ class Website {
     }
   }
 
+  public function getTemplateHome() {
+    if ($this->adminPortal) {
+      return __TSM_ROOT__."admin/templates/admin/home.php";
+    } else {
+      return __TSM_ROOT__."/templates/".$this->getTemplateId()."/home.php";
+    }
+  }
+
   public function getTemplateFooter() {
     if ($this->adminPortal) {
       return __TSM_ROOT__."admin/templates/admin/footer.php";

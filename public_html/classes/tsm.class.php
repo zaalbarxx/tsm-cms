@@ -227,7 +227,7 @@ class TSM {
       }
     } else {
       $prefix = 'controllers/';
-      return __TSM_ROOT__.$prefix.'/registration/main.controller.php';
+      return __TSM_ROOT__.$prefix.'/home/main.controller.php';
     }
 
   }
