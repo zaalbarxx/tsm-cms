@@ -152,13 +152,17 @@ if (!$fp) {
 
         //check to make sure the transacation hasn't already been logged
 
-        $checkq = "SELECT invoice_payment_id FROM tsm_reg_families_invoice_payments WHERE paypal_transaction_id = '$txn_id'";
+        $checkq = "SELECT invoice_payment_id FROM tsm_reg_families_payments WHERE paypal_transaction_id = '$txn_id'";
         //mail("jlane@veritasproductions.net","About to Log Payment","Logging Payment...$checkq");
         $checkr = $tsm->db->runQuery($checkq);
         if (mysql_num_rows($checkr) == 0) {
-          $log_payment_q = "INSERT INTO tsm_reg_families_invoice_payments (family_invoice_id, paypal_transaction_id,amount,payment_time)
-          VALUES ($invoice_num, '$txn_id','$payment_amount','$payment_date')";
+          $log_payment_q = "INSERT INTO tsm_reg_families_payments (family_id,family_invoice_id,reference_number,payment_type,amount,payment_time)
+          VALUES ($family_id, $invoice_num, '$txn_id','Paypal','$payment_amount','$payment_date')";
           mail("jlane@veritasproductions.net", "About to Log Payment", "Logging Payment...$log_payment_q");
+          mysql_query($log_payment_q) or die(mysql_error());
+          $payment_id = mysql_insert_id();
+          $log_payment_q = "INSERT INTO tsm_reg_families_payment_invoice (family_payment_id,family_invoice_id,amount)
+          VALUES($payment_id,$invoice_num,'$payment_amount')";
           mysql_query($log_payment_q) or die(mysql_error());
           $logged = 1;
 
