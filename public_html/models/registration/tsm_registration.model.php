@@ -182,4 +182,20 @@ class TSM_REGISTRATION {
 
 }
 
+require_once(__TSM_ROOT__."models/registration/tsm_registration_campus.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_program.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_course.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_fee.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_family.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_invoice.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_payment.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_family_fee.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_student.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_teacher.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_requirement.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_period.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_fee_condition.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_payment_plan.model.php");
+require_once(__TSM_ROOT__."models/registration/tsm_registration_quickbooks.model.php");
+
 ?>
