@@ -36,6 +36,16 @@ class TSM_REGISTRATION_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     return $numFamiles;
   }
 
+  public function getFamilyPaymentPlans(){
+    $q = "SELECT * FROM tsm_reg_families f, tsm_reg_families_payment_plans fpp WHERE f.family_id = fpp.family_id AND fpp.payment_plan_id = '".$this->paymentPlanId."'";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $familyPaymentPlans[$a['family_payment_plan_id']] = $a;
+    }
+
+    return $familyPaymentPlans;
+  }
+
 }
 
 ?>
