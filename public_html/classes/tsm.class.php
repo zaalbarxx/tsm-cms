@@ -60,6 +60,7 @@ class TSM {
   public function arrayToCSV($array, $filename) {
     $rowCount = 0;
     $csv = "";
+    $filename = str_replace(",","",$filename);
     foreach ($array as $row) {
       if ($rowCount == 0) {
         foreach ($row as $key => $value) {
