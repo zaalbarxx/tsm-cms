@@ -32,6 +32,11 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
     $campus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
     $campusInfo = $campus->getInfo();
+    if($this->info['quickbooks_doc_number'] != ""){
+      $invoiceNum = $this->info['quickbooks_doc_number'];
+    } else {
+      $invoiceNum = $this->info['family_invoice_id'];
+    }
 
     $mpdf = new mPDF('win-1252', 'A4', '', '', 20, 15, 48, 25, 10, 10);
     $mpdf->useOnlyCoreFonts = true; // false is default
@@ -82,7 +87,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     <htmlpageheader name="myheader">
     <table width="100%"><tr>
     <td width="50%" style="color:#0000BB;"><span style="font-weight: bold; font-size: 14pt;">'.$campusInfo['name'].'</span><br />'.$campusInfo['payment_address_attn'].'<br />'.$campusInfo['payment_address'].' '.$campusInfo['payment_address2'].'<br />'.$campusInfo['payment_city'].', '.$campusInfo['payment_state'].' '.$campusInfo['payment_zip'].'</td>
-    <td width="50%" style="text-align: right;">Invoice No.<br /><span style="font-weight: bold; font-size: 12pt;">'.$this->info['family_invoice_id'].'</span></td>
+    <td width="50%" style="text-align: right;">Invoice No.<br /><span style="font-weight: bold; font-size: 12pt;">'.$invoiceNum.'</span></td>
     </tr></table>
     </htmlpageheader>
 
@@ -163,7 +168,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
     $mpdf->WriteHTML($html);
 
-    if($forEmail == true){
+    if($forEmail == false){
       $mpdf->Output();
       exit;
     } else{
@@ -255,11 +260,12 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getPayments() {
-    $q = "SELECT * FROM tsm_reg_families_invoice_payments WHERE family_invoice_id = '".$this->invoiceId."'";
+    $q = "SELECT * FROM tsm_reg_families_payment_invoice fpi, tsm_reg_families_payments fp
+    WHERE fp.family_payment_id = fpi.family_payment_id AND fpi.family_invoice_id = '".$this->invoiceId."'";
     $r = $this->db->runQuery($q);
     $payments = null;
     while ($a = mysql_fetch_assoc($r)) {
-      $payments[$a['invoice_payment_id']] = $a;
+      $payments[$a['family_payment_id']] = $a;
     }
 
     return $payments;
@@ -382,7 +388,10 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       }
       $this->setQuickbooksId($quickbooks_id);
       $invoice = $service->findById($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooks_id);
+      $extKey = $invoice->getExternalKey();
+      $this->setQuickbooksExternalKey($extKey);
 
+      /*
       $payments = $this->getPayments();
       if (isset($payments)) {
         $txnId = $invoice->getExternalKey();
@@ -392,7 +401,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
             $paymentHeader = new QuickBooks_IPP_Object_Header();
             $paymentHeader->setCustomerId($quickbooks_customer_id);
             $paymentHeader->setTotalAmt($payment['amount']);
-            $paymentHeader->setDocNumber($payment['paypal_transaction_id']);
+            $paymentHeader->setDocNumber($payment['reference_number']);
             $paymentHeader->setPaymentMethodId($campusInfo['qb_paypal_payment_method_id']);
             $txnDate = date('Y-m-d', strtotime($payment['payment_time']));
             $paymentHeader->setTxnDate($txnDate);
@@ -408,6 +417,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
           }
         }
       }
+      */
 
       return true;
     } else {
@@ -430,6 +440,20 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
+  public function setQuickbooksExternalKey($key){
+    $q = "UPDATE tsm_reg_families_invoices SET quickbooks_external_key = '".$key."' WHERE family_invoice_id = '".$this->invoiceId."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
+  public function setQuickbooksDocNumber($num){
+    $q = "UPDATE tsm_reg_families_invoices SET quickbooks_doc_number = '".$num."' WHERE family_invoice_id = '".$this->invoiceId."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
   public function getTotal() {
     $q = "SELECT amount FROM tsm_reg_families_invoices WHERE family_invoice_id = '".$this->invoiceId."'";
     $r = $this->db->runQuery($q);
@@ -441,22 +465,28 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getAmountPaid() {
-    $q = "SELECT * FROM tsm_reg_families_invoice_payments WHERE family_invoice_id = '".$this->invoiceId."'";
+    $q = "SELECT fpi.amount FROM tsm_reg_families_payments fp, tsm_reg_families_payment_invoice fpi
+    WHERE fpi.family_payment_id = fp.family_payment_id
+    AND fpi.family_invoice_id = '".$this->invoiceId."'";
     $r = $this->db->runQuery($q);
     $amountPaid = 0;
+    bcscale(2);
     while ($a = mysql_fetch_assoc($r)) {
-      $amountPaid = $amountPaid + $a['amount'];
+      $amountPaid = bcadd($amountPaid,$a['amount']);
     }
 
     return $amountPaid;
   }
 
   public function getAmountDue() {
-    $q = "SELECT * FROM tsm_reg_families_invoice_payments WHERE family_invoice_id = '".$this->invoiceId."'";
+    $q = "SELECT fpi.amount FROM tsm_reg_families_payments fp, tsm_reg_families_payment_invoice fpi
+    WHERE fpi.family_payment_id = fp.family_payment_id
+    AND fpi.family_invoice_id = '".$this->invoiceId."'";
     $r = $this->db->runQuery($q);
     $amountDue = $this->getTotal();
+    bcscale(2);
     while ($a = mysql_fetch_assoc($r)) {
-      $amountDue = $amountDue - $a['amount'];
+      $amountDue = bcsub($amountDue,$a['amount']);
     }
 
     return $amountDue;

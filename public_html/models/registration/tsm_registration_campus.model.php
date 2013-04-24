@@ -67,6 +67,23 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $this->info['current_school_year'];
   }
 
+  public function getInvoices($displayed = null) {
+    $q = "SELECT fi.*, fpp.*, pp.* FROM tsm_reg_families_invoices fi, tsm_reg_families_payment_plans fpp, tsm_reg_fee_payment_plans pp
+    WHERE fi.family_payment_plan_id = fpp.family_payment_plan_id
+    AND pp.payment_plan_id = fpp.payment_plan_id
+    AND pp.campus_id = '".$this->campusId."'";
+    if ($displayed) {
+      $q .= " AND fi.displayed = '$displayed'";
+    }
+    $r = $this->db->runQuery($q);
+    $returnInvoices = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $returnInvoices[$a['family_invoice_id']] = $a;
+    }
+
+    return $returnInvoices;
+  }
+
   public function getTotalExpectedRevenue($fee_type_id) {
     $q = "SELECT SUM(amount) as total_rev FROM tsm_reg_families_fees ff, tsm_reg_families f
     WHERE f.family_id = ff.family_id
@@ -491,6 +508,24 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     }
 
     return $this->families;
+  }
+
+  public function getFamilyByQBId($QbId){
+    $q = "SELECT family_id FROM tsm_reg_families WHERE quickbooks_customer_id = '$QbId' AND campus_id = '".$this->campusId."'";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $family_id = $a['family_id'];
+    }
+
+    if(isset($family_id)){
+      $family = new TSM_REGISTRATION_FAMILY($family_id);
+
+      return $family;
+    } else {
+      return false;
+    }
+
+
   }
 
   public function getStudents() {

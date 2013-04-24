@@ -208,6 +208,30 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $this->students;
   }
 
+  public function addPayment($params){
+    $amount = $params['amount'];
+    $paymentTime = $params['date'];
+    $paymentType = $params['payment_type'];
+    $reference_number = $params['reference_number'];
+
+    $q = "INSERT INTO tsm_reg_families_payments (family_id,amount,payment_time,payment_type,reference_number)
+    VALUES('".$this->familyId."','$amount','$paymentTime','$paymentType','$reference_number')";
+    $this->db->runQuery($q);
+    $id = mysql_insert_id($this->db->conn);
+
+    return $id;
+  }
+
+  public function getPayments(){
+    $q = "SELECT * FROM tsm_reg_families_payments WHERE family_id = '".$this->familyId."'";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $payments[$a['family_payment_id']] = $a;
+    }
+
+    return $payments;
+  }
+
   public function getPaymentPlans($payment_plan_type_id = null) {
     $q = "SELECT pp.*, fpp.payment_plan_type_id, fpp.name, fpp.immediate_invoice_percentage, fpp.fee_type_id AS payment_plan_fee_type_id,
     fpp.installment_fee_id, fpp.installment_description, fpp.credit_fee_id, fpp.credit_description, fpp.invoice_and_credit

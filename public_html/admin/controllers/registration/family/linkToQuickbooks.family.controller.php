@@ -19,6 +19,13 @@ if (isset($linkToQuickbooks)) {
         $invoiceObject->addToQuickbooks();
       }
     }
+    $payments = $family->getPayments();
+    if (isset($payments)) {
+      foreach ($payments as $payment) {
+        $paymentObject = new TSM_REGISTRATION_PAYMENT($payment['family_payment_id']);
+        $paymentObject->addToQuickbooks();
+      }
+    }
   }
   die("1");
 }
