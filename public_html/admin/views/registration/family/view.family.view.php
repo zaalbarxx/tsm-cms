@@ -82,6 +82,39 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       ?>
     </div>
     <div class="infoSection well">
+      <h2>Payment Plans</h2>
+      <table style="width: 100%;" class="table table-striped table-bordered ">
+        <tr style="font-weight: bold;">
+          <td>ID</td>
+          <td>Description</td>
+          <td>Fee Types</td>
+          <td>Total</td>
+          <td>Amt Paid</td>
+          <td>Amt Due</td>
+          <td>Status</td>
+        </tr>
+        <?php
+        if(isset($paymentPlans)){
+          foreach($paymentPlans as $paymentPlan){
+            echo "<tr><td>".$paymentPlan['family_payment_plan_id']."</td>
+            <td>".$paymentPlan['name']."</td>
+            <td>".$paymentPlan['fee_type_names']."</td>
+            <td>$".$paymentPlan['totalAmount']."</td>
+            <td>$".$paymentPlan['amountPaid']."</td>
+            <td>$".$paymentPlan['amountDue']."</td>
+            <td>".$paymentPlan['status'];
+            if($paymentPlan['status'] == "Pending Approval"){
+              echo " - <a class='btn btn-success btn-mini fb' href='index.php?com=registration&view=family&action=approvePaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Approve</a>";
+            }
+            echo "</td></tr>";
+          }
+        }
+
+        ?>
+      </table>
+
+    </div>
+    <div class="infoSection well">
         <h2>Recent Invoices</h2>
         <table style="width: 100%;" class="table table-striped table-bordered ">
             <tr style="font-weight: bold;">

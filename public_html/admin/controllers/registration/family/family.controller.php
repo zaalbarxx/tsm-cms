@@ -48,6 +48,10 @@ switch ($action) {
     require_once(__TSM_ROOT__."admin/controllers/registration/family/linkToQuickbooks.family.controller.php");
     $activeView = __TSM_ROOT__."admin/views/registration/family/linkToQuickbooks.family.view.php";
     break;
+  case "approvePaymentPlan":
+    require_once(__TSM_ROOT__."admin/controllers/registration/family/approvePaymentPlan.family.controller.php");
+    $activeView = __TSM_ROOT__."admin/views/registration/family/approvePaymentPlan.family.view.php";
+    break;
 }
 
 

@@ -57,11 +57,18 @@ $campusList = $reg->getCampuses();
                   foreach($familyPaymentPlans as $familyPaymentPlan){
                     $familyPaymentPlanObject = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyPaymentPlan['family_payment_plan_id']);
                     $numInvoices = $familyPaymentPlanObject->getNumInvoices();
-                    $lastInvoice = $familyPaymentPlanObject->getLastInvoice();
-                    $lastInvoiceDate = $lastInvoice['invoice_time'];
+
 
                     if($numInvoices < $paymentPlan['num_invoices']){
-                      echo "need to create next invoice";
+                      $lastInvoice = $familyPaymentPlanObject->getLastInvoice();
+                      if(isset($lastInvoice)){
+                        $lastInvoiceDate = $lastInvoice['invoice_time'];
+                        echo $lastInvoiceDate;
+                      } else {
+                        echo "No invoices for this plan yet.";
+
+                      }
+
                     }
 
 
