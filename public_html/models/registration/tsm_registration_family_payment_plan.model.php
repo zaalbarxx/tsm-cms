@@ -122,7 +122,12 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     }
 
     if(isset($unassignedFees)){
-      $fees = array_merge($assignedFees,$unassignedFees);
+      if(is_array($unassignedFees) && is_array($assignedFees)){
+        $fees = array_merge($assignedFees,$unassignedFees);
+      } else {
+        $fees = $unassignedFees;
+      }
+
     } else {
       $fees = $assignedFees;
     }

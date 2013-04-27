@@ -65,6 +65,7 @@ class TSM_REGISTRATION_PAYMENT extends TSM_REGISTRATION_CAMPUS {
     $paymentHeader->setPaymentMethodId($campusInfo['qb_paypal_payment_method_id']);
     $txnDate = date('Y-m-d', strtotime($this->info['payment_time']));
     $paymentHeader->setTxnDate($txnDate);
+    $paymentHeader->setNote($this->info['payment_description']);
     $paymentObject->addHeader($paymentHeader);
     $lines = $this->getLines();
     foreach($lines as $localLine){

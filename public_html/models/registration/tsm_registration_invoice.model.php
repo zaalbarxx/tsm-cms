@@ -305,6 +305,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $invoiceHeader->setCustomerId($quickbooks_customer_id);
     $txnDate = date('Y-m-d', strtotime($this->info['invoice_time']));
     $invoiceHeader->setTxnDate($txnDate);
+    $invoiceHeader->setNote($this->info['invoice_description']);
 
     if ($invoiceTotal > 0) {
       $quickbooksInvoice = new QuickBooks_IPP_Object_Invoice();
@@ -353,7 +354,23 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
               $Line->setAmount($fee['amount'] * -1);
             }
 
-            $Line->setDescription($fee['name']);
+            $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+            $familyFeeInfo = $familyFee->getInfo();
+            if($familyFeeInfo['student_id'] != 0){
+              $student = new TSM_REGISTRATION_STUDENT($familyFeeInfo['student_id']);
+              $studentInfo = $student->getInfo();
+              $studentName = $studentInfo['first_name']." ".$studentInfo['last_name'].": ";
+            } else {
+              $studentName = null;
+            }
+
+            if($studentName != null){
+              $description = $studentName.": ".$fee['name'];
+            } else {
+              $description = $fee['name'];
+            }
+
+            $Line->setDescription($description);
             $Line->setQty(1);
             $quickbooksInvoice->addLine($Line);
           } else {
@@ -381,6 +398,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       } elseif ($invoiceTotal < 0) {
         $service = new QuickBooks_IPP_Service_CreditMemo();
       }
+      //print_r($quickbooksInvoice);die();
 
       $quickbooks_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooksInvoice);
       if ($quickbooks_id == null) {
