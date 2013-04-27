@@ -34,18 +34,30 @@ require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
       }
       ?>
     </select><br/><label for="qb_creditmemo_account_id" style="width: 200px;">Credit Memo Account:</label><select
-            name="qb_creditmemo_account_id">
-      <?php
-      foreach ($quickbooksAccounts as $account) {
-        ?>
+        name="qb_creditmemo_account_id">
+        <?php
+        foreach ($quickbooksAccounts as $account) {
+          ?>
           <option value="<?php echo $account->getId(); ?>" <?php if ($campusInfo['qb_creditmemo_account_id'] == $account->getId()) {
             echo "selected=selected";
           } ?>><?php echo $account->getName(); ?>
           </option>
         <?php
-      }
-      ?>
-    </select><br/><br/>
+        }
+        ?>
+      </select><br/><label for="qb_invoice_class_id" style="width: 200px;">Invoice Class:</label><select
+        name="qb_invoice_class_id">
+        <?php
+        foreach ($quickbooksClasses as $class) {
+          ?>
+          <option value="<?php echo $class->getId(); ?>" <?php if ($campusInfo['qb_invoice_class_id'] == $class->getId()) {
+            echo "selected=selected";
+          } ?>><?php echo $class->getName(); ?>
+          </option>
+        <?php
+        }
+        ?>
+      </select><br/><br/>
         <input type="hidden" name="saveQuickbooksStatus" value="1"/>
         <input type="submit" class="btn btn-primary" value="Save Configuration"/>
     </form>
