@@ -1,5 +1,5 @@
 <?php
-require_once(__TSM_ROOT__."models/registration/tsm_registration.model.php");
+require_once(__TSM_ROOT__."modules/registration/registration.php");
 
 //INSTANTIATE THE REGISRATION CLASS
 $reg = new TSM_REGISTRATION();

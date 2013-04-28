@@ -162,12 +162,12 @@ cursor: pointer;
 position:absolute;
 top: 0px;
 left: 0px;
-background: url(/roww/files/2/images/ROWW-PlayBTN-Link.png) no-repeat;
+background: url(/files/2/images/ROWW-PlayBTN-Link.png) no-repeat;
 background-position:center;
 
 }
 .playButton:hover{
-background: url(/roww/files/2/images/ROWW-PlayBTN-Hover.png) no-repeat;
+background: url(/files/2/images/ROWW-PlayBTN-Hover.png) no-repeat;
 background-position:center;
 }
 .arrow{
@@ -672,40 +672,6 @@ padding: 17px 15px;
 border-color: #BCC5D3;
 border-width: 1px;
 padding: 17px 15px;
-}
-#slide-6{
-background: url('/roww/files/2/home_rotation/slide-2/reaching_out_locally_banner.jpg');
-}
-#slide-6 .rightContainer{
-padding-top: 50px;
-}
-#slide-5{
-background: url('/roww/files/2/home_rotation/slide-5/get_involved_banner.jpg');
-}
-#slide-5 .rightContainer{
-padding-top: 50px;
-}
-#slide-3{
-background: url('/roww/files/2/home_rotation/slide-3/stihl_banner.jpg');
-}
-#slide-3 .rightContainer{
-padding-top: 50px;
-}
-.stihl-read-more{
-width: 202px;
-height: 56px;
-background: url(/roww/files/2/home_rotation/slide-3/read_more.jpg);
-display: block;
-position: relative;
-top: 120px;
-left: 100px;
-}
-.sthil-read-more:hover{
-background: url(/roww/files/2/home_rotation/slide-3/read_more_hover.jpg);
-}
-#slide-1{
-background: url('/roww/files/2/images/roww_banner.jpg');
-color: #222;
 }
 #slide-1 .rightContainer{
 padding-top: 40px;

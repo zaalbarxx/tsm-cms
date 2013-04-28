@@ -209,7 +209,19 @@ class TSM {
     return $requestarray;
   }
 
-  public function getComponent() {
+  public function getComponent($comName,$id){
+    require_once(__TSM_ROOT__."modules/".$comName."/Component/".$comName.".php");
+
+    $component = new $className($id);
+
+    return $component;
+  }
+
+  public function getComponentBackend($comName){
+    require_once(__TSM_ROOT__."modules/".$comName."/BackEnd/".$comName.".php");
+  }
+
+  public function getComponentOld() {
     global $com;
 
     if ($this->website->adminPortal) {
@@ -479,6 +491,7 @@ class TSM {
     <script type=\"text/javascript\" src=\"includes/jquery.tooltip/jquery.tooltip.min.js\"></script>
     <link rel=\"stylesheet\" href=\"includes/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"includes/jquery_implementation.js\"></script>
+    <script type=\"text/javascript\" src=\"includes/ckeditor4/ckeditor.js\"></script>
     ";
     $this->headerHTML .= "<script type=\"text/javascript\">
 		$(document).ready( function(){

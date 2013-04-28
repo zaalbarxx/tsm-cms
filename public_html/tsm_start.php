@@ -25,6 +25,6 @@ $tsm->website = new Website();
 $tsm->website->start();
 
 //TURN CONTROL OVER TO THE COMPONENT
-require_once($tsm->getComponent());
+require_once($tsm->getComponentOld());
 
 ?>

@@ -115,5 +115,6 @@
     </ul>
   </div>
 </div>
+<?php $tsm->getComponent("slider",1)->display(); ?>
 <div id="contentWrapper">
 
