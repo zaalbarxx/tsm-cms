@@ -236,14 +236,14 @@ class TSM {
         }
 
       } else {
-        return __TSM_ROOT__.$prefix.'/welcome/main.controller.php';
+        return __TSM_ROOT__.$prefix.'welcome/main.controller.php';
       }
     } else {
       $prefix = 'controllers/';
       if(!isset($com)){
-        return __TSM_ROOT__.$prefix.'/home/main.controller.php';
+        return __TSM_ROOT__.$prefix.'home/main.controller.php';
       } else{
-        return __TSM_ROOT__.$prefix.'/edit/main.controller.php';
+        return __TSM_ROOT__.$prefix.''.$com.'/main.controller.php';
       }
 
 
@@ -481,27 +481,27 @@ class TSM {
     $this->headerHTML = "
     <!--[if lt IE 9]>
         <!--THIS IS HERE FOR THE FORM VALIDATION IN IE 8-->
-        <script src=\"includes/3rdparty/jquery/jquery-1.5.1.min.js\" type=\"text/javascript\"></script>
+        <script src=\"/includes/3rdparty/jquery/jquery-1.5.1.min.js\" type=\"text/javascript\"></script>
     <![endif]-->
     <!--[if (gte IE 9) | (!IE)]><!-->
-        <script src=\"includes/3rdparty/jquery/jquery-1.9.3.min.js\" type=\"text/javascript\"></script>
+        <script src=\"/includes/3rdparty/jquery/jquery-1.9.3.min.js\" type=\"text/javascript\"></script>
     <!--<![endif]-->
-    <link rel=\"stylesheet\" href=\"includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
-    <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
-    <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jquery.validate.min.js\"></script>
-    <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jquery.maskedinput.js\"></script>";
+    <link rel=\"stylesheet\" href=\"/includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
+    <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
+    <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/jquery.validate.min.js\"></script>
+    <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/jquery.maskedinput.js\"></script>";
     $this->headerHTML .= "
-    <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.min.js\"></script>
-    <link rel=\"stylesheet\" href=\"includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
-    <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jqueryui/js/jquery-ui-1.10.2.custom.min.js\"></script>
-    <link rel=\"stylesheet\" href=\"includes/3rdparty/jquery/plugins/jqueryui/css/ui-lightness/jquery-ui-1.10.2.custom.min.css\" type=\"text/css\" media=\"screen\" />
-    <script type=\"text/javascript\" src=\"includes/jquery_implementation.js\"></script>";
+    <script type=\"text/javascript\" src=\"i/ncludes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.min.js\"></script>
+    <link rel=\"stylesheet\" href=\"/includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
+    <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/jqueryui/js/jquery-ui-1.10.2.custom.min.js\"></script>
+    <link rel=\"stylesheet\" href=\"/includes/3rdparty/jquery/plugins/jqueryui/css/ui-lightness/jquery-ui-1.10.2.custom.min.css\" type=\"text/css\" media=\"screen\" />
+    <script type=\"text/javascript\" src=\"/includes/jquery_implementation.js\"></script>";
 
     //include the javascript used for editing when an admin user is logged in
     if($this->adminUser->isLoggedIn()){
       $this->headerHTML .="
-      <script type=\"text/javascript\" src=\"includes/3rdparty/ckeditor4/ckeditor.js\"></script>
-      <script type=\"text/javascript\" src=\"includes/frontend_admin.js\"></script>
+      <script type=\"text/javascript\" src=\"/includes/3rdparty/ckeditor4/ckeditor.js\"></script>
+      <script type=\"text/javascript\" src=\"/includes/frontend_admin.js\"></script>
 
 
 
@@ -509,9 +509,9 @@ class TSM {
     }
 
     if (isset($_GET['fb'])) {
-      $this->headerHTML .= "<link href=\"templates/".$this->website->getTemplateId()."/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+      $this->headerHTML .= "<link href=\"/templates/".$this->website->getTemplateId()."/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
     } else {
-      $this->headerHTML .= "<link href=\"templates/".$this->website->getTemplateId()."/css/custom.css.php\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+      $this->headerHTML .= "<link href=\"/templates/".$this->website->getTemplateId()."/css/custom.css.php\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
     }
 
     $this->headerHTML .= "<script type=\"text/javascript\">

@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteRule ^(admin|files|includes|templates|modules|api|util|views|classes)($|/) - [L]
+RewriteRule ^([^/]*)/([^/]*)$ /index.php?com=$1&var=$2 [L]

@@ -1,3 +1,7 @@
+<?php if(isset($com)){ ?>
+    </div>
+  </div>
+<?php } ?>
 <div class="footerTop">
   <div style="text-align: center;width: 12%; padding: 0; margin: 10px 2% 10px 0; float: left;">
     <div class="socialButtons" style="margin-top: 50px;">
@@ -13,20 +17,20 @@
   <div style="width: 48%; padding: 0; margin: 10px 2% 10px 0; float: left;">
     <div class="third">
       <ul class="footerList">
-        <li><a href="<?php echo __WEBROOT__; ?>relief_efforts">Relief Efforts</a>
+        <li><a href="/relief_efforts">Relief Efforts</a>
           <ul>
-            <li><a href="<?php echo __WEBROOT__; ?>relief_efforts/philippines_typhoon/">Philippines Typhoon</a></li>
-            <li><a href="<?php echo __WEBROOT__; ?>relief_efforts/alabama_tornado/">Albama Tornado</a></li>
-            <li><a href="<?php echo __WEBROOT__; ?>relief_efforts/indonesia_tsunami/">Indonesia Tsunami</a></li>
-            <li><a href="<?php echo __WEBROOT__; ?>relief_efforts/chile_earthquake/">Chile Earthquake</a></li>
-            <li><a href="<?php echo __WEBROOT__; ?>relief_efforts/haiti_earthquake/">Haiti Earthquake</a></li>
+            <li><a href="/relief_efforts/philippines_typhoon/">Philippines Typhoon</a></li>
+            <li><a href="/relief_efforts/alabama_tornado/">Albama Tornado</a></li>
+            <li><a href="/relief_efforts/indonesia_tsunami/">Indonesia Tsunami</a></li>
+            <li><a href="/relief_efforts/chile_earthquake/">Chile Earthquake</a></li>
+            <li><a href="/relief_efforts/haiti_earthquake/">Haiti Earthquake</a></li>
           </ul>
         </li>
       </ul>
     </div>
     <div class="third">
       <ul class="footerList">
-        <li><a href="<?php echo __WEBROOT__; ?>get_involved.php">Get Involved</a>
+        <li><a href="/get_involved.php">Get Involved</a>
           <ul>
             <li>
               <a href="http://www.roww.org/files/volunteer_information_sheet.pdf" target="_blank" rel="nofollow">Volunteer</a>
@@ -48,10 +52,10 @@
     </div>
     <div class="third">
       <ul class="footerList">
-        <li><a href="<?php echo __WEBROOT__; ?>partners.php">Partners</a>
+        <li><a href="/partners.php">Partners</a>
           <ul>
-            <li><a href="<?php echo __WEBROOT__; ?>partners.php">Current Partners</a></li>
-            <li><a href="<?php echo __WEBROOT__; ?>become_a_partner.php">Become a Partner</a></li>
+            <li><a href="/partners.php">Current Partners</a></li>
+            <li><a href="/become_a_partner.php">Become a Partner</a></li>
           </ul>
         </li>
       </ul>
@@ -60,7 +64,7 @@
 
   <div class="third">
     <div contenteditable="true">
-    <img src="files/2/images/Roww-Logo.png" />
+    <img src="/files/2/images/Roww-Logo.png" />
     </div>
     <p style="text-align: center; padding-right: 30px;margin-top: -20px; font-weight: normal;"><br />
       <a href="mailto:info@roww.org">Email Us</a><br /><br />
@@ -106,7 +110,7 @@
   }
 
   //preload the social media hover buttons.
-  $(['../roww/template/files/2/images/facebook_icon.png','../roww/template/files/2/images/facebook_icon_hover.png','../roww/template/files/2/images/twitter_icon.png','../roww/template/files/2/images/twitter_icon_hover.png','../roww/template/files/2/images/pinterest_icon.png','../roww/template/files/2/images/pinterest_icon_hover.png','../roww/template/files/2/images/youtube_icon.png','../roww/template/files/2/images/youtube_icon_hover.png','home_rotation/slide-3/read_more_hover.jpg']).preload();
+  $(['../roww/template//files/2/images/facebook_icon.png','../roww/template//files/2/images/facebook_icon_hover.png','../roww/template//files/2/images/twitter_icon.png','../roww/template//files/2/images/twitter_icon_hover.png','../roww/template//files/2/images/pinterest_icon.png','../roww/template//files/2/images/pinterest_icon_hover.png','../roww/template//files/2/images/youtube_icon.png','../roww/template//files/2/images/youtube_icon_hover.png','home_rotation/slide-3/read_more_hover.jpg']).preload();
 </script>
 <style>
   #donateNow{
@@ -153,5 +157,5 @@
   }
 </style>
 <div id="donateNow" <?php if($_SERVER["REQUEST_URI"] == "/donate.php"){ echo "style=\"display: none;\""; } ?>>
-  <a href="<?php echo __WEBROOT__; ?>donate.php" class="big_button">Donate<br />Now</a>
+  <a href="/donate.php" class="big_button">Donate<br />Now</a>
 </div>

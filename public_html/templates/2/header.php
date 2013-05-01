@@ -18,7 +18,7 @@
 <body>
 <div id="mainWrapper">
 <div id="navWrapper">
-  <a id="navLogo" href="" ></a>
+  <a id="navLogo" href="/" ></a>
   <div id="topNav">
     <?php //$tsm->website->generateMenuHTML($tsm->website->getAdminTopMenu()); ?>
     <div id="socialButtons">
@@ -30,23 +30,23 @@
     </div>
     <ul>
       <li>
-        <a href="<?php echo __WEBROOT__; ?>donate.php">Donate</a>
+        <a href="/donate.php">Donate</a>
         <ul style="width: 268px;">
           <div class="arrow"></div>
-          <li><a style="width: 233px;" href="<?php echo __WEBROOT__; ?>donate.php">Donate Money</a></li>
-          <li><a style="width: 233px;" href="<?php echo __WEBROOT__; ?>mission_fish.php">Donate Items for Auction</a></li>
+          <li><a style="width: 233px;" href="/donate.php">Donate Money</a></li>
+          <li><a style="width: 233px;" href="/mission_fish.php">Donate Items for Auction</a></li>
           <li><a style="width: 233px;" href="mailto:items@roww.org">Donate Items Direct</a></li>
         </ul>
       </li>
       <li>
-        <a href="<?php echo __WEBROOT__; ?>relief_efforts/">Relief Efforts</a>
+        <a href="/relief_efforts/">Relief Efforts</a>
         <ul style="left: 120px;">
           <div class="arrow" style="left: 0px;"></div>
-          <li><a href="<?php echo __WEBROOT__; ?>relief_efforts/philippines_typhoon/">Philippines Typhoon</a></li>
-          <li><a href="<?php echo __WEBROOT__; ?>relief_efforts/alabama_tornado/">Alabama Tornado</a></li>
-          <li><a href="<?php echo __WEBROOT__; ?>relief_efforts/indonesia_tsunami/">Indonesia Tsunami</a></li>
-          <li><a href="<?php echo __WEBROOT__; ?>relief_efforts/chile_earthquake/">Chile Earthquake</a></li>
-          <li><a href="<?php echo __WEBROOT__; ?>relief_efforts/haiti_earthquake/">Haiti Earthquake</a></li>
+          <li><a href="/relief_efforts/philippines_typhoon/">Philippines Typhoon</a></li>
+          <li><a href="/relief_efforts/alabama_tornado/">Alabama Tornado</a></li>
+          <li><a href="/relief_efforts/indonesia_tsunami/">Indonesia Tsunami</a></li>
+          <li><a href="/relief_efforts/chile_earthquake/">Chile Earthquake</a></li>
+          <li><a href="/relief_efforts/haiti_earthquake/">Haiti Earthquake</a></li>
         </ul>
       </li>
       <li>
@@ -54,43 +54,43 @@
         <ul>
           <div class="arrow"></div>
           <li>
-            <a href="<?php echo __WEBROOT__; ?>press.php">Press</a>
+            <a href="/press.php">Press</a>
           </li>
           <li>
-            <a href="<?php echo __WEBROOT__; ?>photos.php">Photos</a>
+            <a href="/photos.php">Photos</a>
           </li>
           <li>
-            <a href="<?php echo __WEBROOT__; ?>videos.php">Videos</a>
+            <a href="/videos.php">Videos</a>
           </li>
         </ul>
       </li>
 
       <li>
-        <a href="<?php echo __WEBROOT__; ?>about_us.php">About Us</a>
+        <a href="/about_us.php">About Us</a>
         <ul>
           <div class="arrow" style="left: 10px;"></div>
 
           <li>
-            <a href="<?php echo __WEBROOT__; ?>about_us.php">About</a>
+            <a href="/about_us.php">About</a>
           </li>
           <li>
-            <a href="<?php echo __WEBROOT__; ?>contact_us.php">Contact</a>
+            <a href="/contact_us.php">Contact</a>
           </li>
         </ul>
       </li>
       <li>
-        <a href="<?php echo __WEBROOT__; ?>get_involved.php">Get Involved</a>
+        <a href="/get_involved.php">Get Involved</a>
         <ul>
           <div class="arrow" style="left: 30px;"></div>
 
           <li>
-            <a href="<?php echo __WEBROOT__; ?>/files/volunteer_information_sheet.pdf" target="_blank">Volunteer</a>
+            <a href="/files/volunteer_information_sheet.pdf" target="_blank">Volunteer</a>
           </li>
           <li>
-            <a href="<?php echo __WEBROOT__; ?>partners.php">Partners</a>
+            <a href="/partners.php">Partners</a>
             <ul>
-              <li><a href="<?php echo __WEBROOT__; ?>partners.php">Current Partners</a></li>
-              <li><a href="<?php echo __WEBROOT__; ?>become_a_partner.php">Become a Partner</a></li>
+              <li><a href="/partners.php">Current Partners</a></li>
+              <li><a href="/become_a_partner.php">Become a Partner</a></li>
             </ul>
           </li>
           <li>
@@ -102,19 +102,21 @@
         </ul>
       </li>
       <!--<li>
-            <a href="<?php echo __WEBROOT__; ?>contact_us.php">Contact</a>
+            <a href="/contact_us.php">Contact</a>
         </li>-->
       <!--<li>
-    			<a href="<?php echo __WEBROOT__; ?>partners.php">Partners</a>
+    			<a href="/partners.php">Partners</a>
     			<ul>
     			<div class="arrow" style="left: 10px;"></div>
-    				<li><a href="<?php echo __WEBROOT__; ?>partners.php">Current Partners</a></li>
-    				<li><a href="<?php echo __WEBROOT__; ?>contact_us.php">Become a Partner</a></li>
+    				<li><a href="/partners.php">Current Partners</a></li>
+    				<li><a href="/contact_us.php">Become a Partner</a></li>
     			</ul>
     		</li>-->
     </ul>
   </div>
 </div>
-<?php $tsm->getComponent("slider",1)->display(); ?>
-<div id="contentWrapper">
+  <?php if(isset($com)){ ?>
+  <div id="insideWrapper">
+    <div id="insideBackground">
+  <?php } ?>
 

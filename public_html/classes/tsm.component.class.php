@@ -2,6 +2,8 @@
 
 class TSM_COMPONENT{
 
+  protected $_data;
+
   public function __call($name, $args) {
     if (substr($name, 0, 3) == 'set') {
       //print('called: ' . $name . ' with args: ' . print_r($args, true) . "\n");

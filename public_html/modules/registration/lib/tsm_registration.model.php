@@ -31,9 +31,11 @@ class TSM_REGISTRATION {
         return true;
       } else {
         $access = false;
-        foreach ($allowed_campues as $allowed_campus_id) {
-          if ($allowed_campus_id == $campus_id) {
-            $access = true;
+        if(isset($allowed_campues)){
+          foreach ($allowed_campues as $allowed_campus_id) {
+            if ($allowed_campus_id == $campus_id) {
+              $access = true;
+            }
           }
         }
 
