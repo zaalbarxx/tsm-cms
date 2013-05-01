@@ -3,10 +3,10 @@ require_once($tsm->website->getTemplateHeader());
 ?>
   <div id="contentWrapper">
     <div class="home-our-mission home-section">
-      <h2 class="strong" contenteditable="true">ROWW Mission</h2>
+      <h2 class="strong" contenteditable="true" <?php $tsm->currentTemplate->makeOptionEditable(1); ?>><?php $tsm->currentTemplate->displayOptionValue(1); ?></h2>
       <div class="inside" >
-        <p class="large" contenteditable="true">ROWW is a network of professionals with first responder skill-sets who augment local expertise when natural disasters strike in order to accelerate relief efforts.</p>
-        <p class="large " style="font-family: sans-serif;">Get relief effort updates by subscribing to our newsletter:</p>
+        <p class="large" contenteditable="true" <?php $tsm->currentTemplate->makeOptionEditable(2); ?>><?php $tsm->currentTemplate->displayOptionValue(2); ?></p>
+        <p class="large " style="font-family: sans-serif;" <?php $tsm->currentTemplate->makeOptionEditable(6); ?>><?php $tsm->currentTemplate->displayOptionValue(6); ?></p>
         <div class="signup">
           <form method="POST" class="styled-form flex" novalidate="">
             <fieldset>
@@ -63,26 +63,16 @@ require_once($tsm->website->getTemplateHeader());
     </div>
     <div class="home-section thirds">
       <div class="inside">
-        <div class="third" contenteditable="true">
-          <div style="height: 300px;"><a href="relief_efforts/philippines_typhoon/"><img border="0" height="300px" style="padding: 4px; box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);" src="files/2/images/ROWW-3Main-Philippines.jpg" /></a></div><a href="relief_efforts/philippines_typhoon/"><h3>PHILIPPINES TYPHOON</h3></a>
-          <p style="height: 150px;">The massive flooding claimed the lives of over 1,200 men, women and children. Thousands of people with their entire lives swept away by the raging waters left to rebuild what was remaining of their past lives.</p>
-          <a href="relief_efforts/philippines_typhoon/" class="d-button red">Read More</a></div>
-        <div class="third" contenteditable="true">
-          <div style="height: 300px;"><a href="relief_efforts/alabama_tornado/"><img style="padding: 4px; box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);" src="files/2/images/ROWW-3Main-Alabama.jpg" /></a></div>
-          <a href="relief_efforts/alabama_tornado/"><h3>ALABAMA TORNADO</h3></a>
-          <p style="height: 150px;">Although Alabama is not new to tornado activity, this time, it was different.</p>
-          <a href="relief_efforts/alabama_tornado/" class="d-button red">Read More</a>
+        <div class="third" <?php $tsm->currentTemplate->makeOptionEditable(3); ?>>
+          <?php $tsm->currentTemplate->displayOptionValue(3); ?>
         </div>
-        <div class="third" contenteditable="true">
-          <div style="height: 300px;"><a href="relief_efforts/indonesia_tsunami/"><img style="padding: 4px; box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);" border="0" height="300px" src="files/2/images/ROWW-3Main-Indo.jpg" /></a></div>
-          <a href="relief_efforts/indonesia_tsunami/"><h3>INDONESIA TSUNAMI</h3></a>
-          <p style="height: 150px;">The devastation from the 7.7 earthquake
-            and the hundreds of aftershocks was bad enough,
-            but in late October 2010, a terrifying tsunami
-            swept through the Mentawai Islands.</p>
-          <a href="relief_efforts/indonesia_tsunami/" class="d-button red" >Read More</a></div>
-        <br style="width: 100%; clear: both;" />
-      </div>
+        <div class="third" <?php $tsm->currentTemplate->makeOptionEditable(4); ?>>
+          <?php $tsm->currentTemplate->displayOptionValue(4); ?>
+        </div>
+        <div class="third" <?php $tsm->currentTemplate->makeOptionEditable(5); ?>>
+          <?php $tsm->currentTemplate->displayOptionValue(5); ?>
+        </div>
+        <br style="width: 100%; clear: both; " />
     </div>
     <br /><br /><br /><br />
   </div>

@@ -23,6 +23,7 @@ $tsm->logRequest();
 //INSTANTIATE THE WEBSITE CLASS AND START THE SITE
 $tsm->website = new Website();
 $tsm->website->start();
+$tsm->currentTemplate = new TSM_TEMPLATE();
 
 //TURN CONTROL OVER TO THE COMPONENT
 require_once($tsm->getComponentOld());

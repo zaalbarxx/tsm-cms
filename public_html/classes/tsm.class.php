@@ -240,7 +240,13 @@ class TSM {
       }
     } else {
       $prefix = 'controllers/';
-      return __TSM_ROOT__.$prefix.'/home/main.controller.php';
+      if(!isset($com)){
+        return __TSM_ROOT__.$prefix.'/home/main.controller.php';
+      } else{
+        return __TSM_ROOT__.$prefix.'/edit/main.controller.php';
+      }
+
+
     }
 
   }
@@ -426,27 +432,28 @@ class TSM {
   public function getAdminHeaderHTML() {
     $this->adminHeaderHTML = "
     <!--[if lt IE 9]>
-        <script src=\"../includes/jquery-1.5.1.min.js\" type=\"text/javascript\"></script>
+        <!--THIS IS HERE FOR THE FORM VALIDATION IN IE 8-->
+        <script src=\"../includes/3rdparty/jquery/jquery-1.5.1.min.js\" type=\"text/javascript\"></script>
     <![endif]-->
     <!--[if (gte IE 9) | (!IE)]><!-->
-        <script src=\"../includes/jquery-1.8.3.min.js\" type=\"text/javascript\"></script>
+        <script src=\"../includes/3rdparty/jquery/jquery-1.9.3.min.js\" type=\"text/javascript\"></script>
     <!--<![endif]-->
-    <link rel=\"stylesheet\" href=\"../includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
-    <link href=\"../includes/bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\" media=\"screen\">
-    <script type=\"text/javascript\" src=\"../includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
-    <script type=\"text/javascript\" src=\"../includes/jquery.validate.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../includes/bootstrap/js/bootstrap.min.js\"></script>
+    <link rel=\"stylesheet\" href=\"../includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
+    <link href=\"../includes/3rdparty/bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\" media=\"screen\">
+    <script type=\"text/javascript\" src=\"../includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
+    <script type=\"text/javascript\" src=\"../includes/3rdparty/jquery/plugins/jquery.validate.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../includes/3rdparty/bootstrap/js/bootstrap.min.js\"></script>
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <link href=\"../includes/bootstrap/css/bootstrap-responsive.css\" rel=\"stylesheet\">
-    <script type=\"text/javascript\" src=\"../includes/jquery.maskedinput.js\"></script>";
+    <link href=\"../includes/3rdparty/bootstrap/css/bootstrap-responsive.css\" rel=\"stylesheet\">
+    <script type=\"text/javascript\" src=\"../includes/3rdparty/jquery/plugins/jquery.maskedinput.js\"></script>";
     if (isset($_GET['fb'])) {
       $this->adminHeaderHTML .= "<link href=\"templates/admin/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
     } else {
       $this->adminHeaderHTML .= "<link href=\"templates/admin/css/custom.css.php\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
     }
     $this->adminHeaderHTML .= "
-    <script type=\"text/javascript\" src=\"../includes/jquery.tooltip/jquery.tooltip.min.js\"></script>
-    <link rel=\"stylesheet\" href=\"../includes/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
+    <script type=\"text/javascript\" src=\"../includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.min.js\"></script>
+    <link rel=\"stylesheet\" href=\"../includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"../includes/jquery_implementation.js\"></script>
     ";
     $this->adminHeaderHTML .= "<script type=\"text/javascript\">
@@ -473,25 +480,29 @@ class TSM {
   public function getHeaderHTML() {
     $this->headerHTML = "
     <!--[if lt IE 9]>
-        <script src=\"includes/jquery-1.5.1.min.js\" type=\"text/javascript\"></script>
+        <!--THIS IS HERE FOR THE FORM VALIDATION IN IE 8-->
+        <script src=\"includes/3rdparty/jquery/jquery-1.5.1.min.js\" type=\"text/javascript\"></script>
     <![endif]-->
     <!--[if (gte IE 9) | (!IE)]><!-->
-        <script src=\"includes/jquery-1.8.3.min.js\" type=\"text/javascript\"></script>
+        <script src=\"includes/3rdparty/jquery/jquery-1.9.3.min.js\" type=\"text/javascript\"></script>
     <!--<![endif]-->
-    <link rel=\"stylesheet\" href=\"includes/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
-    <script type=\"text/javascript\" src=\"includes/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
-    <script type=\"text/javascript\" src=\"includes/jquery.validate.min.js\"></script>
-    <script type=\"text/javascript\" src=\"includes/jquery.maskedinput.js\"></script>";
+    <link rel=\"stylesheet\" href=\"includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
+    <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
+    <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jquery.validate.min.js\"></script>
+    <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jquery.maskedinput.js\"></script>";
     if (isset($_GET['fb'])) {
       $this->headerHTML .= "<link href=\"templates/".$this->website->getTemplateId()."/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
     } else {
       $this->headerHTML .= "<link href=\"templates/".$this->website->getTemplateId()."/css/custom.css.php\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
     }
     $this->headerHTML .= "
-    <script type=\"text/javascript\" src=\"includes/jquery.tooltip/jquery.tooltip.min.js\"></script>
-    <link rel=\"stylesheet\" href=\"includes/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
+    <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.min.js\"></script>
+    <link rel=\"stylesheet\" href=\"includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
+    <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jqueryui/js/jquery-ui-1.10.2.custom.min.js\"></script>
+    <link rel=\"stylesheet\" href=\"includes/3rdparty/jquery/plugins/jqueryui/css/ui-lightness/jquery-ui-1.10.2.custom.min.css\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"includes/jquery_implementation.js\"></script>
-    <script type=\"text/javascript\" src=\"includes/ckeditor4/ckeditor.js\"></script>
+    <script type=\"text/javascript\" src=\"includes/3rdparty/ckeditor4/ckeditor.js\"></script>
+    <script type=\"text/javascript\" src=\"includes/frontend_javascript.js\"></script>
     ";
     $this->headerHTML .= "<script type=\"text/javascript\">
 		$(document).ready( function(){

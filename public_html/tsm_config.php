@@ -20,6 +20,9 @@ function getAdminPath() {
   return $file;
 }
 
-define("__TSM_ROOT__", getRootPath());
-define("__TSM_ADMIN_ROOT__", getAdminPath());
+//define("__TSM_ROOT__", getRootPath());
+//define("__TSM_ADMIN_ROOT__", getAdminPath());
+
+define("__TSM_ROOT__", "/Applications/MAMP/htdocs/sandbox/");
+define("__TSM_ADMIN_ROOT__", "/Applications/MAMP/htdocs/sandbox/admin/");
 ?>

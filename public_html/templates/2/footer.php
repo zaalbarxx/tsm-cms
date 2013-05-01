@@ -59,7 +59,9 @@
   </div>
 
   <div class="third">
+    <div contenteditable="true">
     <img src="files/2/images/Roww-Logo.png" />
+    </div>
     <p style="text-align: center; padding-right: 30px;margin-top: -20px; font-weight: normal;"><br />
       <a href="mailto:info@roww.org">Email Us</a><br /><br />
 

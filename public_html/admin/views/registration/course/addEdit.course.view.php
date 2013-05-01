@@ -1,8 +1,8 @@
 <?php
 require_once(__TSM_ROOT__."admin/views/registration/sidebar.view.php");
 ?>
-<script src="../includes/ckeditor/ckeditor.js" type="text/javascript"></script>
-<script type="text/javascript" src="../includes/ckeditor/adapters/jquery.js"></script>
+<script src="../includes/3rdparty/ckeditor/ckeditor.js" type="text/javascript"></script>
+<script type="text/javascript" src="../includes/3rdparty/ckeditor/adapters/jquery.js"></script>
 <div class="span9">
     <h1><?php echo $pageTitle; ?></h1>
 

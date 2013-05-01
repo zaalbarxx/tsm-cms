@@ -1,5 +1,5 @@
 <?php
-require_once(__TSM_ROOT__."includes/quickbooks/QuickBooks.php");
+require_once(__TSM_ROOT__."includes/3rdparty/quickbooks/QuickBooks.php");
 
 Class TSM_REGISTRATION_QUICKBOOKS extends TSM_REGISTRATION {
 
