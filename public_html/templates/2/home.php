@@ -1,7 +1,7 @@
 <?php
 require_once($tsm->website->getTemplateHeader());
 ?>
-<?php $tsm->getComponent("slider",1)->display(); ?>
+<?php $tsm->getModule("slider",1)->display(); ?>
   <div id="contentWrapper">
     <div class="home-our-mission home-section">
       <h2 class="strong" <?php $tsm->currentTemplate->makeOptionEditable(1); ?>><?php $tsm->currentTemplate->displayOptionValue(1); ?></h2>

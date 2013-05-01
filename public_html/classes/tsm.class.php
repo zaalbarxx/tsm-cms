@@ -209,30 +209,30 @@ class TSM {
     return $requestarray;
   }
 
-  public function getComponent($comName,$id){
-    require_once(__TSM_ROOT__."modules/".$comName."/Component/".$comName.".php");
+  public function getModule($modName,$id){
+    require_once(__TSM_ROOT__."modules/".$modName."/Component/".$modName.".php");
 
-    $component = new $className($id);
+    $module = new $className($id);
 
-    return $component;
+    return $module;
   }
 
-  public function getComponentBackend($comName){
-    require_once(__TSM_ROOT__."modules/".$comName."/BackEnd/".$comName.".php");
+  public function getModuleBackend($modName){
+    require_once(__TSM_ROOT__."modules/".$modName."/BackEnd/".$modName.".php");
   }
 
   public function getComponentOld() {
-    global $com;
+    global $mod;
 
     if ($this->website->adminPortal) {
       $prefix = 'BackEnd/';
-      if (isset($com)) {
-        $q = "SELECT * FROM tsm_components WHERE component_name = '".$com."';";
+      if (isset($mod)) {
+        $q = "SELECT * FROM tsm_modules WHERE module_name = '".$mod."';";
         $r = $this->db->runQuery($q);
         if (mysql_num_rows($r) > 0) {
           $a = mysql_fetch_assoc($r);
-          $com = $a["component_name"];
-          return __TSM_ROOT__.'modules/'.$com.'/'.$prefix.'/controllers/main.controller.php';
+          $mod = $a["module_name"];
+          return __TSM_ROOT__.'modules/'.$mod.'/'.$prefix.'/controllers/main.controller.php';
         }
 
       } else {
@@ -240,10 +240,10 @@ class TSM {
       }
     } else {
       $prefix = 'FrontEnd/';
-      if(!isset($com)){
+      if(!isset($mod)){
         return __TSM_ROOT__.'modules/home/'.$prefix.'controllers/main.controller.php';
       } else{
-        return __TSM_ROOT__.'modules/'.$com.'/'.$prefix.'controllers/main.controller.php';
+        return __TSM_ROOT__.'modules/'.$mod.'/'.$prefix.'controllers/main.controller.php';
       }
 
 

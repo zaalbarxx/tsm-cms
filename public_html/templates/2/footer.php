@@ -1,4 +1,4 @@
-<?php if(isset($com)){ ?>
+<?php if(isset($mod)){ ?>
     </div>
   </div>
 <?php } ?>

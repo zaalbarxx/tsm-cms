@@ -1,6 +1,6 @@
 <?php
 
-class TSM_COMPONENT{
+class TSM_MODULE{
 
   protected $_data;
 

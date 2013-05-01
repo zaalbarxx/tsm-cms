@@ -1,6 +1,6 @@
 <?php
 
-class TSM_PAGE extends TSM_COMPONENT{
+class TSM_PAGE extends TSM_MODULE{
 
   public function __construct($guid){
     $this->tsm = TSM::getInstance();

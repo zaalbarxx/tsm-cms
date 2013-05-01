@@ -1,6 +1,6 @@
 <?php
 
-class TSM_TEMPLATE extends TSM_COMPONENT{
+class TSM_TEMPLATE extends TSM_MODULE{
 
   protected $id;
   protected $_data;

@@ -1,6 +1,6 @@
 <?php
 
-class TSM_SLIDER extends TSM_COMPONENT{
+class TSM_SLIDER extends TSM_MODULE{
 
   protected $id;
 

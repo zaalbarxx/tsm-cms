@@ -115,7 +115,7 @@
     </ul>
   </div>
 </div>
-  <?php if(isset($com)){ ?>
+  <?php if(isset($mod)){ ?>
   <div id="insideWrapper">
     <div id="insideBackground">
   <?php } ?>
