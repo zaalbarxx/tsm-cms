@@ -490,11 +490,6 @@ class TSM {
     <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
     <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jquery.validate.min.js\"></script>
     <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jquery.maskedinput.js\"></script>";
-    if (isset($_GET['fb'])) {
-      $this->headerHTML .= "<link href=\"templates/".$this->website->getTemplateId()."/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
-    } else {
-      $this->headerHTML .= "<link href=\"templates/".$this->website->getTemplateId()."/css/custom.css.php\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
-    }
     $this->headerHTML .= "
     <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.min.js\"></script>
     <link rel=\"stylesheet\" href=\"includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
@@ -507,36 +502,45 @@ class TSM {
       $this->headerHTML .="
       <script type=\"text/javascript\" src=\"includes/3rdparty/ckeditor4/ckeditor.js\"></script>
       <script type=\"text/javascript\" src=\"includes/frontend_admin.js\"></script>
+
+
+
       ";
     }
 
+    if (isset($_GET['fb'])) {
+      $this->headerHTML .= "<link href=\"templates/".$this->website->getTemplateId()."/css/custom.css.php?fb=1\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+    } else {
+      $this->headerHTML .= "<link href=\"templates/".$this->website->getTemplateId()."/css/custom.css.php\" rel=\"stylesheet\" type=\"text/css\" media=\"screen\" />";
+    }
+
     $this->headerHTML .= "<script type=\"text/javascript\">
-		$(document).ready( function(){
-		  $(\".fb\").attr('href', function() {
-		  if($(this).hasClass(\"noext\")){
-		    return $(this).attr('href');
-		  } else {
-		    return $(this).attr('href') + '&fb=1';
-		  }
-		  }).fancybox({
-    	  'width'          : 785,
-    	  'height'          : '85%',
-    	  'padding'       : 5,
-        'autoSize'    : false,
-        'leftRatio' : .51,
-    		'helpers': {
-          title: null
-        },
-    		'type'				: 'iframe'
-    	});
-    	$(\".tooltip\").tooltip();
-    });
-		</script>
-    <!--[if IE 7]>
-      <script type=\"text/javascript\">
-        //window.location = window.location + \"?noIE7\";
+      $(document).ready( function(){
+        $(\".fb\").attr('href', function() {
+        if($(this).hasClass(\"noext\")){
+          return $(this).attr('href');
+        } else {
+          return $(this).attr('href') + '&fb=1';
+        }
+        }).fancybox({
+          'width'          : 785,
+          'height'          : '85%',
+          'padding'       : 5,
+          'autoSize'    : false,
+          'leftRatio' : .51,
+          'helpers': {
+            title: null
+          },
+          'type'				: 'iframe'
+        });
+        $(\".tooltip\").tooltip();
+      });
       </script>
-    <![endif]-->
+      <!--[if IE 7]>
+        <script type=\"text/javascript\">
+          //window.location = window.location + \"?noIE7\";
+        </script>
+      <![endif]-->
     ";
 
     return $this->headerHTML;
