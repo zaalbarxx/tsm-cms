@@ -225,25 +225,25 @@ class TSM {
     global $com;
 
     if ($this->website->adminPortal) {
-      $prefix = 'admin/controllers/';
+      $prefix = 'BackEnd/';
       if (isset($com)) {
         $q = "SELECT * FROM tsm_components WHERE component_name = '".$com."';";
         $r = $this->db->runQuery($q);
         if (mysql_num_rows($r) > 0) {
           $a = mysql_fetch_assoc($r);
           $com = $a["component_name"];
-          return __TSM_ROOT__.$prefix.$com.'/main.controller.php';
+          return __TSM_ROOT__.'modules/'.$com.'/'.$prefix.'/controllers/main.controller.php';
         }
 
       } else {
-        return __TSM_ROOT__.$prefix.'welcome/main.controller.php';
+        return __TSM_ROOT__.'modules/welcome/'.$prefix.'controllers/main.controller.php';
       }
     } else {
-      $prefix = 'controllers/';
+      $prefix = 'FrontEnd/';
       if(!isset($com)){
-        return __TSM_ROOT__.$prefix.'home/main.controller.php';
+        return __TSM_ROOT__.'modules/home/'.$prefix.'controllers/main.controller.php';
       } else{
-        return __TSM_ROOT__.$prefix.''.$com.'/main.controller.php';
+        return __TSM_ROOT__.'modules/'.$com.'/'.$prefix.'controllers/main.controller.php';
       }
 
 

@@ -1,3 +1,3 @@
 <?php
-require_once(__TSM_ROOT__.'controllers/registration/main.controller.php');
+require_once(__TSM_ROOT__.'modules/registration/FrontEnd/controllers/main.controller.php');
 ?>

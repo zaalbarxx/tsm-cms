@@ -1,3 +1,0 @@
-<?php
-$quickbooks->connect();
-?>

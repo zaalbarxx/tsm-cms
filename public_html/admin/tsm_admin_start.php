@@ -31,7 +31,7 @@ if ($tsm->adminUser->isLoggedIn()) {
   //TURN CONTROL OVER TO THE COMPONENT
   require_once($tsm->getComponentOld());
 } else {
-  require_once(__TSM_ROOT__."/admin/controllers/login/main.controller.php");
+  require_once(__TSM_ROOT__."/modules/login/BackEnd/controllers/main.controller.php");
 }
 
 
