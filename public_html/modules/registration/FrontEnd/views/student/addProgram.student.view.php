@@ -10,7 +10,7 @@
                 - <span
                         style="font-size: 12px; position: relative; top: -1px;">Click for Details</span></span>
 				<span class="buttons">
-				<a href="index.php?com=registration&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
+				<a href="index.php?mod=registration&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
            class="addButton24"
            title="Enroll <?php echo $studentInfo['first_name']; ?> in <?php echo $program['name']; ?>"></a>
 				</span>
@@ -30,7 +30,7 @@
                     $<?php echo $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], $campusInfo['tuition_fee_type_id'])); ?>
                 </div>
                 <div style="text-align: center; position: relative; top: 20px;">
-                    <a href="index.php?com=registration&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
+                    <a href="index.php?mod=registration&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
                        class="med_button enrollNow" style="margin-left: -30px;">Enroll in Program</a>
                 </div>
 

@@ -3,7 +3,7 @@ if (isset($createTeacher)) {
   if ($add_type == 1) {
     $teacher = new TSM_REGISTRATION_TEACHER($addTeacher);
     if ($teacher->addToSchoolYear($reg->getSelectedSchoolYear())) {
-      header('Location: index.php?com=registration&view=teacher');
+      header('Location: index.php?mod=registration&view=teacher');
     } else {
       $errorMessage = "Could not add teacher to school year. They may already be added.";
     }
@@ -11,12 +11,12 @@ if (isset($createTeacher)) {
     $teacher_id = $currentCampus->createTeacher();
     $teacher = new TSM_REGISTRATION_TEACHER($teacher_id);
     $teacher->addToSchoolYear($reg->getSelectedSchoolYear());
-    header('Location: index.php?com=registration&view=teacher');
+    header('Location: index.php?mod=registration&view=teacher');
   }
 
 } elseif (isset($saveTeacher)) {
   $currentCampus->saveTeacher($teacher_id);
-  header('Location: index.php?com=registration&view=teacher');
+  header('Location: index.php?mod=registration&view=teacher');
 }
 
 if (isset($teacher_id)) {

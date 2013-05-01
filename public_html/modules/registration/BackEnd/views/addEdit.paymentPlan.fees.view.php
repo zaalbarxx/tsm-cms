@@ -6,7 +6,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 <div class="span9">
 <h1><?php echo $pageTitle; ?></h1>
 
-<form method="post" action="index.php?com=registration&ajax=formSubmission">
+<form method="post" action="index.php?mod=registration&ajax=formSubmission">
 <fieldset>
 <label for="plan_name">Plan Name: </label><input type="text" name="name" id="plan_name"
                                                  value="<?php echo $planInfo['name']; ?>"/><br/>

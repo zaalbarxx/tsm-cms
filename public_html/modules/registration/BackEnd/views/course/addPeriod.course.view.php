@@ -24,7 +24,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
                             <td>
                               <?php echo $teacher['first_name']." ".$teacher['last_name']; ?></td>
                             <td><a
-                                    href="index.php?com=registration&view=courses&action=addPeriod&course_id=<?php echo $courseInfo['course_id']; ?>&teacher_id=<?php echo $teacher['teacher_id']; ?>&addPeriod=<?php echo $period['period_id']; ?>"
+                                    href="index.php?mod=registration&view=courses&action=addPeriod&course_id=<?php echo $courseInfo['course_id']; ?>&teacher_id=<?php echo $teacher['teacher_id']; ?>&addPeriod=<?php echo $period['period_id']; ?>"
                                     class="addPeriod btn btn-small btn-primary pull-right">Choose</a></td>
                         </tr>
                       <?php } ?>

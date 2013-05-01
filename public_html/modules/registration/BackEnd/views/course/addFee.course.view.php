@@ -11,7 +11,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
     <div class="smallItem well well-small">
         <span class="title"><?php echo $fee['name']; ?> - $<?php echo $fee['amount']; ?></span>
       <span class="buttons">
-      <a href="index.php?com=registration&view=courses&action=addFee&course_id=<?php echo $course_id; ?>&addFee=<?php echo $fee['fee_id']; ?>&program_id=<?php echo $program_id; ?>"
+      <a href="index.php?mod=registration&view=courses&action=addFee&course_id=<?php echo $course_id; ?>&addFee=<?php echo $fee['fee_id']; ?>&program_id=<?php echo $program_id; ?>"
          class="addButton24" title="Add to <?php echo $courseName; ?>"></a>
       </span>
     </div>

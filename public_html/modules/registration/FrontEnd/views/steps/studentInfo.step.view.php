@@ -108,7 +108,7 @@
         <input type="hidden" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>"/>
         <input type="hidden" name="<?php echo $submitField; ?>" value="1"/>
       <?php if (isset($addingAdditional)) { ?>
-        <a href="index.php?com=registration&backToReview=1" class="submitButton">Cancel</a>
+        <a href="index.php?mod=registration&backToReview=1" class="submitButton">Cancel</a>
       <?php } ?><input type="submit" class="submitButton" style="float: right;" value="Next Step"/>
         <br/><br/><br/>
     </form>

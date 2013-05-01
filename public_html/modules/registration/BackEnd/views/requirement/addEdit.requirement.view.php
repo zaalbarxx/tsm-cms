@@ -38,12 +38,12 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $.get("index.php?com=registration&view=requirements&action=getRequirementForm&requirement_type_id=" + $("#requirement_type_id").val() + "&requirement_id=<?php echo $requirement['requirement_id']; ?>", function (data) {
+        $.get("index.php?mod=registration&view=requirements&action=getRequirementForm&requirement_type_id=" + $("#requirement_type_id").val() + "&requirement_id=<?php echo $requirement['requirement_id']; ?>", function (data) {
             $("#requirementForm").html(data);
         });
     });
     $("#requirement_type_id").change(function () {
-        $.get("index.php?com=registration&view=requirements&action=getRequirementForm&requirement_type_id=" + $(this).val(), function (data) {
+        $.get("index.php?mod=registration&view=requirements&action=getRequirementForm&requirement_type_id=" + $(this).val(), function (data) {
             $("#requirementForm").html(data);
         });
     });

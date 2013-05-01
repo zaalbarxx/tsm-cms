@@ -5,7 +5,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
     <input id="searchItems" rel="smallItem" class="search-query" value="Search..."/>
 
     <h1>Available Courses - <a
-            href="index.php?com=registration&view=courses&action=addEditCourse" class="btn btn-primary"
+            href="index.php?mod=registration&view=courses&action=addEditCourse" class="btn btn-primary"
             title="Add a Course">Add</a></h1>
 
   <?php
@@ -14,15 +14,15 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
       ?>
         <div class="smallItem well well-small">
             <a class="title"
-               href="index.php?com=registration&view=courses&action=viewCourse&course_id=<?php echo $course['course_id']; ?>"><?php echo $course['name']; ?></a>
+               href="index.php?mod=registration&view=courses&action=viewCourse&course_id=<?php echo $course['course_id']; ?>"><?php echo $course['name']; ?></a>
                 <span class="buttons"><a
-                        href="index.php?com=registration&view=courses&action=viewRoster&course_id=<?php echo $course['course_id']; ?>"
+                        href="index.php?mod=registration&view=courses&action=viewRoster&course_id=<?php echo $course['course_id']; ?>"
                         class="rosterButton" title="Course Roster"></a><a
-                        href="index.php?com=registration&view=courses&action=viewCourse&course_id=<?php echo $course['course_id']; ?>"
+                        href="index.php?mod=registration&view=courses&action=viewCourse&course_id=<?php echo $course['course_id']; ?>"
                         class="reviewButton" title="Review This Course"></a><a
-                        href="index.php?com=registration&view=courses&action=addEditCourse&course_id=<?php echo $course['course_id']; ?>"
+                        href="index.php?mod=registration&view=courses&action=addEditCourse&course_id=<?php echo $course['course_id']; ?>"
                         class="editButton" title="Edit This Course"></a><a
-                        href="index.php?com=registration&ajax=deleteCourse&courseId=<?php echo $course['course_id']; ?>"
+                        href="index.php?mod=registration&ajax=deleteCourse&courseId=<?php echo $course['course_id']; ?>"
                         class="deleteButton" title="Delete Course"></a></span>
 
             <div class="itemDetails">

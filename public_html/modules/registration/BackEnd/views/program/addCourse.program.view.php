@@ -13,7 +13,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         <div class="smallItem well well-small">
             <span class="title"><?php echo $course['name']; ?></span>
 				<span class="buttons">
-				<a href="index.php?com=registration&view=programs&action=addCourse&program_id=<?php echo $programInfo['program_id']; ?>&addCourse=<?php echo $course['course_id']; ?>"
+				<a href="index.php?mod=registration&view=programs&action=addCourse&program_id=<?php echo $programInfo['program_id']; ?>&addCourse=<?php echo $course['course_id']; ?>"
            class="addButton24" title="Add to <?php echo $programInfo['name']; ?>"></a>
             <input type="checkbox" name="course_<?php echo $course['course_id']; ?>"
                    value="<?php echo $course['course_id']; ?>"/>

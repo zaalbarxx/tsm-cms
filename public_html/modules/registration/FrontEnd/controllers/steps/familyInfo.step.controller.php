@@ -22,11 +22,11 @@ if (!$family->isLoggedIn()) {
         $newFamily->addToSchoolYear($currentCampus->getCurrentSchoolYear());
         if ($newFamily->moveToNextStep()) {
           $family->login($primary_email, $password, $campus_id);
-          header("Location: index.php?com=registration");
+          header("Location: index.php?mod=registration");
         } else {
           die("Error moving to the next step.");
         }
-        //header('Location: index.php?com=registration&view=programs');
+        //header('Location: index.php?mod=registration&view=programs');
       }
     }
 
@@ -58,9 +58,9 @@ if (!$family->isLoggedIn()) {
     if ($family->saveFamily()) {
       if (isset($backToReview)) {
         $family->moveToStep(4);
-        header("Location: index.php?com=registration");
+        header("Location: index.php?mod=registration");
       } else if ($family->moveToNextStep()) {
-        header("Location: index.php?com=registration");
+        header("Location: index.php?mod=registration");
       } else {
         die("Error moving to the next step.");
       }

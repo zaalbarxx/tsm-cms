@@ -1,12 +1,12 @@
 <?php
 if (isset($createProgram)) {
   if ($currentCampus->createProgram()) {
-    header('Location: index.php?com=registration&view=programs');
+    header('Location: index.php?mod=registration&view=programs');
   }
 }
 if (isset($saveProgram)) {
   if ($currentCampus->saveProgram($program_id)) {
-    header('Location: index.php?com=registration&view=programs');
+    header('Location: index.php?mod=registration&view=programs');
   }
 }
 if (isset($program_id)) {

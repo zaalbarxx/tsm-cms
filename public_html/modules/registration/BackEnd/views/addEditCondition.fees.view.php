@@ -37,12 +37,12 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/fees.sidebar.view.
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        $.get("index.php?com=registration&view=fees&action=getConditionForm&fee_condition_type_id=" + $("#fee_condition_type_id").val() + "&fee_condition_id=<?php echo $condition['fee_condition_id']; ?>", function (data) {
+        $.get("index.php?mod=registration&view=fees&action=getConditionForm&fee_condition_type_id=" + $("#fee_condition_type_id").val() + "&fee_condition_id=<?php echo $condition['fee_condition_id']; ?>", function (data) {
             $("#conditionForm").html(data);
         });
     });
     $("#fee_condition_type_id").change(function () {
-        $.get("index.php?com=registration&view=fees&action=getConditionForm&fee_condition_type_id=" + $(this).val(), function (data) {
+        $.get("index.php?mod=registration&view=fees&action=getConditionForm&fee_condition_type_id=" + $(this).val(), function (data) {
             $("#conditionForm").html(data);
         });
     });

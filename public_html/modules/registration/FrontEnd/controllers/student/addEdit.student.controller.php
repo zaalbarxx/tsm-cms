@@ -8,7 +8,7 @@ if (isset($addStudent)) {
   if ($student_id) {
     $student = new TSM_REGISTRATION_STUDENT($student_id);
     $student->addToSchoolYear($currentCampus->getCurrentSchoolYear());
-    header('Location: index.php?com=registration&view=student');
+    header('Location: index.php?mod=registration&view=student');
   }
 }
 
@@ -20,7 +20,7 @@ if (isset($student_id)) {
   $submitField = "saveStudent";
   if (isset($saveStudent)) {
     if ($student->saveStudent($student_id)) {
-      header('Location: index.php?com=registration&view=student');
+      header('Location: index.php?mod=registration&view=student');
     }
   }
 } else {

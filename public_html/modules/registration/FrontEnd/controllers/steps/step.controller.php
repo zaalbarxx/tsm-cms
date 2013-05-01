@@ -3,27 +3,27 @@
 if ($family->getCurrentStep() != 1) {
   if (isset($addAnotherStudent)) {
     $family->moveToStep(2);
-    header("Location: index.php?com=registration&addingAdditional=1");
+    header("Location: index.php?mod=registration&addingAdditional=1");
   }
   if (isset($addAnotherProgram)) {
     $family->moveToStep(3);
-    header("Location: index.php?com=registration");
+    header("Location: index.php?mod=registration");
   }
   if (isset($reviewRegistration)) {
     $family->moveToStep(4);
-    header("Location: index.php?com=registration");
+    header("Location: index.php?mod=registration");
   }
   if (isset($reviseStudent)) {
     $family->moveToStep(3);
-    header("Location: index.php?com=registration&student_id=".$student_id);
+    header("Location: index.php?mod=registration&student_id=".$student_id);
   }
   if (isset($choosePaymentPlan)) {
     $family->moveToStep(5);
-    header("Location: index.php?com=registration");
+    header("Location: index.php?mod=registration");
   }
   if (isset($editFamilyInfo)) {
     $family->moveToStep(1);
-    header("Location: index.php?com=registration&backToReview=1");
+    header("Location: index.php?mod=registration&backToReview=1");
   }
 }
 

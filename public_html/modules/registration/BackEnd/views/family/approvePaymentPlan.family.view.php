@@ -14,7 +14,7 @@
   <div style="text-align: right; font-size: 20px">Plan Total: $<?php echo $total; ?></div>
   <br />
   <span class="center">
-    <a class="btn btn-success btn-large right approvePlan" href="index.php?com=registration&ajax=approveFamilyPaymentPlan&family_payment_plan_id=<?php echo $familyPaymentPlanId; ?>&fb=1">Approve Plan</a>
+    <a class="btn btn-success btn-large right approvePlan" href="index.php?mod=registration&ajax=approveFamilyPaymentPlan&family_payment_plan_id=<?php echo $familyPaymentPlanId; ?>&fb=1">Approve Plan</a>
   </span>
 </div>
 <script type="text/javascript">

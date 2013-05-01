@@ -1,5 +1,5 @@
 <div class="contentArea">
-    <a class="submitButton" href="index.php?com=registration&backToReview=1" style="float: right">Back to Review</a>
+    <a class="submitButton" href="index.php?mod=registration&backToReview=1" style="float: right">Back to Review</a>
 
     <h1>Choose Payment Plan</h1>
 
@@ -33,7 +33,7 @@
                     echo "<option value='".$plan['payment_plan_id']."' $selected>".$plan['name']."</option>";
                   } ?>
                   </select><br/><a
-                      href="index.php?com=registration&action=viewAvailablePaymentPlans&fee_type_id=<?php echo $feeType['fee_type_id']; ?>"
+                      href="index.php?mod=registration&action=viewAvailablePaymentPlans&fee_type_id=<?php echo $feeType['fee_type_id']; ?>"
                       class="fb paymentPlanHelp" style="position: relative; left: 120px;">see details</a>
 
               </div>

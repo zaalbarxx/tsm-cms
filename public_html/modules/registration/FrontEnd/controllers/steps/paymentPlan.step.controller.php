@@ -2,7 +2,7 @@
 if (isset($savePaymentPlans)) {
   if ($family->savePaymentPlans()) {
     $family->moveToNextStep();
-    header("Location: index.php?com=registration");
+    header("Location: index.php?mod=registration");
   } else {
     $errorMessage = "There was a problem adding your payment plans. Please make sure you have selected a payment plan for each fee type.";
   }
@@ -12,7 +12,7 @@ if (isset($savePaymentPlans)) {
 
 if (isset($backToReview)) {
   $family->moveToStep(4);
-  header("Location: index.php?com=registration");
+  header("Location: index.php?mod=registration");
 }
 
 $feeTypes = $currentCampus->getFeeTypes();

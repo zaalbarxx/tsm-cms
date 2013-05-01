@@ -29,6 +29,6 @@
     </div>
     <p style="text-align: center;">
         <br/><br/>
-        <a href="index.php?com=registration&action=payByMail&invoice_id=<?php echo $invoice_id; ?>&setupComplete=1"
+        <a href="index.php?mod=registration&action=payByMail&invoice_id=<?php echo $invoice_id; ?>&setupComplete=1"
            class="submitButton" target="_parent">Finished</a></p>
 </div>

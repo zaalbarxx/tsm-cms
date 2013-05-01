@@ -2,12 +2,12 @@
 $family = new TSM_REGISTRATION_FAMILY($family_id);
 if (isset($registerFamily)) {
   if ($family->registerFamily()) {
-    header('Location: index.php?com=registration&view=family');
+    header('Location: index.php?mod=registration&view=family');
   }
 }
 if (isset($saveFamily)) {
   if ($family->saveFamily($family_id)) {
-    header('Location: index.php?com=registration&view=family&action=viewFamily&family_id='.$family_id);
+    header('Location: index.php?mod=registration&view=family&action=viewFamily&family_id='.$family_id);
   }
 }
 if (isset($family_id)) {

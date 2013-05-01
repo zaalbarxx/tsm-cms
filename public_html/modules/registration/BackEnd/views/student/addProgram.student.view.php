@@ -13,7 +13,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
             <span class="title"><?php echo $program['name']; ?> - <span
                     style="font-size: 12px; position: relative; top: -1px;">Click for Details</span></span>
 				<span class="buttons">
-				<a href="index.php?com=registration&view=student&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
+				<a href="index.php?mod=registration&view=student&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
            class="addButton24" title="Add to <?php echo $studentInfo['first_name']; ?>"></a>
 				</span>
 
@@ -32,7 +32,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
                     $<?php echo $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], $campusInfo['tuition_fee_type_id'])); ?>
                 </div>
                 <div style="text-align: center; position: relative; top: 20px;">
-                    <a href="index.php?com=registration&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
+                    <a href="index.php?mod=registration&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
                        class="btn btn-primary enrollNow" style="margin-left: -30px;">Enroll in Program</a>
                 </div>
 

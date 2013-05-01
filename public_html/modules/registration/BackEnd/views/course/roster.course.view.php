@@ -6,7 +6,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
            value="Search..."/>
 
     <h1><?php echo $pageTitle; ?> - <a
-            href="index.php?com=registration&view=courses&action=viewRoster&course_id=<?php echo $course_id; ?>&downloadCSV=1"
+            href="index.php?mod=registration&view=courses&action=viewRoster&course_id=<?php echo $course_id; ?>&downloadCSV=1"
             class="button downloadButton" title="Download CSV"></a></h1>
 
     <div class="programStudents">

@@ -11,7 +11,7 @@ foreach ($paymentPlans as $family_payment_plan_id => $familyPaymentPlan) {
 
 if ($plan_to_process == null) {
   $family->moveToStep(0);
-  header("Location: index.php?com=registration");
+  header("Location: index.php?mod=registration");
 }
 $familyInfo = $family->getInfo();
 $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($plan_to_process['payment_plan_id']);
@@ -31,6 +31,6 @@ if (isset($setupComplete)) {
 }
 
 $notify_url = urlencode("http://".$_SERVER['HTTP_HOST']."/api/paypal_ipn.php");
-$return_url = urlencode("http://".$_SERVER['HTTP_HOST']."/index.php?com=registration&setupComplete=1");
-$cancel_url = urlencode("http://".$_SERVER['HTTP_HOST']."/index.php?com=registration");
+$return_url = urlencode("http://".$_SERVER['HTTP_HOST']."/index.php?mod=registration&setupComplete=1");
+$cancel_url = urlencode("http://".$_SERVER['HTTP_HOST']."/index.php?mod=registration");
 ?>

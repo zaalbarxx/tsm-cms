@@ -3,7 +3,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 ?>
 <div class="span9">
     <h1><?php echo $pageTitle; ?> Family - <a
-            href="index.php?com=registration&view=family&action=addEditFamily&family_id=<?php echo $familyInfo['family_id']; ?>"
+            href="index.php?mod=registration&view=family&action=addEditFamily&family_id=<?php echo $familyInfo['family_id']; ?>"
             class="editButton" title="Edit Family"></a></h1>
 
     <div class="infoSection well clearfix">
@@ -26,15 +26,15 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         </div>
         <div class="center">
             <div class="btn-group clearfix" style="top: 10px;">
-                <a href="index.php?com=registration&view=family&action=resetPassword&family_id=<?php echo $familyInfo['family_id']; ?>"
+                <a href="index.php?mod=registration&view=family&action=resetPassword&family_id=<?php echo $familyInfo['family_id']; ?>"
                    class="btn fb">Reset
                     Password</a><?php if ($currentCampus->usesQuickbooks() && $familyInfo['quickbooks_customer_id'] == "") { ?>
-                <a href="index.php?com=registration&view=family&action=linkToQuickbooks&family_id=<?php echo $familyInfo['family_id']; ?>"
+                <a href="index.php?mod=registration&view=family&action=linkToQuickbooks&family_id=<?php echo $familyInfo['family_id']; ?>"
                    class="btn fb">Link To Quickbooks</a>
 
               <?php } ?>
                 <a class="btn" target="_blank"
-                   href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $familyInfo['family_id']; ?>&loginAs=1">Login
+                   href="index.php?mod=registration&view=family&action=viewFamily&family_id=<?php echo $familyInfo['family_id']; ?>&loginAs=1">Login
                     As</a>
             </div>
         </div>
@@ -48,7 +48,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           <div class="bigItem well">
               <span class="title"><?php echo $student['first_name']." ".$student['last_name']; ?></span>
 			<span class="buttons">
-				<a href="index.php?com=registration&view=student&action=viewStudent&student_id=<?php echo $student['student_id']; ?>"
+				<a href="index.php?mod=registration&view=student&action=viewStudent&student_id=<?php echo $student['student_id']; ?>"
            class="reviewButton" title="Review This Student"></a>
 				<a href="#" class="editButton" title="Edit This Student"></a>
 			</span>
@@ -104,7 +104,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
             <td>$".$paymentPlan['amountDue']."</td>
             <td>".$paymentPlan['status'];
             if($paymentPlan['status'] == "Pending Approval"){
-              echo " - <a class='btn btn-success btn-mini fb' href='index.php?com=registration&view=family&action=approvePaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Approve</a>";
+              echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=approvePaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Approve</a>";
             }
             echo "</td></tr>";
           }
@@ -130,7 +130,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           <?php
           if (isset($invoices)) {
             foreach ($invoices as $invoice) {
-              echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['name']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td><td><a href='index.php?com=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>View</a></td></tr>";
+              echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['name']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td><td><a href='index.php?mod=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>View</a></td></tr>";
             }
           } else {
             echo "<tr class='warning'><td colspan=7>There are no recent invoices for this family.</td></tr>";

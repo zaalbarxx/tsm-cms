@@ -13,7 +13,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
       <div class="smallItem well well-small">
           <span class="title"><?php echo $requirement['name']; ?></span>
       <span class="buttons">
-      <a href="index.php?com=registration&view=programs&action=addRequirement&program_id=<?php echo $program_id; ?>&addRequirement=<?php echo $requirement['requirement_id']; ?>"
+      <a href="index.php?mod=registration&view=programs&action=addRequirement&program_id=<?php echo $program_id; ?>&addRequirement=<?php echo $requirement['requirement_id']; ?>"
          class="addButton24" title="Add to <?php echo $programName; ?>"></a>
       </span>
       </div>

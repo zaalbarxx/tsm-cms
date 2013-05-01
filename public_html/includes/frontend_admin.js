@@ -8,7 +8,7 @@ CKEDITOR.on( 'currentInstance', function(event){
     if(editor == null){
         inlineEditInfo = currentInstance.element.getAttribute('data-tsm-inline-edit-info');
         data = { editInfo: inlineEditInfo, contents: currentInstance.getData() };
-        $.post('index.php?com=edit&ajax=inlineSave',data,function(e){
+        $.post('index.php?mod=edit&ajax=inlineSave',data,function(e){
             if(e == "1"){
                 currentInstance.element.setAttribute("class",currentInstance.element.getAttribute("class") + " doneEditing");
                 $("#__msg_overlay").remove();

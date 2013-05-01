@@ -10,7 +10,7 @@ if (isset($addStudent)) {
       $student->addToSchoolYear($currentCampus->getCurrentSchoolYear());
       $student->setFirstYear($first_year);
       $family->moveToNextStep();
-      header('Location: index.php?com=registration');
+      header('Location: index.php?mod=registration');
     }
   }
 } else if (isset($editStudent)) {
@@ -18,12 +18,12 @@ if (isset($addStudent)) {
   $student->saveStudent();
   $student->setFirstYear($first_year);
   $family->moveToStep(3);
-  header('Location: index.php?com=registration&student_id='.$student_id);
+  header('Location: index.php?mod=registration&student_id='.$student_id);
 }
 
 if (isset($backToReview)) {
   $family->moveToStep(4);
-  header("Location: index.php?com=registration");
+  header("Location: index.php?mod=registration");
 }
 
 if (isset($student_id)) {

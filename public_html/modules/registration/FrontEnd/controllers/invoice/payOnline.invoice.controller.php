@@ -10,6 +10,6 @@ if (isset($setupComplete)) {
 }
 
 $notify_url = urlencode("http://".$_SERVER['HTTP_HOST']."/api/paypal_ipn.php");
-$return_url = urlencode("http://".$_SERVER['HTTP_HOST']."/index.php?com=registration&setupComplete=1");
-$cancel_url = urlencode("http://".$_SERVER['HTTP_HOST']."/index.php?com=registration");
+$return_url = urlencode("http://".$_SERVER['HTTP_HOST']."/index.php?mod=registration&setupComplete=1");
+$cancel_url = urlencode("http://".$_SERVER['HTTP_HOST']."/index.php?mod=registration");
 ?>

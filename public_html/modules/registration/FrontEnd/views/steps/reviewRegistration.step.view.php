@@ -7,9 +7,9 @@
     <p style="text-align: center;">Please review the registration information for your students below.</p>
 
     <div style="width: 100%; display: block; position: relative;  text-align: right; float: right;">
-        <a href="index.php?com=registration&choosePaymentPlan=1" class="submitButton"
+        <a href="index.php?mod=registration&choosePaymentPlan=1" class="submitButton"
            style="margin-right: 20px;float: right; text-decoration: none;">Finalize Registration</a><a
-            href="index.php?com=registration&addAnotherStudent=1" class="submitButton"
+            href="index.php?mod=registration&addAnotherStudent=1" class="submitButton"
             style="margin-right: 20px;float: right; text-decoration: none;">Add Another Student</a>
     </div>
     <br style="width: 100%; clear: both;"/>
@@ -17,7 +17,7 @@
 
     <div class="infoSection">
         <h2>Family Information - <a
-                href="index.php?com=registration&editFamilyInfo=1"
+                href="index.php?mod=registration&editFamilyInfo=1"
                 class="editButton" title="Edit Family"></a></h2>
 
         <div class="half">
@@ -47,10 +47,10 @@
     </div>
   <?php foreach ($students as $studentInfo) { ?>
     <div class="infoSection">
-        <a href="index.php?com=registration&reviseStudent=1&student_id=<?php echo $studentInfo['student_id']; ?>"
+        <a href="index.php?mod=registration&reviseStudent=1&student_id=<?php echo $studentInfo['student_id']; ?>"
            class="right small_button">Revise Student</a>
 
-        <a href="index.php?com=registration&student_id=<?php echo $studentInfo['student_id']; ?>&action=editStudentInfo&backToReview=1"
+        <a href="index.php?mod=registration&student_id=<?php echo $studentInfo['student_id']; ?>&action=editStudentInfo&backToReview=1"
            class="editButton" title="Edit Student" style="float: left;"></a>
 
         <h2 class="title"><?php echo $studentInfo['last_name'].", ".$studentInfo['first_name']; ?> - <span
@@ -103,7 +103,7 @@
                 <div class="bigItem">
                 <span class="title"><img src="<?php echo $program['icon_url']; ?>"
                                          style="width: 40px; margin-top: -25px; margin-bottom: -15px; margin-right: 20px; margin-left: -30px;"/><?php echo $program['name']; ?></span>
-                    <a href="index.php?com=registration&reviseStudent=1&student_id=<?php echo $studentInfo['student_id']; ?>"
+                    <a href="index.php?mod=registration&reviseStudent=1&student_id=<?php echo $studentInfo['student_id']; ?>"
                        class="right small_button" style="margin-top: -25px;">Revise Student</a>
 
                     <div class="itemDetails" style="display: block;">
@@ -169,9 +169,9 @@
   echo $campusInfo['registration_review_footnote'];
 } ?>
     <br/>
-    <a href="index.php?com=registration&choosePaymentPlan=1" class="submitButton"
+    <a href="index.php?mod=registration&choosePaymentPlan=1" class="submitButton"
        style="margin-right: 20px;float: right; text-decoration: none;">Finalize Registration</a><a
-        href="index.php?com=registration&addAnotherStudent=1" class="submitButton"
+        href="index.php?mod=registration&addAnotherStudent=1" class="submitButton"
         style="margin-right: 20px;float: right; text-decoration: none;">Add Another Student</a>
     <br style="width: 100%; clear: both;"/>
 </div>

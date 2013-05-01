@@ -3,7 +3,7 @@
   <?php if ($planInfo['disclaimer'] != "" && !isset($acceptDisclaimer)) { ?>
     <p style="text-align: center;"><?php echo html_entity_decode($planInfo['disclaimer']); ?></p>
     <div style="width: 300px; margin-left: auto;margin-right: auto;text-align: center;">
-        <a href="index.php?com=registration&acceptDisclaimer=1" class="submitButton"
+        <a href="index.php?mod=registration&acceptDisclaimer=1" class="submitButton"
            style="text-decoration: none; margin-right: 30px;">Accept</a>
     </div>
   <?php } else { ?>

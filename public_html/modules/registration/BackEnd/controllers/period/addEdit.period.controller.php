@@ -1,11 +1,11 @@
 <?php
 if (isset($createPeriod)) {
   if ($currentCampus->createPeriod()) {
-    header('Location: index.php?com=registration&view=periods');
+    header('Location: index.php?mod=registration&view=periods');
   }
 } else if (isset($savePeriod)) {
   if ($currentCampus->savePeriod($period_id)) {
-    header('Location: index.php?com=registration&view=periods');
+    header('Location: index.php?mod=registration&view=periods');
   } else {
     die();
   }

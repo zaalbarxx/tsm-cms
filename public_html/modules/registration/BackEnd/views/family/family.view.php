@@ -11,7 +11,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
            value="Search..."/>
 
     <h1>Families - <a
-            href="index.php?com=registration&view=family&downloadCSV=1"
+            href="index.php?mod=registration&view=family&downloadCSV=1"
             class="button downloadButton" title="Download CSV"></a></h1>
 
     <p>There are <?php echo $numFamilies; ?> families enrolled.</p>
@@ -19,10 +19,10 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
   foreach ($families as $family) {
     ?>
       <div class="smallItem well well-small">
-          <a href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"
+          <a href="index.php?mod=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"
              class="title"><?php echo $family['father_last']; ?> Family <?php echo $family['status']; ?></a>
               <span class="buttons"><a
-                      href="index.php?com=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"
+                      href="index.php?mod=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"
                       class="reviewButton" title="Review This Family"></a></span>
 
           <div class="itemDetails">

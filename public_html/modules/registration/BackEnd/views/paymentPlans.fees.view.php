@@ -6,7 +6,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
            value="Search..."/>
 
     <h1>Payment Plans - <a class="btn btn-primary"
-                           href="index.php?com=registration&view=fees&action=addEditPaymentPlan" class="addButton"
+                           href="index.php?mod=registration&view=fees&action=addEditPaymentPlan" class="addButton"
                            title="Add a Payment Plan">Add</a></h1>
   <?php
   if ($paymentPlans) {
@@ -15,9 +15,9 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         <div class="smallItem well well-small">
             <span class="title"><?php echo $plan['name']; ?> - <?php echo $plan['num_families']; ?></span>
           <span class="buttons">
-          <a href="index.php?com=registration&view=fees&action=addEditPaymentPlan&payment_plan_id=<?php echo $plan['payment_plan_id']; ?>"
+          <a href="index.php?mod=registration&view=fees&action=addEditPaymentPlan&payment_plan_id=<?php echo $plan['payment_plan_id']; ?>"
              class="editButton fb" title="Edit This Payment Plan"></a>
-          <a href="index.php?com=registration&ajax=deletePaymentPlan&payment_plan_id=<?php echo $plan['payment_plan_id']; ?>"
+          <a href="index.php?mod=registration&ajax=deletePaymentPlan&payment_plan_id=<?php echo $plan['payment_plan_id']; ?>"
              class="deleteButton" title="Delete Payment Plan"></a>
           </span>
         </div>

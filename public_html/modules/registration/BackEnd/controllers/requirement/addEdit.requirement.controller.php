@@ -8,11 +8,11 @@ if (isset($requirement_id)) {
 }
 if (isset($createRequirement)) {
   if ($currentCampus->createRequirement()) {
-    header('Location: index.php?com=registration&view=requirements');
+    header('Location: index.php?mod=registration&view=requirements');
   }
 } else if (isset($saveRequirement)) {
   if ($currentCampus->saveRequirement($requirement_id)) {
-    header('Location: index.php?com=registration&view=requirements');
+    header('Location: index.php?mod=registration&view=requirements');
   } else {
     die();
   }

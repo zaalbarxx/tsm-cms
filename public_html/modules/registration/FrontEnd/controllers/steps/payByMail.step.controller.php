@@ -11,7 +11,7 @@ foreach ($paymentPlans as $family_payment_plan_id => $familyPaymentPlan) {
 
 if ($plan_to_process == null) {
   $family->moveToStep(0);
-  header("Location: index.php?com=registration");
+  header("Location: index.php?mod=registration");
 }
 
 $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($plan_to_process['payment_plan_id']);
@@ -22,6 +22,6 @@ $campusInfo = $currentCampus->getInfo();
 
 if (isset($setupComplete)) {
   $family->completePaymentPlanSetup($plan_to_process['family_payment_plan_id']);
-  header("Location: index.php?com=registration");
+  header("Location: index.php?mod=registration");
 }
 ?>

@@ -3,7 +3,7 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
 ?>
 <div class="contentWithSideBar">
     <h1><?php echo $pageTitle; ?> - <a
-            href="index.php?com=registration&view=student&action=addEditStudent&student_id=<?php echo $studentInfo['student_id']; ?>"
+            href="index.php?mod=registration&view=student&action=addEditStudent&student_id=<?php echo $studentInfo['student_id']; ?>"
             class="editButton" title="Edit Student"></a></h1>
 
     <div class="infoSection">
@@ -62,7 +62,7 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
                     </table>
                     <br/>
                     <span class="center"><a
-                            href="index.php?com=registration&view=student&action=addCourse&student_id=<?php echo $studentInfo['student_id']; ?>&program_id=<?php echo $program['program_id']; ?>"
+                            href="index.php?mod=registration&view=student&action=addCourse&student_id=<?php echo $studentInfo['student_id']; ?>&program_id=<?php echo $program['program_id']; ?>"
                             class="small_button fb">Add Course</a></span>
                     <hr class="divider"/>
                     <h3>Program Fee Summary</h3>
@@ -83,7 +83,7 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
       }
       ?>
         <span class="center"><a
-                href="index.php?com=registration&view=student&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>"
+                href="index.php?mod=registration&view=student&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>"
                 class="med_button fb">Enroll in Additional Programs</a></span>
     </div>
     <div class="infoSection">

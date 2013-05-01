@@ -1,12 +1,12 @@
 <?php
 if (isset($createCourse)) {
   if ($currentCampus->createCourse()) {
-    header('Location: index.php?com=registration&view=courses');
+    header('Location: index.php?mod=registration&view=courses');
   }
 }
 if (isset($saveCourse)) {
   if ($currentCampus->saveCourse($course_id)) {
-    header('Location: index.php?com=registration&view=courses');
+    header('Location: index.php?mod=registration&view=courses');
   }
 }
 if (isset($course_id)) {

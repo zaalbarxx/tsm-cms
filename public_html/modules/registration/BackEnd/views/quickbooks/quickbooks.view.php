@@ -7,7 +7,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
             connection process.</p>
 
         <p style="text-align: center;">
-            <a href="index.php?com=registration&view=quickbooks&action=connect" class="med_button" style="">Connect
+            <a href="index.php?mod=registration&view=quickbooks&action=connect" class="med_button" style="">Connect
                 Quickbooks</a>
         </p>
 </div>

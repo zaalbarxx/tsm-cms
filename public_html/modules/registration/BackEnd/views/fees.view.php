@@ -4,7 +4,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 <div class="span9">
     <input id="searchItems" rel="smallItem" class="search-query" value="Search..."/>
 
-    <h1>Fees - <a href="index.php?com=registration&view=fees&action=addEditFee" class="btn btn-primary"
+    <h1>Fees - <a href="index.php?mod=registration&view=fees&action=addEditFee" class="btn btn-primary"
                   title="Add a Fee">Add</a></h1>
 
   <?php
@@ -14,9 +14,9 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         <div class="smallItem well well-small">
             <span class="title"><?php echo $fee['name']; ?> - $<?php echo $fee['amount']; ?></span>
           <span class="buttons">
-          <a href="index.php?com=registration&view=fees&action=addEditFee&fee_id=<?php echo $fee['fee_id']; ?>"
+          <a href="index.php?mod=registration&view=fees&action=addEditFee&fee_id=<?php echo $fee['fee_id']; ?>"
              class="editButton fb" title="Edit This Fee"></a>
-          <a href="index.php?com=registration&ajax=deleteFee&fee_id=<?php echo $fee['fee_id']; ?>" class="deleteButton"
+          <a href="index.php?mod=registration&ajax=deleteFee&fee_id=<?php echo $fee['fee_id']; ?>" class="deleteButton"
              title="Delete Fee"></a>
           </span>
         </div>

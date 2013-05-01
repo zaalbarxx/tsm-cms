@@ -12,7 +12,7 @@
                 <h3>Select a Teacher for this Period</h3>
               <?php foreach ($teachers as $teacher) { ?>
               <?php echo $teacher['first_name']." ".$teacher['last_name']; ?> - <a
-                        href="index.php?com=registration&ajax=changePeriodInCourse&course_period_id=<?php echo $course_period_id; ?>&course_id=<?php echo $courseInfo['course_id']; ?>&new_teacher_id=<?php echo $teacher['teacher_id']; ?>&new_period_id=<?php echo $period['period_id']; ?>"
+                        href="index.php?mod=registration&ajax=changePeriodInCourse&course_period_id=<?php echo $course_period_id; ?>&course_id=<?php echo $courseInfo['course_id']; ?>&new_teacher_id=<?php echo $teacher['teacher_id']; ?>&new_period_id=<?php echo $period['period_id']; ?>"
                         class="changePeriod">Choose</a><br/>
               <?php } ?>
             </div>

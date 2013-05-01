@@ -47,7 +47,7 @@
                 foreach ($course['periods'] as $period) {
                   ?>
                   <?php echo $reg->displayPeriod($period); ?> - <a
-                            href="index.php?com=registration&action=addCourse&student_id=<?php echo $studentInfo['student_id']; ?>&program_id=<?php echo $programInfo['program_id']; ?>&enrollInCourse=<?php echo $course['course_id']; ?>&course_period_id=<?php echo $period['course_period_id']; ?>"
+                            href="index.php?mod=registration&action=addCourse&student_id=<?php echo $studentInfo['student_id']; ?>&program_id=<?php echo $programInfo['program_id']; ?>&enrollInCourse=<?php echo $course['course_id']; ?>&course_period_id=<?php echo $period['course_period_id']; ?>"
                             class="addCourse" ref="<?php echo $course['name']; ?>">Select</a><br/>
                   <?php
                 }

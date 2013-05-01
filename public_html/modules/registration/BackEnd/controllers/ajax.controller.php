@@ -6,7 +6,7 @@ switch ($ajax) {
       case "saveFee":
         if ($currentCampus->saveFee($fee_id)) {
           $response = true;
-          $redirect = "index.php?com=registration&view=fees";
+          $redirect = "index.php?mod=registration&view=fees";
         } else {
           $response = false;
         }
@@ -14,7 +14,7 @@ switch ($ajax) {
       case "createFee":
         if ($currentCampus->createFee()) {
           $response = true;
-          $redirect = "index.php?com=registration&view=fees";
+          $redirect = "index.php?mod=registration&view=fees";
         } else {
           $response = false;
         }
@@ -22,7 +22,7 @@ switch ($ajax) {
       case "savePaymentPlan":
         if ($currentCampus->savePaymentPlan($payment_plan_id)) {
           $response = true;
-          $redirect = "index.php?com=registration&view=fees&action=paymentPlans";
+          $redirect = "index.php?mod=registration&view=fees&action=paymentPlans";
         } else {
           $response = false;
         }
@@ -30,7 +30,7 @@ switch ($ajax) {
       case "createPaymentPlan":
         if ($currentCampus->createPaymentPlan()) {
           $response = true;
-          $redirect = "index.php?com=registration&view=fees&action=paymentPlans";
+          $redirect = "index.php?mod=registration&view=fees&action=paymentPlans";
         } else {
           $response = false;
         }
