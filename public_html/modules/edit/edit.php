@@ -7,6 +7,7 @@ class TSM_EDIT {
     $this->website = $tsm->website;
   }
 
+  //we'll need to integrate some security here
   public function saveOption($optionName,$data){
     if($this->getOption($optionName)){
       $q = "UPDATE tsm_options SET option_value = '$data' WHERE option_name = '$optionName' AND website_id = '".$this->website->getWebsiteId()."'";
@@ -27,13 +28,6 @@ class TSM_EDIT {
     }
 
     return $return;
-  }
-
-  public function saveTemplateOption(){
-    $hasPermission = true;
-    if($hasPermission == true){
-      $this->saveOption($optionName,$data);
-    }
   }
 
 }
