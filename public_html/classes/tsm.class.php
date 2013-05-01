@@ -221,6 +221,17 @@ class TSM {
     require_once(__TSM_ROOT__."modules/".$modName."/BackEnd/".$modName.".php");
   }
 
+  public function getModuleById($id){
+    $q = "SELECT * FROM tsm_modules WHERE module_id = '$id'";
+
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $module = $a;
+    }
+
+    return $module;
+  }
+
   public function getComponentOld() {
     global $mod;
 

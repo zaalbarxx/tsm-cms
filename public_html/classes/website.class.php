@@ -100,6 +100,10 @@ class Website {
     return $this->info;
   }
 
+  public function getDefaultAdminModuleId(){
+    return $this->info['default_admin_module'];
+  }
+
   public function getAdminTopMenu($parentId = NULL) {
     if ($parentId != null) {
       $q = "SELECT * FROM tsm_admin_menu WHERE parent_id = ".$parentId;

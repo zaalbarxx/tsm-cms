@@ -8,6 +8,7 @@ class AdminUser {
     global $logout;
 
     $tsm = TSM::getInstance();
+    $this->tsm = $tsm;
     $this->db = $tsm->db;
 
     if ($logout == 1) {
@@ -33,7 +34,13 @@ class AdminUser {
       $a = mysql_fetch_assoc($r);
       if (TSM::getInstance()->checkPassword($a['password'], $password)) {
         $_SESSION['adminUser']['id'] = $a['user_id'];
-        header("location: ../index.php");
+        $defaultModule = $this->tsm->website->getDefaultAdminModuleId();
+        if($defaultModule == 0){
+          header("location: index.php?mod=welcome");
+        } else {
+          $moduleInfo = $this->tsm->getModuleById($defaultModule);
+          header("location: index.php?mod=".$moduleInfo['module_name']);
+        }
         $success = 1;
       } else {
         $success = 0;
