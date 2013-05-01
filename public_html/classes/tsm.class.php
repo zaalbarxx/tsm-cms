@@ -500,10 +500,16 @@ class TSM {
     <link rel=\"stylesheet\" href=\"includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"includes/3rdparty/jquery/plugins/jqueryui/js/jquery-ui-1.10.2.custom.min.js\"></script>
     <link rel=\"stylesheet\" href=\"includes/3rdparty/jquery/plugins/jqueryui/css/ui-lightness/jquery-ui-1.10.2.custom.min.css\" type=\"text/css\" media=\"screen\" />
-    <script type=\"text/javascript\" src=\"includes/jquery_implementation.js\"></script>
-    <script type=\"text/javascript\" src=\"includes/3rdparty/ckeditor4/ckeditor.js\"></script>
-    <script type=\"text/javascript\" src=\"includes/frontend_javascript.js\"></script>
-    ";
+    <script type=\"text/javascript\" src=\"includes/jquery_implementation.js\"></script>";
+
+    //include the javascript used for editing when an admin user is logged in
+    if($this->adminUser->isLoggedIn()){
+      $this->headerHTML .="
+      <script type=\"text/javascript\" src=\"includes/3rdparty/ckeditor4/ckeditor.js\"></script>
+      <script type=\"text/javascript\" src=\"includes/frontend_admin.js\"></script>
+      ";
+    }
+
     $this->headerHTML .= "<script type=\"text/javascript\">
 		$(document).ready( function(){
 		  $(\".fb\").attr('href', function() {

@@ -11,7 +11,9 @@ if(isset($ajax)){
         case "option":
           $optionName = $editArray[1];
           $edit = new TSM_EDIT();
-          $edit->saveOption($optionName,$contents);
+          if($edit->saveOption($optionName,$contents)){
+            echo "1";
+          }
         break;
       }
 

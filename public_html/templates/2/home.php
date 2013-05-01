@@ -3,9 +3,9 @@ require_once($tsm->website->getTemplateHeader());
 ?>
   <div id="contentWrapper">
     <div class="home-our-mission home-section">
-      <h2 class="strong" contenteditable="true" <?php $tsm->currentTemplate->makeOptionEditable(1); ?>><?php $tsm->currentTemplate->displayOptionValue(1); ?></h2>
+      <h2 class="strong" <?php $tsm->currentTemplate->makeOptionEditable(1); ?>><?php $tsm->currentTemplate->displayOptionValue(1); ?></h2>
       <div class="inside" >
-        <p class="large" contenteditable="true" <?php $tsm->currentTemplate->makeOptionEditable(2); ?>><?php $tsm->currentTemplate->displayOptionValue(2); ?></p>
+        <p class="large" <?php $tsm->currentTemplate->makeOptionEditable(2); ?>><?php $tsm->currentTemplate->displayOptionValue(2); ?></p>
         <p class="large " style="font-family: sans-serif;" <?php $tsm->currentTemplate->makeOptionEditable(6); ?>><?php $tsm->currentTemplate->displayOptionValue(6); ?></p>
         <div class="signup">
           <form method="POST" class="styled-form flex" novalidate="">

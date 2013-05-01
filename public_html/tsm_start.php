@@ -24,6 +24,7 @@ $tsm->logRequest();
 $tsm->website = new Website();
 $tsm->website->start();
 $tsm->currentTemplate = new TSM_TEMPLATE();
+$tsm->adminUser = new AdminUser();
 
 //TURN CONTROL OVER TO THE COMPONENT
 require_once($tsm->getComponentOld());

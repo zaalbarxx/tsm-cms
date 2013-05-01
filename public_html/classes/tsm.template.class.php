@@ -33,7 +33,9 @@ class TSM_TEMPLATE extends TSM_COMPONENT{
   }
 
   public function makeOptionEditable($id){
-    echo "contenteditable=\"true\" data-tsm-inline-edit-info=\"option:template_".$this->id."_option_".$id."\"";
+    if($this->tsm->adminUser->isLoggedIn()){
+      echo "contenteditable=\"true\" data-tsm-inline-edit-info=\"option:template_".$this->id."_option_".$id."\"";
+    }
   }
 
 }

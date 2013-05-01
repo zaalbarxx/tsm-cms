@@ -5,6 +5,9 @@ class TSM_EDIT {
     $tsm = TSM::getInstance();
     $this->db = $tsm->db;
     $this->website = $tsm->website;
+    if(!$tsm->adminUser->isLoggedIn()){
+      throw new Exception('Not logged in.');
+    }
   }
 
   //we'll need to integrate some security here

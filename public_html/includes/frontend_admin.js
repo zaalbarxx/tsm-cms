@@ -9,10 +9,18 @@ CKEDITOR.on( 'currentInstance', function(event){
         inlineEditInfo = currentInstance.element.getAttribute('data-tsm-inline-edit-info');
         data = { editInfo: inlineEditInfo, contents: currentInstance.getData() };
         $.post('index.php?com=edit&ajax=inlineSave',data,function(e){
-            currentInstance.element.setAttribute("class",currentInstance.element.getAttribute("class") + " doneEditing");
-            $("#__msg_overlay").remove();
-            $(".currentlyEditing").css({"background": previousBackgroundCss, "zIndex": previouszIndex}).removeClass("currentlyEditing");
-            $(".doneEditing").effect("highlight",{color: "#91FA94", duration: 800}).removeClass("doneEditing");
+            if(e == "1"){
+                currentInstance.element.setAttribute("class",currentInstance.element.getAttribute("class") + " doneEditing");
+                $("#__msg_overlay").remove();
+                $(".currentlyEditing").css({"background": previousBackgroundCss, "zIndex": previouszIndex}).removeClass("currentlyEditing");
+                $(".doneEditing").effect("highlight",{color: "#91FA94", duration: 800}).removeClass("doneEditing");
+            } else {
+                alert("Your changes could not be saved. Please try again.");
+                currentInstance.element.setAttribute("class",currentInstance.element.getAttribute("class") + " doneEditing");
+                $("#__msg_overlay").remove();
+                $(".currentlyEditing").css({"background": previousBackgroundCss, "zIndex": previouszIndex}).removeClass("currentlyEditing");
+                $(".doneEditing").effect("highlight",{color: "#F54242", duration: 800}).removeClass("doneEditing");
+            }
         });
     } else {
         currentInstance = editor;
