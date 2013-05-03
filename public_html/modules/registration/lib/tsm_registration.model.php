@@ -134,7 +134,7 @@ class TSM_REGISTRATION {
     $r = $this->db->runQuery($q);
     $campuses = null;
     while ($a = mysql_fetch_assoc($r)) {
-      if ($this->userCanAccessCampus($a['campus_id'])) {
+      if (!$this->tsm->adminUser->isLoggedIn() || $this->userCanAccessCampus($a['campus_id'])) {
         $campuses[$a['campus_id']] = $a;
       }
     }
