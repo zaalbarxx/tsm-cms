@@ -20,7 +20,7 @@ class TSM_REGISTRATION {
   }
 
   public function userCanAccessCampus($campus_id) {
-    if (isset($this->tsm->adminUser)) {
+    if ($this->tsm->adminUser->isLoggedIn()) {
       $q = "SELECT * FROM tsm_reg_users WHERE user_id = '".$_SESSION['adminUser']['id']."'";
       $r = $this->db->runQuery($q);
       while ($a = mysql_fetch_assoc($r)) {
@@ -134,7 +134,7 @@ class TSM_REGISTRATION {
     $r = $this->db->runQuery($q);
     $campuses = null;
     while ($a = mysql_fetch_assoc($r)) {
-      if (!$this->tsm->adminUser->isLoggedIn() || $this->userCanAccessCampus($a['campus_id'])) {
+      if ($this->userCanAccessCampus($a['campus_id'])) {
         $campuses[$a['campus_id']] = $a;
       }
     }
