@@ -502,7 +502,7 @@ class TSM {
     <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/jquery.validate.min.js\"></script>
     <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/jquery.maskedinput.js\"></script>";
     $this->headerHTML .= "
-    <script type=\"text/javascript\" src=\"i/ncludes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.min.js\"></script>
+    <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.min.js\"></script>
     <link rel=\"stylesheet\" href=\"/includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/jqueryui/js/jquery-ui-1.10.2.custom.min.js\"></script>
     <link rel=\"stylesheet\" href=\"/includes/3rdparty/jquery/plugins/jqueryui/css/ui-lightness/jquery-ui-1.10.2.custom.min.css\" type=\"text/css\" media=\"screen\" />
