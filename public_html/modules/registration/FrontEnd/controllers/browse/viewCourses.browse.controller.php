@@ -10,14 +10,18 @@ if (isset($program_id)) {
       $fees = $courseObject->getFees($program_id, $campusInfo['tuition_fee_type_id']);
       $courseFees = $courseObject->getFees(null, null);
       $displayTuition = 0;
-      foreach ($fees as $fee) {
-        if ($fee['amount'] > $displayTuition) {
-          $displayTuition = $fee['amount'];
+      if(isset($fees)){
+        foreach ($fees as $fee) {
+          if ($fee['amount'] > $displayTuition) {
+            $displayTuition = $fee['amount'];
+          }
         }
       }
-      foreach ($courseFees as $fee) {
-        if ($fee['amount'] > $displayTuition) {
-          $displayTuition = $fee['amount'];
+      if(isset($courseFees)){
+        foreach ($courseFees as $fee) {
+          if ($fee['amount'] > $displayTuition) {
+            $displayTuition = $fee['amount'];
+          }
         }
       }
       if ($displayTuition > 0) {
