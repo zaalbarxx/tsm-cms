@@ -15,7 +15,7 @@
     } ?>
     </select>
         <input type="hidden" name="browseOfferings" value="1"/>
-        <input type="hidden" name="com" value="registration"/>
+        <input type="hidden" name="mod" value="registration"/>
 
     </form>
 </div>
