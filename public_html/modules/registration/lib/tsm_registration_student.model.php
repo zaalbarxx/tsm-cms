@@ -22,12 +22,8 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function hasPermission($student_id) {
-    if (isset($this->tsm->adminUser)) {
-      if ($this->tsm->adminUser->isLoggedIn()) {
-        return true;
-      } else {
-        return false;
-      }
+    if ($this->tsm->adminUser->isLoggedIn()) {
+      return true;
     } else {
       $family = new TSM_REGISTRATION_FAMILY();
       if ($family->isLoggedIn()) {
