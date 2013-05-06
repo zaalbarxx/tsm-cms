@@ -448,6 +448,7 @@ class TSM {
     <![endif]-->
     <!--[if (gte IE 9) | (!IE)]><!-->
         <script src=\"../includes/3rdparty/jquery/jquery-1.9.3.min.js\" type=\"text/javascript\"></script>
+        <script src=\"../includes/3rdparty/jquery/plugins/jquery-migrate-1.2.0.min.js\" type=\"text/javascript\"></script>
     <!--<![endif]-->
     <link rel=\"stylesheet\" href=\"../includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
     <link href=\"../includes/3rdparty/bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\" media=\"screen\">
@@ -496,13 +497,14 @@ class TSM {
     <![endif]-->
     <!--[if (gte IE 9) | (!IE)]><!-->
         <script src=\"/includes/3rdparty/jquery/jquery-1.9.3.min.js\" type=\"text/javascript\"></script>
+        <script src=\"/includes/3rdparty/jquery/plugins/jquery-migrate-1.2.0.min.js\" type=\"text/javascript\"></script>
     <!--<![endif]-->
     <link rel=\"stylesheet\" href=\"/includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
     <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/jquery.validate.min.js\"></script>
     <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/jquery.maskedinput.js\"></script>";
     $this->headerHTML .= "
-    <script type=\"text/javascript\" src=\"i/ncludes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.min.js\"></script>
+    <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.min.js\"></script>
     <link rel=\"stylesheet\" href=\"/includes/3rdparty/jquery/plugins/jquery.tooltip/jquery.tooltip.css\" type=\"text/css\" media=\"screen\" />
     <script type=\"text/javascript\" src=\"/includes/3rdparty/jquery/plugins/jqueryui/js/jquery-ui-1.10.2.custom.min.js\"></script>
     <link rel=\"stylesheet\" href=\"/includes/3rdparty/jquery/plugins/jqueryui/css/ui-lightness/jquery-ui-1.10.2.custom.min.css\" type=\"text/css\" media=\"screen\" />
