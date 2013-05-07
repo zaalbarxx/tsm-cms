@@ -171,7 +171,7 @@ if (!$fp) {
           mail("jlane@veritasproductions.net", "About to Log Payment", "Logging Payment...$log_payment_q");
           mysql_query($log_payment_q) or die(mysql_error());
           $payment_id = mysql_insert_id();
-          $log_payment_q = "INSERT INTO tsm_reg_families_payment_invoice (family_payment_id,family_invoice_id,amount,last_updated)
+          $log_payment_q = "INSERT INTO tsm_reg_families_payment_invoice (family_payment_id,family_invoice_id,amount,time_payment_applied)
           VALUES($payment_id,$invoice_num,'$payment_amount','$payment_date')";
           mysql_query($log_payment_q) or die(mysql_error());
           $logged = 1;
