@@ -1,5 +1,6 @@
 <?php
 //GET PAYMENT PLANS THAT ARE SET TO BILL IMMEDIATELY
+//todo: all of this logic needs to be moved inside the TSM_REG_FAMILY_PAYMENT_PLAN class
 $immediatePlans = $family->getPaymentPlans(1);
 $partNowPartLaterPlans = $family->getPaymentPlans(4);
 $paymentPlans = array_merge($immediatePlans, $partNowPartLaterPlans);
@@ -85,7 +86,7 @@ if ($invoices == null) {
   }
 
   $dueToday = $planTotal;
-
+  //todo: make payment plans honour the invoice and credit setting from addEdit.paymentPlans.fee.view.php
   if ($plan_to_process['payment_plan_type_id'] == 4) {
     $invoice->hide();
 

@@ -91,7 +91,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getFees(){
-
+    //todo: make sure this function is grabbing the correct fees
     $creditFeeId = $this->info['credit_fee_id'];
     $installmentFeeId = $this->info['installment_fee_id'];
     //print_r($this->info);

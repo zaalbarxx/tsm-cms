@@ -314,6 +314,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function addFee($name, $amount, $fee_id = null, $fee_type_id = null) {
+    //todo: there needs to be some logic in here that checks to see if the family is already on a payment plan for this school year that supports this fee_type_id. If so, we need to give the admin the option to put this fee on an existing payment plan or add it to a new one.
     $q = "INSERT INTO tsm_reg_families_fees (family_id,name,amount,fee_id,fee_type_id,school_year) VALUES('".$this->familyId."','$name','$amount','$fee_id','$fee_type_id','".$this->getSelectedSchoolYear()."')";
     $this->db->runQuery($q);
     $id = mysql_insert_id($this->db->conn);
