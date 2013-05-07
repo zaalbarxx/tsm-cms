@@ -152,20 +152,29 @@ if (!$fp) {
 
         //check to make sure the transacation hasn't already been logged
 
-        $checkq = "SELECT invoice_payment_id FROM tsm_reg_families_payments WHERE paypal_transaction_id = '$txn_id'";
+        $checkq = "SELECT family_payment_id FROM tsm_reg_families_payments WHERE reference_number = '$txn_id'";
         //mail("jlane@veritasproductions.net","About to Log Payment","Logging Payment...$checkq");
         $checkr = $tsm->db->runQuery($checkq);
         if (mysql_num_rows($checkr) == 0) {
-          $log_payment_q = "INSERT INTO tsm_reg_families_payments (family_id,family_invoice_id,reference_number,payment_type,amount,payment_time)
-          VALUES ($family_id, $invoice_num, '$txn_id','Paypal','$payment_amount','$payment_date')";
+          $invoice_num = intval($invoice_num);
+          $invq = "SELECT * FROM tsm_reg_families_invoices WHERE family_invoice_id = '$invoice_num'";
+          $invr = mysql_query($invq) or die(mysql_error());
+          if(mysql_num_rows($invr) == 1){
+            while($a = mysql_fetch_assoc($invr)){
+              $payment_description = $a['invoice_description'];
+            }
+          } else {
+            $payment_description = "";
+          }
+          $log_payment_q = "INSERT INTO tsm_reg_families_payments (family_id,payment_description,reference_number,payment_type,amount,payment_time)
+          VALUES ($family_id,'$payment_description', '$txn_id','Paypal','$payment_amount','$payment_date')";
           mail("jlane@veritasproductions.net", "About to Log Payment", "Logging Payment...$log_payment_q");
           mysql_query($log_payment_q) or die(mysql_error());
           $payment_id = mysql_insert_id();
-          $log_payment_q = "INSERT INTO tsm_reg_families_payment_invoice (family_payment_id,family_invoice_id,amount)
-          VALUES($payment_id,$invoice_num,'$payment_amount')";
+          $log_payment_q = "INSERT INTO tsm_reg_families_payment_invoice (family_payment_id,family_invoice_id,amount,last_updated)
+          VALUES($payment_id,$invoice_num,'$payment_amount','$payment_date')";
           mysql_query($log_payment_q) or die(mysql_error());
           $logged = 1;
-
         } else {
           echo "This transaction has already been processed.";
           $logged = 0;
