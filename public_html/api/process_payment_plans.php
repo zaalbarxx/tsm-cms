@@ -2,6 +2,7 @@
 error_reporting(E_ALL ^ E_STRICT);
 ini_set("display_errors", "1");
 ini_set('memory_limit', '256M');
+
 set_time_limit(0);
 
 session_start();
@@ -26,7 +27,7 @@ $tsm->adminUser = new AdminUser();
 $tsm->website = new Website();
 $tsm->website->start();
 
-require_once(__TSM_ROOT__."models/registration/tsm_registration.model.php");
+require_once(__TSM_ROOT__."modules/registration/lib/tsm_registration.model.php");
 
 $reg = new TSM_REGISTRATION();
 $campusList = $reg->getCampuses();
@@ -44,10 +45,14 @@ $campusList = $reg->getCampuses();
       foreach($paymentPlans as $paymentPlan){
         switch($paymentPlan['payment_plan_type_id']){
           case 2:
-            if($paymentPlan['payment_plan_id'] == 57){
+            if($paymentPlan['payment_plan_id'] == 64){
               $startBilling = strtotime($paymentPlan['start_date']);
-              $today = time();
+              $installmentFee = new TSM_REGISTRATION_FEE($paymentPlan['installment_fee_id']);
+              $installmentFee = $installmentFee->getInfo();
+              $today = date("Y-m-d");
+              $today = strtotime($today);
               //if we're past the start date, continue
+
               if($today > $startBilling){
                 $startDate = new DateTime($paymentPlan['start_date']);
 
@@ -55,33 +60,63 @@ $campusList = $reg->getCampuses();
                 $familyPaymentPlans = $paymentPlanObject->getFamilyPaymentPlans();
                 if(isset($familyPaymentPlans)){
                   foreach($familyPaymentPlans as $familyPaymentPlan){
+
                     $familyPaymentPlanObject = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyPaymentPlan['family_payment_plan_id']);
-                    $numInvoices = $familyPaymentPlanObject->getNumInvoices();
+                    if($familyPaymentPlanObject->setupComplete()){
+                      print_r($familyPaymentPlan);
+                      echo "\r\n";
+                      print_r($paymentPlan);
+                      echo "\r\n";
+                      $numInvoices = $familyPaymentPlanObject->getNumInvoices();
 
 
-                    if($numInvoices < $paymentPlan['num_invoices']){
-                      $lastInvoice = $familyPaymentPlanObject->getLastInvoice();
-                      if(isset($lastInvoice)){
-                        $lastInvoiceDate = $lastInvoice['invoice_time'];
-                        //todo: implement the processing of this payment plan
+                      if($numInvoices < $paymentPlan['num_invoices']){
+                        $family = new TSM_REGISTRATION_FAMILY($familyPaymentPlan['family_id']);
+                        $totalInvoiced = $familyPaymentPlanObject->getAmountInvoiced();
+                        $totalAmount = $familyPaymentPlanObject->getTotal();
+                        $totalRemaining = $totalAmount - $totalInvoiced;
+                        $numInvoicesRemaining = $paymentPlan['num_invoices'] - $numInvoices;
+                        $invoiceTotal = $totalRemaining / $numInvoicesRemaining;
+                        $invoiceNumber = $numInvoices+1;
+                        //echo "Plan Total: ".$totalAmount." Total Invoiced: ".$totalInvoiced." Total This Invoice: ".$invoiceTotal."\r\n";
+                        $lastInvoice = $familyPaymentPlanObject->getLastInvoice();
+                        $invoiceNow = false;
+                        if(isset($lastInvoice)){
+                          $lastInvoiceDate = new DateTime($lastInvoice['invoice_time']);
+                          $nextInvoiceDate = $lastInvoiceDate->add(date_interval_create_from_date_string('1 month'));
+                          $nextInvoiceDate = date_format($nextInvoiceDate,'Y-m-d');
+                          $nextInvoiceDate = strtotime($nextInvoiceDate);
 
-                        echo $lastInvoiceDate;
-                      } else {
-                        echo "No invoices for this plan yet.";
+                          if($today >= $nextInvoiceDate){
+                            $invoiceNow = true;
+                          }
+                        } else {
+                          $invoiceNow = true;
+
+                        }
+
+                        if($invoiceNow){
+                          $installmentFeeId = $family->addFee($paymentPlan['installment_description'],$invoiceTotal,$installmentFee['fee_id'],$installmentFee['fee_type_id']);
+                          $familyFee = new TSM_REGISTRATION_FAMILY_FEE($installmentFeeId);
+                          $familyFee->setPaymentPlan($familyPaymentPlan['family_payment_plan_id']);
+                          $invoiceId = $family->createInvoice($familyPaymentPlan['family_payment_plan_id'],$paymentPlan['name']." - Invoice #".$invoiceNumber);
+
+                          $familyInvoice = new TSM_REGISTRATION_INVOICE($invoiceId);
+                          $params = Array("family_fee_id"=>$installmentFeeId,"description"=>$paymentPlan['installment_description'],"amount"=>$invoiceTotal);
+                          $familyInvoice->addFee($params);
+                          $familyInvoice->updateTotal();
+                        }
 
                       }
-
+                      //stop here so we only affect one family as we're developing
+                      die("did one family: ".$numInvoices);
                     }
 
 
-                    //stop here so we only affect one family as we're developing
-                    die();
+
+
                   }
                 }
-
-                //print_r($familyPaymentPlans);
-
-                echo "Time to start";
               }
 
               //print_r($paymentPlan);

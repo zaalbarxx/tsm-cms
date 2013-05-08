@@ -39,7 +39,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getLastInvoice(){
-    $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."' ORDER BY family_invoice_id DESC";
+    $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."' ORDER BY family_invoice_id DESC LIMIT 1";
     $r = $this->db->runQuery($q);
     $lastInvocie = null;
     while ($a = mysql_fetch_assoc($r)) {
@@ -154,6 +154,16 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     return $total;
   }
 
+  public function getAmountInvoiced(){
+    $q = "SELECT SUM(amount) AS total_invoiced FROM tsm_reg_families_invoices WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."'";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $total = $a['total_invoiced'];
+    }
+
+    return $total;
+  }
+
   public function getAmountPaid(){
     $amountPaid = 0;
     $invoices = $this->getInvoices();
@@ -186,6 +196,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function approve(){
+    //todo: need to see if we're supposed to invoice then credit this invoice and handle that somehow
     $this->completeSetup();
 
     return true;

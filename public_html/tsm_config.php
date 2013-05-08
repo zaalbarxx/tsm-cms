@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set("America/Denver");
+
 function getRootPath() {
   $file = __FILE__;
   $file = str_replace("\\", "/", $file);
