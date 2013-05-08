@@ -2,7 +2,7 @@
 
 $paymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyPaymentPlanId);
 $total = $paymentPlan->getTotal();
-$fees = $paymentPlan->getFees();
+$fees = $paymentPlan->getUnassignedApplicableFees();
 foreach($fees as $fee){
   if($fee['student_id'] != ""){
     $students[$fee['student_id']]['fees'][$fee['family_fee_id']] = $fee;
