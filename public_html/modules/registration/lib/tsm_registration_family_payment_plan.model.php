@@ -90,46 +90,41 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     return $feeTypes;
   }
 
+  public function getUnassignedApplicableFees(){
+    $creditFeeId = $this->info['credit_fee_id'];
+    $installmentFeeId = $this->info['installment_fee_id'];
+
+    $q = "SELECT * FROM tsm_reg_families_fees f WHERE (";
+    $i = 0;
+    $feeTypes = $this->getFeeTypes();
+    if(isset($feeTypes)){
+      foreach($feeTypes as $fee_type_id){
+        if($i != 0){
+          $q .= " And ";
+        }
+        $q .= " fee_type_id = '".$fee_type_id."' ";
+        $i++;
+      }
+      $q .= ") AND family_payment_plan_id IS NULL AND family_id = '".$this->info['family_id']."' AND fee_id <> '$creditFeeId' and fee_id <> '$installmentFeeId'";
+      $r = $this->db->runQuery($q);
+      $fees = null;
+      while ($a = mysql_fetch_assoc($r)) {
+        $fees[$a['family_fee_id']] = $a;
+      }
+    }
+
+    return $fees;
+  }
+
   public function getFees(){
-    //todo: make sure this function is grabbing the correct fees
     $creditFeeId = $this->info['credit_fee_id'];
     $installmentFeeId = $this->info['installment_fee_id'];
     //print_r($this->info);
     $q = "SELECT * FROM tsm_reg_families_fees WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."' AND fee_id <> '$creditFeeId' and fee_id <> '$installmentFeeId'";
     $r = $this->db->runQuery($q);
+    $fees = null;
     while ($a = mysql_fetch_assoc($r)) {
-      $assignedFees[$a['family_fee_id']] = $a;
-    }
-
-    if($this->setupComplete() == false){
-      $q = "SELECT * FROM tsm_reg_families_fees f WHERE (";
-      $i = 0;
-      $feeTypes = $this->getFeeTypes();
-      if(isset($feeTypes)){
-        foreach($feeTypes as $fee_type_id){
-          if($i != 0){
-            $q .= " And ";
-          }
-          $q .= " fee_type_id = '".$fee_type_id."' ";
-          $i++;
-        }
-        $q .= ") AND family_payment_plan_id IS NULL AND family_id = '".$this->info['family_id']."' AND fee_id <> '$creditFeeId' and fee_id <> '$installmentFeeId'";
-        $r = $this->db->runQuery($q);
-        while ($a = mysql_fetch_assoc($r)) {
-          $unassignedFees[$a['family_fee_id']] = $a;
-        }
-      }
-    }
-
-    if(isset($unassignedFees)){
-      if(is_array($unassignedFees) && is_array($assignedFees)){
-        $fees = array_merge($assignedFees,$unassignedFees);
-      } else {
-        $fees = $unassignedFees;
-      }
-
-    } else {
-      $fees = $assignedFees;
+      $fees[$a['family_fee_id']] = $a;
     }
 
     return $fees;
@@ -146,8 +141,15 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
   public function getTotal(){
     global $reg;
 
-    $fees = $this->getFees();
-    $total = $reg->addFees($fees);
+    if($this->setupComplete()){
+      $fees = $this->getFees();
+      $total = $reg->addFees($fees);
+    } else {
+      $fees = $this->getFees();
+      $unassignedFees = $this->getUnassignedApplicableFees();
+      $total = $reg->addFees($fees) + $reg->addFees($unassignedFees);
+    }
+
 
     return $total;
   }
@@ -172,12 +174,18 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
-  public function approve(){
-    $fees = $this->getFees();
-    foreach($fees as $fee){
-      $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-      $feeObject->setPaymentPlan($this->familyPaymentPlanId);
+  public function addFees($feesToAdd){
+    if(isset($feesToAdd)){
+      foreach($feesToAdd as $family_fee_id){
+        $feeObject = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+        $feeObject->setPaymentPlan($this->familyPaymentPlanId);
+      }
     }
+
+    return true;
+  }
+
+  public function approve(){
     $this->completeSetup();
 
     return true;
