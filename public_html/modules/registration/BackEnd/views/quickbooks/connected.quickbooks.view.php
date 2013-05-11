@@ -33,7 +33,34 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         <?php
       }
       ?>
-    </select><br/><label for="qb_creditmemo_account_id" style="width: 200px;">Credit Memo Account:</label><select
+    </select><br/>
+      <label for="paypal_convenience_fee_id" style="width: 200px;">PayPal Convenience Fee:</label><select
+        name="paypal_convenience_fee_id">
+        <?php
+        foreach ($campusFees as $fee) {
+          ?>
+          <option value="<?php echo $fee['fee_id']; ?>" <?php if ($campusInfo['paypal_convenience_fee_id'] == $fee['fee_id']) {
+            echo "selected=selected";
+          } ?>><?php echo $fee['name']; ?>
+          </option>
+        <?php
+        }
+        ?>
+      </select><br/>
+      <label for="paypal_convenience_fee_qb_class_id" style="width: 200px;">PayPal Fee Class:</label><select
+        name="paypal_convenience_fee_qb_class_id">
+        <?php
+        foreach ($classes as $classId=>$className) {
+          ?>
+          <option value="<?php echo $classId; ?>" <?php if ($campusInfo['paypal_convenience_fee_qb_class_id'] == $classId) {
+            echo "selected=selected";
+          } ?>><?php echo $className; ?>
+          </option>
+        <?php
+        }
+        ?>
+      </select><br/>
+      <label for="qb_creditmemo_account_id" style="width: 200px;">Credit Memo Account:</label><select
         name="qb_creditmemo_account_id">
         <?php
         foreach ($quickbooksAccounts as $account) {
@@ -41,18 +68,6 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           <option value="<?php echo $account->getId(); ?>" <?php if ($campusInfo['qb_creditmemo_account_id'] == $account->getId()) {
             echo "selected=selected";
           } ?>><?php echo $account->getName(); ?>
-          </option>
-        <?php
-        }
-        ?>
-      </select><br/><label for="qb_invoice_class_id" style="width: 200px;">Invoice Class:</label><select
-        name="qb_invoice_class_id">
-        <?php
-        foreach ($quickbooksClasses as $class) {
-          ?>
-          <option value="<?php echo $class->getId(); ?>" <?php if ($campusInfo['qb_invoice_class_id'] == $class->getId()) {
-            echo "selected=selected";
-          } ?>><?php echo $class->getName(); ?>
           </option>
         <?php
         }

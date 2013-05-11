@@ -53,6 +53,9 @@ class TSM_REGISTRATION_PAYMENT extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function addToQuickbooks(){
+    $currentCampus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
+    $campusInfo = $currentCampus->getInfo();
+
     $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
     $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
     $familyInfo = $family->getInfo();

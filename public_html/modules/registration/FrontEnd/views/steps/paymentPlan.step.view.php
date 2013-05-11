@@ -4,7 +4,9 @@
     <h1>Choose Payment Plan</h1>
 
     <p style="text-align: center;">Please choose a payment plan for each of the fee types below.</p>
+    <p style="text-align: center;">Your account will be locked for changes once you click "Save Payment Plans".<br /> All subsequent changes to your registration must be requested via the Help desk at <a href="mailto:support@artiosacademies.com">support@artiosacademies.com</a>.</p>
   <?php if (isset($errorMessage)) {
+    //todo: make the message above use a value from the campus table in the database.
   echo "<p style='text-align: center; color: red; font-weight: bold'>".$errorMessage."</p>";
 } ?>
     <form action="" id="paymentPlans" method="post">
@@ -49,6 +51,3 @@
         <br/><br/>
     </form>
 </div>
-<script type="text/javascript">
-    $(document).ready()
-</script>
