@@ -56,6 +56,12 @@
         } ?>>
             <a href="index.php?mod=registration&view=fees&action=quickbooksInfo">Quickbooks Info</a>
         </li>
+        <li <?php if ($tsm->stringEndsWith($_SERVER["REQUEST_URI"], "index.php?mod=registration&view=fees&action=quickbooksClasses")) {
+          echo "class='active'";
+        } ?>>
+          <a href="index.php?mod=registration&view=fees&action=quickbooksClasses">Quickbooks Classes</a>
+        </li>
+
       <?php } ?>
         <li <?php if ($tsm->stringEndsWith($_SERVER["REQUEST_URI"], "index.php?mod=registration&view=fees&action=conditions")) {
           echo "class='active'";
