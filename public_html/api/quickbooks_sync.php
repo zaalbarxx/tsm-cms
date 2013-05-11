@@ -31,7 +31,9 @@ require_once(__TSM_ROOT__."models/registration/tsm_registration.model.php");
 $reg = new TSM_REGISTRATION();
 $campusList = $reg->getCampuses();
 
-
+//todo: verify that this is working correctly
+//todo: make sure this is only syncing changed and new invoices and payments
+//todo: make sure this is checking updated payments to see which invoices they are applied to and applying them to those invoices.
 if(isset($campusList)){
   foreach($campusList as $campus){
     $reg->setCurrentCampusId($campus['campus_id']);

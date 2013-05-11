@@ -1,5 +1,7 @@
 <?php
 require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php");
+
+//todo: add the list of fees that apply to each program here
 ?>
 <div class="span9">
     <h1><?php echo $pageTitle; ?> - <a

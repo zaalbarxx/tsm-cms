@@ -263,9 +263,14 @@ switch ($ajax) {
     }
     break;
   case "approveFamilyPaymentPlan":
-    if (isset($family_payment_plan_id)) {
+    if (isset($family_payment_plan_id) && isset($feesToAdd)) {
       $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($family_payment_plan_id);
-      $success = $familyPaymentPlan->approve();
+      $familyPaymentPlan->addFees($feesToAdd);
+      if($familyPaymentPlan->addFees($feesToAdd)){
+        $success = $familyPaymentPlan->approve();
+      } else {
+        $success = false;
+      }
 
       $response = Array("success" => false, "alertMessage" => null);
 

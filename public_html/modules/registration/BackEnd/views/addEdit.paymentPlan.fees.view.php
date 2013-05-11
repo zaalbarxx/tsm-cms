@@ -1,5 +1,8 @@
 <?php
 require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php");
+
+//todo:disable editing of installment fee_id and credit_memo_fee_id if payment plan is in use
+//todo: require the installment description and credit memo description fields to be filled out
 ?>
 <script src="../includes/3rdparty/ckeditor/ckeditor.js" type="text/javascript"></script>
 <script type="text/javascript" src="../includes/3rdparty/ckeditor/adapters/jquery.js"></script>

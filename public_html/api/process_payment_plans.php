@@ -63,6 +63,8 @@ $campusList = $reg->getCampuses();
                       $lastInvoice = $familyPaymentPlanObject->getLastInvoice();
                       if(isset($lastInvoice)){
                         $lastInvoiceDate = $lastInvoice['invoice_time'];
+                        //todo: implement the processing of this payment plan
+
                         echo $lastInvoiceDate;
                       } else {
                         echo "No invoices for this plan yet.";
