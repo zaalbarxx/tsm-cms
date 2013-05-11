@@ -11,6 +11,11 @@ $quickbooksAccounts = $service->findAll($quickbooks->Context, $quickbooks->creds
 $campusInfo = $currentCampus->getInfo();
 $service = new QuickBooks_IPP_Service_Class();
 $quickbooksClasses = $service->findAll($quickbooks->Context, $quickbooks->creds['qb_realm'],$query);
+foreach($quickbooksClasses as $class){
+  $classes[$class->getId()] = $class->getName();
+}
+asort($classes);
+$campusFees = $currentCampus->getfees();
 
 //$ItemService = new QuickBooks_IPP_Service_Item();
 //$id = "{QB-459}";
