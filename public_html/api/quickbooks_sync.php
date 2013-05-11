@@ -26,7 +26,7 @@ $tsm->adminUser = new AdminUser();
 $tsm->website = new Website();
 $tsm->website->start();
 
-require_once(__TSM_ROOT__."models/registration/tsm_registration.model.php");
+require_once(__TSM_ROOT__."modules/registration/lib/tsm_registration.model.php");
 
 $reg = new TSM_REGISTRATION();
 $campusList = $reg->getCampuses();

@@ -299,6 +299,13 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       $doNotProcess = true;
     }
 
+    if($this->info['family_payment_plan_id'] != ""){
+      $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($this->info['family_payment_plan_id']);
+      $paymentPlanInfo = $familyPaymentPlan->getInfo();
+      $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($paymentPlanInfo['payment_plan_id']);
+      $paymentPlanInfo = $paymentPlan->getInfo();
+    }
+
     $fees = $this->getFees();
 
     $invoiceHeader = new QuickBooks_IPP_Object_Header();
@@ -308,9 +315,19 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $invoiceHeader->setNote($this->info['invoice_description']);
 
     if ($invoiceTotal > 0) {
+      if(isset($paymentPlanInfo['qb_invoice_class_id'])){
+        if($paymentPlanInfo['qb_invoice_class_id'] != ""){
+          $invoiceHeader->setClassId($paymentPlanInfo['qb_invoice_class_id']);
+        }
+      }
       $quickbooksInvoice = new QuickBooks_IPP_Object_Invoice();
       $quickbooksInvoice->addHeader($invoiceHeader);
     } elseif ($invoiceTotal < 0) {
+      if(isset($paymentPlanInfo['qb_credit_class_id'])){
+        if($paymentPlanInfo['qb_credit_class_id'] != ""){
+          $invoiceHeader->setClassId($paymentPlanInfo['qb_credit_class_id']);
+        }
+      }
       $quickbooksInvoice = new QuickBooks_IPP_Object_CreditMemo();
       $creditMemoTotal = $invoiceTotal * -1;
       $invoiceHeader->setTotalAmt($creditMemoTotal);
@@ -356,6 +373,41 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
             $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
             $familyFeeInfo = $familyFee->getInfo();
+
+            if($familyFeeInfo['program_id'] != 0 || $familyFeeInfo['course_id'] == 0){
+              if($familyFeeInfo['program_id'] == 0){
+                $programString = " program_id IS NULL ";
+              } else {
+                $programString = " program_id = ".$familyFeeInfo['program_id']." ";
+              }
+              if($familyFeeInfo['course_id'] == 0){
+                $courseString = "course_id IS NULL";
+              } else {
+                $courseString = "course_id = ".$familyFeeInfo['course_id']." ";
+              }
+              if($familyFeeInfo['course_id'] == 0 && $familyFeeInfo['program_id'] != 0){
+                $q = "SELECT * FROM tsm_reg_program_fee WHERE $programString AND fee_id = '".$familyFeeInfo['fee_id']."'";
+              } elseif($familyFeeInfo['course_id'] != 0) {
+                $q = "SELECT * FROM tsm_reg_course_fee WHERE $programString AND $courseString AND fee_id = '".$familyFeeInfo['fee_id']."'";
+              }
+              if(isset($q)){
+                $r = $this->db->runQuery($q);
+                while($a = mysql_fetch_assoc($r)){
+                  $feeQbClassId = $a['quickbooks_class_id'];
+                }
+              } else {
+                $feeQbClassId = null;
+              }
+              if($feeQbClassId != null){
+                $Line->setClassId($feeQbClassId);
+              }
+            } else if($fee['fee_id'] == $campusInfo['paypal_convenience_fee_id']){
+              if($campusInfo['paypal_convenience_fee_qb_class_id'] != ""){
+                $Line->setClassId($campusInfo['paypal_convenience_fee_qb_class_id']);
+              }
+            }
+
+
             if($familyFeeInfo['student_id'] != 0){
               $student = new TSM_REGISTRATION_STUDENT($familyFeeInfo['student_id']);
               $studentInfo = $student->getInfo();

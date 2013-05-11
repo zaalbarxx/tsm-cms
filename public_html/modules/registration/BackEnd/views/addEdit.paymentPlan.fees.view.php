@@ -47,7 +47,46 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
       echo "selected=selected";
     } ?>>Part now / part later
     </option>
-</select><br/><br/>
+</select><br/>
+<?php
+if($currentCampus->usesQuickbooks()){
+  echo "<label>Quickbooks Invoice Class: </label><select name='qb_invoice_class_id'>";
+  echo "<option value=''";
+  if($planInfo['qb_invoice_class_id'] == ""){
+    echo " selected=selected ";
+  }
+  echo ">None</option>";
+  if(isset($classes)){
+    foreach($classes as $classId=>$value){
+      if($classId == $planInfo['qb_invoice_class_id']){
+        $selected = " selected=selected ";
+      } else {
+        $selected = "";
+      }
+      echo "<option value='$classId' $selected>$value</option>";
+    }
+  }
+  echo "</select><br />";
+  echo "<label>Quickbooks Credit Class: </label><select name='qb_credit_class_id'>";
+  echo "<option value=''";
+  if($planInfo['qb_invoice_class_id'] == ""){
+    echo " selected=selected ";
+  }
+  echo ">None</option>";
+  if(isset($classes)){
+    foreach($classes as $classId=>$value){
+      if($classId == $planInfo['qb_credit_class_id']){
+        $selected = " selected=selected ";
+      } else {
+        $selected = "";
+      }
+      echo "<option value='$classId' $selected>$value</option>";
+    }
+  }
+  echo "</select><br />";
+}
+?>
+<br />
           <span id="partNow_partLater" class="planDetails" style="display: none;">
             <b>Plan Details</b>
               <p>Invoice <input type="textbox" name="immediate_invoice_percentage"
