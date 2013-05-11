@@ -195,7 +195,7 @@ abstract class QuickBooks_IPP_Service {
    *   Supported array keys for QuickBooks Online are:
    *     (none yet)
    */
-  protected function _findAll($Context, $realmID, $resource, $query = null, $sort = null, $page = 1, $size = 50, $xml = '', $options = array()) {
+  protected function _findAll($Context, $realmID, $resource, $query = null, $sort = null, $page = 1, $size = 999, $xml = '', $options = array()) {
     $IPP = $Context->IPP();
     $flavor = $IPP->flavor();
 

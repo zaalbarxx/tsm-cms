@@ -16,6 +16,10 @@ switch ($action) {
     require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/fee/quickbooksInfo.fee.controller.php");
     $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/fee/quickbooksInfo.fee.view.php";
     break;
+  case "quickbooksClasses":
+    require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/fee/quickbooksClasses.fee.controller.php");
+    $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/fee/quickbooksClasses.fee.view.php";
+    break;
   case "conditions":
     $conditionsList = $currentCampus->getFeeConditions();
     $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/conditions.fees.view.php";

@@ -186,7 +186,9 @@ class TSM_REGISTRATION {
 
 require_once(__TSM_ROOT__."modules/registration/lib/tsm_registration_campus.model.php");
 require_once(__TSM_ROOT__."modules/registration/lib/tsm_registration_program.model.php");
+require_once(__TSM_ROOT__."modules/registration/lib/tsm_registration_program_fee.model.php");
 require_once(__TSM_ROOT__."modules/registration/lib/tsm_registration_course.model.php");
+require_once(__TSM_ROOT__."modules/registration/lib/tsm_registration_course_fee.model.php");
 require_once(__TSM_ROOT__."modules/registration/lib/tsm_registration_fee.model.php");
 require_once(__TSM_ROOT__."modules/registration/lib/tsm_registration_family.model.php");
 require_once(__TSM_ROOT__."modules/registration/lib/tsm_registration_invoice.model.php");
