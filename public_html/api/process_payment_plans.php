@@ -136,26 +136,25 @@ $campusList = $reg->getCampuses();
                       $numInvoices = $numInvoices - 2;
                     }
 
+                    //IF NO INVOICES, INVOICE THE FIRST PERCENTAGE
+                    if($numInvoices == 0) {
+                      //invoice the first percentage here.
+                    }
                     //CHECK TO SEE IF WE HAVE REACHED THE FULL NUMBER OF INVOICES FOR THIS PP
-                    if($numInvoices < $paymentPlan['num_invoices']){
+                    else if($numInvoices < ($paymentPlan['num_invoices'] + 1)){
+                      $lastInvoice = $familyPaymentPlanObject->getLastInvoice();
 
-                      //IF NO INVOICES, INVOICE THE FIRST PERCENTAGE
-                      if($numInvoices == 0){
+                      //GET THE NEXT INVOICE DATE FOR THIS PP
+                      if(isset($lastInvoice)){
+                        $lastInvoiceDate = new DateTime($lastInvoice['invoice_time']);
+                        $nextInvoiceDate = $lastInvoiceDate->add(date_interval_create_from_date_string('1 month'));
+                        $nextInvoiceDate = date_format($nextInvoiceDate,'Y-m-d');
+                        $nextInvoiceDate = strtotime($nextInvoiceDate);
 
-                      } else {
-                        $lastInvoice = $familyPaymentPlanObject->getLastInvoice();
-
-                        //GET THE NEXT INVOICE DATE FOR THIS PP
-                        if(isset($lastInvoice)){
-                          $lastInvoiceDate = new DateTime($lastInvoice['invoice_time']);
-                          $nextInvoiceDate = $lastInvoiceDate->add(date_interval_create_from_date_string('1 month'));
-                          $nextInvoiceDate = date_format($nextInvoiceDate,'Y-m-d');
-                          $nextInvoiceDate = strtotime($nextInvoiceDate);
-
-                          //IF WE'RE PAST THE NEXT INVOICE THIS INSTALLMENT
-                          if($today >= $nextInvoiceDate){
-                            $familyPaymentPlanObject->invoiceInstallment();
-                          }
+                        //IF WE'RE PAST THE NEXT INVOICE THIS INSTALLMENT
+                        if($today >= $nextInvoiceDate){
+                          //die('invoicing next invoice');
+                          $familyPaymentPlanObject->invoiceInstallment();
                         }
                       }
 
