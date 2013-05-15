@@ -95,8 +95,12 @@ $campusList = $reg->getCampuses();
 
                         //IF WE'RE PAST THE NEXT INVOICE THIS INSTALLMENT
                         if($today >= $nextInvoiceDate){
-                          $familyPaymentPlanObject->invoiceInstallment();
+                          $invoice = $familyPaymentPlanObject->invoiceInstallment();
+                          $invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
                         }
+                      } else {
+                        $invoice = $familyPaymentPlanObject->invoiceInstallment();
+                        $invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
                       }
                     }
                   }
@@ -143,7 +147,8 @@ $campusList = $reg->getCampuses();
                     //IF NO INVOICES, INVOICE THE FIRST PERCENTAGE
                     if($numInvoices == 0) {
                       //invoice the first percentage here.
-                      $familyPaymentPlanObject->invoicePercentage();
+                      $invoice = $familyPaymentPlanObject->invoicePercentage();
+                      $invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
                     }
                     //CHECK TO SEE IF WE HAVE REACHED THE FULL NUMBER OF INVOICES FOR THIS PP
                     else if($numInvoices < ($paymentPlan['num_invoices'] + 1)){
@@ -162,10 +167,10 @@ $campusList = $reg->getCampuses();
                           $invoice = $familyPaymentPlanObject->invoiceInstallment();
                           $invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
                         }
+                      } else {
+                        $invoice = $familyPaymentPlanObject->invoiceInstallment();
+                        $invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
                       }
-
-
-
                     }
                   }
                 }
