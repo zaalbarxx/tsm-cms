@@ -38,6 +38,9 @@ $campusList = $reg->getCampuses();
 //    $reg->setCurrentCampusId($campus['campus_id']);
     $reg->setCurrentCampusId(2);
     $currentCampus = new TSM_REGISTRATION_CAMPUS(2);
+    if($currentCampus->usesQuickbooks()){
+      $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
+    }
     $reg->setSelectedSchoolYear($currentCampus->getCurrentSchoolYear());
 
     $paymentPlans = $currentCampus->getPaymentPlans();
@@ -139,6 +142,7 @@ $campusList = $reg->getCampuses();
                     //IF NO INVOICES, INVOICE THE FIRST PERCENTAGE
                     if($numInvoices == 0) {
                       //invoice the first percentage here.
+                      $familyPaymentPlanObject->invoicePercentage();
                     }
                     //CHECK TO SEE IF WE HAVE REACHED THE FULL NUMBER OF INVOICES FOR THIS PP
                     else if($numInvoices < ($paymentPlan['num_invoices'] + 1)){
@@ -154,7 +158,8 @@ $campusList = $reg->getCampuses();
                         //IF WE'RE PAST THE NEXT INVOICE THIS INSTALLMENT
                         if($today >= $nextInvoiceDate){
                           //die('invoicing next invoice');
-                          $familyPaymentPlanObject->invoiceInstallment();
+                          $invoice = $familyPaymentPlanObject->invoiceInstallment();
+                          $invoice->emailInvoice("jlane@veritasproductions.net","Tuition Installment","This is the contents");
                         }
                       }
 
@@ -162,7 +167,6 @@ $campusList = $reg->getCampuses();
 
                     }
                   }
-                  die('finished one family. stopping.');
                 }
               }
             }

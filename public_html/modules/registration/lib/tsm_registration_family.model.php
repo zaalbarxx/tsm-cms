@@ -447,8 +447,12 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
       $service->update($quickbooks->Context, $quickbooks->creds['qb_realm'], $customer->getId(), $customer);
     } elseif ($create == true) {
       $quickbooks_customer_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $customer);
+      //$customer = $service->findById($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooks_customer_id);
+      //print_r($customer);die();
+      //$extKey = $customer->getExternalKey();
+
       if (!$quickbooks_customer_id) {
-        die("THERE WAS A PROBLEM! EXITING!");
+        die("THERE WAS A PROBLEM! EXITING!".$service->lastResponse());
       }
       $this->setQuickbooksCustomerId($quickbooks_customer_id);
     }
