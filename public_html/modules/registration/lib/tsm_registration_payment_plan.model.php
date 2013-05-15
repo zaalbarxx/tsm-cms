@@ -36,6 +36,14 @@ class TSM_REGISTRATION_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     return $numFamiles;
   }
 
+  public function getInvoiceEmail(){
+    return html_entity_decode($this->info['invoice_email']);
+  }
+
+  public function getInvoiceEmailSubject(){
+    return $this->info['invoice_email_subject'];
+  }
+
   public function getFamilyPaymentPlans(){
     $q = "SELECT * FROM tsm_reg_families f, tsm_reg_families_payment_plans fpp WHERE f.family_id = fpp.family_id AND fpp.payment_plan_id = '".$this->paymentPlanId."'";
     $r = $this->db->runQuery($q);

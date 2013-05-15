@@ -106,6 +106,7 @@ $campusList = $reg->getCampuses();
             break;
           case 3:
             //invoice in full on a specific date
+
             break;
           case 4:
             //get the time when we should begin billing this payment plan
@@ -159,7 +160,7 @@ $campusList = $reg->getCampuses();
                         if($today >= $nextInvoiceDate){
                           //die('invoicing next invoice');
                           $invoice = $familyPaymentPlanObject->invoiceInstallment();
-                          $invoice->emailInvoice("jlane@veritasproductions.net","Tuition Installment","This is the contents");
+                          $invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
                         }
                       }
 

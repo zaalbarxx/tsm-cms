@@ -34,9 +34,10 @@ $campusList = $reg->getCampuses();
 //todo: verify that this is working correctly
 //todo: make sure this is only syncing changed and new invoices and payments
 //todo: make sure this is checking updated payments to see which invoices they are applied to and applying them to those invoices.
-if(isset($campusList)){
-  foreach($campusList as $campus){
-    $reg->setCurrentCampusId($campus['campus_id']);
+//if(isset($campusList)){
+//  foreach($campusList as $campus){
+    //$reg->setCurrentCampusId($campus['campus_id']);
+    $reg->setCurrentCampusId(2);
     $currentCampus = new TSM_REGISTRATION_CAMPUS($campus['campus_id']);
     $reg->setSelectedSchoolYear($currentCampus->getCurrentSchoolYear());
     if($currentCampus->usesQuickbooks()){
@@ -208,7 +209,7 @@ if(isset($campusList)){
       }
 
     }
-  }
-}
+//  }
+//}
 $memUsage = memory_get_peak_usage(true)/1048576;
 echo "Sync is complete: ".$memUsage."MB";

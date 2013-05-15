@@ -27,38 +27,51 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function emailInvoice($sendTo, $contents, $subject){
+    global $currentCampus;
+
+    $currentCampusInfo = $currentCampus->getInfo();
+
     $invoicePdf = $this->generatePDF(true);
 
-    $content = chunk_split(base64_encode($invoicePdf));
-    $from_name = 'Your name';
-    $from_mail = 'sender@domain.com';
-    $replyto = 'sender@domain.com';
-    $uid = md5(uniqid(time()));
+    $file = $invoicePdf;
+    $from_name = $currentCampusInfo['name'];
+    $from_mail = $currentCampusInfo['invoice_email_address'];
     if($this->info['quickbooks_doc_number'] != ""){
       $filename = "Invoice ".$this->info['quickbooks_doc_number'].".pdf";
+      $invoiceNo = $this->info['quickbooks_doc_number'];
     } else {
       $filename = "Invoice ".$this->info['family_invoice_id'].".pdf";
+      $invoiceNo = $this->info['family_invoice_id'];
+    }
+    $contents = str_replace("{{invoiceNo}}",$invoiceNo,$contents);
+    $subject = str_replace("{{invoiceNo}}",$invoiceNo,$subject);
+
+    require_once __TSM_ROOT__.'includes/3rdparty/swift/lib/swift_required.php';
+    $transport = Swift_SmtpTransport::newInstance('66.147.244.176', 25)
+      ->setUsername('noreply@takesixmedia.com')
+      ->setPassword('LTOZ7]OLz~wB')
+    ;
+    $mailer = Swift_Mailer::newInstance($transport);
+
+    // Create a message
+    $message = Swift_Message::newInstance($subject)
+      ->setContentType('text/html')
+      ->setFrom(array($from_mail => $from_name))
+      ->setTo(array($sendTo))
+      ->setBody($contents)
+      ->attach(Swift_Attachment::newInstance($file, $filename, 'application/pdf'));
+    ;
+
+    // Send the message
+    $result = $mailer->send($message);
+
+    //$is_sent = @mail($sendTo, $subject, "", $header);
+    if($result){
+      $q = "INSERT INTO tsm_reg_families_invoice_email (family_invoice_id,family_id) VALUES('".$this->invoiceId."','".$this->info['family_id']."')";
+      $this->db->runQuery($q);
     }
 
-
-    $header = "From: ".$from_name." <".$from_mail.">\r\n";
-    $header .= "Reply-To: ".$replyto."\r\n";
-    $header .= "MIME-Version: 1.0\r\n";
-    $header .= "Content-Type: multipart/mixed; boundary=\"".$uid."\"\r\n\r\n";
-    $header .= "This is a multi-part message in MIME format.\r\n";
-    $header .= "--".$uid."\r\n";
-    $header .= "Content-type:text/plain; charset=iso-8859-1\r\n";
-    $header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
-    $header .= $contents."\r\n\r\n";
-    $header .= "--".$uid."\r\n";
-    $header .= "Content-Type: application/pdf; name=\"".$filename."\"\r\n";
-    $header .= "Content-Transfer-Encoding: base64\r\n";
-    $header .= "Content-Disposition: attachment; filename=\"".$filename."\"\r\n\r\n";
-    $header .= $content."\r\n\r\n";
-    $header .= "--".$uid."--";
-    $is_sent = @mail($sendTo, $subject, "", $header);
-
-    return $is_sent;
+    return $result;
   }
 
   public function generatePDF($forEmail = false) {
