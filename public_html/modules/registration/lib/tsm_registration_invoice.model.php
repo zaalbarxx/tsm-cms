@@ -26,6 +26,41 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
+  public function emailInvoice($sendTo, $contents, $subject){
+    $invoicePdf = $this->generatePDF(true);
+
+    $content = chunk_split(base64_encode($invoicePdf));
+    $from_name = 'Your name';
+    $from_mail = 'sender@domain.com';
+    $replyto = 'sender@domain.com';
+    $uid = md5(uniqid(time()));
+    if($this->info['quickbooks_doc_number'] != ""){
+      $filename = "Invoice ".$this->info['quickbooks_doc_number'].".pdf";
+    } else {
+      $filename = "Invoice ".$this->info['family_invoice_id'].".pdf";
+    }
+
+
+    $header = "From: ".$from_name." <".$from_mail.">\r\n";
+    $header .= "Reply-To: ".$replyto."\r\n";
+    $header .= "MIME-Version: 1.0\r\n";
+    $header .= "Content-Type: multipart/mixed; boundary=\"".$uid."\"\r\n\r\n";
+    $header .= "This is a multi-part message in MIME format.\r\n";
+    $header .= "--".$uid."\r\n";
+    $header .= "Content-type:text/plain; charset=iso-8859-1\r\n";
+    $header .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+    $header .= $contents."\r\n\r\n";
+    $header .= "--".$uid."\r\n";
+    $header .= "Content-Type: application/pdf; name=\"".$filename."\"\r\n";
+    $header .= "Content-Transfer-Encoding: base64\r\n";
+    $header .= "Content-Disposition: attachment; filename=\"".$filename."\"\r\n\r\n";
+    $header .= $content."\r\n\r\n";
+    $header .= "--".$uid."--";
+    $is_sent = @mail($sendTo, $subject, "", $header);
+
+    return $is_sent;
+  }
+
   public function generatePDF($forEmail = false) {
     $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
     $familyInfo = $family->getInfo();
@@ -336,24 +371,6 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       $quickbooksInvoice->addHeader($invoiceHeader);
     }
 
-    /*
-    if(isset($fees)){
-      foreach ($fees as $fee) {
-        $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
-        if (isset($fee['fee_id'])) {
-          $feeInfo = $feeObject->getInfo();
-        }
-
-
-        if (!isset($feeInfo['quickbooks_item_id'])) {
-          $doNotProcess = true;
-        }
-
-
-      }
-    }
-    */
-
     if (!$doNotProcess) {
       if (isset($fees)) {
         foreach ($fees as $fee) {
@@ -434,23 +451,12 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
           }
         }
       }
-      /*
-      else {
-        $Line = new QuickBooks_IPP_Object_Line();
-        $Line->setAmount($creditMemoTotal);
-        $Line->setDesc("Tuition Installment");
-        $Line->setItemId("{QB-398}");
-        $Line->setQty(1);
-        $quickbooksInvoice->addLine($Line);
-      }
-      */
 
       if ($invoiceTotal > 0) {
         $service = new QuickBooks_IPP_Service_Invoice();
       } elseif ($invoiceTotal < 0) {
         $service = new QuickBooks_IPP_Service_CreditMemo();
       }
-      //print_r($quickbooksInvoice);die();
 
       $quickbooks_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooksInvoice);
       if ($quickbooks_id == null) {
@@ -459,35 +465,11 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       $this->setQuickbooksId($quickbooks_id);
       $invoice = $service->findById($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooks_id);
       $extKey = $invoice->getExternalKey();
+      $header = $invoice->getHeader();
+      $docNumber = $header->getDocNumber();
       $this->setQuickbooksExternalKey($extKey);
+      $this->setQuickbooksDocNumber($docNumber);
 
-      /*
-      $payments = $this->getPayments();
-      if (isset($payments)) {
-        $txnId = $invoice->getExternalKey();
-        foreach ($payments as $payment) {
-          if ($payment['quickbooks_payment_id'] == "") {
-            $paymentObject = new QuickBooks_IPP_Object_Payment();
-            $paymentHeader = new QuickBooks_IPP_Object_Header();
-            $paymentHeader->setCustomerId($quickbooks_customer_id);
-            $paymentHeader->setTotalAmt($payment['amount']);
-            $paymentHeader->setDocNumber($payment['reference_number']);
-            $paymentHeader->setPaymentMethodId($campusInfo['qb_paypal_payment_method_id']);
-            $txnDate = date('Y-m-d', strtotime($payment['payment_time']));
-            $paymentHeader->setTxnDate($txnDate);
-            $paymentObject->addHeader($paymentHeader);
-            $Line = new QuickBooks_IPP_Object_Line();
-            $Line->setTxnId($txnId);
-            $Line->setAmount($payment['amount']);
-            $paymentObject->addLine($Line);
-            $service = new QuickBooks_IPP_Service_Payment();
-            $quickbooks_payment_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $paymentObject);
-            $paymentObject = new TSM_REGISTRATION_PAYMENT($payment['invoice_payment_id']);
-            $paymentObject->setQuickbooksId($quickbooks_payment_id);
-          }
-        }
-      }
-      */
 
       return true;
     } else {
