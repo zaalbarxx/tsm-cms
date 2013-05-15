@@ -5,7 +5,8 @@ $familyInfo = $family->getInfo();
 
 if (isset($linkToQuickbooks)) {
   if (isset($createNewCustomer)) {
-    $family->createQuickbooksInfo();
+    //todo: figure out how to link a family when they haven't been synced with quickbooks yet
+    //$family->createQuickbooksInfo();
   } else {
     $family->setQuickbooksCustomerId($linkToQuickbooks);
     $family->updateQuickbooksInfo();
