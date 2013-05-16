@@ -160,22 +160,57 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getAmountInvoiced(){
-    $q = "SELECT SUM(amount) AS total_invoiced FROM tsm_reg_families_invoices WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."'";
-    $r = $this->db->runQuery($q);
-    while($a = mysql_fetch_assoc($r)){
-      $total = $a['total_invoiced'];
+    global $reg;
+
+    $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
+    $campusInfo = $campus->getInfo();
+
+    $invoices = $this->getInvoices();
+    if(isset($invoices)){
+      foreach($invoices as $invoice){
+        $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
+        $fees = $invoiceObject->getFees();
+        if(isset($fees)){
+          foreach($fees as $fee){
+            if($fee['fee_id'] != $campusInfo['paypal_convenience_fee_id']){
+              $paymentPlanFees[] = $fee;
+            }
+          }
+        }
+      }
+    }
+    if(isset($paymentPlanFees)){
+      $total = $reg->addFees($paymentPlanFees);
+    } else {
+      $total = 0;
     }
 
     return $total;
   }
 
   public function getAmountPaid(){
+    $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
+    $campusInfo = $campus->getInfo();
+
     $amountPaid = 0;
     $invoices = $this->getInvoices();
     if(isset($invoices)){
       foreach($invoices as $invoice){
         $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
-        $amountPaid = $amountPaid + $invoiceObject->getAmountPaid();
+        $invoiceFees = $invoiceObject->getFees();
+        $amtToSubtract = 0;
+        if(isset($invoiceFees)){
+          foreach($invoiceFees as $fee){
+            if($fee['fee_id'] == $campusInfo['paypal_convenience_fee_id']){
+              $amtToSubtract = $amtToSubtract + $fee['amount'];
+            }
+          }
+        }
+        $invoiceAmtPaid = $invoiceObject->getAmountPaid();
+        if($invoiceAmtPaid > 0){
+          $invoiceAmtPaid = $invoiceObject->getAmountPaid() - $amtToSubtract;
+        }
+        $amountPaid = $amountPaid + $invoiceAmtPaid;
       }
     }
 
