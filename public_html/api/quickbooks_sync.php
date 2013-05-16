@@ -50,7 +50,7 @@ $campusList = $reg->getCampuses();
       $updateInvoices = null;
       if(isset($localInvoices)){
         foreach($localInvoices as $invoice){
-          if(($invoice['quickbooks_external_key'] == "" or $invoice['quickbooks_doc_number'] == "") and $invoice['quickbooks_invoice_id'] != ""){
+          if(($invoice['quickbooks_external_key'] == "") and $invoice['quickbooks_invoice_id'] != ""){
             $txnIds[] = substr($invoice['quickbooks_invoice_id'],4,-1);
             $updateInvoices[$invoice['quickbooks_invoice_id']] = $invoice;
           }
@@ -73,12 +73,10 @@ $campusList = $reg->getCampuses();
           $invoiceId = $updateInvoices[$quickbooksId]['family_invoice_id'];
           $extKey = $invoice->getExternalKey();
           $header = $invoice->getHeader();
-          $docNumber = $header->getDocNumber();
           $invoiceObject = new TSM_REGISTRATION_INVOICE($invoiceId);
           $extTxnIds[] = substr($extKey,4,-1);
           //update the external key for the invoice
           $invoiceObject->setQuickbooksExternalKey($extKey);
-          $invoiceObject->setQuickbooksDocNumber($docNumber);
         }
       }
 

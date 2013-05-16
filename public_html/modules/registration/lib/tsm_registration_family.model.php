@@ -512,25 +512,9 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
 
     //If the campus uses quickbooks, we have to create the invoice in quickbooks as well.
     $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
-    if ($campus->usesQuickbooks() == true) {
-      /*
-      global $quickbooks;
-      $invoice = new QuickBooks_IPP_Object_Invoice();
-      $invoiceHeader = new QuickBooks_IPP_Object_Header();
-      $invoiceHeader->setCustomerId($this->info['quickbooks_customer_id']);
-
-      $invoice->addHeader($invoiceHeader);
-      $Line = new QuickBooks_IPP_Object_Line();
-      $Line->setItemId('{QB-162}');
-      $Line->setQty(1);
-      //$Line->setOverrideItemAccountName("test");
-
-      $invoice->addLine($Line);
-
-      $service = new QuickBooks_IPP_Service_Invoice();
-      $service->add($quickbooks->Context,$quickbooks->creds['qb_realm'],$invoice);
-      */
-    }
+    $campusInfo = $campus->getInfo();
+    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+    $invoice->setDocNumber($campusInfo['invoice_prefix'].$invoice_id);
 
     return $invoice_id;
   }

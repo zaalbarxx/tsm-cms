@@ -36,13 +36,8 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $file = $invoicePdf;
     $from_name = $currentCampusInfo['name'];
     $from_mail = $currentCampusInfo['invoice_email_address'];
-    if($this->info['quickbooks_doc_number'] != ""){
-      $filename = "Invoice ".$this->info['quickbooks_doc_number'].".pdf";
-      $invoiceNo = $this->info['quickbooks_doc_number'];
-    } else {
-      $filename = "Invoice ".$this->info['family_invoice_id'].".pdf";
-      $invoiceNo = $this->info['family_invoice_id'];
-    }
+    $filename = "Invoice ".$this->info['doc_number'].".pdf";
+    $invoiceNo = $this->info['doc_number'];
     $contents = str_replace("{{invoiceNo}}",$invoiceNo,$contents);
     $subject = str_replace("{{invoiceNo}}",$invoiceNo,$subject);
 
@@ -63,7 +58,8 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     ;
 
     // Send the message
-    $result = $mailer->send($message);
+    //$result = $mailer->send($message);
+    $result = true;
 
     //$is_sent = @mail($sendTo, $subject, "", $header);
     if($result){
@@ -80,11 +76,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
     $campus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
     $campusInfo = $campus->getInfo();
-    if($this->info['quickbooks_doc_number'] != ""){
-      $invoiceNum = $this->info['quickbooks_doc_number'];
-    } else {
-      $invoiceNum = $this->info['family_invoice_id'];
-    }
+    $invoiceNum = $this->info['doc_number'];
 
     $mpdf = new mPDF('win-1252', 'A4', '', '', 20, 15, 48, 25, 10, 10);
     $mpdf->useOnlyCoreFonts = true; // false is default
@@ -361,6 +353,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $txnDate = date('Y-m-d', strtotime($this->info['invoice_time']));
     $invoiceHeader->setTxnDate($txnDate);
     $invoiceHeader->setNote($this->info['invoice_description']);
+    $invoiceHeader->setDocNumber($this->info['doc_number']);
 
     if ($invoiceTotal > 0) {
       if(isset($paymentPlanInfo['qb_invoice_class_id'])){
@@ -478,10 +471,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       $this->setQuickbooksId($quickbooks_id);
       $invoice = $service->findById($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooks_id);
       $extKey = $invoice->getExternalKey();
-      $header = $invoice->getHeader();
-      $docNumber = $header->getDocNumber();
       $this->setQuickbooksExternalKey($extKey);
-      $this->setQuickbooksDocNumber($docNumber);
 
 
       return true;
@@ -519,8 +509,8 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
-  public function setQuickbooksDocNumber($num){
-    $q = "UPDATE tsm_reg_families_invoices SET quickbooks_doc_number = '".$num."' WHERE family_invoice_id = '".$this->invoiceId."'";
+  public function setDocNumber($num){
+    $q = "UPDATE tsm_reg_families_invoices SET doc_number = '".$num."' WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);
 
     return true;
