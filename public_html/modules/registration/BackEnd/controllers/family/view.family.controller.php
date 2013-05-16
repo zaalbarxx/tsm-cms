@@ -29,6 +29,7 @@ if(isset($paymentPlans)){
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountDue'] = $paymentPlanObject->getAmountDue();
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountPaid'] = $paymentPlanObject->getAmountPaid();
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['totalAmount'] = $paymentPlanObject->getTotal();
+    $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountInvoiced'] = $paymentPlanObject->getAmountInvoiced();
     foreach($paymentPlans[$paymentPlan['family_payment_plan_id']]['fee_types'] as $feeType){
       $paymentPlans[$paymentPlan['family_payment_plan_id']]['fee_type_names'] .= $currentCampus->getFeeTypeName($feeType).", ";
     }

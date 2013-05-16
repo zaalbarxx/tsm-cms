@@ -87,9 +87,10 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         <tr style="font-weight: bold;">
           <td>ID</td>
           <td>Description</td>
-          <td>Fee Types</td>
+          <!--<td>Fee Types</td>-->
           <td>Total</td>
           <td>Amt Paid</td>
+          <td>Amt Invoiced</td>
           <td>Amt Due</td>
           <td>Status</td>
         </tr>
@@ -98,9 +99,10 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           foreach($paymentPlans as $paymentPlan){
             echo "<tr><td>".$paymentPlan['family_payment_plan_id']."</td>
             <td>".$paymentPlan['name']."</td>
-            <td>".$paymentPlan['fee_type_names']."</td>
+            <!--<td>".$paymentPlan['fee_type_names']."</td>-->
             <td>$".$paymentPlan['totalAmount']."</td>
             <td>$".$paymentPlan['amountPaid']."</td>
+            <td>$".$paymentPlan['amountInvoiced']."</td>
             <td>$".$paymentPlan['amountDue']."</td>
             <td>".$paymentPlan['status'];
             if($paymentPlan['status'] == "Pending Approval"){
