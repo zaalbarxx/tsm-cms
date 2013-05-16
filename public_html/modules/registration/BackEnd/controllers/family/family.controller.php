@@ -56,6 +56,10 @@ switch ($action) {
     require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/family/addFeesToPaymentPlan.family.controller.php");
     $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/family/addFeesToPaymentPlan.family.view.php";
     break;
+  case "invoiceFeesToPaymentPlan":
+    require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/family/invoiceFeesToPaymentPlan.family.controller.php");
+    $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/family/invoiceFeesToPaymentPlan.family.view.php";
+    break;
 }
 
 
