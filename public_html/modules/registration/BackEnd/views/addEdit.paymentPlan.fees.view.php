@@ -299,6 +299,11 @@ if($currentCampus->usesQuickbooks()){
 <textarea name="description" id="description" class="editor"/><?php echo $planInfo['description']; ?></textarea>
 <label for="description">Disclaimer: </label>
 <textarea name="disclaimer" id="disclaimer" class="editor"/><?php echo $planInfo['disclaimer']; ?></textarea>
+<br />
+<label>Invoice E-mail Subject: </label>
+<input name="invoice_email_subject" value="<?php echo $planInfo['invoice_email_subject']; ?>" size="80"/><br /><br />
+<label for="invoice_email">Invoice E-mail Contents: </label>
+<textarea name="invoice_email" id="invoice_email" class="editor"/><?php echo $planInfo['invoice_email']; ?></textarea>
 <script type="text/javascript">
     $('textarea.editor').ckeditor();
 </script>

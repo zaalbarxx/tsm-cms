@@ -447,8 +447,12 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
       $service->update($quickbooks->Context, $quickbooks->creds['qb_realm'], $customer->getId(), $customer);
     } elseif ($create == true) {
       $quickbooks_customer_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $customer);
+      //$customer = $service->findById($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooks_customer_id);
+      //print_r($customer);die();
+      //$extKey = $customer->getExternalKey();
+
       if (!$quickbooks_customer_id) {
-        die("THERE WAS A PROBLEM! EXITING!");
+        die("THERE WAS A PROBLEM! EXITING!".$service->lastResponse());
       }
       $this->setQuickbooksCustomerId($quickbooks_customer_id);
     }
@@ -501,32 +505,16 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $quickbooks_customer_id;
   }
 
-  public function createInvoice($family_payment_plan_id = null) {
-    $q = "INSERT INTO tsm_reg_families_invoices (family_id,family_payment_plan_id) VALUES('".$this->familyId."','$family_payment_plan_id')";
+  public function createInvoice($family_payment_plan_id = null,$invoice_description = null) {
+    $q = "INSERT INTO tsm_reg_families_invoices (family_id,family_payment_plan_id,invoice_description) VALUES('".$this->familyId."','$family_payment_plan_id','$invoice_description')";
     $this->db->runQuery($q);
     $invoice_id = mysql_insert_id($this->db->conn);
 
     //If the campus uses quickbooks, we have to create the invoice in quickbooks as well.
     $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
-    if ($campus->usesQuickbooks() == true) {
-      /*
-      global $quickbooks;
-      $invoice = new QuickBooks_IPP_Object_Invoice();
-      $invoiceHeader = new QuickBooks_IPP_Object_Header();
-      $invoiceHeader->setCustomerId($this->info['quickbooks_customer_id']);
-
-      $invoice->addHeader($invoiceHeader);
-      $Line = new QuickBooks_IPP_Object_Line();
-      $Line->setItemId('{QB-162}');
-      $Line->setQty(1);
-      //$Line->setOverrideItemAccountName("test");
-
-      $invoice->addLine($Line);
-
-      $service = new QuickBooks_IPP_Service_Invoice();
-      $service->add($quickbooks->Context,$quickbooks->creds['qb_realm'],$invoice);
-      */
-    }
+    $campusInfo = $campus->getInfo();
+    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+    $invoice->setDocNumber($campusInfo['invoice_prefix'].$invoice_id);
 
     return $invoice_id;
   }

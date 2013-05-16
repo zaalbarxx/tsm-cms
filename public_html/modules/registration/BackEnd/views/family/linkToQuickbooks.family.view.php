@@ -9,13 +9,13 @@
         ?>
           <fieldset>
               <legend>Quickbook Information</legend>
-              <div class="control-group">
+              <!--<div class="control-group">
                   <label class="control-label" for="createNewCustomer">Create New Customer: </label>
 
                   <div class="controls">
                       <input type="checkbox" id="createNewCustomer" name="createNewCustomer" value="1"/>
                   </div>
-              </div>
+              </div>-->
               <div class="control-group" id="quickbooks_customer_id_group">
                   <label for="quickbooks_customer_id" class="control-label">Existing Customer: </label>
 

@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set("America/Denver");
+
 function getRootPath() {
   $file = __FILE__;
   $file = str_replace("\\", "/", $file);
@@ -23,6 +25,6 @@ function getAdminPath() {
 //define("__TSM_ROOT__", getRootPath());
 //define("__TSM_ADMIN_ROOT__", getAdminPath());
 
-define("__TSM_ROOT__", "/Applications/MAMP/htdocs/tsm-cms/public_html/");
-define("__TSM_ADMIN_ROOT__", "/Applications/MAMP/htdocs/tsm-cms/public_html/admin/");
+define("__TSM_ROOT__", "/Users/jeremymlane/Development/Veritas/Veritas/tsm-cms/project_root/public_html/");
+define("__TSM_ADMIN_ROOT__", "/Users/jeremymlane/Development/Veritas/Veritas/tsm-cms/project_root/public_html/admin/");
 ?>

@@ -26,17 +26,57 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
+  public function emailInvoice($sendTo, $contents, $subject){
+    global $currentCampus;
+
+    $currentCampusInfo = $currentCampus->getInfo();
+
+    $invoicePdf = $this->generatePDF(true);
+
+    $file = $invoicePdf;
+    $from_name = $currentCampusInfo['name'];
+    $from_mail = $currentCampusInfo['invoice_email_address'];
+    $filename = "Invoice ".$this->info['doc_number'].".pdf";
+    $invoiceNo = $this->info['doc_number'];
+    $contents = str_replace("{{invoiceNo}}",$invoiceNo,$contents);
+    $subject = str_replace("{{invoiceNo}}",$invoiceNo,$subject);
+
+    require_once __TSM_ROOT__.'includes/3rdparty/swift/lib/swift_required.php';
+    $transport = Swift_SmtpTransport::newInstance('66.147.244.176', 25)
+      ->setUsername('noreply@takesixmedia.com')
+      ->setPassword('LTOZ7]OLz~wB')
+    ;
+    $mailer = Swift_Mailer::newInstance($transport);
+
+    // Create a message
+    $message = Swift_Message::newInstance($subject)
+      ->setContentType('text/html')
+      ->setFrom(array($from_mail => $from_name))
+      ->setTo(array($sendTo))
+      ->setBody($contents)
+      ->attach(Swift_Attachment::newInstance($file, $filename, 'application/pdf'));
+    ;
+
+    // Send the message
+    //$result = $mailer->send($message);
+    $result = true;
+
+    //$is_sent = @mail($sendTo, $subject, "", $header);
+    if($result){
+      $q = "INSERT INTO tsm_reg_families_invoice_email (family_invoice_id,family_id) VALUES('".$this->invoiceId."','".$this->info['family_id']."')";
+      $this->db->runQuery($q);
+    }
+
+    return $result;
+  }
+
   public function generatePDF($forEmail = false) {
     $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
     $familyInfo = $family->getInfo();
 
     $campus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
     $campusInfo = $campus->getInfo();
-    if($this->info['quickbooks_doc_number'] != ""){
-      $invoiceNum = $this->info['quickbooks_doc_number'];
-    } else {
-      $invoiceNum = $this->info['family_invoice_id'];
-    }
+    $invoiceNum = $this->info['doc_number'];
 
     $mpdf = new mPDF('win-1252', 'A4', '', '', 20, 15, 48, 25, 10, 10);
     $mpdf->useOnlyCoreFonts = true; // false is default
@@ -313,6 +353,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $txnDate = date('Y-m-d', strtotime($this->info['invoice_time']));
     $invoiceHeader->setTxnDate($txnDate);
     $invoiceHeader->setNote($this->info['invoice_description']);
+    $invoiceHeader->setDocNumber($this->info['doc_number']);
 
     if ($invoiceTotal > 0) {
       if(isset($paymentPlanInfo['qb_invoice_class_id'])){
@@ -335,24 +376,6 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       //todo: need to set the account to whatever account the campus is set to.
       $quickbooksInvoice->addHeader($invoiceHeader);
     }
-
-    /*
-    if(isset($fees)){
-      foreach ($fees as $fee) {
-        $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
-        if (isset($fee['fee_id'])) {
-          $feeInfo = $feeObject->getInfo();
-        }
-
-
-        if (!isset($feeInfo['quickbooks_item_id'])) {
-          $doNotProcess = true;
-        }
-
-
-      }
-    }
-    */
 
     if (!$doNotProcess) {
       if (isset($fees)) {
@@ -434,23 +457,12 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
           }
         }
       }
-      /*
-      else {
-        $Line = new QuickBooks_IPP_Object_Line();
-        $Line->setAmount($creditMemoTotal);
-        $Line->setDesc("Tuition Installment");
-        $Line->setItemId("{QB-398}");
-        $Line->setQty(1);
-        $quickbooksInvoice->addLine($Line);
-      }
-      */
 
       if ($invoiceTotal > 0) {
         $service = new QuickBooks_IPP_Service_Invoice();
       } elseif ($invoiceTotal < 0) {
         $service = new QuickBooks_IPP_Service_CreditMemo();
       }
-      //print_r($quickbooksInvoice);die();
 
       $quickbooks_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooksInvoice);
       if ($quickbooks_id == null) {
@@ -461,33 +473,6 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       $extKey = $invoice->getExternalKey();
       $this->setQuickbooksExternalKey($extKey);
 
-      /*
-      $payments = $this->getPayments();
-      if (isset($payments)) {
-        $txnId = $invoice->getExternalKey();
-        foreach ($payments as $payment) {
-          if ($payment['quickbooks_payment_id'] == "") {
-            $paymentObject = new QuickBooks_IPP_Object_Payment();
-            $paymentHeader = new QuickBooks_IPP_Object_Header();
-            $paymentHeader->setCustomerId($quickbooks_customer_id);
-            $paymentHeader->setTotalAmt($payment['amount']);
-            $paymentHeader->setDocNumber($payment['reference_number']);
-            $paymentHeader->setPaymentMethodId($campusInfo['qb_paypal_payment_method_id']);
-            $txnDate = date('Y-m-d', strtotime($payment['payment_time']));
-            $paymentHeader->setTxnDate($txnDate);
-            $paymentObject->addHeader($paymentHeader);
-            $Line = new QuickBooks_IPP_Object_Line();
-            $Line->setTxnId($txnId);
-            $Line->setAmount($payment['amount']);
-            $paymentObject->addLine($Line);
-            $service = new QuickBooks_IPP_Service_Payment();
-            $quickbooks_payment_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $paymentObject);
-            $paymentObject = new TSM_REGISTRATION_PAYMENT($payment['invoice_payment_id']);
-            $paymentObject->setQuickbooksId($quickbooks_payment_id);
-          }
-        }
-      }
-      */
 
       return true;
     } else {
@@ -498,6 +483,13 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
   public function hide() {
     $q = "UPDATE tsm_reg_families_invoices SET displayed = false WHERE family_invoice_id = '".$this->invoiceId."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
+  public function setInvoiceAndCredit($value) {
+    $q = "UPDATE tsm_reg_families_invoices SET invoice_and_credit = $value WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);
 
     return true;
@@ -517,8 +509,8 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
-  public function setQuickbooksDocNumber($num){
-    $q = "UPDATE tsm_reg_families_invoices SET quickbooks_doc_number = '".$num."' WHERE family_invoice_id = '".$this->invoiceId."'";
+  public function setDocNumber($num){
+    $q = "UPDATE tsm_reg_families_invoices SET doc_number = '".$num."' WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);
 
     return true;

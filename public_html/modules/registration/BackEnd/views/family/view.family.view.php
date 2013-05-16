@@ -87,9 +87,10 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         <tr style="font-weight: bold;">
           <td>ID</td>
           <td>Description</td>
-          <td>Fee Types</td>
+          <!--<td>Fee Types</td>-->
           <td>Total</td>
           <td>Amt Paid</td>
+          <td>Amt Invoiced</td>
           <td>Amt Due</td>
           <td>Status</td>
         </tr>
@@ -98,13 +99,16 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           foreach($paymentPlans as $paymentPlan){
             echo "<tr><td>".$paymentPlan['family_payment_plan_id']."</td>
             <td>".$paymentPlan['name']."</td>
-            <td>".$paymentPlan['fee_type_names']."</td>
+            <!--<td>".$paymentPlan['fee_type_names']."</td>-->
             <td>$".$paymentPlan['totalAmount']."</td>
             <td>$".$paymentPlan['amountPaid']."</td>
+            <td>$".$paymentPlan['amountInvoiced']."</td>
             <td>$".$paymentPlan['amountDue']."</td>
             <td>".$paymentPlan['status'];
             if($paymentPlan['status'] == "Pending Approval"){
               echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=approvePaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Approve</a>";
+            } else if ($paymentPlan['moreFeesAvailible']){
+              echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=addFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Add Fees</a> | <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=invoiceFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Invoice All</a>";
             }
             echo "</td></tr>";
           }
@@ -130,7 +134,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           <?php
           if (isset($invoices)) {
             foreach ($invoices as $invoice) {
-              echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['name']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td><td><a href='index.php?mod=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>View</a></td></tr>";
+              echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['invoice_description']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td><td><a href='index.php?mod=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>View</a></td></tr>";
             }
           } else {
             echo "<tr class='warning'><td colspan=7>There are no recent invoices for this family.</td></tr>";
