@@ -285,6 +285,28 @@ switch ($ajax) {
       echo json_encode($response);
     }
     break;
+  case "invoiceFeesToFamilyPaymentPlan":
+    if (isset($family_payment_plan_id) && isset($feesToAdd)) {
+      $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($family_payment_plan_id);
+      $success = $familyPaymentPlan->invoiceSpecificFees($feesToAdd);
+      if($success){
+        $familyPaymentPlan->addFees($feesToAdd);
+      }
+
+
+      $response = Array("success" => false, "alertMessage" => null);
+
+      if ($success == true) {
+        $response["success"] = true;
+        $response["alertMessage"] = "The payment plan was successfully approved.";
+      } else {
+        $response["success"] = false;
+        $response["alertMessage"] = "The payment plan could not be approved.";
+      }
+
+      echo json_encode($response);
+    }
+    break;
 }
 die();
 ?>

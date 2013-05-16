@@ -107,6 +107,8 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
             <td>".$paymentPlan['status'];
             if($paymentPlan['status'] == "Pending Approval"){
               echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=approvePaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Approve</a>";
+            } else if ($paymentPlan['moreFeesAvailible']){
+              echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=addFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Add Fees</a> | <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=invoiceFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Invoice All</a>";
             }
             echo "</td></tr>";
           }
