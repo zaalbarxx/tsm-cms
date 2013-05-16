@@ -73,6 +73,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   public function generatePDF($forEmail = false) {
     $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
     $familyInfo = $family->getInfo();
+    $students = $family->getStudents($this->getSelectedSchoolYear());
 
     $campus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
     $campusInfo = $campus->getInfo();
@@ -172,10 +173,17 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     <!-- ITEMS HERE -->';
 
     foreach ($this->getFees() as $fee) {
+      $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+      $familyFee = $familyFee->getInfo();
+      if($familyFee['student_id'] != 0){
+        $description = $students[$familyFee['student_id']]['first_name']." ".$students[$familyFee['student_id']]['last_name'].": ".$fee['description'];
+      } else {
+        $description = $fee['description'];
+      }
       $html .= '
     <tr>
     <td align="center">'.$fee['family_fee_id'].'</td>
-    <td>'.$fee['description'].'</td>
+    <td>'.$description.'</td>
     <td align="right">$'.$fee['amount'].'</td>
     <td align="right">$'.$fee['amount'].'</td>
     </tr>';

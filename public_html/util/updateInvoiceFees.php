@@ -60,10 +60,10 @@ foreach ($campuses as $campus_id) {
 
     $family = new TSM_REGISTRATION_FAMILY($a['family_id']);
     if ($a['description'] == "Offset annual tuition to invoice according to payment plan selected.") {
-      $name = $paymentPlanInfo['credit_description'];
+      $name = $paymentPlanInfo['credit_fee_description'];
       $fee_id = $paymentPlanInfo['credit_fee_id'];
     } elseif (($a['description'] == "50% of Payment Plan Total") or ($a['description'] == "10% of Payment Plan Total")) {
-      $name = $paymentPlanInfo['installment_description'];
+      $name = $paymentPlanInfo['installment_fee_description'];
       $fee_id = $paymentPlanInfo['installment_fee_id'];
     } else {
       $name = null;

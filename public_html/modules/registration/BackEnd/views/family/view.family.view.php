@@ -107,8 +107,9 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
             <td>".$paymentPlan['status'];
             if($paymentPlan['status'] == "Pending Approval"){
               echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=approvePaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Approve</a>";
-            } else if ($paymentPlan['moreFeesAvailible']){
-              echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=addFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Add Fees</a> | <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=invoiceFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Invoice All</a>";
+            } else if ($paymentPlan['moreFeesAvailible'] && $paymentPlan['amountInvoiced'] < $paymentPlan['totalAmount']){
+              echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=addFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Add Fees</a>";
+              //echo " | <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=invoiceFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Invoice All</a>";
             }
             echo "</td></tr>";
           }
@@ -142,6 +143,29 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           ?>
         </table>
     </div>
+  <?php if (isset($looseFees)) { ?>
+  <div class="infoSection well">
+    <h2>Unassigned Fees</h2>
+    <p>This family has fees that have not been invoiced and are not assigned to a payment plan. They are listed below.</p>
+    <div class="btn-group center">
+      <!--<a class="btn" href="">Assign to Payment Plan</a>-->
+      <a class="btn fb" href="index.php?mod=registration&view=family&action=invoiceFees&family_id=<?php echo $family_id; ?>">Invoice Now</a>
+    </div>
+    <br /><br />
+    <table style="width: 100%;" class="table table-striped table-bordered ">
+      <tr style="font-weight: bold;">
+        <td>ID</td>
+        <td>Description</td>
+        <td>Amount</td>
+      </tr>
+    <?php
+      foreach ($looseFees as $fee) {
+        echo "<tr><td>".$fee['family_fee_id']."</td><td>".$fee['name']."</td><td>$".$fee['amount']."</td></tr>";
+      }
+    ?>
+    </table>
+  </div>
+  <?php } ?>
 
 </div>
 <script type="text/javascript">

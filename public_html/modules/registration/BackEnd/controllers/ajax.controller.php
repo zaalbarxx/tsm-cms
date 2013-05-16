@@ -306,11 +306,36 @@ switch ($ajax) {
   case "invoiceFeesToFamilyPaymentPlan":
     if (isset($family_payment_plan_id) && isset($feesToAdd)) {
       $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($family_payment_plan_id);
-      $success = $familyPaymentPlan->invoiceSpecificFees($feesToAdd);
+      $success = $familyPaymentPlan->invoiceSpecificFees($feesToAdd,$invoice_description);
       if($success){
         $familyPaymentPlan->addFees($feesToAdd);
       }
 
+
+      $response = Array("success" => false, "alertMessage" => null);
+
+      if ($success == true) {
+        $response["success"] = true;
+        $response["alertMessage"] = "The payment plan was successfully approved.";
+      } else {
+        $response["success"] = false;
+        $response["alertMessage"] = "The payment plan could not be approved.";
+      }
+
+      echo json_encode($response);
+    }
+    break;
+  case "invoiceFees":
+    if (isset($family_id) && isset($feesToAdd) && isset($invoice_description) && $invoice_description != "") {
+      $family = new TSM_REGISTRATION_FAMILY($family_id);
+      foreach($feesToAdd as $family_fee_id){
+        $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+        $familyFeeInfo = $familyFee->getInfo();
+
+        $invoiceFees[] = $familyFeeInfo;
+      }
+
+      $success = $family->createInvoiceFromFees($invoiceFees,$invoice_description);
 
       $response = Array("success" => false, "alertMessage" => null);
 

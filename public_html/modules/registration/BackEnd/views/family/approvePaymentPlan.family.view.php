@@ -3,16 +3,19 @@
     <h2>Approve Payment Plan</h2>
     <p>Approving this plan will being the invoicing process for the fees below. If you do not want to add a certain fee to this payment plan, just uncheck the corresponding box.</p>
     <span class="right"><label class="checkbox"><input id="checkAll" type="checkbox" checked=checked> Check All</label></span>
-    <?php foreach($students as $student){
-      echo "<h3>".$student['info']['first_name']."".$student['last_name']."</h3>";
-      foreach($student['fees'] as $fee){
-        ?>
-        <div class="well well-small">
-          <div class="title"><?php echo $fee['name']; ?>: $<?php echo $fee['amount']; ?></div><input style="float: right; margin-top: -18px;" type="checkbox" class="feesToAdd" name="feesToAdd[]" data-tsm-amount="<?php echo $fee['amount']; ?>" value="<?php echo $fee['family_fee_id']; ?>" checked=checked/>
-        </div>
-        <?php
+    <?php
+    if(isset($students)){
+      foreach($students as $student){
+        echo "<h3>".$student['info']['first_name']."".$student['last_name']."</h3>";
+        foreach($student['fees'] as $fee){
+          ?>
+          <div class="well well-small">
+            <div class="title"><?php echo $fee['name']; ?>: $<?php echo $fee['amount']; ?></div><input style="float: right; margin-top: -18px;" type="checkbox" class="feesToAdd" name="feesToAdd[]" data-tsm-amount="<?php echo $fee['amount']; ?>" value="<?php echo $fee['family_fee_id']; ?>" checked=checked/>
+          </div>
+          <?php
+        }
       }
-    } ?>
+    }?>
     <div style="text-align: right; font-size: 20px">Plan Total: $<span id="planTotal"><?php echo $total; ?></span></div>
     <br />
     <span class="center">

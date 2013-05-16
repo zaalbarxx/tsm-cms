@@ -234,7 +234,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
 
   public function getPaymentPlans($payment_plan_type_id = null) {
     $q = "SELECT pp.*, fpp.payment_plan_type_id, fpp.name, fpp.immediate_invoice_percentage, fpp.fee_type_id AS payment_plan_fee_type_id,
-    fpp.installment_fee_id, fpp.installment_description, fpp.credit_fee_id, fpp.credit_description, fpp.invoice_and_credit
+    fpp.installment_fee_id, fpp.installment_fee_description, fpp.credit_fee_id, fpp.credit_fee_description, fpp.invoice_and_credit
     FROM tsm_reg_families_payment_plans pp, tsm_reg_fee_payment_plans fpp
     WHERE fpp.payment_plan_id = pp.payment_plan_id
     AND pp.family_id = '".$this->familyId."'
@@ -332,6 +332,12 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     }
     $r = $this->db->runQuery($q);
     $returnInvoices = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $returnInvoices[$a['family_invoice_id']] = $a;
+    }
+
+    $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_id = '".$this->familyId."' AND family_payment_plan_id IS NULL";
+    $r = $this->db->runQuery($q);
     while ($a = mysql_fetch_assoc($r)) {
       $returnInvoices[$a['family_invoice_id']] = $a;
     }
@@ -506,7 +512,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function createInvoice($family_payment_plan_id = null,$invoice_description = null) {
-    $q = "INSERT INTO tsm_reg_families_invoices (family_id,family_payment_plan_id,invoice_description) VALUES('".$this->familyId."','$family_payment_plan_id','$invoice_description')";
+    $q = "INSERT INTO tsm_reg_families_invoices (family_id,family_payment_plan_id,invoice_description) VALUES('".$this->familyId."',$family_payment_plan_id,'$invoice_description')";
     $this->db->runQuery($q);
     $invoice_id = mysql_insert_id($this->db->conn);
 
@@ -517,6 +523,19 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     $invoice->setDocNumber($campusInfo['invoice_prefix'].$invoice_id);
 
     return $invoice_id;
+  }
+
+  public function createInvoiceFromFees($fees,$description,$family_payment_plan_id = "NULL"){
+    $invoice_id = $this->createInvoice($family_payment_plan_id,$description);
+    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+
+    foreach($fees as $fee){
+      $params = Array("family_fee_id"=>$fee['family_fee_id'],"description"=>$fee['name'],"amount"=>$fee['amount']);
+      $invoice->addFee($params);
+    }
+    $invoice->updateTotal();
+
+    return $invoice;
   }
 
   public function recordFee($fee) {
@@ -543,6 +562,19 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     ";
 */
     mail($this->info['primary_email'], $subject, $message, $headers);
+  }
+
+  public function getLooseFees(){
+    $q = "SELECT * FROM tsm_reg_families_fees WHERE family_id = '".$this->familyId."' AND family_payment_plan_id IS NULL";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $familyFee = new TSM_REGISTRATION_FAMILY_FEE($a['family_fee_id']);
+      if(!$familyFee->isInvoiced()){
+        $returnFees[] = $a;
+      }
+    }
+
+    return $returnFees;
   }
 
   public function getFees($fee_type_id = null) {

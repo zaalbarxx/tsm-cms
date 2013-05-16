@@ -11,7 +11,7 @@ if (isset($students)) {
     $students[$student['student_id']]['registration_total'] = $reg->addFees($studentObject->getFees($campusInfo['registration_fee_type_id']));
   }
 }
-$invoices = $family->getInvoices(1);
+$invoices = $family->getInvoices();
 $paymentPlans = $family->getPaymentPlans();
 if (isset($invoices)) {
   foreach ($invoices as $invoice) {
@@ -41,6 +41,7 @@ if(isset($paymentPlans)){
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['fee_type_names'] = substr_replace($paymentPlans[$paymentPlan['family_payment_plan_id']]['fee_type_names'] ,"",-2);
   }
 }
+$looseFees = $family->getLooseFees();
 //print_r($paymentPlans);die();
 
 

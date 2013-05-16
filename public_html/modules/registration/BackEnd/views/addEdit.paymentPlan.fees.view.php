@@ -159,7 +159,7 @@ if($currentCampus->usesQuickbooks()){
             ?>
           </select><br/>
           <b>Installment Description: </b>
-          <input name="installment_description" value="<?php echo $planInfo['installment_description']; ?>"
+          <input name="installment_fee_description" value="<?php echo $planInfo['installment_fee_description']; ?>"
                  size="80"/><br/><br/>
           <b>Invoice and Credit: </b><select name="invoice_and_credit">
 
@@ -187,7 +187,7 @@ if($currentCampus->usesQuickbooks()){
             ?>
           </select><br/>
           <b>Credit Description: </b>
-          <input name="credit_description" value="<?php echo $planInfo['credit_description']; ?>" size="80"/>
+          <input name="credit_fee_description" value="<?php echo $planInfo['credit_fee_description']; ?>" size="80"/>
           </span>
       <span id="monthly_plan" class="planDetails" style="display: none;">
 				<b>Plan Details</b>
@@ -262,7 +262,7 @@ if($currentCampus->usesQuickbooks()){
         ?>
       </select><br/>
           <b>Installment Description: </b>
-          <input name="installment_description" value="<?php echo $planInfo['installment_description']; ?>"
+          <input name="installment_fee_description" value="<?php echo $planInfo['installment_fee_description']; ?>"
                  size="80"/><br/><br/>
           <b>Invoice and Credit: </b><select name="invoice_and_credit">
 
@@ -290,7 +290,7 @@ if($currentCampus->usesQuickbooks()){
         ?>
       </select><br/>
           <b>Credit Description: </b>
-          <input name="credit_description" value="<?php echo $planInfo['credit_description']; ?>" size="80"/>
+          <input name="credit_fee_description" value="<?php echo $planInfo['credit_fee_description']; ?>" size="80"/>
 
       </span>
 

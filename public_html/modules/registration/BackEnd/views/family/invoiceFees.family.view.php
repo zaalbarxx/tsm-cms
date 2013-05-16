@@ -1,19 +1,19 @@
 <div class="span9">
-  <form action="index.php?mod=registration&ajax=invoiceFeesToFamilyPaymentPlan&family_payment_plan_id=<?php echo $familyPaymentPlanId; ?>" method="post" id="paymentPlanForm">
-    <h2>Invoice Fees To Payment Plan</h2>
-    <p>Invoicing fees to this payment plan will add these fees to this payment plan and immediate invoice them in a separate invoice. If you do not want to invoice a certain fee to this payment plan, just uncheck the corresponding box.</p>
-    <span class="right"><label class="checkbox"><input id="checkAll" type="checkbox" checked=checked> Check All</label></span>
+  <form action="index.php?mod=registration&ajax=invoiceFees&family_id=<?php echo $family_id; ?>&family_payment_plan_id=<?php echo $familyPaymentPlanId; ?>" method="post" id="paymentPlanForm">
+    <h2>Invoice Fees</h2>
+    <p>Please select the fees that you would like to invoice below.</p>
+    <span class="right"><label class="checkbox"><input id="checkAll" type="checkbox"> Check All</label></span>
     <?php foreach($students as $student){
       echo "<h3>".$student['info']['first_name']."".$student['last_name']."</h3>";
       foreach($student['fees'] as $fee){
         ?>
         <div class="well well-small">
-          <div class="title"><?php echo $fee['name']; ?>: $<?php echo $fee['amount']; ?></div><input style="float: right; margin-top: -18px;" type="checkbox" class="feesToAdd" name="feesToAdd[]" data-tsm-amount="<?php echo $fee['amount']; ?>" value="<?php echo $fee['family_fee_id']; ?>" checked=checked/>
+          <div class="title"><?php echo $fee['name']; ?>: $<?php echo $fee['amount']; ?></div><input style="float: right; margin-top: -18px;" type="checkbox" class="feesToAdd" name="feesToAdd[]" data-tsm-amount="<?php echo $fee['amount']; ?>" value="<?php echo $fee['family_fee_id']; ?>" />
         </div>
         <?php
       }
     } ?>
-    <div style="text-align: right; font-size: 20px">Invoice Total: $<span id="planTotal"><?php echo $total; ?></span></div>
+    <div style="text-align: right; font-size: 20px">Invoice Total: $<span id="planTotal">0.00</span></div>
     <br />
     <span class="center">
       <div class="right"><input type="text" name="invoice_description" placeholder="Invoice Description" /></div>
