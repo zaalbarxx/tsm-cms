@@ -611,7 +611,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
-  public function processFees() {
+  public function processFees($preview = false) {
     $this->setUseRecordedFees(false);
     $fees = $this->getFees();
     $this->setUseRecordedFees(true);
@@ -639,7 +639,12 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
             $courseConditions = null;
           }
           if ($this->meetsConditions($programConditions, $params) && $this->meetsConditions($courseConditions, $params)) {
-            $this->assignFee($fee['fee_id'], $fee['program_id'], $fee['course_id']);
+            if($preview == false){
+              $this->assignFee($fee['fee_id'], $fee['program_id'], $fee['course_id']);
+            } else {
+              $addFees[] = $fee;
+            }
+
           }
           //$addFees[] = $fee;
         }
@@ -684,13 +689,28 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
           //echo "deleteing: ".$fee['fee_id']."\r\n";
           $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
           if (!$feeObject->isInvoiced()) {
-            $feeObject->delete();
+            if($preview == false){
+              $feeObject->delete();
+            } else {
+              $removeFees[] = $fee;
+            }
+
+          } else {
+            if($preview == true){
+              $removeButInvoiced[] = $fee;
+            }
           }
         }
       }
 
     }
-    return true;
+
+    if($preview == false){
+      $return = true;
+    } else {
+      $return = Array("addFees"=>$addFees,"removeFees"=>$removeFees,"removeButInvoiced"=>$removeButInvoiced);
+    }
+    return $return;
   }
 
   public function enrollInProgram($program_id) {
