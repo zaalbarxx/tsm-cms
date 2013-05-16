@@ -63,7 +63,7 @@ if (isset($acceptDisclaimer)) {
 
 if ($invoices == null) {
 
-  $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
+  $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id'],$planInfo['name']);
   $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 
   foreach ($planFeeTypes as $fee_type_id) {
@@ -100,7 +100,7 @@ if ($invoices == null) {
     $creditFeeAmount = -$planTotal;
 
     //Credit intial invoice back to account so we can bill in installments.
-    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
+    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id'],$planInfo['name']);
     $family_fee_id = $family->addFee($plan_to_process['credit_description'], $creditFeeAmount, $plan_to_process['credit_fee_id'], $creditFeeInfo['fee_type_id']);
     $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
     $familyFee->setPaymentPlan($plan_to_process['family_payment_plan_id']);
@@ -111,7 +111,7 @@ if ($invoices == null) {
     $invoice->setInvoiceAndCredit(true);
 
     //Invoice first installment
-    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
+    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id'],$planInfo['name']);
     $family_fee_id = $family->addFee($plan_to_process['installment_description'], $installmentFeeAmount, $plan_to_process['installment_fee_id'], $installmentFeeInfo['fee_type_id']);
     $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
     $familyFee->setPaymentPlan($plan_to_process['family_payment_plan_id']);
