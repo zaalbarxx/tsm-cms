@@ -539,14 +539,14 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       if (isset($fees)) {
         foreach ($fees as $fee) {
           $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-          if ($familyFee->isInvoiced() == true) {
+          if ($familyFee->isInvoiced() == true || $familyFee->isOnPaymentPlan() == true) {
             $canDelete = false;
           }
         }
         if ($canDelete == true) {
           foreach ($fees as $fee) {
             $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-            if ($familyFee->isInvoiced() == false) {
+            if ($familyFee->isInvoiced() == false && $familyFee->isOnPaymentPlan() == false) {
               $familyFee->delete();
             }
           }
@@ -688,7 +688,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         if ($needed == false) {
           //echo "deleteing: ".$fee['fee_id']."\r\n";
           $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-          if (!$feeObject->isInvoiced()) {
+          if (!$feeObject->isInvoiced() && !$feeObject->isOnPaymentPlan()) {
             if($preview == false){
               $feeObject->delete();
             } else {
@@ -738,7 +738,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         if (isset($fees)) {
           foreach ($fees as $fee) {
             $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-            if ($familyFee->isInvoiced() == true) {
+            if ($familyFee->isInvoiced() == true || $familyFee->isOnPaymentPlan() == true) {
               $canDelete = false;
             }
 
@@ -747,7 +747,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
           if ($canDelete == true) {
             foreach ($fees as $fee) {
               $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-              if ($familyFee->isInvoiced() == false) {
+              if ($familyFee->isInvoiced() == false && $familyFee->isOnPaymentPlan() == false) {
                 $familyFee->delete();
               } else {
                 $return = false;
