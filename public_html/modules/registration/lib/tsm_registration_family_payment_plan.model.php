@@ -261,7 +261,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     $installmentFeeId = $family->addFee($paymentPlan['installment_fee_description'],$invoiceTotal,$installmentFee['fee_id'],$installmentFee['fee_type_id']);
     $familyFee = new TSM_REGISTRATION_FAMILY_FEE($installmentFeeId);
     $familyFee->setPaymentPlan($this->familyPaymentPlanId);
-    $invoiceId = $family->createInvoice($this->familyPaymentPlanId,$paymentPlan['name']." - Invoice #".$invoiceNumber);
+    $invoiceId = $family->createInvoice($this->familyPaymentPlanId,$paymentPlan['installment_invoice_description']." - (".$invoiceNumber." of ".$paymentPlan['num_invoices'].")");
 
     $familyInvoice = new TSM_REGISTRATION_INVOICE($invoiceId);
     $params = Array("family_fee_id"=>$installmentFeeId,"description"=>$paymentPlan['installment_fee_description'],"amount"=>$invoiceTotal);
@@ -290,7 +290,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     $creditFeeAmount = -$planTotal;
 
     //Credit intial invoice back to account so we can bill in installments.
-    $credit_invoice_id = $family->createInvoice($this->familyPaymentPlanId,$paymentPlanInfo['name']." - Credit");
+    $credit_invoice_id = $family->createInvoice($this->familyPaymentPlanId,$paymentPlanInfo['credit_invoice_description']);
     $family_fee_id = $family->addFee($paymentPlanInfo['credit_fee_description'], $creditFeeAmount, $paymentPlanInfo['credit_fee_id'], $creditFeeInfo['fee_type_id']);
     $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
     $familyFee->setPaymentPlan($this->familyPaymentPlanId);
@@ -346,7 +346,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($this->info['payment_plan_id']);
     $paymentPlanInfo = $paymentPlan->getInfo();
 
-    $invoice_id = $family->createInvoice($this->familyPaymentPlanId,$paymentPlanInfo['name']." - Full Invoice");
+    $invoice_id = $family->createInvoice($this->familyPaymentPlanId,$paymentPlanInfo['full_invoice_description']);
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 
 

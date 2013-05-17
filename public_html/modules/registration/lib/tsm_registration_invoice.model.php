@@ -58,8 +58,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     ;
 
     // Send the message
-    //$result = $mailer->send($message);
-    $result = true;
+    $result = $mailer->send($message);
 
     //$is_sent = @mail($sendTo, $subject, "", $header);
     if($result){
