@@ -511,8 +511,17 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $quickbooks_customer_id;
   }
 
-  public function createInvoice($family_payment_plan_id = null,$invoice_description = null) {
-    $q = "INSERT INTO tsm_reg_families_invoices (family_id,family_payment_plan_id,invoice_description) VALUES('".$this->familyId."',$family_payment_plan_id,'$invoice_description')";
+  public function createInvoice($family_payment_plan_id = null,$invoice_description = null,$due_date = null) {
+    if($due_date == null){
+      $due_date = date("Y-m-d");
+      $due_date = new DateTime($due_date);
+      $due_date = $due_date->add(date_interval_create_from_date_string('1 month'));
+      $due_date = date_format($due_date,'Y-m-d');
+    }
+
+
+    $q = "INSERT INTO tsm_reg_families_invoices (family_id,family_payment_plan_id,invoice_description,due_date)
+    VALUES('".$this->familyId."',$family_payment_plan_id,'$invoice_description','$due_date')";
     $this->db->runQuery($q);
     $invoice_id = mysql_insert_id($this->db->conn);
 

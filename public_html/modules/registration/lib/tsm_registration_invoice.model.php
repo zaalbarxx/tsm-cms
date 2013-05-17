@@ -368,6 +368,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
           $invoiceHeader->setClassId($paymentPlanInfo['qb_invoice_class_id']);
         }
       }
+      $invoiceHeader->setDueDate($this->info['due_date']);
       $quickbooksInvoice = new QuickBooks_IPP_Object_Invoice();
       $quickbooksInvoice->addHeader($invoiceHeader);
     } elseif ($invoiceTotal < 0) {
