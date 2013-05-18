@@ -2,7 +2,7 @@
     <h2>Link To Quickbooks</h2>
 
     <p>To link this family to a quickbooks customer, select the customer below and press "Link Now".</p>
-
+    <p>You are linking: <?php echo $familyInfo['father_first']." & ".$familyInfo['mother_first']." ".$familyInfo['father_last'].", ".$familyInfo['address']; ?></p>
     <form action="" method="post" id="linkToQuickbooks" class="form-horizontal">
       <?php
       if ($currentCampus->usesQuickbooks()) {
