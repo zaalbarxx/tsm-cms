@@ -21,10 +21,15 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
       <div class="smallItem well well-small">
           <a href="index.php?mod=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"
              class="title"><?php echo $family['father_last']; ?> Family <?php echo $family['status']; ?></a>
-              <span class="buttons"><a
-                      href="index.php?mod=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"
-                      class="reviewButton" title="Review This Family"></a></span>
-
+            <?php if ($currentCampus->usesQuickbooks() && $family['quickbooks_customer_id'] == "" && $family['status'] == " - Finalized") { ?>
+              <span style="margin-left: 100px;">
+                <a href="index.php?mod=registration&view=family&action=linkToQuickbooks&family_id=<?php echo $family['family_id']; ?>" class="btn fb">Link To Quickbooks</a>
+              </span>
+            <?php } ?>
+            <span class="buttons"><a
+              href="index.php?mod=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"
+              class="reviewButton" title="Review This Family"></a>
+            </span>
           <div class="itemDetails">
             <?php
             //foreach($family['students'] as $student){
