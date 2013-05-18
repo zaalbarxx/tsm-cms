@@ -534,7 +534,8 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $invoice_id;
   }
 
-  public function createInvoiceFromFees($fees,$description,$family_payment_plan_id = "NULL"){
+  public function createInvoiceFromFees($fees,$description,$family_payment_plan_id = "NULL" ){
+    global $currentCampus;
     $invoice_id = $this->createInvoice($family_payment_plan_id,$description);
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 
@@ -543,6 +544,10 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
       $invoice->addFee($params);
     }
     $invoice->updateTotal();
+
+    if($currentCampus->usesQuickbooks() && $this->inQuickbooks()){
+      $invoice->addToQuickbooks();
+    }
 
     return $invoice;
   }
