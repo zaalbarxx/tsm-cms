@@ -123,7 +123,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         <h2>Recent Invoices</h2>
         <table style="width: 100%;" class="table table-striped table-bordered ">
             <tr style="font-weight: bold;">
-                <td>ID</td>
+                <td>Invoice</td>
                 <td>Description</td>
                 <td>Date</td>
                 <td>Total</td>
@@ -135,7 +135,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           <?php
           if (isset($invoices)) {
             foreach ($invoices as $invoice) {
-              echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['invoice_description']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td><td><a href='index.php?mod=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>View</a></td></tr>";
+              echo "<tr><td>".$invoice['doc_number']."</td><td>".$invoice['invoice_description']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td><td><a href='index.php?mod=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>View</a></td></tr>";
             }
           } else {
             echo "<tr class='warning'><td colspan=7>There are no recent invoices for this family.</td></tr>";
