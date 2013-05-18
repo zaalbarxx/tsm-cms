@@ -42,9 +42,15 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $subject = str_replace("{{invoiceNo}}",$invoiceNo,$subject);
 
     require_once __TSM_ROOT__.'includes/3rdparty/swift/lib/swift_required.php';
+    /*
     $transport = Swift_SmtpTransport::newInstance('66.147.244.176', 25)
       ->setUsername('noreply@takesixmedia.com')
       ->setPassword('LTOZ7]OLz~wB')
+    ;
+    */
+    $transport = Swift_SmtpTransport::newInstance('mail.google.com', 25)
+      ->setUsername('billing@artiosacademies.com')
+      ->setPassword('5646lane')
     ;
     $mailer = Swift_Mailer::newInstance($transport);
 
@@ -76,7 +82,25 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
     $campus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
     $campusInfo = $campus->getInfo();
+    if($campusInfo['payment_address2'] != ""){
+      $paymentLine2 = "<br />".$campusInfo['payment_address2'];
+    } else {
+      $paymentLine2 = "";
+    }
+
     $invoiceNum = $this->info['doc_number'];
+
+    if($familyInfo['father_first'] != "" && $familyInfo['father_last'] != "" && $familyInfo['mother_first'] != "" && $familyInfo['mother_last'] != ""){
+      $familyName = $familyInfo['father_first']." & ".$familyInfo['mother_first']." ".$familyInfo['father_last'];
+    } else if($familyInfo['father_first'] != "" && $familyInfo['father_last'] != "" && ($familyInfo['mother_first'] == "" && $familyInfo['mother_last'] == "")){
+      $familyName = $familyInfo['father_first']." ".$familyInfo['father_last'];
+    } else if($familyInfo['mother_first'] != "" && $familyInfo['mother_last'] != "" && ($familyInfo['father_first'] == "" && $familyInfo['father_last'] == "")){
+      $familyName = $familyInfo['mother_first']." ".$familyInfo['mother_last'];
+    } else{
+      $familyName = $familyInfo['father_first']." ".$familyInfo['father_last'];
+    }
+
+
 
     $mpdf = new mPDF('win-1252', 'A4', '', '', 20, 15, 48, 25, 10, 10);
     $mpdf->useOnlyCoreFonts = true; // false is default
@@ -105,7 +129,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
         border-left: 0.1mm solid #000000;
         border-right: 0.1mm solid #000000;
     }
-    table thead td { background-color: #EEEEEE;
+    table thead td { background-color: #f5f6e0;
         text-align: center;
         border: 0.1mm solid #000000;
     }
@@ -125,9 +149,11 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
     <!--mpdf
     <htmlpageheader name="myheader">
+
     <table width="100%"><tr>
-    <td width="50%" style="color:#0000BB;"><span style="font-weight: bold; font-size: 14pt;">'.$campusInfo['name'].'</span><br />'.$campusInfo['payment_address_attn'].'<br />'.$campusInfo['payment_address'].' '.$campusInfo['payment_address2'].'<br />'.$campusInfo['payment_city'].', '.$campusInfo['payment_state'].' '.$campusInfo['payment_zip'].'</td>
-    <td width="50%" style="text-align: right;">Invoice No.<br /><span style="font-weight: bold; font-size: 12pt;">'.$invoiceNum.'</span></td>
+    <td width="33%" valign=top style="color: #522d1d;"><br /><span style="font-weight: bold; font-size: 14pt; float: right; color: #8f9332;">'.$campusInfo['name'].'</span><br />'.$campusInfo['payment_address'].$paymentLine2.'<br />'.$campusInfo['payment_city'].', '.$campusInfo['payment_state'].' '.$campusInfo['payment_zip'].'</td>
+    <td width="33%" align=center valign=top><img src="/files/1/artios_logo_invoice.png" style="width: 125px;" /></td>
+    <td width="33%" style="text-align: right;" valign=top><br /><div style="margin-top: 20px;">Invoice No.<br /><span style="font-weight: bold; font-size: 12pt;">'.$invoiceNum.'</span></div></td>
     </tr></table>
     </htmlpageheader>
 
@@ -141,18 +167,23 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     <sethtmlpagefooter name="myfooter" value="on" />
     mpdf-->
 
-    <div style="text-align: right; margin-top: -50px;">Date: '.date('jS F Y', strtotime($this->info['invoice_time'])).'</div>
+    <div style="text-align: right; margin-top: -50px;">
+    <table width="400" align=right>
+    <tr><td></td><td></td></tr>
+    <tr><td align=right>Invoice Date: </td><td width=100 align=right>'.date('M j, Y', strtotime($this->info['invoice_time'])).'</td></tr>
+    <tr><td align=right>Payment Due: </td><td width=100 align=right>'.date("M j, Y",strtotime($this->info['due_date'])).'</td></tr>
+    </table>
     <br /><br />
 
     <table width="100%" style="font-family: serif;" cellpadding="10">
     <tr>
-    <td width="45%" style="border: 0.1mm solid #888888;">
+    <td width="40%" style="border: 0.1mm solid #888888;">
     <span style="font-size: 7pt; color: #555555; font-family: sans;">BILL TO:</span>
-    <br /><br />'.$familyInfo['father_first'].' '.$familyInfo['father_last'].'
+    <br /><br />'.$familyName.'
     <br />'.$familyInfo['address'].'
     <br />'.$familyInfo['city'].', '.$familyInfo['state'].' '.$familyInfo['zip'].'
     </td>
-    <td width="10%">&nbsp;</td>
+    <td width="15%">&nbsp;</td>
     <td width="45%" style="border: 0mm solid #888888;"></td>
     </tr>
     </table>
@@ -163,8 +194,8 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     <thead>
     <tr>
     <td width="15%">REF. NO.</td>
-    <td width="55%">DESCRIPTION</td>
-    <td width="15%">UNIT PRICE</td>
+    <td width="55%" colspan=2>DESCRIPTION</td>
+    <!--<td width="15%">UNIT PRICE</td>-->
     <td width="15%">AMOUNT</td>
     </tr>
     </thead>
@@ -182,9 +213,9 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       $html .= '
     <tr>
     <td align="center">'.$fee['family_fee_id'].'</td>
-    <td>'.$description.'</td>
-    <td align="right">$'.$fee['amount'].'</td>
-    <td align="right">$'.$fee['amount'].'</td>
+    <td style="border-right: #fff;">'.$description.'</td>
+    <td align="right" style="border-left: 0px;"></td>
+    <td align="right">$'.number_format($fee['amount'], 2, '.', ',').'</td>
     </tr>';
     }
 
@@ -195,20 +226,20 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     <tr>
     <td class="blanktotal" colspan="2" rowspan="6"></td>
     <td class="totals"><b>TOTAL:</b></td>
-    <td class="totals"><b>$'.$this->getTotal().'</b></td>
+    <td class="totals"><b>$'.number_format($this->getTotal(), 2, '.', ',').'</b></td>
     </tr>
     <tr>
     <td class="totals">Amount Paid:</td>
-    <td class="totals">$'.$this->getAmountPaid().'</td>
+    <td class="totals">$'.number_format($this->getAmountPaid(), 2, '.', ',').'</td>
     </tr>
     <tr>
     <td class="totals"><b>Balance due:</b></td>
-    <td class="totals"><b>$'.$this->getAmountDue().'</b></td>
+    <td class="totals"><b>$'.number_format($this->getAmountDue(), 2, '.', ',').'</b></td>
     </tr>
     </tbody>
     </table>
     <br /><br />
-    <div style="text-align: center; font-style: italic;">Payment terms: payment due in 30 days</div>
+    <div style="text-align: right; font-style: italic;">Note: '.$this->info['invoice_description'].'</div>
     </body>
     </html>
     ';
@@ -405,6 +436,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
             $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
             $familyFeeInfo = $familyFee->getInfo();
 
+            //todo:figure out why the paypal convenience fee is not getting assigned the correct class.
             if($familyFeeInfo['program_id'] != 0 || $familyFeeInfo['course_id'] == 0){
               if($familyFeeInfo['program_id'] == 0){
                 $programString = " program_id IS NULL ";
