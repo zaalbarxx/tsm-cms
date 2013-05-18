@@ -37,8 +37,8 @@ $campusList = $reg->getCampuses();
 //if(isset($campusList)){
 //  foreach($campusList as $campus){
     //$reg->setCurrentCampusId($campus['campus_id']);
-    $reg->setCurrentCampusId(2);
-    $currentCampus = new TSM_REGISTRATION_CAMPUS($campus['campus_id']);
+    $reg->setCurrentCampusId(1);
+    $currentCampus = new TSM_REGISTRATION_CAMPUS(1);
     $reg->setSelectedSchoolYear($currentCampus->getCurrentSchoolYear());
     if($currentCampus->usesQuickbooks()){
       $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
