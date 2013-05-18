@@ -156,24 +156,34 @@
 
 <div class="infoSection">
     <h2>Recent Invoices</h2>
-    <table style="width: 100%;">
-        <tr style="font-weight: bold;">
-            <td>ID</td>
-            <td>Description</td>
-            <td>Date</td>
-            <td>Total</td>
-            <td>Amount Paid</td>
-            <td>Amount Due</td>
+    <table style="width: 100%; " cellspacing=0 cellpadding=5>
+        <tr style="font-weight: bold;background: #ddd;">
+          <td>Invoice</td>
+          <td>Description</td>
+          <td>Date</td>
+          <td>Total</td>
+          <td>Amount Paid</td>
+          <td>Amount Due</td>
+          <td align=center>Options</td>
         </tr>
 
       <?php
       if (isset($familyInvoices)) {
+        $i = 0;
         foreach ($familyInvoices as $invoice) {
-          echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['name']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid'];
-          if ($invoice['amountPaid'] == 0 && $campusInfo['paypal_email'] != "") {
-            echo " - <a href='index.php?view=invoice&action=payOnline&family_invoice_id=".$invoice['family_invoice_id']."' class='payOnline fb'>Pay Now</a>";
+
+          if($i & 1){
+            $rowStyle = "background: #ddd;";
+          } else {
+            $rowStyle = "";
           }
-          echo "</td><td>$".$invoice['amountDue']."</td></tr>";
+          echo "<tr style='height: 45px; $rowStyle'><td>".$invoice['doc_number']."</td><td>".$invoice['invoice_description']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".number_format($invoice['amount'],2)."</td><td>$".number_format($invoice['amountPaid'],2);
+          echo "</td><td>$".number_format($invoice['amountDue'],2)."</td><td><a href='index.php?mod=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class=\"small_button\" target=\"blank\">View Invoice</a>";
+          if ($invoice['amountPaid'] == 0 && $campusInfo['paypal_email'] != "") {
+            echo " - <a href='index.php?view=invoice&action=payOnline&family_invoice_id=".$invoice['family_invoice_id']."' class='payOnline fb small_button'>Pay Now</a>";
+          }
+          echo "</td></tr>";
+          $i++;
         }
       }
       ?>
