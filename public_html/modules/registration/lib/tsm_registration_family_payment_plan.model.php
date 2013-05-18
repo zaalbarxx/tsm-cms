@@ -261,7 +261,15 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     $installmentFeeId = $family->addFee($paymentPlan['installment_fee_description'],$invoiceTotal,$installmentFee['fee_id'],$installmentFee['fee_type_id']);
     $familyFee = new TSM_REGISTRATION_FAMILY_FEE($installmentFeeId);
     $familyFee->setPaymentPlan($this->familyPaymentPlanId);
-    $invoiceId = $family->createInvoice($this->familyPaymentPlanId,$paymentPlan['installment_invoice_description']." - (".$invoiceNumber." of ".$paymentPlan['num_invoices'].")");
+
+
+    //SET DUE DATE TO BE THE 1ST OF NEXT MONTH
+    $dueDate = date("Y-m-d");
+    $dueDate = new DateTime($dueDate);
+    $dueDate = $dueDate->add(date_interval_create_from_date_string('1 month'));
+    $dueDate = date_format($dueDate,'Y-m-1');
+
+    $invoiceId = $family->createInvoice($this->familyPaymentPlanId,$paymentPlan['installment_invoice_description']." - (".$invoiceNumber." of ".$paymentPlan['num_invoices'].")",$dueDate);
 
     $familyInvoice = new TSM_REGISTRATION_INVOICE($invoiceId);
     $params = Array("family_fee_id"=>$installmentFeeId,"description"=>$paymentPlan['installment_fee_description'],"amount"=>$invoiceTotal);
