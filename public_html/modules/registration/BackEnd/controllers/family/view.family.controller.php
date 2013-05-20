@@ -18,6 +18,7 @@ if (isset($invoices)) {
     $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
     $invoices[$invoice['family_invoice_id']]['amountPaid'] = number_format($invoiceObject->getAmountPaid(), 2, '.', ',');
     $invoices[$invoice['family_invoice_id']]['amountDue'] = number_format($invoiceObject->getAmountDue(), 2, '.', ',');
+    $invoices[$invoice['family_invoice_id']]['timesSent'] = $invoiceObject->getTimesSent();
   }
 }
 
