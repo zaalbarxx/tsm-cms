@@ -263,10 +263,11 @@ switch ($ajax) {
     }
     break;
   case "approveFamilyPaymentPlan":
-    if (isset($family_payment_plan_id) && isset($feesToAdd)) {
+    if (isset($family_payment_plan_id)) {
       $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($family_payment_plan_id);
-      $familyPaymentPlan->addFees($feesToAdd);
-      if($familyPaymentPlan->addFees($feesToAdd)){
+      $feesAdded = $familyPaymentPlan->addFees($feesToAdd);
+
+      if($feesAdded){
         $success = $familyPaymentPlan->approve();
       } else {
         $success = false;
@@ -280,6 +281,129 @@ switch ($ajax) {
       } else {
         $response["success"] = false;
         $response["alertMessage"] = "The payment plan could not be approved.";
+      }
+
+      echo json_encode($response);
+    }
+    break;
+  case "addFeesToFamilyPaymentPlan":
+    if (isset($family_payment_plan_id) && isset($feesToAdd)) {
+      $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($family_payment_plan_id);
+      $success = $familyPaymentPlan->addFees($feesToAdd);
+
+      $response = Array("success" => false, "alertMessage" => null);
+
+      if ($success == true) {
+        $response["success"] = true;
+        $response["alertMessage"] = "The payment plan was successfully approved.";
+      } else {
+        $response["success"] = false;
+        $response["alertMessage"] = "The payment plan could not be approved.";
+      }
+
+      echo json_encode($response);
+    }
+    break;
+  case "invoiceFeesToFamilyPaymentPlan":
+    if (isset($family_payment_plan_id) && isset($feesToAdd)) {
+      $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($family_payment_plan_id);
+      $success = $familyPaymentPlan->invoiceSpecificFees($feesToAdd,$invoice_description);
+      if($success){
+        $familyPaymentPlan->addFees($feesToAdd);
+      }
+
+
+      $response = Array("success" => false, "alertMessage" => null);
+
+      if ($success == true) {
+        $response["success"] = true;
+        $response["alertMessage"] = "The payment plan was successfully approved.";
+      } else {
+        $response["success"] = false;
+        $response["alertMessage"] = "The payment plan could not be approved.";
+      }
+
+      echo json_encode($response);
+    }
+    break;
+  case "invoiceFees":
+    if (isset($family_id) && isset($feesToAdd) && isset($invoice_description) && $invoice_description != "" && isset($due_date)) {
+      $family = new TSM_REGISTRATION_FAMILY($family_id);
+      foreach($feesToAdd as $family_fee_id){
+        $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+        $familyFeeInfo = $familyFee->getInfo();
+
+        $invoiceFees[] = $familyFeeInfo;
+      }
+
+
+      $success = $family->createInvoiceFromFees($invoiceFees,$invoice_description,"NULL",$due_date);
+
+      $response = Array("success" => false, "alertMessage" => null);
+
+      if ($success == true) {
+        $response["success"] = true;
+        $response["alertMessage"] = "The payment plan was successfully approved.";
+      } else {
+        $response["success"] = false;
+        $response["alertMessage"] = "The payment plan could not be approved.";
+      }
+
+      echo json_encode($response);
+    }
+    break;
+  case "sendInvoiceEmail":
+    if (isset($family_invoice_id) && isset($send_to) && isset($email_subject) && isset($email_contents)) {
+      $invoice = new TSM_REGISTRATION_INVOICE($family_invoice_id);
+      $email_contents = html_entity_decode($email_contents);
+      $success = $invoice->emailInvoice($send_to,$email_contents,$email_subject);
+
+      $response = Array("success" => false, "alertMessage" => null);
+
+      if ($success == true) {
+        $response["success"] = true;
+        $response["alertMessage"] = "The invoice was successfully sent.";
+      } else {
+        $response["success"] = false;
+        $response["alertMessage"] = "The invoice could not be sent.";
+      }
+
+      echo json_encode($response);
+    }
+    break;
+  case "sendInvoices":
+    if (isset($invoicesToSend) && isset($email_subject) && isset($email_contents)) {
+      set_time_limit(0);
+      ini_set('memory_limit', '256M');
+      $email_contents = html_entity_decode($email_contents);
+      $failed = false;
+      foreach($invoicesToSend as $family_invoice_id){
+        $invoice = new TSM_REGISTRATION_INVOICE($family_invoice_id);
+        $invoiceInfo = $invoice->getInfo();
+        $family = new TSM_REGISTRATION_FAMILY($invoiceInfo['family_id']);
+        $familyInfo = $family->getInfo();
+
+        $sent = $invoice->emailInvoice($familyInfo['primary_email'],$email_contents,$email_subject);
+        //$sent = $invoice->emailInvoice("jlane@veritasproductions.net",$email_contents,$email_subject);
+        if($sent == 0){
+          $failed = 1;
+        }
+      }
+
+      if($failed == 1){
+        $success = false;
+      } else {
+        $success = true;
+      }
+
+      $response = Array("success" => false, "alertMessage" => null);
+
+      if ($success == true) {
+        $response["success"] = true;
+        $response["alertMessage"] = "The invoice was successfully sent.";
+      } else {
+        $response["success"] = false;
+        $response["alertMessage"] = "The invoice could not be sent.";
       }
 
       echo json_encode($response);

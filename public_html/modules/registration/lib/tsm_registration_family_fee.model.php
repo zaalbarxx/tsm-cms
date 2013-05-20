@@ -52,6 +52,14 @@ class TSM_REGISTRATION_FAMILY_FEE extends TSM_REGISTRATION_CAMPUS {
     return $this->info['family_payment_plan_id'];
   }
 
+  public function isOnPaymentPlan(){
+    if($this->getPaymentPlan() != ""){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public function delete() {
     if ($this->isInvoiced() == false) {
       $q = "DELETE FROM tsm_reg_families_fees WHERE family_fee_id = '".$this->familyFeeId."'";

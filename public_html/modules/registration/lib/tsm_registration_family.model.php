@@ -15,8 +15,21 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     $this->tsm = $tsm;
     $this->db = $tsm->db;
     if (isset($familyId)) {
-      $this->familyId = intval($familyId);
-      $this->getInfo();
+      if ($this->tsm->adminUser->isLoggedIn()) {
+        $permission = true;
+      } else {
+        if ($familyId != $_SESSION['family']['id']) {
+          $permission = false;
+        } else {
+          $permission = true;
+        }
+      }
+      if ($permission == true) {
+        $this->familyId = intval($familyId);
+        $this->getInfo();
+      } else {
+        die("no permission");
+      }
     } else if (isset($_SESSION['family']['id'])) {
       $this->familyId = intval($_SESSION['family']['id']);
       $this->getInfo();
@@ -208,7 +221,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $this->students;
   }
 
-  public function addPayment($params){
+  public function addPayment($params) {
     $amount = $params['amount'];
     $paymentTime = $params['date'];
     $paymentType = $params['payment_type'];
@@ -222,10 +235,10 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $id;
   }
 
-  public function getPayments(){
+  public function getPayments() {
     $q = "SELECT * FROM tsm_reg_families_payments WHERE family_id = '".$this->familyId."'";
     $r = $this->db->runQuery($q);
-    while($a = mysql_fetch_assoc($r)){
+    while ($a = mysql_fetch_assoc($r)) {
       $payments[$a['family_payment_id']] = $a;
     }
 
@@ -234,7 +247,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
 
   public function getPaymentPlans($payment_plan_type_id = null) {
     $q = "SELECT pp.*, fpp.payment_plan_type_id, fpp.name, fpp.immediate_invoice_percentage, fpp.fee_type_id AS payment_plan_fee_type_id,
-    fpp.installment_fee_id, fpp.installment_description, fpp.credit_fee_id, fpp.credit_description, fpp.invoice_and_credit
+    fpp.installment_fee_id, fpp.installment_fee_description, fpp.credit_fee_id, fpp.credit_fee_description, fpp.invoice_and_credit
     FROM tsm_reg_families_payment_plans pp, tsm_reg_fee_payment_plans fpp
     WHERE fpp.payment_plan_id = pp.payment_plan_id
     AND pp.family_id = '".$this->familyId."'
@@ -336,7 +349,42 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
       $returnInvoices[$a['family_invoice_id']] = $a;
     }
 
+    $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_id = '".$this->familyId."' AND family_payment_plan_id IS NULL";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $returnInvoices[$a['family_invoice_id']] = $a;
+    }
+
     return $returnInvoices;
+  }
+
+  public function getGivenName(){
+    if ($this->info['father_first'] != "" && $this->info['mother_first'] != "") {
+      $givenName = $this->info['father_first']." & ".$this->info['mother_first'];
+    } elseif ($this->info['father_first'] == "") {
+      $givenName = $this->info['mother_first'];
+    } elseif ($this->info['mother_first'] == "") {
+      $givenName = $this->info['father_first'];
+    }
+
+    return $givenName;
+  }
+
+  public function getFamilyName(){
+
+    if ($this->info['father_last'] != "" && $this->info['mother_last'] != "") {
+      $familyName = $this->info['father_last'];
+    } elseif ($this->info['father_last'] == "") {
+      $familyName = $this->info['mother_last'];
+    } elseif ($this->info['mother_last'] == "") {
+      $familyName = $this->info['father_last'];
+    }
+
+    return $familyName;
+  }
+
+  public function getDisplayName(){
+    return $this->getGivenName()." ".$this->getFamilyName();
   }
 
   public function createQuickbooksInfo() {
@@ -447,8 +495,12 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
       $service->update($quickbooks->Context, $quickbooks->creds['qb_realm'], $customer->getId(), $customer);
     } elseif ($create == true) {
       $quickbooks_customer_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $customer);
+      //$customer = $service->findById($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooks_customer_id);
+      //print_r($customer);die();
+      //$extKey = $customer->getExternalKey();
+
       if (!$quickbooks_customer_id) {
-        die("THERE WAS A PROBLEM! EXITING!");
+        die("THERE WAS A PROBLEM! EXITING!".$service->lastResponse());
       }
       $this->setQuickbooksCustomerId($quickbooks_customer_id);
     }
@@ -501,34 +553,46 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $quickbooks_customer_id;
   }
 
-  public function createInvoice($family_payment_plan_id = null) {
-    $q = "INSERT INTO tsm_reg_families_invoices (family_id,family_payment_plan_id) VALUES('".$this->familyId."','$family_payment_plan_id')";
+  public function createInvoice($family_payment_plan_id = null, $invoice_description = null, $due_date = null) {
+    if ($due_date == null) {
+      $due_date = date("Y-m-d");
+      $due_date = new DateTime($due_date);
+      $due_date = $due_date->add(date_interval_create_from_date_string('1 month'));
+      $due_date = date_format($due_date, 'Y-m-d');
+    }
+
+
+    $q = "INSERT INTO tsm_reg_families_invoices (family_id,family_payment_plan_id,invoice_description,due_date)
+    VALUES('".$this->familyId."',$family_payment_plan_id,'$invoice_description','$due_date')";
     $this->db->runQuery($q);
     $invoice_id = mysql_insert_id($this->db->conn);
 
     //If the campus uses quickbooks, we have to create the invoice in quickbooks as well.
     $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
-    if ($campus->usesQuickbooks() == true) {
-      /*
-      global $quickbooks;
-      $invoice = new QuickBooks_IPP_Object_Invoice();
-      $invoiceHeader = new QuickBooks_IPP_Object_Header();
-      $invoiceHeader->setCustomerId($this->info['quickbooks_customer_id']);
-
-      $invoice->addHeader($invoiceHeader);
-      $Line = new QuickBooks_IPP_Object_Line();
-      $Line->setItemId('{QB-162}');
-      $Line->setQty(1);
-      //$Line->setOverrideItemAccountName("test");
-
-      $invoice->addLine($Line);
-
-      $service = new QuickBooks_IPP_Service_Invoice();
-      $service->add($quickbooks->Context,$quickbooks->creds['qb_realm'],$invoice);
-      */
-    }
+    $campusInfo = $campus->getInfo();
+    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+    $invoice->setDocNumber($campusInfo['invoice_prefix'].$invoice_id);
 
     return $invoice_id;
+  }
+
+  public function createInvoiceFromFees($fees, $description, $family_payment_plan_id = "NULL", $due_date = null) {
+    global $currentCampus;
+    $invoice_id = $this->createInvoice($family_payment_plan_id, $description,$due_date);
+    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+
+    foreach ($fees as $fee) {
+      $params = Array("family_fee_id" => $fee['family_fee_id'], "description" => $fee['name'], "amount" => $fee['amount']);
+      $invoice->addFee($params);
+    }
+
+    $invoice->updateTotal();
+
+    if ($currentCampus->usesQuickbooks() && $this->inQuickbooks()) {
+      $invoice->addToQuickbooks();
+    }
+
+    return $invoice;
   }
 
   public function recordFee($fee) {
@@ -555,6 +619,19 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     ";
 */
     mail($this->info['primary_email'], $subject, $message, $headers);
+  }
+
+  public function getLooseFees() {
+    $q = "SELECT * FROM tsm_reg_families_fees WHERE family_id = '".$this->familyId."' AND family_payment_plan_id IS NULL";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $familyFee = new TSM_REGISTRATION_FAMILY_FEE($a['family_fee_id']);
+      if (!$familyFee->isInvoiced()) {
+        $returnFees[] = $a;
+      }
+    }
+
+    return $returnFees;
   }
 
   public function getFees($fee_type_id = null) {

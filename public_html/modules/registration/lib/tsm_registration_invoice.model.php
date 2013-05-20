@@ -26,17 +26,108 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
+  public function getTimesSent(){
+    $q = "SELECT COUNT(family_invoice_id) AS times_sent FROM tsm_reg_families_invoice_email WHERE family_invoice_id = '".$this->invoiceId."'";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $timesSent = $a['times_sent'];
+    }
+
+    return $timesSent;
+  }
+
+  public function emailInvoice($sendTo, $contents, $subject){
+    global $currentCampus;
+
+    $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
+    $currentCampusInfo = $currentCampus->getInfo();
+
+    $invoicePdf = $this->generatePDF(true);
+
+    $file = $invoicePdf;
+    $from_name = $currentCampusInfo['name'];
+    $from_mail = $currentCampusInfo['invoice_email_address'];
+    $filename = "Invoice ".$this->info['doc_number'].".pdf";
+    $invoiceNo = $this->info['doc_number'];
+    $contents = str_replace("{{invoiceNo}}",$invoiceNo,$contents);
+    $subject = str_replace("{{invoiceNo}}",$invoiceNo,$subject);
+    $contents = str_replace("{{name}}",$family->getDisplayName(),$contents);
+    $subject = str_replace("{{name}}",$family->getDisplayName(),$subject);
+    $contents = str_replace("{{amount}}",$this->info['amount'],$contents);
+    $subject = str_replace("{{amount}}",$this->info['amount'],$subject);
+    if($currentCampus->usesQuickbooks() && $family->inQuickbooks()){
+      $contents = $contents.'
+      <br />
+      <b>Intuit Payment Network</b>
+      <p>To pay via Intuit Payment Network, just click the button below.
+      <b>Important: </b>Be sure to specify Invoice Number: <b>'.$this->info['doc_number'].'</b> on the following page to ensure that your payment is applied to the correct invoice.
+      If a warning is displayed after you click "Pay Online", simply click "Okay" or "Continue".</p>
+      <form method="post" target="_payByIpnWindow"
+            action="https://ipn.intuit.com/payNow/start" id="payByIpnForm">
+          <input type="hidden" name="eId" value="5152baca5e802cda"/> <input type="hidden" name="uuId"
+                                                                            value="8a89fc3b-5f4b-49be-809e-8fc3a1ff0f32"/>
+          <!--<input type="image" id="payByIpnImg" style="background-color:transparent;border:0 none !important;"
+                 src="https://ipn.intuit.com/images/payButton/btn_PayNow_BLU_LG.png"
+                 alt="Make payments for less with Intuit Payment Network."/>-->
+                 <input style="padding: 10px;" type="submit" value="Pay Online" />
+      </form>
+      <br /><br />
+      ';
+    }
+
+    require_once __TSM_ROOT__.'includes/3rdparty/swift/lib/swift_required.php';
+    /*
+    $transport = Swift_SmtpTransport::newInstance('66.147.244.176', 25)
+      ->setUsername('noreply@takesixmedia.com')
+      ->setPassword('LTOZ7]OLz~wB')
+    ;
+    */
+
+    $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+      ->setUsername('billing@artiosacademies.com')
+      ->setPassword('5646lane')
+    ;
+
+    $mailer = Swift_Mailer::newInstance($transport);
+
+    // Create a message
+    $message = Swift_Message::newInstance($subject)
+      ->setContentType('text/html')
+      ->setFrom(array($from_mail => $from_name))
+      ->setTo(array($sendTo))
+      ->setBody($contents)
+      ->attach(Swift_Attachment::newInstance($file, $filename, 'application/pdf'));
+    ;
+
+    // Send the message
+    $result = $mailer->send($message);
+    //$is_sent = @mail($sendTo, $subject, "", $header);
+    if($result == 1){
+      $q = "INSERT INTO tsm_reg_families_invoice_email (family_invoice_id,family_id,email_subject,email_contents,sent_to) VALUES('".$this->invoiceId."','".$this->info['family_id']."','$subject','".htmlentities($contents)."','$sendTo')";
+      $this->db->runQuery($q);
+    }
+
+    return $result;
+  }
+
   public function generatePDF($forEmail = false) {
     $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
     $familyInfo = $family->getInfo();
 
+    $students = $family->getStudents($this->getSelectedSchoolYear());
+
     $campus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
     $campusInfo = $campus->getInfo();
-    if($this->info['quickbooks_doc_number'] != ""){
-      $invoiceNum = $this->info['quickbooks_doc_number'];
+    if($campusInfo['payment_address2'] != ""){
+      $paymentLine2 = "<br />".$campusInfo['payment_address2'];
     } else {
-      $invoiceNum = $this->info['family_invoice_id'];
+      $paymentLine2 = "";
     }
+
+    $invoiceNum = $this->info['doc_number'];
+
+    $familyName = $family->getDisplayName();
+
 
     $mpdf = new mPDF('win-1252', 'A4', '', '', 20, 15, 48, 25, 10, 10);
     $mpdf->useOnlyCoreFonts = true; // false is default
@@ -65,7 +156,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
         border-left: 0.1mm solid #000000;
         border-right: 0.1mm solid #000000;
     }
-    table thead td { background-color: #EEEEEE;
+    table thead td { background-color: #f5f6e0;
         text-align: center;
         border: 0.1mm solid #000000;
     }
@@ -85,9 +176,11 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
     <!--mpdf
     <htmlpageheader name="myheader">
+
     <table width="100%"><tr>
-    <td width="50%" style="color:#0000BB;"><span style="font-weight: bold; font-size: 14pt;">'.$campusInfo['name'].'</span><br />'.$campusInfo['payment_address_attn'].'<br />'.$campusInfo['payment_address'].' '.$campusInfo['payment_address2'].'<br />'.$campusInfo['payment_city'].', '.$campusInfo['payment_state'].' '.$campusInfo['payment_zip'].'</td>
-    <td width="50%" style="text-align: right;">Invoice No.<br /><span style="font-weight: bold; font-size: 12pt;">'.$invoiceNum.'</span></td>
+    <td width="33%" valign=top style="color: #522d1d;"><br /><span style="font-weight: bold; font-size: 14pt; float: right; color: #8f9332;">'.$campusInfo['name'].'</span><br />'.$campusInfo['payment_address'].$paymentLine2.'<br />'.$campusInfo['payment_city'].', '.$campusInfo['payment_state'].' '.$campusInfo['payment_zip'].'</td>
+    <td width="33%" align=center valign=top><img src="/files/1/artios_logo_invoice.png" style="width: 125px;" /></td>
+    <td width="33%" style="text-align: right;" valign=top><br /><div style="margin-top: 20px;">Invoice No.<br /><span style="font-weight: bold; font-size: 12pt;">'.$invoiceNum.'</span></div></td>
     </tr></table>
     </htmlpageheader>
 
@@ -101,18 +194,23 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     <sethtmlpagefooter name="myfooter" value="on" />
     mpdf-->
 
-    <div style="text-align: right; margin-top: -50px;">Date: '.date('jS F Y', strtotime($this->info['invoice_time'])).'</div>
+    <div style="text-align: right; margin-top: -50px;">
+    <table width="400" align=right>
+    <tr><td></td><td></td></tr>
+    <tr><td align=right>Invoice Date: </td><td width=100 align=right>'.date('M j, Y', strtotime($this->info['invoice_time'])).'</td></tr>
+    <tr><td align=right>Payment Due: </td><td width=100 align=right>'.date("M j, Y",strtotime($this->info['due_date'])).'</td></tr>
+    </table>
     <br /><br />
 
     <table width="100%" style="font-family: serif;" cellpadding="10">
     <tr>
-    <td width="45%" style="border: 0.1mm solid #888888;">
+    <td width="40%" style="border: 0.1mm solid #888888;">
     <span style="font-size: 7pt; color: #555555; font-family: sans;">BILL TO:</span>
-    <br /><br />'.$familyInfo['father_first'].' '.$familyInfo['father_last'].'
+    <br /><br />'.$familyName.'
     <br />'.$familyInfo['address'].'
     <br />'.$familyInfo['city'].', '.$familyInfo['state'].' '.$familyInfo['zip'].'
     </td>
-    <td width="10%">&nbsp;</td>
+    <td width="15%">&nbsp;</td>
     <td width="45%" style="border: 0mm solid #888888;"></td>
     </tr>
     </table>
@@ -123,8 +221,8 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     <thead>
     <tr>
     <td width="15%">REF. NO.</td>
-    <td width="55%">DESCRIPTION</td>
-    <td width="15%">UNIT PRICE</td>
+    <td width="55%" colspan=2>DESCRIPTION</td>
+    <!--<td width="15%">UNIT PRICE</td>-->
     <td width="15%">AMOUNT</td>
     </tr>
     </thead>
@@ -132,12 +230,19 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     <!-- ITEMS HERE -->';
 
     foreach ($this->getFees() as $fee) {
+      $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+      $familyFee = $familyFee->getInfo();
+      if($familyFee['student_id'] != 0){
+        $description = $students[$familyFee['student_id']]['first_name']." ".$students[$familyFee['student_id']]['last_name'].": ".$fee['description'];
+      } else {
+        $description = $fee['description'];
+      }
       $html .= '
     <tr>
     <td align="center">'.$fee['family_fee_id'].'</td>
-    <td>'.$fee['description'].'</td>
-    <td align="right">$'.$fee['amount'].'</td>
-    <td align="right">$'.$fee['amount'].'</td>
+    <td style="border-right: #fff;">'.$description.'</td>
+    <td align="right" style="border-left: 0px;"></td>
+    <td align="right">$'.number_format($fee['amount'], 2, '.', ',').'</td>
     </tr>';
     }
 
@@ -148,20 +253,20 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     <tr>
     <td class="blanktotal" colspan="2" rowspan="6"></td>
     <td class="totals"><b>TOTAL:</b></td>
-    <td class="totals"><b>$'.$this->getTotal().'</b></td>
+    <td class="totals"><b>$'.number_format($this->getTotal(), 2, '.', ',').'</b></td>
     </tr>
     <tr>
     <td class="totals">Amount Paid:</td>
-    <td class="totals">$'.$this->getAmountPaid().'</td>
+    <td class="totals">$'.number_format($this->getAmountPaid(), 2, '.', ',').'</td>
     </tr>
     <tr>
     <td class="totals"><b>Balance due:</b></td>
-    <td class="totals"><b>$'.$this->getAmountDue().'</b></td>
+    <td class="totals"><b>$'.number_format($this->getAmountDue(), 2, '.', ',').'</b></td>
     </tr>
     </tbody>
     </table>
     <br /><br />
-    <div style="text-align: center; font-style: italic;">Payment terms: payment due in 30 days</div>
+    <div style="text-align: right; font-style: italic;">Note: '.$this->info['invoice_description'].'</div>
     </body>
     </html>
     ';
@@ -313,6 +418,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $txnDate = date('Y-m-d', strtotime($this->info['invoice_time']));
     $invoiceHeader->setTxnDate($txnDate);
     $invoiceHeader->setNote($this->info['invoice_description']);
+    $invoiceHeader->setDocNumber($this->info['doc_number']);
 
     if ($invoiceTotal > 0) {
       if(isset($paymentPlanInfo['qb_invoice_class_id'])){
@@ -320,6 +426,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
           $invoiceHeader->setClassId($paymentPlanInfo['qb_invoice_class_id']);
         }
       }
+      $invoiceHeader->setDueDate($this->info['due_date']);
       $quickbooksInvoice = new QuickBooks_IPP_Object_Invoice();
       $quickbooksInvoice->addHeader($invoiceHeader);
     } elseif ($invoiceTotal < 0) {
@@ -335,24 +442,6 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       //todo: need to set the account to whatever account the campus is set to.
       $quickbooksInvoice->addHeader($invoiceHeader);
     }
-
-    /*
-    if(isset($fees)){
-      foreach ($fees as $fee) {
-        $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
-        if (isset($fee['fee_id'])) {
-          $feeInfo = $feeObject->getInfo();
-        }
-
-
-        if (!isset($feeInfo['quickbooks_item_id'])) {
-          $doNotProcess = true;
-        }
-
-
-      }
-    }
-    */
 
     if (!$doNotProcess) {
       if (isset($fees)) {
@@ -374,6 +463,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
             $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
             $familyFeeInfo = $familyFee->getInfo();
 
+            //todo:figure out why the paypal convenience fee is not getting assigned the correct class.
             if($familyFeeInfo['program_id'] != 0 || $familyFeeInfo['course_id'] == 0){
               if($familyFeeInfo['program_id'] == 0){
                 $programString = " program_id IS NULL ";
@@ -434,23 +524,12 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
           }
         }
       }
-      /*
-      else {
-        $Line = new QuickBooks_IPP_Object_Line();
-        $Line->setAmount($creditMemoTotal);
-        $Line->setDesc("Tuition Installment");
-        $Line->setItemId("{QB-398}");
-        $Line->setQty(1);
-        $quickbooksInvoice->addLine($Line);
-      }
-      */
 
       if ($invoiceTotal > 0) {
         $service = new QuickBooks_IPP_Service_Invoice();
       } elseif ($invoiceTotal < 0) {
         $service = new QuickBooks_IPP_Service_CreditMemo();
       }
-      //print_r($quickbooksInvoice);die();
 
       $quickbooks_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $quickbooksInvoice);
       if ($quickbooks_id == null) {
@@ -461,33 +540,6 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       $extKey = $invoice->getExternalKey();
       $this->setQuickbooksExternalKey($extKey);
 
-      /*
-      $payments = $this->getPayments();
-      if (isset($payments)) {
-        $txnId = $invoice->getExternalKey();
-        foreach ($payments as $payment) {
-          if ($payment['quickbooks_payment_id'] == "") {
-            $paymentObject = new QuickBooks_IPP_Object_Payment();
-            $paymentHeader = new QuickBooks_IPP_Object_Header();
-            $paymentHeader->setCustomerId($quickbooks_customer_id);
-            $paymentHeader->setTotalAmt($payment['amount']);
-            $paymentHeader->setDocNumber($payment['reference_number']);
-            $paymentHeader->setPaymentMethodId($campusInfo['qb_paypal_payment_method_id']);
-            $txnDate = date('Y-m-d', strtotime($payment['payment_time']));
-            $paymentHeader->setTxnDate($txnDate);
-            $paymentObject->addHeader($paymentHeader);
-            $Line = new QuickBooks_IPP_Object_Line();
-            $Line->setTxnId($txnId);
-            $Line->setAmount($payment['amount']);
-            $paymentObject->addLine($Line);
-            $service = new QuickBooks_IPP_Service_Payment();
-            $quickbooks_payment_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $paymentObject);
-            $paymentObject = new TSM_REGISTRATION_PAYMENT($payment['invoice_payment_id']);
-            $paymentObject->setQuickbooksId($quickbooks_payment_id);
-          }
-        }
-      }
-      */
 
       return true;
     } else {
@@ -498,6 +550,13 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
   public function hide() {
     $q = "UPDATE tsm_reg_families_invoices SET displayed = false WHERE family_invoice_id = '".$this->invoiceId."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
+  public function setInvoiceAndCredit($value) {
+    $q = "UPDATE tsm_reg_families_invoices SET invoice_and_credit = $value WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);
 
     return true;
@@ -517,8 +576,8 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
-  public function setQuickbooksDocNumber($num){
-    $q = "UPDATE tsm_reg_families_invoices SET quickbooks_doc_number = '".$num."' WHERE family_invoice_id = '".$this->invoiceId."'";
+  public function setDocNumber($num){
+    $q = "UPDATE tsm_reg_families_invoices SET doc_number = '".$num."' WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);
 
     return true;

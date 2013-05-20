@@ -34,10 +34,11 @@ $campusList = $reg->getCampuses();
 //todo: verify that this is working correctly
 //todo: make sure this is only syncing changed and new invoices and payments
 //todo: make sure this is checking updated payments to see which invoices they are applied to and applying them to those invoices.
-if(isset($campusList)){
-  foreach($campusList as $campus){
-    $reg->setCurrentCampusId($campus['campus_id']);
-    $currentCampus = new TSM_REGISTRATION_CAMPUS($campus['campus_id']);
+//if(isset($campusList)){
+//  foreach($campusList as $campus){
+    //$reg->setCurrentCampusId($campus['campus_id']);
+    $reg->setCurrentCampusId(1);
+    $currentCampus = new TSM_REGISTRATION_CAMPUS(1);
     $reg->setSelectedSchoolYear($currentCampus->getCurrentSchoolYear());
     if($currentCampus->usesQuickbooks()){
       $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
@@ -49,7 +50,7 @@ if(isset($campusList)){
       $updateInvoices = null;
       if(isset($localInvoices)){
         foreach($localInvoices as $invoice){
-          if(($invoice['quickbooks_external_key'] == "" or $invoice['quickbooks_doc_number'] == "") and $invoice['quickbooks_invoice_id'] != ""){
+          if(($invoice['quickbooks_external_key'] == "") and $invoice['quickbooks_invoice_id'] != ""){
             $txnIds[] = substr($invoice['quickbooks_invoice_id'],4,-1);
             $updateInvoices[$invoice['quickbooks_invoice_id']] = $invoice;
           }
@@ -72,12 +73,10 @@ if(isset($campusList)){
           $invoiceId = $updateInvoices[$quickbooksId]['family_invoice_id'];
           $extKey = $invoice->getExternalKey();
           $header = $invoice->getHeader();
-          $docNumber = $header->getDocNumber();
           $invoiceObject = new TSM_REGISTRATION_INVOICE($invoiceId);
           $extTxnIds[] = substr($extKey,4,-1);
           //update the external key for the invoice
           $invoiceObject->setQuickbooksExternalKey($extKey);
-          $invoiceObject->setQuickbooksDocNumber($docNumber);
         }
       }
 
@@ -208,7 +207,7 @@ if(isset($campusList)){
       }
 
     }
-  }
-}
+//  }
+//}
 $memUsage = memory_get_peak_usage(true)/1048576;
 echo "Sync is complete: ".$memUsage."MB";

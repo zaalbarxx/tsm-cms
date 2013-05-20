@@ -24,6 +24,22 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
                       class="reviewButton" title="Review This Student"></a></span>
 
           <div class="itemDetails">
+            <?php
+            /* This code is useful for making sure everyone was assigned the correct fees
+            $studentObject = new TSM_REGISTRATION_STUDENT($student['student_id']);
+            $processFees = $studentObject->processFees(true);
+            if((isset($processFees['addFees']) || isset($processFees['removeFees'])) && !isset($processFees['removeButInvoiced'])){
+              echo "Okay to process: ";
+              print_r($processFees);
+              //$studentObject->processFees();
+            } else if(isset($processFees['addFees']) || isset($processFees['removeFees']) || isset($processFees['removeButInvoiced'])){
+              echo "Not okay to process: ";
+              print_r($processFees);
+              //$studentObject->processFees();
+              //die();
+            }
+            */
+            ?>
           </div>
       </div>
     <?php

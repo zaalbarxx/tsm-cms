@@ -379,6 +379,9 @@ background: url(../images/icons/smile24.png);
 .smallItem .buttons .editButton{
 background: url(../images/icons/pencil24.png);
 }
+.smallItem .buttons .sendButton{
+background: url(../images/icons/mail24.png);
+}
 .smallItem .buttons .deleteButton{
 background: url(../images/icons/stop24.png);
 }

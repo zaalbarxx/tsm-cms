@@ -106,7 +106,9 @@ class TSM_REGISTRATION_FEE_CONDITION extends TSM_REGISTRATION_CAMPUS {
         $endDate = strtotime($endDate);
         $regDate = $student->getRegistrationDate($params['program_id']);
         $regDate = strtotime($regDate);
-        if ($startDate < $regDate && ($endDate > $regDate)) {
+        $regDate = date("Y-m-d",$regDate);
+        $regDate = strtotime($regDate);
+        if (($startDate <= $regDate) && ($endDate >= $regDate)) {
           $result = true;
         } else {
           $result = false;
@@ -179,9 +181,11 @@ class TSM_REGISTRATION_FEE_CONDITION extends TSM_REGISTRATION_CAMPUS {
       case "7":
         $courses = $student->getAllCourses();
         $result = false;
-        foreach ($courses as $course) {
-          if ($course['course_id'] == $this->info['config_1']) {
-            $result = true;
+        if(isset($courses)){
+          foreach ($courses as $course) {
+            if ($course['course_id'] == $this->info['config_1']) {
+              $result = true;
+            }
           }
         }
         return $result;

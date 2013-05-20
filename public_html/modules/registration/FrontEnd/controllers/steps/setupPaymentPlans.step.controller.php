@@ -61,10 +61,9 @@ if (isset($acceptDisclaimer)) {
   $family->acceptDisclaimer($plan_to_process['family_payment_plan_id']);
 }
 
-
 if ($invoices == null) {
 
-  $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
+  $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id'],$planInfo['name'],"2013-05-01");
   $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 
   foreach ($planFeeTypes as $fee_type_id) {
@@ -81,14 +80,15 @@ if ($invoices == null) {
   $invoice->updateTotal();
   $planTotal = $invoice->getTotal();
 
-  if (isset($familyInfo['quickbooks_customer_id']) && $currentCampus->usesQuickbooks()) {
-    //$invoice->addToQuickbooks();
+  if ($family->inQuickbooks() && $currentCampus->usesQuickbooks()) {
+    $invoice->addToQuickbooks();
   }
 
   $dueToday = $planTotal;
   //todo: make payment plans honour the invoice and credit setting from addEdit.paymentPlans.fee.view.php
   if ($plan_to_process['payment_plan_type_id'] == 4) {
     $invoice->hide();
+    $invoice->setInvoiceAndCredit(true);
 
     $installmentFee = new TSM_REGISTRATION_FEE($plan_to_process['installment_fee_id']);
     $installmentFeeInfo = $installmentFee->getInfo();
@@ -100,23 +100,30 @@ if ($invoices == null) {
     $creditFeeAmount = -$planTotal;
 
     //Credit intial invoice back to account so we can bill in installments.
-    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
-    $family_fee_id = $family->addFee($plan_to_process['credit_description'], $creditFeeAmount, $plan_to_process['credit_fee_id'], $creditFeeInfo['fee_type_id']);
+    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id'],$planInfo['name']);
+    $family_fee_id = $family->addFee($plan_to_process['credit_fee_description'], $creditFeeAmount, $plan_to_process['credit_fee_id'], $creditFeeInfo['fee_type_id']);
     $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
     $familyFee->setPaymentPlan($plan_to_process['family_payment_plan_id']);
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
-    $invoice->addFee(Array("family_fee_id" => $family_fee_id, "description" => $plan_to_process['credit_description'], "amount" => $creditFeeAmount));
+    $invoice->addFee(Array("family_fee_id" => $family_fee_id, "description" => $plan_to_process['credit_fee_description'], "amount" => $creditFeeAmount));
     $invoice->updateTotal();
+    if ($family->inQuickbooks() && $currentCampus->usesQuickbooks()) {
+      $invoice->addToQuickbooks();
+    }
     $invoice->hide();
+    $invoice->setInvoiceAndCredit(true);
 
     //Invoice first installment
-    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id']);
-    $family_fee_id = $family->addFee($plan_to_process['installment_description'], $installmentFeeAmount, $plan_to_process['installment_fee_id'], $installmentFeeInfo['fee_type_id']);
+    $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id'],$planInfo['name']);
+    $family_fee_id = $family->addFee($plan_to_process['installment_fee_description'], $installmentFeeAmount, $plan_to_process['installment_fee_id'], $installmentFeeInfo['fee_type_id']);
     $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
     $familyFee->setPaymentPlan($plan_to_process['family_payment_plan_id']);
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
-    $invoice->addFee(Array("family_fee_id" => $family_fee_id, "description" => $plan_to_process['installment_description'], "amount" => $installmentFeeAmount));
+    $invoice->addFee(Array("family_fee_id" => $family_fee_id, "description" => $plan_to_process['installment_fee_description'], "amount" => $installmentFeeAmount));
     $invoice->updateTotal();
+    if ($family->inQuickbooks() && $currentCampus->usesQuickbooks()) {
+      $invoice->addToQuickbooks();
+    }
 
     $dueToday = $installmentFeeAmount;
   }

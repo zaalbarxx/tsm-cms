@@ -29,7 +29,9 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getNumInvoices(){
-    $q = "SELECT COUNT(family_invoice_id) AS num_invoices FROM tsm_reg_families_invoices WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."'";
+    $q = "SELECT COUNT(family_invoice_id) AS num_invoices
+    FROM tsm_reg_families_invoices
+    WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."'";
     $r = $this->db->runQuery($q);
     while ($a = mysql_fetch_assoc($r)) {
       $numInvoices = $a['num_invoices'];
@@ -39,7 +41,10 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getLastInvoice(){
-    $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."' ORDER BY family_invoice_id DESC";
+    $q = "SELECT * FROM tsm_reg_families_invoices
+    WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."'
+    AND invoice_and_credit = 0
+    ORDER BY family_invoice_id DESC LIMIT 1";
     $r = $this->db->runQuery($q);
     $lastInvocie = null;
     while ($a = mysql_fetch_assoc($r)) {
@@ -109,7 +114,10 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
       $r = $this->db->runQuery($q);
       $fees = null;
       while ($a = mysql_fetch_assoc($r)) {
-        $fees[$a['family_fee_id']] = $a;
+        $familyFee = new TSM_REGISTRATION_FAMILY_FEE($a['family_fee_id']);
+        if(!$familyFee->isInvoiced()){
+          $fees[$a['family_fee_id']] = $a;
+        }
       }
     }
 
@@ -154,17 +162,224 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     return $total;
   }
 
+  public function getAmountInvoiced(){
+    global $reg;
+
+    $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
+    $campusInfo = $campus->getInfo();
+
+    $invoices = $this->getInvoices();
+    if(isset($invoices)){
+      foreach($invoices as $invoice){
+        $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
+        $fees = $invoiceObject->getFees();
+        if(isset($fees)){
+          foreach($fees as $fee){
+            if($fee['fee_id'] != $campusInfo['paypal_convenience_fee_id']){
+              $paymentPlanFees[] = $fee;
+            }
+          }
+        }
+      }
+    }
+    if(isset($paymentPlanFees)){
+      $total = $reg->addFees($paymentPlanFees);
+    } else {
+      $total = 0;
+    }
+
+    return $total;
+  }
+
   public function getAmountPaid(){
+    $campus = new TSM_REGISTRATION_CAMPUS($this->getCurrentCampusId());
+    $campusInfo = $campus->getInfo();
+
     $amountPaid = 0;
     $invoices = $this->getInvoices();
     if(isset($invoices)){
       foreach($invoices as $invoice){
         $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
-        $amountPaid = $amountPaid + $invoiceObject->getAmountPaid();
+        $invoiceFees = $invoiceObject->getFees();
+        $amtToSubtract = 0;
+        if(isset($invoiceFees)){
+          foreach($invoiceFees as $fee){
+            if($fee['fee_id'] == $campusInfo['paypal_convenience_fee_id']){
+              $amtToSubtract = $amtToSubtract + $fee['amount'];
+            }
+          }
+        }
+        $invoiceAmtPaid = $invoiceObject->getAmountPaid();
+        if($invoiceAmtPaid > 0){
+          $invoiceAmtPaid = $invoiceObject->getAmountPaid() - $amtToSubtract;
+        }
+        $amountPaid = $amountPaid + $invoiceAmtPaid;
       }
     }
 
     return $amountPaid;
+  }
+
+  public function invoicePercentage(){
+    $percentage = $this->info['immediate_invoice_percentage'];
+    $percentage = $percentage / 100;
+    $paymentPlanTotal = $this->getTotal();
+    $invoiceAmount = $paymentPlanTotal * $percentage;
+    $invoice = $this->invoiceInstallment($invoiceAmount);
+
+    return $invoice;
+  }
+
+  public function invoiceInstallment($invoiceAmount = null){
+    $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
+    $familyInfo = $family->getInfo();
+    $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($this->info['payment_plan_id']);
+    $paymentPlan = $paymentPlan->getInfo();
+    $installmentFee = new TSM_REGISTRATION_FEE($paymentPlan['installment_fee_id']);
+    $installmentFee = $installmentFee->getInfo();
+
+    $numInvoices = $this->getNumInvoices();
+    if($this->info['invoice_and_credit'] == 1){
+      $numInvoices = $numInvoices - 2;
+    }
+
+    //if we're invoicing a percentage up front and then invoicing installments, we need to modify the number of invoices to be +1;
+    if($paymentPlan['payment_plan_type_id'] == 4){
+      $paymentPlan['num_invoices']++;
+    }
+
+    $totalInvoiced = $this->getAmountInvoiced();
+    $totalAmount = $this->getTotal();
+    $totalRemaining = $totalAmount - $totalInvoiced;
+    $numInvoicesRemaining = $paymentPlan['num_invoices'] - $numInvoices;
+    if($invoiceAmount == null){
+      $invoiceTotal = $totalRemaining / $numInvoicesRemaining;
+    } else {
+      $invoiceTotal = $invoiceAmount;
+    }
+    $invoiceNumber = $numInvoices+1;
+    $installmentFeeId = $family->addFee($paymentPlan['installment_fee_description'],$invoiceTotal,$installmentFee['fee_id'],$installmentFee['fee_type_id']);
+    $familyFee = new TSM_REGISTRATION_FAMILY_FEE($installmentFeeId);
+    $familyFee->setPaymentPlan($this->familyPaymentPlanId);
+
+
+    //SET DUE DATE TO BE THE 1ST OF NEXT MONTH
+    $dueDate = date("Y-m-d");
+    $dueDate = new DateTime($dueDate);
+    $dueDate = $dueDate->add(date_interval_create_from_date_string('1 month'));
+    $dueDate = date_format($dueDate,'Y-m-1');
+
+    $invoiceId = $family->createInvoice($this->familyPaymentPlanId,$paymentPlan['installment_invoice_description']." - (".$invoiceNumber." of ".$paymentPlan['num_invoices'].")",$dueDate);
+
+    $familyInvoice = new TSM_REGISTRATION_INVOICE($invoiceId);
+    $params = Array("family_fee_id"=>$installmentFeeId,"description"=>$paymentPlan['installment_fee_description'],"amount"=>$invoiceTotal);
+    $familyInvoice->addFee($params);
+    $familyInvoice->updateTotal();
+
+    $currentCampus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
+    if($currentCampus->usesQuickbooks() && $family->inQuickbooks()){
+      $familyInvoice->addToQuickbooks();
+    }
+
+    return $familyInvoice;
+  }
+
+  public function invoiceAndCredit(){
+    $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
+    $familyInfo = $family->getInfo();
+    $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($this->info['payment_plan_id']);
+    $paymentPlanInfo = $paymentPlan->getInfo();
+
+    $invoiceFull = $this->invoiceFull();
+    $planTotal = $this->getTotal();
+
+    $creditFee = new TSM_REGISTRATION_FEE($paymentPlanInfo['credit_fee_id']);
+    $creditFeeInfo = $creditFee->getInfo();
+    $creditFeeAmount = -$planTotal;
+
+    //Credit intial invoice back to account so we can bill in installments.
+    $credit_invoice_id = $family->createInvoice($this->familyPaymentPlanId,$paymentPlanInfo['credit_invoice_description']);
+    $family_fee_id = $family->addFee($paymentPlanInfo['credit_fee_description'], $creditFeeAmount, $paymentPlanInfo['credit_fee_id'], $creditFeeInfo['fee_type_id']);
+    $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+    $familyFee->setPaymentPlan($this->familyPaymentPlanId);
+    $invoiceCredit = new TSM_REGISTRATION_INVOICE($credit_invoice_id);
+    $invoiceCredit->addFee(Array("family_fee_id" => $family_fee_id, "description" => $paymentPlanInfo['credit_fee_description'], "amount" => $creditFeeAmount));
+    $invoiceCredit->updateTotal();
+    $invoiceCredit->hide();
+    $invoiceCredit->setInvoiceAndCredit(true);
+
+    $currentCampus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
+    if($currentCampus->usesQuickbooks() && $family->inQuickbooks()){
+      $invoiceCredit->addToQuickbooks();
+    }
+    $return = Array("invoice_full"=>$invoiceFull,"invoice_credit"=>$invoiceCredit);
+
+    return $return;
+  }
+
+  public function invoiceSpecificFees($feesToInvoice,$description = null,$dueDate = null){
+    $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
+    $familyInfo = $family->getInfo();
+    $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($this->info['payment_plan_id']);
+    $paymentPlanInfo = $paymentPlan->getInfo();
+    if($description == null){
+      $description = $paymentPlanInfo['name'];
+    }
+
+    $invoice_id = $family->createInvoice($this->familyPaymentPlanId,$description);
+    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+
+    if(isset($feesToInvoice)){
+      foreach ($feesToInvoice as $family_fee_id) {
+        $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+        $familyFee->setPaymentPlan($this->familyPaymentPlanId);
+        //$feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
+        $familyFeeInfo = $familyFee->getInfo();
+        $invoice->addFee(Array("family_fee_id" => $family_fee_id, "description" => $familyFeeInfo['name'], "amount" => $familyFeeInfo['amount']));
+      }
+    }
+    $invoice->updateTotal();
+
+    $currentCampus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
+    if($currentCampus->usesQuickbooks() && $family->inQuickbooks()){
+      $invoice->addToQuickbooks();
+    }
+
+    return $invoice;
+  }
+
+  public function invoiceFull(){
+    $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
+    $familyInfo = $family->getInfo();
+    $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($this->info['payment_plan_id']);
+    $paymentPlanInfo = $paymentPlan->getInfo();
+
+    $invoice_id = $family->createInvoice($this->familyPaymentPlanId,$paymentPlanInfo['full_invoice_description']);
+    $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+
+
+    $fees = $this->getFees();
+    if(isset($fees)){
+      foreach ($fees as $fee) {
+        $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+        $familyFee->setPaymentPlan($this->familyPaymentPlanId);
+        //$feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
+        $familyFeeInfo = $familyFee->getInfo();
+        $invoice->addFee(Array("family_fee_id" => $fee['family_fee_id'], "description" => $familyFeeInfo['name'], "amount" => $familyFeeInfo['amount']));
+      }
+    }
+    $invoice->updateTotal();
+    if($paymentPlanInfo['invoice_and_credit'] == 1){
+      $invoice->hide();
+      $invoice->setInvoiceAndCredit(true);
+    }
+
+    $currentCampus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
+    if($currentCampus->usesQuickbooks() && $family->inQuickbooks()){
+      $invoice->addToQuickbooks();
+    }
+
+    return $invoice;
   }
 
   public function completeSetup(){
@@ -186,6 +401,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function approve(){
+    //todo: need to see if we're supposed to invoice then credit this invoice and handle that somehow
     $this->completeSetup();
 
     return true;

@@ -11,13 +11,14 @@ if (isset($students)) {
     $students[$student['student_id']]['registration_total'] = $reg->addFees($studentObject->getFees($campusInfo['registration_fee_type_id']));
   }
 }
-$invoices = $family->getInvoices(1);
+$invoices = $family->getInvoices();
 $paymentPlans = $family->getPaymentPlans();
 if (isset($invoices)) {
   foreach ($invoices as $invoice) {
     $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
-    $invoices[$invoice['family_invoice_id']]['amountPaid'] = $invoiceObject->getAmountPaid();
-    $invoices[$invoice['family_invoice_id']]['amountDue'] = $invoiceObject->getAmountDue();
+    $invoices[$invoice['family_invoice_id']]['amountPaid'] = number_format($invoiceObject->getAmountPaid(), 2, '.', ',');
+    $invoices[$invoice['family_invoice_id']]['amountDue'] = number_format($invoiceObject->getAmountDue(), 2, '.', ',');
+    $invoices[$invoice['family_invoice_id']]['timesSent'] = $invoiceObject->getTimesSent();
   }
 }
 
@@ -26,15 +27,22 @@ if(isset($paymentPlans)){
 
     $paymentPlanObject = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($paymentPlan['family_payment_plan_id']);
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['status'] = $paymentPlanObject->getStatus();
-    $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountDue'] = $paymentPlanObject->getAmountDue();
-    $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountPaid'] = $paymentPlanObject->getAmountPaid();
-    $paymentPlans[$paymentPlan['family_payment_plan_id']]['totalAmount'] = $paymentPlanObject->getTotal();
+    $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountDue'] = number_format($paymentPlanObject->getAmountDue(), 2, '.', ',');
+    $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountPaid'] = number_format($paymentPlanObject->getAmountPaid(), 2, '.', ',');
+    $paymentPlans[$paymentPlan['family_payment_plan_id']]['totalAmount'] = number_format($paymentPlanObject->getTotal(), 2, '.', ',');
+    $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountInvoiced'] = number_format($paymentPlanObject->getAmountInvoiced(), 2, '.', ',');
+    if($paymentPlanObject->getUnassignedApplicableFees()){
+      $paymentPlans[$paymentPlan['family_payment_plan_id']]['moreFeesAvailible'] = true;
+    } else {
+      $paymentPlans[$paymentPlan['family_payment_plan_id']]['moreFeesAvailible'] = false;
+    }
     foreach($paymentPlans[$paymentPlan['family_payment_plan_id']]['fee_types'] as $feeType){
       $paymentPlans[$paymentPlan['family_payment_plan_id']]['fee_type_names'] .= $currentCampus->getFeeTypeName($feeType).", ";
     }
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['fee_type_names'] = substr_replace($paymentPlans[$paymentPlan['family_payment_plan_id']]['fee_type_names'] ,"",-2);
   }
 }
+$looseFees = $family->getLooseFees();
 //print_r($paymentPlans);die();
 
 

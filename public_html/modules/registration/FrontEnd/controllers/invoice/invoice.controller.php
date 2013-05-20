@@ -10,5 +10,8 @@ switch ($action) {
     require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/invoice/payOnline.invoice.controller.php");
     $activeView = __TSM_ROOT__."modules/registration/FrontEnd/views/invoice/payOnline.invoice.view.php";
     break;
+  case "viewPDF":
+    require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/invoice/viewPDF.invoice.controller.php");
+    break;
 }
 ?>

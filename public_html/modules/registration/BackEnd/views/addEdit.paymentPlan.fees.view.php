@@ -159,7 +159,7 @@ if($currentCampus->usesQuickbooks()){
             ?>
           </select><br/>
           <b>Installment Description: </b>
-          <input name="installment_description" value="<?php echo $planInfo['installment_description']; ?>"
+          <input name="installment_fee_description" value="<?php echo $planInfo['installment_fee_description']; ?>"
                  size="80"/><br/><br/>
           <b>Invoice and Credit: </b><select name="invoice_and_credit">
 
@@ -187,7 +187,7 @@ if($currentCampus->usesQuickbooks()){
             ?>
           </select><br/>
           <b>Credit Description: </b>
-          <input name="credit_description" value="<?php echo $planInfo['credit_description']; ?>" size="80"/>
+          <input name="credit_fee_description" value="<?php echo $planInfo['credit_fee_description']; ?>" size="80"/>
           </span>
       <span id="monthly_plan" class="planDetails" style="display: none;">
 				<b>Plan Details</b>
@@ -262,7 +262,7 @@ if($currentCampus->usesQuickbooks()){
         ?>
       </select><br/>
           <b>Installment Description: </b>
-          <input name="installment_description" value="<?php echo $planInfo['installment_description']; ?>"
+          <input name="installment_fee_description" value="<?php echo $planInfo['installment_fee_description']; ?>"
                  size="80"/><br/><br/>
           <b>Invoice and Credit: </b><select name="invoice_and_credit">
 
@@ -290,7 +290,7 @@ if($currentCampus->usesQuickbooks()){
         ?>
       </select><br/>
           <b>Credit Description: </b>
-          <input name="credit_description" value="<?php echo $planInfo['credit_description']; ?>" size="80"/>
+          <input name="credit_fee_description" value="<?php echo $planInfo['credit_fee_description']; ?>" size="80"/>
 
       </span>
 
@@ -299,6 +299,11 @@ if($currentCampus->usesQuickbooks()){
 <textarea name="description" id="description" class="editor"/><?php echo $planInfo['description']; ?></textarea>
 <label for="description">Disclaimer: </label>
 <textarea name="disclaimer" id="disclaimer" class="editor"/><?php echo $planInfo['disclaimer']; ?></textarea>
+<br />
+<label>Invoice E-mail Subject: </label>
+<input name="invoice_email_subject" value="<?php echo $planInfo['invoice_email_subject']; ?>" size="80"/><br /><br />
+<label for="invoice_email">Invoice E-mail Contents: </label>
+<textarea name="invoice_email" id="invoice_email" class="editor"/><?php echo $planInfo['invoice_email']; ?></textarea>
 <script type="text/javascript">
     $('textarea.editor').ckeditor();
 </script>

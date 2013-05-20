@@ -2,20 +2,20 @@
     <h2>Link To Quickbooks</h2>
 
     <p>To link this family to a quickbooks customer, select the customer below and press "Link Now".</p>
-
+    <p>You are linking: <?php echo $familyInfo['father_first']." & ".$familyInfo['mother_first']." ".$familyInfo['father_last'].", ".$familyInfo['address']; ?></p>
     <form action="" method="post" id="linkToQuickbooks" class="form-horizontal">
       <?php
       if ($currentCampus->usesQuickbooks()) {
         ?>
           <fieldset>
               <legend>Quickbook Information</legend>
-              <div class="control-group">
+              <!--<div class="control-group">
                   <label class="control-label" for="createNewCustomer">Create New Customer: </label>
 
                   <div class="controls">
                       <input type="checkbox" id="createNewCustomer" name="createNewCustomer" value="1"/>
                   </div>
-              </div>
+              </div>-->
               <div class="control-group" id="quickbooks_customer_id_group">
                   <label for="quickbooks_customer_id" class="control-label">Existing Customer: </label>
 
@@ -31,7 +31,12 @@
                             $selected = "";
                           }
                           $address = $customer->getAddress();
-                          echo "<option value='".$id."' $selected>".$customer->getName()." - ".$address->getLine2()."</option>";
+                          if(is_object($address)){
+                            $addressLine2 = " - ".$address->getLine2();
+                          } else {
+                            $addressLine2 = "";
+                          }
+                          echo "<option value='".$id."' $selected>".$customer->getName().$addressLine2."</option>";
                           //echo $item->getId()."--".$item->getName()."--$".$price."<br />";
                         }
                         ?>

@@ -87,9 +87,10 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         <tr style="font-weight: bold;">
           <td>ID</td>
           <td>Description</td>
-          <td>Fee Types</td>
+          <!--<td>Fee Types</td>-->
           <td>Total</td>
           <td>Amt Paid</td>
+          <td>Amt Invoiced</td>
           <td>Amt Due</td>
           <td>Status</td>
         </tr>
@@ -98,13 +99,17 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           foreach($paymentPlans as $paymentPlan){
             echo "<tr><td>".$paymentPlan['family_payment_plan_id']."</td>
             <td>".$paymentPlan['name']."</td>
-            <td>".$paymentPlan['fee_type_names']."</td>
+            <!--<td>".$paymentPlan['fee_type_names']."</td>-->
             <td>$".$paymentPlan['totalAmount']."</td>
             <td>$".$paymentPlan['amountPaid']."</td>
+            <td>$".$paymentPlan['amountInvoiced']."</td>
             <td>$".$paymentPlan['amountDue']."</td>
             <td>".$paymentPlan['status'];
             if($paymentPlan['status'] == "Pending Approval"){
               echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=approvePaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Approve</a>";
+            } else if ($paymentPlan['moreFeesAvailible'] && $paymentPlan['amountInvoiced'] < $paymentPlan['totalAmount']){
+              echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=addFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Add Fees</a>";
+              //echo " | <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=invoiceFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Invoice All</a>";
             }
             echo "</td></tr>";
           }
@@ -118,19 +123,27 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         <h2>Recent Invoices</h2>
         <table style="width: 100%;" class="table table-striped table-bordered ">
             <tr style="font-weight: bold;">
-                <td>ID</td>
+                <td>Invoice</td>
                 <td>Description</td>
                 <td>Date</td>
+                <td>Sent</td>
                 <td>Total</td>
                 <td>Amount Paid</td>
                 <td>Amount Due</td>
-                <td></td>
+              <td></td>
+              <td></td>
             </tr>
 
           <?php
           if (isset($invoices)) {
             foreach ($invoices as $invoice) {
-              echo "<tr><td>".$invoice['family_invoice_id']."</td><td>".$invoice['name']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td><td><a href='index.php?mod=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>View</a></td></tr>";
+              echo "<tr><td>".$invoice['doc_number']."</td><td>".$invoice['invoice_description']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>".$invoice['timesSent']."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td><td><a href='index.php?mod=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>View</a></td>";
+              if($invoice['displayed'] == 1){
+                echo "<td><a href='index.php?mod=registration&view=family&action=emailInvoice&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary fb'>Email</a></td>";
+              } else {
+                echo "<td></td>";
+              }
+              echo "</tr>";
             }
           } else {
             echo "<tr class='warning'><td colspan=7>There are no recent invoices for this family.</td></tr>";
@@ -138,6 +151,29 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           ?>
         </table>
     </div>
+  <?php if (isset($looseFees)) { ?>
+  <div class="infoSection well">
+    <h2>Unassigned Fees</h2>
+    <p>This family has fees that have not been invoiced and are not assigned to a payment plan. They are listed below.</p>
+    <div class="btn-group center">
+      <!--<a class="btn" href="">Assign to Payment Plan</a>-->
+      <a class="btn fb" href="index.php?mod=registration&view=family&action=invoiceFees&family_id=<?php echo $family_id; ?>">Invoice Now</a>
+    </div>
+    <br /><br />
+    <table style="width: 100%;" class="table table-striped table-bordered ">
+      <tr style="font-weight: bold;">
+        <td>ID</td>
+        <td>Description</td>
+        <td>Amount</td>
+      </tr>
+    <?php
+      foreach ($looseFees as $fee) {
+        echo "<tr><td>".$fee['family_fee_id']."</td><td>".$fee['name']."</td><td>$".$fee['amount']."</td></tr>";
+      }
+    ?>
+    </table>
+  </div>
+  <?php } ?>
 
 </div>
 <script type="text/javascript">

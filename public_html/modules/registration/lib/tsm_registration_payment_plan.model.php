@@ -36,6 +36,28 @@ class TSM_REGISTRATION_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     return $numFamiles;
   }
 
+  public function getInvoiceEmail(){
+    return html_entity_decode($this->info['invoice_email']);
+  }
+
+  public function getInvoiceEmailSubject(){
+    return $this->info['invoice_email_subject'];
+  }
+
+  public function getInvoices(){
+    $q = "SELECT * FROM tsm_reg_families_invoices fi, tsm_reg_families_payment_plans fpp, tsm_reg_families f
+    WHERE fpp.family_payment_plan_id = fi.family_payment_plan_id
+    AND fi.family_id = f.family_id
+    AND fpp.payment_plan_id = '".$this->info['payment_plan_id']."'
+    AND fi.displayed = 1";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $invoices[$a['family_invoice_id']] = $a;
+    }
+
+    return $invoices;
+  }
+
   public function getFamilyPaymentPlans(){
     $q = "SELECT * FROM tsm_reg_families f, tsm_reg_families_payment_plans fpp WHERE f.family_id = fpp.family_id AND fpp.payment_plan_id = '".$this->paymentPlanId."'";
     $r = $this->db->runQuery($q);
