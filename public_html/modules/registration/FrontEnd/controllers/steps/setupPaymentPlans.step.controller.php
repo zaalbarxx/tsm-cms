@@ -63,7 +63,7 @@ if (isset($acceptDisclaimer)) {
 
 if ($invoices == null) {
 
-  $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id'],$planInfo['name']);
+  $invoice_id = $family->createInvoice($plan_to_process['family_payment_plan_id'],$planInfo['name'],"2013-05-01");
   $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 
   foreach ($planFeeTypes as $fee_type_id) {
