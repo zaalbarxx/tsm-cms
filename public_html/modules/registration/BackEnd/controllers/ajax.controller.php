@@ -327,7 +327,7 @@ switch ($ajax) {
     }
     break;
   case "invoiceFees":
-    if (isset($family_id) && isset($feesToAdd) && isset($invoice_description) && $invoice_description != "") {
+    if (isset($family_id) && isset($feesToAdd) && isset($invoice_description) && $invoice_description != "" && isset($due_date)) {
       $family = new TSM_REGISTRATION_FAMILY($family_id);
       foreach($feesToAdd as $family_fee_id){
         $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);

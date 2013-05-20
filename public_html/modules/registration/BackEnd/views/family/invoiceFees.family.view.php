@@ -16,7 +16,8 @@
     <div style="text-align: right; font-size: 20px">Invoice Total: $<span id="planTotal">0.00</span></div>
     <br />
     <span class="center">
-      <div class="right"><input type="text" name="invoice_description" placeholder="Invoice Description" /></div>
+      <div class="right"><input type="text" name="invoice_description" placeholder="Invoice Description" /><br />
+        <input type="text" name="due_date" placeholder="Due Date (YYYY-MM-DD)" /></div>
       <br style="width: 100%; clear: both" />
       <input type="submit" class="btn btn-success btn-large right approvePlan" value="Invoice Now" />
     </span>
