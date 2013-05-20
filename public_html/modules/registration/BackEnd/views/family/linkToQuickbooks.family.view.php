@@ -31,7 +31,12 @@
                             $selected = "";
                           }
                           $address = $customer->getAddress();
-                          echo "<option value='".$id."' $selected>".$customer->getName()." - ".$address->getLine2()."</option>";
+                          if(is_object($address)){
+                            $addressLine2 = " - ".$address->getLine2();
+                          } else {
+                            $addressLine2 = "";
+                          }
+                          echo "<option value='".$id."' $selected>".$customer->getName().$addressLine2."</option>";
                           //echo $item->getId()."--".$item->getName()."--$".$price."<br />";
                         }
                         ?>
