@@ -351,6 +351,44 @@ switch ($ajax) {
       echo json_encode($response);
     }
     break;
+  case "sendInvoices":
+    if (isset($invoicesToSend) && isset($email_subject) && isset($email_contents)) {
+      set_time_limit(0);
+      ini_set('memory_limit', '256M');
+      $email_contents = html_entity_decode($email_contents);
+      $failed = false;
+      foreach($invoicesToSend as $family_invoice_id){
+        $invoice = new TSM_REGISTRATION_INVOICE($family_invoice_id);
+        $invoiceInfo = $invoice->getInfo();
+        $family = new TSM_REGISTRATION_FAMILY($invoiceInfo['family_id']);
+        $familyInfo = $family->getInfo();
+
+        $sent = $invoice->emailInvoice($familyInfo['primary_email'],$email_contents,$email_subject);
+        //$sent = $invoice->emailInvoice("jlane@veritasproductions.net",$email_contents,$email_subject);
+        if($sent == 0){
+          $failed = 1;
+        }
+      }
+
+      if($failed == 1){
+        $success = false;
+      } else {
+        $success = true;
+      }
+
+      $response = Array("success" => false, "alertMessage" => null);
+
+      if ($success == true) {
+        $response["success"] = true;
+        $response["alertMessage"] = "The invoice was successfully sent.";
+      } else {
+        $response["success"] = false;
+        $response["alertMessage"] = "The invoice could not be sent.";
+      }
+
+      echo json_encode($response);
+    }
+    break;
 }
 die();
 ?>
