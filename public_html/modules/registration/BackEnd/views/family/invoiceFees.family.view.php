@@ -1,5 +1,5 @@
 <div class="span9">
-  <form action="index.php?mod=registration&ajax=invoiceFees&family_id=<?php echo $family_id; ?>&family_payment_plan_id=<?php echo $familyPaymentPlanId; ?>" method="post" id="paymentPlanForm">
+  <form action="index.php?mod=registration&ajax=invoiceFees&family_id=<?php echo $family_id; ?>" method="post" id="paymentPlanForm">
     <h2>Invoice Fees</h2>
     <p>Please select the fees that you would like to invoice below.</p>
     <span class="right"><label class="checkbox"><input id="checkAll" type="checkbox"> Check All</label></span>
