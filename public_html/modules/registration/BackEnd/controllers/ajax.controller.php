@@ -352,6 +352,25 @@ switch ($ajax) {
       echo json_encode($response);
     }
     break;
+  case "sendInvoiceEmail":
+    if (isset($family_invoice_id) && isset($send_to) && isset($email_subject) && isset($email_contents)) {
+      $invoice = new TSM_REGISTRATION_INVOICE($family_invoice_id);
+      $email_contents = html_entity_decode($email_contents);
+      $success = $invoice->emailInvoice($send_to,$email_contents,$email_subject);
+
+      $response = Array("success" => false, "alertMessage" => null);
+
+      if ($success == true) {
+        $response["success"] = true;
+        $response["alertMessage"] = "The invoice was successfully sent.";
+      } else {
+        $response["success"] = false;
+        $response["alertMessage"] = "The invoice could not be sent.";
+      }
+
+      echo json_encode($response);
+    }
+    break;
   case "sendInvoices":
     if (isset($invoicesToSend) && isset($email_subject) && isset($email_contents)) {
       set_time_limit(0);
