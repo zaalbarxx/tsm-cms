@@ -336,7 +336,8 @@ switch ($ajax) {
         $invoiceFees[] = $familyFeeInfo;
       }
 
-      $success = $family->createInvoiceFromFees($invoiceFees,$invoice_description);
+
+      $success = $family->createInvoiceFromFees($invoiceFees,$invoice_description,"NULL",$due_date);
 
       $response = Array("success" => false, "alertMessage" => null);
 
