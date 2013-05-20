@@ -36,6 +36,10 @@ switch ($action) {
     require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/addEdit.paymentPlan.fees.controller.php");
     $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/addEdit.paymentPlan.fees.view.php";
     break;
+  case "sendPaymentPlanInvoices":
+    require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/fee/sendInvoices.paymentPlan.fee.controller.php");
+    $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/fee/sendInvoices.paymentPlan.fee.view.php";
+    break;
   case "addEditCondition":
     require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/addEditConditions.controller.php");
     $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/addEditCondition.fees.view.php";
