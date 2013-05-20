@@ -80,8 +80,8 @@ if ($invoices == null) {
   $invoice->updateTotal();
   $planTotal = $invoice->getTotal();
 
-  if (isset($familyInfo['quickbooks_customer_id']) && $currentCampus->usesQuickbooks()) {
-    //$invoice->addToQuickbooks();
+  if ($family->inQuickbooks() && $currentCampus->usesQuickbooks()) {
+    $invoice->addToQuickbooks();
   }
 
   $dueToday = $planTotal;
@@ -107,6 +107,9 @@ if ($invoices == null) {
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
     $invoice->addFee(Array("family_fee_id" => $family_fee_id, "description" => $plan_to_process['credit_fee_description'], "amount" => $creditFeeAmount));
     $invoice->updateTotal();
+    if ($family->inQuickbooks() && $currentCampus->usesQuickbooks()) {
+      $invoice->addToQuickbooks();
+    }
     $invoice->hide();
     $invoice->setInvoiceAndCredit(true);
 
@@ -118,6 +121,9 @@ if ($invoices == null) {
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
     $invoice->addFee(Array("family_fee_id" => $family_fee_id, "description" => $plan_to_process['installment_fee_description'], "amount" => $installmentFeeAmount));
     $invoice->updateTotal();
+    if ($family->inQuickbooks() && $currentCampus->usesQuickbooks()) {
+      $invoice->addToQuickbooks();
+    }
 
     $dueToday = $installmentFeeAmount;
   }
