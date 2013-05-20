@@ -358,6 +358,35 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $returnInvoices;
   }
 
+  public function getGivenName(){
+    if ($this->info['father_first'] != "" && $this->info['mother_first'] != "") {
+      $givenName = $this->info['father_first']." & ".$this->info['mother_first'];
+    } elseif ($this->info['father_first'] == "") {
+      $givenName = $this->info['mother_first'];
+    } elseif ($this->info['mother_first'] == "") {
+      $givenName = $this->info['father_first'];
+    }
+
+    return $givenName;
+  }
+
+  public function getFamilyName(){
+
+    if ($this->info['father_last'] != "" && $this->info['mother_last'] != "") {
+      $familyName = $this->info['father_last'];
+    } elseif ($this->info['father_last'] == "") {
+      $familyName = $this->info['mother_last'];
+    } elseif ($this->info['mother_last'] == "") {
+      $familyName = $this->info['father_last'];
+    }
+
+    return $familyName;
+  }
+
+  public function getDisplayName(){
+    return $this->getGivenName()." ".$this->getFamilyName();
+  }
+
   public function createQuickbooksInfo() {
     $this->updateQuickbooksInfo(true);
   }
@@ -547,15 +576,16 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $invoice_id;
   }
 
-  public function createInvoiceFromFees($fees, $description, $family_payment_plan_id = "NULL") {
+  public function createInvoiceFromFees($fees, $description, $family_payment_plan_id = "NULL", $due_date = null) {
     global $currentCampus;
-    $invoice_id = $this->createInvoice($family_payment_plan_id, $description);
+    $invoice_id = $this->createInvoice($family_payment_plan_id, $description,$due_date);
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 
     foreach ($fees as $fee) {
       $params = Array("family_fee_id" => $fee['family_fee_id'], "description" => $fee['name'], "amount" => $fee['amount']);
       $invoice->addFee($params);
     }
+
     $invoice->updateTotal();
 
     if ($currentCampus->usesQuickbooks() && $this->inQuickbooks()) {
