@@ -26,9 +26,20 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
+  public function getTimesSent(){
+    $q = "SELECT COUNT(family_invoice_id) AS times_sent FROM tsm_reg_families_invoice_email WHERE family_invoice_id = '".$this->invoiceId."'";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $timesSent = $a['times_sent'];
+    }
+
+    return $timesSent;
+  }
+
   public function emailInvoice($sendTo, $contents, $subject){
     global $currentCampus;
 
+    $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
     $currentCampusInfo = $currentCampus->getInfo();
 
     $invoicePdf = $this->generatePDF(true);
@@ -40,6 +51,29 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $invoiceNo = $this->info['doc_number'];
     $contents = str_replace("{{invoiceNo}}",$invoiceNo,$contents);
     $subject = str_replace("{{invoiceNo}}",$invoiceNo,$subject);
+    $contents = str_replace("{{name}}",$family->getDisplayName(),$contents);
+    $subject = str_replace("{{name}}",$family->getDisplayName(),$subject);
+    $contents = str_replace("{{amount}}",$this->info['amount'],$contents);
+    $subject = str_replace("{{amount}}",$this->info['amount'],$subject);
+    if($currentCampus->usesQuickbooks() && $family->inQuickbooks()){
+      $contents = $contents.'
+      <br />
+      <b>Intuit Payment Network</b>
+      <p>To pay via Intuit Payment Network, just click the button below.
+      <b>Important: </b>Be sure to specify Invoice Number: <b>'.$this->info['doc_number'].'</b> on the following page to ensure that your payment is applied to the correct invoice.
+      If a warning is displayed after you click "Pay Online", simply click "Okay" or "Continue".</p>
+      <form method="post" target="_payByIpnWindow"
+            action="https://ipn.intuit.com/payNow/start" id="payByIpnForm">
+          <input type="hidden" name="eId" value="5152baca5e802cda"/> <input type="hidden" name="uuId"
+                                                                            value="8a89fc3b-5f4b-49be-809e-8fc3a1ff0f32"/>
+          <!--<input type="image" id="payByIpnImg" style="background-color:transparent;border:0 none !important;"
+                 src="https://ipn.intuit.com/images/payButton/btn_PayNow_BLU_LG.png"
+                 alt="Make payments for less with Intuit Payment Network."/>-->
+                 <input style="padding: 10px;" type="submit" value="Pay Online" />
+      </form>
+      <br /><br />
+      ';
+    }
 
     require_once __TSM_ROOT__.'includes/3rdparty/swift/lib/swift_required.php';
     /*
@@ -48,10 +82,12 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       ->setPassword('LTOZ7]OLz~wB')
     ;
     */
-    $transport = Swift_SmtpTransport::newInstance('mail.google.com', 25)
+
+    $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
       ->setUsername('billing@artiosacademies.com')
       ->setPassword('5646lane')
     ;
+
     $mailer = Swift_Mailer::newInstance($transport);
 
     // Create a message
@@ -65,10 +101,9 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
     // Send the message
     $result = $mailer->send($message);
-
     //$is_sent = @mail($sendTo, $subject, "", $header);
-    if($result){
-      $q = "INSERT INTO tsm_reg_families_invoice_email (family_invoice_id,family_id) VALUES('".$this->invoiceId."','".$this->info['family_id']."')";
+    if($result == 1){
+      $q = "INSERT INTO tsm_reg_families_invoice_email (family_invoice_id,family_id,email_subject,email_contents,sent_to) VALUES('".$this->invoiceId."','".$this->info['family_id']."','$subject','".htmlentities($contents)."','$sendTo')";
       $this->db->runQuery($q);
     }
 
@@ -78,6 +113,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   public function generatePDF($forEmail = false) {
     $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
     $familyInfo = $family->getInfo();
+
     $students = $family->getStudents($this->getSelectedSchoolYear());
 
     $campus = new TSM_REGISTRATION_CAMPUS($familyInfo['campus_id']);
@@ -90,16 +126,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
     $invoiceNum = $this->info['doc_number'];
 
-    if($familyInfo['father_first'] != "" && $familyInfo['father_last'] != "" && $familyInfo['mother_first'] != "" && $familyInfo['mother_last'] != ""){
-      $familyName = $familyInfo['father_first']." & ".$familyInfo['mother_first']." ".$familyInfo['father_last'];
-    } else if($familyInfo['father_first'] != "" && $familyInfo['father_last'] != "" && ($familyInfo['mother_first'] == "" && $familyInfo['mother_last'] == "")){
-      $familyName = $familyInfo['father_first']." ".$familyInfo['father_last'];
-    } else if($familyInfo['mother_first'] != "" && $familyInfo['mother_last'] != "" && ($familyInfo['father_first'] == "" && $familyInfo['father_last'] == "")){
-      $familyName = $familyInfo['mother_first']." ".$familyInfo['mother_last'];
-    } else{
-      $familyName = $familyInfo['father_first']." ".$familyInfo['father_last'];
-    }
-
+    $familyName = $family->getDisplayName();
 
 
     $mpdf = new mPDF('win-1252', 'A4', '', '', 20, 15, 48, 25, 10, 10);
