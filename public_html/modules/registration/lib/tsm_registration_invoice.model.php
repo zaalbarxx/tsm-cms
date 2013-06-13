@@ -468,7 +468,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       }
       $quickbooksInvoice = new QuickBooks_IPP_Object_CreditMemo();
       $creditMemoTotal = $invoiceTotal * -1;
-      $invoiceHeader->setTotalAmt($creditMemoTotal);
+      //$invoiceHeader->setTotalAmt($creditMemoTotal);
       $invoiceHeader->setARAccountName("Accounts Receivable");
       //todo: need to set the account to whatever account the campus is set to.
       $quickbooksInvoice->addHeader($invoiceHeader);
@@ -581,7 +581,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function updateLastQBSync(){
-    $q = "UPDATE tsm_reg_families_invoices SET last_qb_sync = '".date("Y-m-d G:H:i",time())."' WHERE family_invoice_id = '".$this->invoiceId."'";
+    $q = "UPDATE tsm_reg_families_invoices SET last_qb_sync = '".date("Y-m-d H:i:s",time())."' WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);
 
     return true;
@@ -661,7 +661,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function updateTotal() {
-    $q = "UPDATE tsm_reg_families_invoices SET amount = '".$this->addFees($this->getFees())."', last_updated = '".date("Y-m-d G:H:s",time())."' WHERE family_invoice_id = '".$this->invoiceId."'";
+    $q = "UPDATE tsm_reg_families_invoices SET amount = '".$this->addFees($this->getFees())."', last_updated = '".date("Y-m-d H:i:s",time())."' WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);
 
     return true;
