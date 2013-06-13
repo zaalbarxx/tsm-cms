@@ -36,6 +36,23 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return $timesSent;
   }
 
+  public function updateFeeAmount($family_fee_id,$amount){
+    $q = "UPDATE tsm_reg_families_invoice_fees SET amount = '$amount' WHERE family_fee_id = $family_fee_id AND family_invoice_id = '".$this->invoiceId."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
+  public function getFirstFamilyFeeId(){
+    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."' ORDER BY family_invoice_fee_id ASC LIMIT 1";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $family_fee_id = $a['family_fee_id'];
+    }
+
+    return $family_fee_id;
+  }
+
   public function emailInvoice($sendTo, $contents, $subject){
     global $currentCampus;
 
@@ -364,6 +381,20 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
+  public function removeFee($family_fee_id){
+    if(isset($this->info['family_invoice_id'])){
+      $q = "DELETE FROM tsm_reg_families_invoice_fees WHERE family_fee_id = '$family_fee_id' AND family_invoice_id = '".$this->info['family_invoice_id']."'";
+      $this->db->runQuery($q);
+
+      $q = "INSERT INTO tsm_reg_families_invoice_fee_log (add_remove,family_fee_id,family_invoice_id) VALUES(0,$family_fee_id,".$this->info['family_invoice_id'].")";
+      $this->db->runQuery($q);
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public function getPayments() {
     $q = "SELECT * FROM tsm_reg_families_payment_invoice fpi, tsm_reg_families_payments fp
     WHERE fp.family_payment_id = fpi.family_payment_id AND fpi.family_invoice_id = '".$this->invoiceId."'";
@@ -540,12 +571,20 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       $extKey = $invoice->getExternalKey();
       $this->setQuickbooksExternalKey($extKey);
 
+      $this->updateLastQBSync();
 
       return true;
     } else {
       die("doNotProcess");
       return false;
     }
+  }
+
+  public function updateLastQBSync(){
+    $q = "UPDATE tsm_reg_families_invoices SET last_qb_sync = '".date("Y-m-d G:H:i",time())."' WHERE family_invoice_id = '".$this->invoiceId."'";
+    $this->db->runQuery($q);
+
+    return true;
   }
 
   public function hide() {
@@ -622,7 +661,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function updateTotal() {
-    $q = "UPDATE tsm_reg_families_invoices SET amount = '".$this->addFees($this->getFees())."' WHERE family_invoice_id = '".$this->invoiceId."'";
+    $q = "UPDATE tsm_reg_families_invoices SET amount = '".$this->addFees($this->getFees())."', last_updated = '".date("Y-m-d G:H:s",time())."' WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);
 
     return true;

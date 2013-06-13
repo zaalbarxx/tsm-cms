@@ -225,18 +225,63 @@ switch ($ajax) {
     break;
   case "unenrollStudentFromProgram":
     if (isset($student_id) && isset($program_id)) {
+      //print_r($_POST);
+      if(isset($handleFees)){
+        foreach($handleFees as $family_fee_id=>$handleInfo){
+          if($handleInfo['handleMethod'] == 1){
+            $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+            $familyFeeInfo = $familyFee->getInfo();
+            $invoice_id = $familyFee->getInvoiceId();
+            if(isset($familyFeeInfo['family_payment_plan_id']) && isset($invoice_id)){
+              $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyFeeInfo['family_payment_plan_id']);
+
+              $originalInvoiceId = $familyPaymentPlan->getOriginalInvoiceId();
+
+              $familyPaymentPlanInfo = $familyPaymentPlan->getInfo();
+              if($familyPaymentPlanInfo['invoice_and_credit'] == 0 || !($familyPaymentPlan->getAmountInvoiced() >= $familyPaymentPlan->getTotal())){
+                $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($familyPaymentPlanInfo['payment_plan_id']);
+                $paymentPlanInfo = $paymentPlan->getInfo();
+
+                $familyInvoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+                $familyInvoice->removeFee($family_fee_id);
+                $familyInvoice->updateTotal();
+                $newTotal = $familyInvoice->getTotal();
+
+                if($invoice_id == $originalInvoiceId){
+                  $credit_invoice_id = $familyPaymentPlan->getCreditInvoiceId();
+                  $creditInvoice = new TSM_REGISTRATION_INVOICE($credit_invoice_id);
+                  $creditFeeId = $creditInvoice->getFirstFamilyFeeId();
+                  $credtFee = new TSM_REGISTRATION_FAMILY_FEE($creditFeeId);
+                  $newTotal = $newTotal*-1;
+                  $credtFee->updateAmount($newTotal);
+                  $creditInvoice->updateFeeAmount($creditFeeId,$newTotal);
+                  $creditInvoice->updateTotal();
+                }
+
+                $familyFee->delete();
+              }
+
+
+
+            }
+          }
+
+
+        }
+      }
 
       $student = new TSM_REGISTRATION_STUDENT($student_id);
       $success = $student->unenrollFromProgram($program_id);
-
       $response = Array("success" => false, "alertMessage" => null);
 
-      if ($success == true) {
+      if ($success['success'] == true) {
         $response["success"] = true;
         $response["alertMessage"] = "The student has been successfully unenrolled from this program.";
       } else {
         $response["success"] = false;
-        $response["alertMessage"] = "The student could not be unenrolled from this program. Please make sure they are not enrolled in any courses.";
+        $response["error"] = $success["error"];
+        $response["alertMessage"] = $success['message'];
+        $response["nonRemovableFees"] = $success['nonRemovableFees'];
       }
 
       echo json_encode($response);
@@ -407,6 +452,87 @@ switch ($ajax) {
       }
 
       echo json_encode($response);
+    }
+    break;
+  case "getHandleFeesView":
+    if(isset($student_id) && isset($feesToHandle) && isset($program_id)){
+      $feesToHandle = explode(",",$feesToHandle);
+      foreach($feesToHandle as $family_fee_id){
+        $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+
+        $fees[$family_fee_id] = $familyFee->getInfo();
+        $fees[$family_fee_id]["invoiced"] = $familyFee->isInvoiced();
+        $fees[$family_fee_id]["onPaymentPlan"] = $familyFee->isOnPaymentPlan();
+      }
+    ?>
+    <div id="feesToHandle" class="modal hide fade" tabindex="-1" style="width: 800px; margin-left: -430px;" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+        <h3 id="myModalLabel">Fee Adjustments</h3>
+      </div>
+      <div class="modal-body">
+        <form id="handleFeesForm" class="form-horizontal" method="post" action="index.php?mod=registration&ajax=unenrollStudentFromProgram&student_id=<?php echo $student_id; ?>&program_id=<?php echo $program_id; ?>">
+
+          <table class="table table-striped">
+            <caption>Please specify what you would like to do with the fees below.</caption>
+            <tr>
+              <th>Fee</th>
+              <th>Amount</th>
+              <th>Invoiced</th>
+              <th>On Payment Plan</th>
+              <th></th>
+            </tr>
+            <?php
+            if (isset($fees)) {
+              foreach ($fees as $fee) {
+
+                ?>
+                <tr><td>
+                  <?php echo $fee['name']; ?>
+                </td>
+                <td>$<?php echo $fee['amount']; ?></td>
+                <td><?php if($fee['invoiced'] == 1){ echo "Yes"; } else { echo "No"; }; ?></td>
+                <td><?php if($fee['onPaymentPlan'] == 1){ echo "Yes"; } else { echo "No"; }; ?></td>
+                <td>
+                  <select name="handleFees[<?php echo $fee['family_fee_id']; ?>][handleMethod]">
+                    <option value="1">Remove from invoices and payment plan.</option>
+                  </select>
+
+                </td>
+              <?php
+              } ?>
+              </tr>
+            <?php } ?>
+          </table>
+
+        <br /><br >
+        <span class="right">
+          <a href="" class="btn btn-danger"  data-dismiss="modal" aria-hidden="true">Cancel</a>
+          <input class="btn btn-primary" type="submit" value="Remove From Program" />
+        </span>
+        </form>
+      </div>
+    </div>
+      <script type="text/javascript">
+        $("#handleFeesForm").submit( function(){
+          var conf = confirm("Are you sure you want to remove the student from this program?");
+          if(conf){
+            var data = $(this).serialize();
+            $.post($(this).attr("action"),data,function(data){
+              var response = JSON.parse(data);
+              if(response.success == true){
+                alert(response.alertMessage);
+                window.location.reload();
+              } else {
+                alert(response.alertMessage);
+              }
+            });
+          }
+          return false;
+        });
+      </script>
+    <?php
     }
     break;
 }

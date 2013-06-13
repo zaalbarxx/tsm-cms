@@ -332,6 +332,9 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     $this->db->runQuery($q);
     $id = mysql_insert_id($this->db->conn);
 
+    $q = "INSERT INTO tsm_reg_families_fee_log (family_id,add_remove,fee_id,amount,fee_name) VALUES('".$this->info['family_id']."',1,$fee_id,'$amount','$name')";
+    $this->db->runQuery($q);
+
     return $id;
   }
 
@@ -412,7 +415,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     } elseif ($father_first == "") {
       $givenName = $mother_first;
     } elseif ($mother_first == "") {
-      $givenName = $fatherFirst;
+      $givenName = $father_first;
     }
 
     if ($father_last != "" && $mother_last != "") {

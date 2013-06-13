@@ -29,8 +29,11 @@ if(isset($paymentPlans)){
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['status'] = $paymentPlanObject->getStatus();
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountDue'] = number_format($paymentPlanObject->getAmountDue(), 2, '.', ',');
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountPaid'] = number_format($paymentPlanObject->getAmountPaid(), 2, '.', ',');
-    $paymentPlans[$paymentPlan['family_payment_plan_id']]['totalAmount'] = number_format($paymentPlanObject->getTotal(), 2, '.', ',');
-    $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountInvoiced'] = number_format($paymentPlanObject->getAmountInvoiced(), 2, '.', ',');
+    $amtInvoiced = $paymentPlanObject->getAmountInvoiced();
+    $total = $paymentPlanObject->getTotal();
+    $paymentPlans[$paymentPlan['family_payment_plan_id']]['canAddFees'] = $amtInvoiced < $total;
+    $paymentPlans[$paymentPlan['family_payment_plan_id']]['totalAmount'] = number_format($total, 2, '.', ',');
+    $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountInvoiced'] = number_format($amtInvoiced, 2, '.', ',');
     if($paymentPlanObject->getUnassignedApplicableFees()){
       $paymentPlans[$paymentPlan['family_payment_plan_id']]['moreFeesAvailible'] = true;
     } else {

@@ -36,6 +36,16 @@ class TSM_REGISTRATION_FAMILY_FEE extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
+  public function getInvoiceId(){
+    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_fee_id = '".$this->familyFeeId."'";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $invoice_id = $a['family_invoice_id'];
+    }
+
+    return $invoice_id;
+  }
+
   public function setPaymentPlan($family_payment_plan_id) {
     if ($this->getPaymentPlan() == null) {
       $q = "UPDATE tsm_reg_families_fees SET family_payment_plan_id = '".$family_payment_plan_id."' WHERE family_fee_id = '".$this->familyFeeId."'";
@@ -60,9 +70,27 @@ class TSM_REGISTRATION_FAMILY_FEE extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
+  public function isRemovable(){
+    if($this->info['removable'] == true){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function updateAmount($amount){
+    $q = "UPDATE tsm_reg_families_fees SET amount = '$amount' WHERE family_fee_id = '".$this->familyFeeId."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
   public function delete() {
     if ($this->isInvoiced() == false) {
       $q = "DELETE FROM tsm_reg_families_fees WHERE family_fee_id = '".$this->familyFeeId."'";
+      $this->db->runQuery($q);
+
+      $q = "INSERT INTO tsm_reg_families_fee_log (family_id,student_id,family_fee_id,fee_id,program_id,course_id,amount,fee_name) VALUES('".$this->info['family_id']."','".$this->info['fee_id']."','".$this->info['family_fee_id']."','".$this->info['fee_id']."','".$this->info['program_id']."','".$this->info['course_id']."','".$this->info['amount']."','".$this->info['name']."')";
       $this->db->runQuery($q);
 
       return true;

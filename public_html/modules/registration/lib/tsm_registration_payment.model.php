@@ -71,11 +71,13 @@ class TSM_REGISTRATION_PAYMENT extends TSM_REGISTRATION_CAMPUS {
     $paymentHeader->setNote($this->info['payment_description']);
     $paymentObject->addHeader($paymentHeader);
     $lines = $this->getLines();
-    foreach($lines as $localLine){
-      $Line = new QuickBooks_IPP_Object_Line();
-      $Line->setTxnId($localLine['quickbooks_external_key']);
-      $Line->setAmount($localLine['amount']);
-      $paymentObject->addLine($Line);
+    if(isset($lines)){
+      foreach($lines as $localLine){
+        $Line = new QuickBooks_IPP_Object_Line();
+        $Line->setTxnId($localLine['quickbooks_external_key']);
+        $Line->setAmount($localLine['amount']);
+        $paymentObject->addLine($Line);
+      }
     }
     $service = new QuickBooks_IPP_Service_Payment();
     $quickbooks_payment_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $paymentObject);

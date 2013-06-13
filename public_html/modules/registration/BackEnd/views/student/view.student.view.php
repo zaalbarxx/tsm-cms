@@ -31,7 +31,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 					<!--<a href="#" class="reviewButton" title="Review This Program"></a>
 					<a href="#" class="editButton" title="Edit This Student"></a>-->
 					<a href="index.php?mod=registration&ajax=unenrollStudentFromProgram&student_id=<?php echo $student_id; ?>&program_id=<?php echo $program['program_id']; ?>"
-             class="deleteButton" title="Unenroll From This Program"></a>
+             class="deleteButton deleteProgram" title="Unenroll From This Program" data-tsm-program-id="<?php echo $program['program_id']; ?>"></a>
 				</span>
 
                 <div class="itemDetails" style="display: block;">
@@ -101,18 +101,33 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
     $(".bigItem .title").click(function () {
         $(this).parent().children(".itemDetails").slideToggle();
     });
-    $(".deleteButton").click(function () {
-        $.get($(this).attr("href"), function (data) {
-            var response = JSON.parse(data);
-            if (response.alertMessage != null) {
-                alert(response.alertMessage);
-            }
-            if (response.success == true) {
-                window.location.reload();
-            }
-        });
-        return false;
+    $(".deleteProgram").click(function () {
+      var program_id = $(this).attr("data-tsm-program-id");
+      $.get($(this).attr("href"), function (data) {
+        var response = JSON.parse(data);
+        if (response.success == true) {
+          window.location.reload();
+        } else if(response.error == 1){
+          //handle enrolled in courses
+          alert(response.alertMessage);
+
+        } else if(response.error == 2){
+          //handle fees can't be removed.
+          $.get("index.php?mod=registration&ajax=getHandleFeesView&student_id=<?php echo $student_id; ?>&program_id=" + program_id + "&feesToHandle=" + response.nonRemovableFees,function(data){
+            $("body").append(data);
+            $("#feesToHandle").modal().on("hidden",function(){
+              $(this).remove();
+            });
+
+            //alert(data);
+          });
+
+
+        }
+      });
+      return false;
     });
+
     $(".showDetails").click(function () {
         if ($(this).html() == "Show Details") {
             $(this).parent().children(".bigItem").children(".itemDetails").show(500);

@@ -524,6 +524,9 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       $q = "INSERT INTO tsm_reg_student_course (student_id,course_id,program_id,course_period_id) VALUES('".$this->studentId."','".$course_id."','".$program_id."','".$course_period_id."')";
       $this->db->runQuery($q);
 
+      $q = "INSERT INTO tsm_reg_student_log (student_id,program_id,course_id,add_remove) VALUES('".$this->studentId."',$program_id,$course_id,1)";
+      $this->db->runQuery($q);
+
       $this->processFees();
 
       return true;
@@ -557,6 +560,9 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
 
       if ($canDelete == true) {
         $q = "DELETE FROM tsm_reg_student_course WHERE student_id = '".$this->studentId."' AND course_id = '".$course_id."' AND program_id = '".$program_id."'";
+        $this->db->runQuery($q);
+
+        $q = "INSERT INTO tsm_reg_student_log (student_id,program_id,course_id,add_remove) VALUES('".$this->studentId."',$program_id,$course_id,0)";
         $this->db->runQuery($q);
 
         $return = true;
@@ -603,6 +609,9 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       }
 
       $q = "INSERT INTO tsm_reg_families_fees (family_id,student_id,program_id,course_id,fee_id,name,fee_type_id,amount,school_year) VALUES ('".$this->info['family_id']."','".$this->studentId."',".$program_id.",".$course_id.",'".$fee_id."','".$feeInfo['name']."','".$feeInfo['fee_type_id']."','".$feeInfo['amount']."','".$this->getSelectedSchoolYear()."');";
+      $this->db->runQuery($q);
+
+      $q = "INSERT INTO tsm_reg_families_fee_log (family_id,student_id,add_remove,fee_id,program_id,course_id,amount,fee_name) VALUES('".$this->info['family_id']."','".$this->studentId."',1,$fee_id,$program_id,$course_id,'".$feeInfo['amount']."','".$feeInfo['name']."')";
       $this->db->runQuery($q);
 
       return true;
@@ -688,7 +697,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         if ($needed == false) {
           //echo "deleteing: ".$fee['fee_id']."\r\n";
           $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-          if (!$feeObject->isInvoiced() && !$feeObject->isOnPaymentPlan()) {
+          if (!$feeObject->isInvoiced() && !$feeObject->isOnPaymentPlan() && $feeObject->isRemovable() == true) {
             if($preview == false){
               $feeObject->delete();
             } else {
@@ -718,6 +727,9 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       $q = "INSERT INTO tsm_reg_student_program (student_id,program_id) VALUES('".$this->studentId."','".$program_id."')";
       $this->db->runQuery($q);
 
+      $q = "INSERT INTO tsm_reg_student_log (student_id,program_id,course_id,add_remove) VALUES('".$this->studentId."',$program_id,NULL,1)";
+      $this->db->runQuery($q);
+
       $this->processFees();
 
       return true;
@@ -727,11 +739,11 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function unenrollFromProgram($program_id) {
-    $return = false;
+    $return["success"] = false;
     if ($this->inProgram($program_id)) {
       $courses = $this->getCoursesIn($program_id);
       if (isset($courses)) {
-        $return = false;
+        $return = Array("success"=>true,"message"=>"The student could not be unenrolled from this program. Please make sure they are not enrolled in any courses.");
       } else {
         $fees = $this->getFeesForProgramAndCourses($program_id);
         $canDelete = true;
@@ -739,6 +751,9 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
           foreach ($fees as $fee) {
             $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
             if ($familyFee->isInvoiced() == true || $familyFee->isOnPaymentPlan() == true) {
+              $nonRemovableFees[] = $fee['family_fee_id'];
+              $message = "The student could not be unenrolled from this program. There are fees that are invoiced or assigned to a payment plan.";
+              $error = 2;
               $canDelete = false;
             }
 
@@ -750,11 +765,11 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
               if ($familyFee->isInvoiced() == false && $familyFee->isOnPaymentPlan() == false) {
                 $familyFee->delete();
               } else {
-                $return = false;
+                $return["success"] = false;
               }
             }
           } else {
-            $return = false;
+            $return["success"] = false;
           }
 
         }
@@ -762,9 +777,13 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
           $q = "DELETE FROM tsm_reg_student_program WHERE student_id = '".$this->studentId."' AND program_id = '".$program_id."'";
           $this->db->runQuery($q);
 
-          $return = true;
+          $q = "INSERT INTO tsm_reg_student_log (student_id,program_id,course_id,add_remove) VALUES('".$this->studentId."',$program_id,NULL,0)";
+          $this->db->runQuery($q);
+
+          $return = Array("success"=>true);
         } else {
-          $return = false;
+          $return = Array("success"=>false,"nonRemovableFees"=>$nonRemovableFees,"message"=>$message,"error"=>$error);
+          //$return = false;
         }
 
       }

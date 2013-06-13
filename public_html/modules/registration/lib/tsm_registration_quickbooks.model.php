@@ -17,6 +17,9 @@ Class TSM_REGISTRATION_QUICKBOOKS extends TSM_REGISTRATION {
   public $Context;
 
   public function __construct() {
+    $tsm = TSM::getInstance();
+    $this->tsm = $tsm;
+    $this->db = $tsm->db;
     /*
     $tsm = TSM::getInstance();
     $this->tsm = $tsm;
@@ -62,6 +65,87 @@ Class TSM_REGISTRATION_QUICKBOOKS extends TSM_REGISTRATION {
     } else {
       die('Oh no, something bad happened: '.$this->IntuitAnywhere->errorNumber().': '.$this->IntuitAnywhere->errorMessage());
     }
+  }
+
+  public function createLineFromFee($fee,$invoiceTotal){
+    global $currentCampus, $campusInfo;
+
+    if (isset($fee['fee_id'])) {
+      $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
+      $feeInfo = $feeObject->getInfo();
+
+      $Line = new QuickBooks_IPP_Object_Line();
+      $Line->setItemId($feeInfo['quickbooks_item_id']);
+
+      //we need to make the negative charge positive if this is a credit to their account.
+      if ($invoiceTotal > 0) {
+        $Line->setAmount($fee['amount']);
+      } else {
+        $Line->setAmount($fee['amount'] * -1);
+      }
+
+      $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+      $familyFeeInfo = $familyFee->getInfo();
+
+      //todo:figure out why the paypal convenience fee is not getting assigned the correct class.
+      if($familyFeeInfo['program_id'] != 0 || $familyFeeInfo['course_id'] == 0){
+        if($familyFeeInfo['program_id'] == 0){
+          $programString = " program_id IS NULL ";
+        } else {
+          $programString = " program_id = ".$familyFeeInfo['program_id']." ";
+        }
+        if($familyFeeInfo['course_id'] == 0){
+          $courseString = "course_id IS NULL";
+        } else {
+          $courseString = "course_id = ".$familyFeeInfo['course_id']." ";
+        }
+        if($familyFeeInfo['course_id'] == 0 && $familyFeeInfo['program_id'] != 0){
+          $q = "SELECT * FROM tsm_reg_program_fee WHERE $programString AND fee_id = '".$familyFeeInfo['fee_id']."'";
+        } elseif($familyFeeInfo['course_id'] != 0) {
+          $q = "SELECT * FROM tsm_reg_course_fee WHERE $programString AND $courseString AND fee_id = '".$familyFeeInfo['fee_id']."'";
+        }
+        if(isset($q)){
+          $r = $this->db->runQuery($q);
+          while($a = mysql_fetch_assoc($r)){
+            $feeQbClassId = $a['quickbooks_class_id'];
+          }
+        } else {
+          $feeQbClassId = null;
+        }
+        if($feeQbClassId != null){
+          $Line->setClassId($feeQbClassId);
+        }
+      } else if($fee['fee_id'] == $campusInfo['paypal_convenience_fee_id']){
+        if($campusInfo['paypal_convenience_fee_qb_class_id'] != ""){
+          $Line->setClassId($campusInfo['paypal_convenience_fee_qb_class_id']);
+        }
+      }
+
+
+      if($familyFeeInfo['student_id'] != 0){
+        $student = new TSM_REGISTRATION_STUDENT($familyFeeInfo['student_id']);
+        $studentInfo = $student->getInfo();
+        $studentName = $studentInfo['first_name']." ".$studentInfo['last_name'].": ";
+      } else {
+        $studentName = null;
+      }
+
+      if($studentName != null){
+        $description = $studentName.": ".$fee['name'];
+      } else {
+        $description = $fee['name'];
+      }
+
+      $Line->setDescription($description);
+      $Line->setQty(1);
+    } else {
+      $Line = new QuickBooks_IPP_Object_Line();
+      $Line->setAmount($fee['amount']);
+      $Line->setDescription($fee['name']);
+      $Line->setQty(1);
+    }
+
+    return $Line;
   }
 
 }
