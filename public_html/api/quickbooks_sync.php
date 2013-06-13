@@ -56,10 +56,11 @@ $campusList = $reg->getCampuses();
               $updateInvoices[$invoice['quickbooks_invoice_id']] = $invoice;
             }
 
+            //update invoices that were updated after the last time they were synced.
             if(strtotime($invoice['last_qb_sync']) < strtotime($invoice['last_updated'])){
               $updateInv[$invoice['quickbooks_invoice_id']] = $invoice;
 
-              echo "Need to update".$invoice['family_invoice_id']."--".strtotime($invoice['last_qb_sync'])."---".strtotime($invoice['last_updated'])."<br />";
+              echo "Updating invoice: ".$invoice['family_invoice_id']."<br />";
             }
           }
         }
@@ -91,34 +92,46 @@ $campusList = $reg->getCampuses();
       if(isset($updateInv)){
         foreach($updateInv as $invoice){
           $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
+          $total = $invoiceObject->getTotal();
+          if($total > 0){
+            $invoiceService = new QuickBooks_IPP_Service_Invoice();
+          } else {
+            $invoiceService = new QuickBooks_IPP_Service_CreditMemo();
+          }
           $fees = $invoiceObject->getFees();
           $qbInvoice = $invoiceService->findById($quickbooks->Context, $quickbooks->creds['qb_realm'],$invoice['quickbooks_invoice_id']);
+          //echo $invoiceService->lastResponse()."\r\n\r\n\r\n";
+          //print_r($qbInvoice);
 
           $header = $qbInvoice->getHeader();
-          $header->setTotalAmt($invoiceObject->getTotal());
+          $header->remove("TotalAmt");
+          //$header->setTotalAmt($invoiceObject->getTotal());
 
           $qbInvoice->remove("Header");
           $qbInvoice->add($header);
 
 
+
           $qbInvoice->remove("Line");
           if(isset($fees)){
             foreach($fees as $fee){
-              $qbInvoice->add($quickbooks->createLineFromFee($fee,$invoiceObject->getTotal()));
+              $qbInvoice->add($quickbooks->createLineFromFee($fee,$total));
             }
           }
 
-          $invoiceService->update($quickbooks->Context, $quickbooks->creds['qb_realm'],$invoice['quickbooks_invoice_id'],$qbInvoice);
+          $invoiceService->update($quickbooks->Context, $quickbooks->creds['qb_realm'],$id,$qbInvoice);
           $invoiceObject->updateLastQBSync();
 
-          echo $invoiceService->lastRequest()."<br /><br /><br />";
+          //echo $invoiceService->lastRequest()."\r\n\r\n\r\n";
 
-          echo $invoiceService->lastResponse()."<br /><br /><br />";
+          //echo $invoiceService->lastResponse()."\r\n\r\n\r\n";
+          //print_r($qbInvoice);
+          //die();
           //print_r($invoice);
         }
       }
 
-      die();
+      //die();
       //Once all the external keys are up to date locally, we need to re-grab the local invoices.
       $localInvoices = $currentCampus->getInvoices();
 
