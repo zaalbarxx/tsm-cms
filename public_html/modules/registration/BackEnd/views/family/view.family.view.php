@@ -175,6 +175,64 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
   </div>
   <?php } ?>
 
+  <?php if(isset($feesNeedingReview)){ ?>
+    <div class="infoSection well">
+      <h2>Fees to Review</h2>
+      <p>The following fees need attention.</p>
+      <form id="handleFeesForm" class="form-horizontal" method="post" action="index.php?mod=registration&ajax=handleFees&family_id=<?php echo $family_id; ?>">
+        <table class="table table-striped">
+          <caption>Please specify what you would like to do with the fees below.</caption>
+          <tr>
+            <th>Fee</th>
+            <th>Amount</th>
+            <th>Invoiced</th>
+            <th>On Payment Plan</th>
+            <th></th>
+          </tr>
+          <?php
+            foreach ($feesNeedingReview as $fee) {
+
+              ?>
+              <tr><td>
+                <?php echo $fee['name']; ?>
+              </td>
+              <td>$<?php echo $fee['amount']; ?></td>
+              <td><?php if($fee['invoiced'] == 1){ echo "Yes"; } else { echo "No"; }; ?></td>
+              <td><?php if($fee['onPaymentPlan'] == 1){ echo "Yes"; } else { echo "No"; }; ?></td>
+              <td>
+                <select name="handleFees[<?php echo $fee['family_fee_id']; ?>][handleMethod]">
+                  <option value="1">Remove from invoices and payment plan.</option>
+                  <option value="2">Non-refundable.</option>
+                </select>
+
+              </td>
+            <?php
+            } ?>
+            </tr>
+        </table>
+        <span class="right">
+          <input class="btn btn-primary" type="submit" value="Mark as Reviewed" />
+        </span>
+        <br />
+      </form>
+      <script type="text/javascript">
+        $("#handleFeesForm").submit( function(){
+          var data = $(this).serialize();
+          $.post($(this).attr('action'),data,function(data){
+            if(data == 1){
+              alert("The fees were successfully reviewed");
+              window.location.reload();
+            } else {
+              alert("There was a problem");
+            }
+          });
+          return false;
+        });
+      </script>
+    </div>
+  <?php } ?>
+
+
 </div>
 <script type="text/javascript">
     $(".bigItem .title").click(function () {

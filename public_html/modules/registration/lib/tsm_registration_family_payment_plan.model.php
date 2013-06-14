@@ -422,9 +422,39 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
 
   public function addFees($feesToAdd){
     if(isset($feesToAdd)){
+      if($this->getNumInvoices() > 0){
+        $originalInvoiceId = $this->getOriginalInvoiceId();
+        $originalInvoice = new TSM_REGISTRATION_INVOICE($originalInvoiceId);
+
+        $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($this->info['payment_plan_id']);
+        $paymentPlanInfo = $paymentPlan->getInfo();
+
+        if($paymentPlanInfo['invoice_and_credit'] == 1){
+          $creditMemoId = $this->getCreditInvoiceId();
+          $creditMemo = new TSM_REGISTRATION_INVOICE($creditMemoId);
+        }
+      }
+
       foreach($feesToAdd as $family_fee_id){
         $feeObject = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
         $feeObject->setPaymentPlan($this->familyPaymentPlanId);
+        $feeInfo = $feeObject->getInfo();
+        if($this->getNumInvoices() > 0){
+          $options = Array('family_fee_id'=>$family_fee_id,'description'=>$feeInfo['name'],'amount'=>$feeInfo['amount']);
+          $originalInvoice->addFee($options);
+        }
+      }
+      if($this->getNumInvoices() > 0){
+        $originalInvoice->updateTotal();
+      }
+
+      if($this->getNumInvoices() > 0){
+        if($paymentPlanInfo['invoice_and_credit'] == 1){
+          $newTotal = $originalInvoice->getTotal() * -1;
+          $creditFeeId = $creditMemo->getFirstFamilyFeeId();
+          $creditMemo->updateFeeAmount($creditFeeId,$newTotal);
+          $creditMemo->updateTotal();
+        }
       }
     }
 

@@ -50,6 +50,7 @@ class TSM_REGISTRATION_FAMILY_FEE extends TSM_REGISTRATION_CAMPUS {
     //if ($this->getPaymentPlan() == null) {
       $q = "UPDATE tsm_reg_families_fees SET family_payment_plan_id = ".$family_payment_plan_id." WHERE family_fee_id = '".$this->familyFeeId."'";
       $this->db->runQuery($q);
+      $this->info['family_payment_plan_id'] = "";
 
       return true;
     //} else {
@@ -81,8 +82,22 @@ class TSM_REGISTRATION_FAMILY_FEE extends TSM_REGISTRATION_CAMPUS {
   public function setRemovable($set){
     $q = "UPDATE tsm_reg_families_fees SET removable = '$set' WHERE family_fee_id = '".$this->familyFeeId."'";
     $this->db->runQuery($q);
+    $this->info['removable'] = $set;
 
     return true;
+  }
+
+  public function setToReview($set){
+    $q = "UPDATE tsm_reg_families_fees SET to_review = '$set' WHERE family_fee_id = '".$this->familyFeeId."'";
+    $this->db->runQuery($q);
+    $this->info['to_review'] = $set;
+
+
+    return true;
+  }
+
+  public function getIsUnderReview(){
+    return $this->info['to_review'];
   }
 
   public function updateAmount($amount){
@@ -93,7 +108,7 @@ class TSM_REGISTRATION_FAMILY_FEE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function delete() {
-    if ($this->isInvoiced() == false && $this->isOnPaymentPlan() == false && $this->isRemovable() == true) {
+    if ($this->isInvoiced() == false && $this->isOnPaymentPlan() == false && $this->isRemovable() == true && $this->getIsUnderReview() == false) {
       $q = "DELETE FROM tsm_reg_families_fees WHERE family_fee_id = '".$this->familyFeeId."'";
       $this->db->runQuery($q);
 

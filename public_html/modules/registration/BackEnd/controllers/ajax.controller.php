@@ -207,28 +207,14 @@ switch ($ajax) {
   case "unenrollStudentFromCourse":
     if (isset($course_id) && isset($student_id) && isset($program_id)) {
       $student = new TSM_REGISTRATION_STUDENT($student_id);
-
-      if(isset($handleFees)){
-        $studentInfo = $student->getInfo();
-        $family = new TSM_REGISTRATION_FAMILY($studentInfo['family_id']);
-        $family->handleFees($handleFees);
-      }
-
       $success = $student->unenrollFromCourse($course_id, $program_id);
 
-      $response = Array("success" => false, "alertMessage" => null);
-      $processPreview = $student->processFees(true);
-
-      print_r($processPreview);die();
-
-      if ($success['success'] == true) {
+      if ($success == true) {
         $response["success"] = true;
         $response["alertMessage"] = "The student has been successfully unenrolled from this course.";
       } else {
         $response["success"] = false;
-        $response["error"] = $success["error"];
-        $response["alertMessage"] = $success['message'];
-        $response["nonRemovableFees"] = $success['nonRemovableFees'];
+        $response["alertMessage"] = "There was an error unenrolling the student from this course.";
       }
 
       echo json_encode($response);
@@ -238,24 +224,15 @@ switch ($ajax) {
     if (isset($student_id) && isset($program_id)) {
       $student = new TSM_REGISTRATION_STUDENT($student_id);
 
-      if(isset($handleFees)){
-        $studentInfo = $student->getInfo();
-        $family = new TSM_REGISTRATION_FAMILY($studentInfo['family_id']);
-        $family->handleFees($handleFees);
-      }
-
-
       $success = $student->unenrollFromProgram($program_id);
       $response = Array("success" => false, "alertMessage" => null);
 
-      if ($success['success'] == true) {
+      if ($success == true) {
         $response["success"] = true;
         $response["alertMessage"] = "The student has been successfully unenrolled from this program.";
       } else {
         $response["success"] = false;
-        $response["error"] = $success["error"];
-        $response["alertMessage"] = $success['message'];
-        $response["nonRemovableFees"] = $success['nonRemovableFees'];
+        $response["alertMessage"] = "The student could not be unenrolled from this program. Please make sure they are not enrolled in any courses.";
       }
 
       echo json_encode($response);
@@ -427,6 +404,15 @@ switch ($ajax) {
 
       echo json_encode($response);
     }
+    break;
+  case "handleFees":
+
+    if(isset($handleFees) && isset($family_id)){
+      $family = new TSM_REGISTRATION_FAMILY($family_id);
+      $family->handleFees($handleFees);
+    }
+
+    die("1");
     break;
   case "getHandleFeesView":
     if(isset($student_id) && isset($feesToHandle) && (isset($program_id) || isset($course_id))){

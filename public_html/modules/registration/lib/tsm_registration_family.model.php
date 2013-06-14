@@ -656,50 +656,67 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $returnFees;
   }
 
+  public function getFeesNeedingReview(){
+    $q = "SELECT * FROM tsm_reg_families_fees WHERE family_id = ".$this->familyId." AND to_review = '1'";
+    $r = $this->db->runQuery($q);
+    $feesNeedingReview = null;
+    while($a = mysql_fetch_assoc($r)){
+      $feesNeedingReview[] = $a;
+    }
+
+    return $feesNeedingReview;
+  }
+
   public function handleFees($handleFees){
+
     foreach($handleFees as $family_fee_id=>$handleInfo){
       if($handleInfo['handleMethod'] == 1){
+
         //echo $family_fee_id.": removing from invoices and family";
         $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
         $familyFeeInfo = $familyFee->getInfo();
-        $invoice_id = $familyFee->getInvoiceId();
+        if($familyFee->isInvoiced()){
+          $invoice_id = $familyFee->getInvoiceId();
+          if(isset($familyFeeInfo['family_payment_plan_id']) && isset($invoice_id)){
+            //echo "the fee is on a payment plan";
+            $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyFeeInfo['family_payment_plan_id']);
 
-        if(isset($familyFeeInfo['family_payment_plan_id']) && isset($invoice_id)){
-          //echo "the fee is on a payment plan";
-          $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyFeeInfo['family_payment_plan_id']);
+            $originalInvoiceId = $familyPaymentPlan->getOriginalInvoiceId();
 
-          $originalInvoiceId = $familyPaymentPlan->getOriginalInvoiceId();
+            $familyPaymentPlanInfo = $familyPaymentPlan->getInfo();
+            if($familyPaymentPlanInfo['invoice_and_credit'] == 0 || !($familyPaymentPlan->getAmountInvoiced() >= $familyPaymentPlan->getTotal())){
+              $familyInvoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+              $familyInvoice->removeFee($family_fee_id);
+              $familyInvoice->updateTotal();
+              $newTotal = $familyInvoice->getTotal();
 
-          $familyPaymentPlanInfo = $familyPaymentPlan->getInfo();
-          if($familyPaymentPlanInfo['invoice_and_credit'] == 0 || !($familyPaymentPlan->getAmountInvoiced() >= $familyPaymentPlan->getTotal())){
-            $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($familyPaymentPlanInfo['payment_plan_id']);
-            $paymentPlanInfo = $paymentPlan->getInfo();
+              if($invoice_id == $originalInvoiceId){
+                $credit_invoice_id = $familyPaymentPlan->getCreditInvoiceId();
+                $creditInvoice = new TSM_REGISTRATION_INVOICE($credit_invoice_id);
+                $creditFeeId = $creditInvoice->getFirstFamilyFeeId();
+                $credtFee = new TSM_REGISTRATION_FAMILY_FEE($creditFeeId);
+                $newTotal = $newTotal*-1;
+                $credtFee->updateAmount($newTotal);
+                $creditInvoice->updateFeeAmount($creditFeeId,$newTotal);
+                $creditInvoice->updateTotal();
+              }
 
-            $familyInvoice = new TSM_REGISTRATION_INVOICE($invoice_id);
-            $familyInvoice->removeFee($family_fee_id);
-            $familyInvoice->updateTotal();
-            $newTotal = $familyInvoice->getTotal();
-
-            if($invoice_id == $originalInvoiceId){
-              $credit_invoice_id = $familyPaymentPlan->getCreditInvoiceId();
-              $creditInvoice = new TSM_REGISTRATION_INVOICE($credit_invoice_id);
-              $creditFeeId = $creditInvoice->getFirstFamilyFeeId();
-              $credtFee = new TSM_REGISTRATION_FAMILY_FEE($creditFeeId);
-              $newTotal = $newTotal*-1;
-              $credtFee->updateAmount($newTotal);
-              $creditInvoice->updateFeeAmount($creditFeeId,$newTotal);
-              $creditInvoice->updateTotal();
+              $familyFee->setPaymentPlan("NULL");
+              $familyFee->setToReview(false);
+              $familyFee->delete();
             }
-
-            $familyFee->setPaymentPlan("NULL");
-            //echo "Set payment plan to ''";
-            $familyFee->delete();
           }
+        } else if($familyFee->isOnPaymentPlan()){
+          $familyFee->setPaymentPlan("NULL");
+          $familyFee->setToReview(false);
+          $familyFee->delete();
         }
+
       } else if($handleInfo['handleMethod'] == 2){
         //echo $family_fee_id.": nonrefundable";
         $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
         $familyFee->setRemovable(false);
+        $familyFee->setToReview(false);
       }
 
 

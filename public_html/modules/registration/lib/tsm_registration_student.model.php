@@ -306,6 +306,27 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
       }
     }
 
+
+    if($this->getUseRecordedFees() == true){
+      $q = "SELECT * FROM tsm_reg_families_fees WHERE student_id = '".$this->studentId."' AND (program_id IS NOT NULL or course_id IS NOT NULL)";
+      if(isset($eligibleFees)){
+        $q .= " AND (";
+        //print_r($eligibleFees);die();
+        foreach($eligibleFees as $fee){
+          $q .= " family_fee_id != ".$fee['family_fee_id']." AND ";
+        }
+        $q = substr($q, 0, -5);
+        $q .= ")";
+      }
+
+
+      $r = $this->db->runQuery($q);
+      while($a = mysql_fetch_assoc($r)){
+        $eligibleFees[] = $a;
+      }
+    }
+
+
     return $eligibleFees;
   }
 
@@ -537,48 +558,25 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
 
   public function unenrollFromCourse($course_id, $program_id) {
     if ($this->inCourse($course_id)) {
-      $fees = $this->getFeesForCourse($course_id, $program_id);
-      $canDelete = true;
-      if (isset($fees)) {
-        foreach ($fees as $fee) {
+      $q = "DELETE FROM tsm_reg_student_course WHERE student_id = '".$this->studentId."' AND course_id = '".$course_id."' AND program_id = '".$program_id."'";
+      $this->db->runQuery($q);
+
+      $q = "INSERT INTO tsm_reg_student_log (student_id,program_id,course_id,add_remove) VALUES('".$this->studentId."',$program_id,$course_id,0)";
+      $this->db->runQuery($q);
+
+      $processFees = $this->processFees(true);
+      if(isset($processFees['removeButInvoiced'])){
+        foreach($processFees['removeButInvoiced'] as $fee){
           $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-          if ($familyFee->isInvoiced() == true || $familyFee->isOnPaymentPlan() == true) {
-            $nonRemovableFees[] = $fee['family_fee_id'];
-            $message = "The student could not be unenrolled from this program. There are fees that are invoiced or assigned to a payment plan.";
-            $error = 2;
-            $canDelete = false;
+          $familyFeeInfo = $familyFee->getInfo();
+          if($familyFeeInfo['removable'] == 1){
+            $familyFee->setToReview(true);
           }
         }
-
-
-        if ($canDelete == true) {
-          foreach ($fees as $fee) {
-            $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-            if ($familyFee->isInvoiced() == false && $familyFee->isOnPaymentPlan() == false) {
-              $familyFee->delete();
-            }
-          }
-        } else {
-          $return['success'] = false;
-        }
       }
-
-      if ($canDelete == true) {
-        $q = "DELETE FROM tsm_reg_student_course WHERE student_id = '".$this->studentId."' AND course_id = '".$course_id."' AND program_id = '".$program_id."'";
-        $this->db->runQuery($q);
-
-        $q = "INSERT INTO tsm_reg_student_log (student_id,program_id,course_id,add_remove) VALUES('".$this->studentId."',$program_id,$course_id,0)";
-        $this->db->runQuery($q);
-
-        $return = Array("success"=>true);
-      } else {
-        $return = Array("success"=>false,"nonRemovableFees"=>$nonRemovableFees,"message"=>$message,"error"=>$error);
-        //$return = false;
-      }
-
       $this->processFees();
 
-      return $return;
+      return true;
     }
   }
 
@@ -751,53 +749,28 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     if ($this->inProgram($program_id)) {
       $courses = $this->getCoursesIn($program_id);
       if (isset($courses)) {
-        $return = Array("success"=>true,"message"=>"The student could not be unenrolled from this program. Please make sure they are not enrolled in any courses.");
+        $return = false;
       } else {
-        $fees = $this->getFeesForProgramAndCourses($program_id);
-        $canDelete = true;
-        if (isset($fees)) {
-          foreach ($fees as $fee) {
-            $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-            if (($familyFee->isInvoiced() == true || $familyFee->isOnPaymentPlan() == true) && $familyFee->isRemovable() == true) {
-              $nonRemovableFees[] = $fee['family_fee_id'];
-              $message = "The student could not be unenrolled from this program. There are fees that are invoiced or assigned to a payment plan.";
-              $error = 2;
-              $canDelete = false;
-            }
+        $q = "DELETE FROM tsm_reg_student_program WHERE student_id = '".$this->studentId."' AND program_id = '".$program_id."'";
+        $this->db->runQuery($q);
 
-          }
+        $q = "INSERT INTO tsm_reg_student_log (student_id,program_id,course_id,add_remove) VALUES('".$this->studentId."',$program_id,NULL,0)";
+        $this->db->runQuery($q);
 
-          if ($canDelete == true) {
-            foreach ($fees as $fee) {
-              $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-              if ($familyFee->isInvoiced() == false && $familyFee->isOnPaymentPlan() == false) {
-                $familyFee->delete();
-              } else {
-                $return["success"] = false;
-              }
-            }
-          } else {
-            $return["success"] = false;
-          }
-
-        }
-        if ($canDelete == true) {
-          $q = "DELETE FROM tsm_reg_student_program WHERE student_id = '".$this->studentId."' AND program_id = '".$program_id."'";
-          $this->db->runQuery($q);
-
-          $q = "INSERT INTO tsm_reg_student_log (student_id,program_id,course_id,add_remove) VALUES('".$this->studentId."',$program_id,NULL,0)";
-          $this->db->runQuery($q);
-
-          $return = Array("success"=>true);
-        } else {
-          $return = Array("success"=>false,"nonRemovableFees"=>$nonRemovableFees,"message"=>$message,"error"=>$error);
-          //$return = false;
-        }
-
+        $return = true;
       }
-
     }
 
+    $processFees = $this->processFees(true);
+    if(isset($processFees['removeButInvoiced'])){
+      foreach($processFees['removeButInvoiced'] as $fee){
+        $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+        $familyFeeInfo = $familyFee->getInfo();
+        if($familyFeeInfo['removable'] == 1){
+          $familyFee->setToReview(true);
+        }
+      }
+    }
     $this->processFees();
 
     return $return;

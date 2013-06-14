@@ -46,6 +46,14 @@ if(isset($paymentPlans)){
   }
 }
 $looseFees = $family->getLooseFees();
+$feesNeedingReview = $family->getFeesNeedingReview();
+if(isset($feesNeedingReview)){
+  foreach($feesNeedingReview as $id=>$fee){
+    $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+    $feesNeedingReview[$id]['invoiced'] = $familyFee->isInvoiced();
+    $feesNeedingReview[$id]['onPaymentPlan'] = $familyFee->isOnPaymentPlan();
+  }
+}
 //print_r($paymentPlans);die();
 
 
