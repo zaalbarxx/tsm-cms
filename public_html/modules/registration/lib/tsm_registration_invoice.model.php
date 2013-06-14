@@ -374,6 +374,9 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       VALUES('".$this->info['family_id']."','".$description."','".$amount."','$family_fee_id','".$this->invoiceId."')";
       $this->db->runQuery($q);
 
+      $q = "INSERT INTO tsm_reg_families_invoice_fee_log (add_remove,family_fee_id,family_invoice_id) VALUES(1,$family_fee_id,".$this->info['family_invoice_id'].")";
+      $this->db->runQuery($q);
+
       return true;
     } else {
       return false;
