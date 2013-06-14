@@ -543,9 +543,14 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         foreach ($fees as $fee) {
           $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
           if ($familyFee->isInvoiced() == true || $familyFee->isOnPaymentPlan() == true) {
+            $nonRemovableFees[] = $fee['family_fee_id'];
+            $message = "The student could not be unenrolled from this program. There are fees that are invoiced or assigned to a payment plan.";
+            $error = 2;
             $canDelete = false;
           }
         }
+
+
         if ($canDelete == true) {
           foreach ($fees as $fee) {
             $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
@@ -554,7 +559,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
             }
           }
         } else {
-          $return = false;
+          $return['success'] = false;
         }
       }
 
@@ -565,7 +570,10 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         $q = "INSERT INTO tsm_reg_student_log (student_id,program_id,course_id,add_remove) VALUES('".$this->studentId."',$program_id,$course_id,0)";
         $this->db->runQuery($q);
 
-        $return = true;
+        $return = Array("success"=>true);
+      } else {
+        $return = Array("success"=>false,"nonRemovableFees"=>$nonRemovableFees,"message"=>$message,"error"=>$error);
+        //$return = false;
       }
 
       $this->processFees();
@@ -750,7 +758,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         if (isset($fees)) {
           foreach ($fees as $fee) {
             $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-            if ($familyFee->isInvoiced() == true || $familyFee->isOnPaymentPlan() == true) {
+            if (($familyFee->isInvoiced() == true || $familyFee->isOnPaymentPlan() == true) && $familyFee->isRemovable() == true) {
               $nonRemovableFees[] = $fee['family_fee_id'];
               $message = "The student could not be unenrolled from this program. There are fees that are invoiced or assigned to a payment plan.";
               $error = 2;

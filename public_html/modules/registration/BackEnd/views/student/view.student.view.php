@@ -6,7 +6,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 <div class="span9">
     <h1><?php echo $pageTitle; ?> - <a
             href="index.php?mod=registration&view=student&action=addEditStudent&student_id=<?php echo $studentInfo['student_id']; ?>"
-            class="editButton" title="Edit Student"></a></h1>
+            class="editButton fb" title="Edit Student"></a></h1>
 
     <div class="well well-large">
         <h2>Student Information</h2>
@@ -52,7 +52,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
                           $i = 1;
                           if ($program['courses']) {
                             foreach ($program['courses'] as $course) {
-                              echo "<tr><td>".$i.". ".$course['name']."</td><td><a href='index.php?mod=registration&view=student&action=changeStudentPeriodForCourse&course_period_id=".$course['course_period_id']."&student_id=".$student_id."&course_id=".$course['course_id']."&program_id=".$program['program_id']."' class='fb'>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</a></td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?mod=registration&ajax=unenrollStudentFromCourse&course_id=".$course['course_id']."&student_id=".$student_id."&program_id=".$course['program_id']."\" title=\"Unenroll From This Course\" class=\"deleteButton btn btn-danger btn-small\">Unenroll</a></td></tr>";
+                              echo "<tr><td>".$i.". ".$course['name']."</td><td><a href='index.php?mod=registration&view=student&action=changeStudentPeriodForCourse&course_period_id=".$course['course_period_id']."&student_id=".$student_id."&course_id=".$course['course_id']."&program_id=".$program['program_id']."' class='fb'>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</a></td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?mod=registration&ajax=unenrollStudentFromCourse&course_id=".$course['course_id']."&student_id=".$student_id."&program_id=".$course['program_id']."\" title=\"Unenroll From This Course\" data-tsm-course-id=\"".$course['course_id']."\" data-tsm-program-id=\"".$course['program_id']."\" class=\"deleteButton deleteCourse btn btn-danger btn-small\">Unenroll</a></td></tr>";
                               $i++;
                             }
                           } else {
@@ -114,6 +114,33 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         } else if(response.error == 2){
           //handle fees can't be removed.
           $.get("index.php?mod=registration&ajax=getHandleFeesView&student_id=<?php echo $student_id; ?>&program_id=" + program_id + "&feesToHandle=" + response.nonRemovableFees,function(data){
+            $("body").append(data);
+            $("#feesToHandle").modal().on("hidden",function(){
+              $(this).remove();
+            });
+
+            //alert(data);
+          });
+
+
+        }
+      });
+      return false;
+    });
+    $(".deleteCourse").click(function () {
+      var course_id = $(this).attr("data-tsm-course-id");
+      var program_id = $(this).attr("data-tsm-program-id");
+      $.get($(this).attr("href"), function (data) {
+        var response = JSON.parse(data);
+        if (response.success == true) {
+          window.location.reload();
+        } else if(response.error == 1){
+          //handle enrolled in courses
+          alert(response.alertMessage);
+
+        } else if(response.error == 2){
+          //handle fees can't be removed.
+          $.get("index.php?mod=registration&ajax=getHandleFeesView&student_id=<?php echo $student_id; ?>&program_id=" + program_id + "&course_id=" + course_id + "&feesToHandle=" + response.nonRemovableFees,function(data){
             $("body").append(data);
             $("#feesToHandle").modal().on("hidden",function(){
               $(this).remove();

@@ -206,18 +206,29 @@ switch ($ajax) {
     break;
   case "unenrollStudentFromCourse":
     if (isset($course_id) && isset($student_id) && isset($program_id)) {
-
       $student = new TSM_REGISTRATION_STUDENT($student_id);
+
+      if(isset($handleFees)){
+        $studentInfo = $student->getInfo();
+        $family = new TSM_REGISTRATION_FAMILY($studentInfo['family_id']);
+        $family->handleFees($handleFees);
+      }
+
       $success = $student->unenrollFromCourse($course_id, $program_id);
 
       $response = Array("success" => false, "alertMessage" => null);
+      $processPreview = $student->processFees(true);
 
-      if ($success == true) {
+      print_r($processPreview);die();
+
+      if ($success['success'] == true) {
         $response["success"] = true;
         $response["alertMessage"] = "The student has been successfully unenrolled from this course.";
       } else {
         $response["success"] = false;
-        $response["alertMessage"] = "The student could not be unenrolled.";
+        $response["error"] = $success["error"];
+        $response["alertMessage"] = $success['message'];
+        $response["nonRemovableFees"] = $success['nonRemovableFees'];
       }
 
       echo json_encode($response);
@@ -225,52 +236,15 @@ switch ($ajax) {
     break;
   case "unenrollStudentFromProgram":
     if (isset($student_id) && isset($program_id)) {
-      //print_r($_POST);
+      $student = new TSM_REGISTRATION_STUDENT($student_id);
+
       if(isset($handleFees)){
-        foreach($handleFees as $family_fee_id=>$handleInfo){
-          if($handleInfo['handleMethod'] == 1){
-            $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
-            $familyFeeInfo = $familyFee->getInfo();
-            $invoice_id = $familyFee->getInvoiceId();
-            if(isset($familyFeeInfo['family_payment_plan_id']) && isset($invoice_id)){
-              $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyFeeInfo['family_payment_plan_id']);
-
-              $originalInvoiceId = $familyPaymentPlan->getOriginalInvoiceId();
-
-              $familyPaymentPlanInfo = $familyPaymentPlan->getInfo();
-              if($familyPaymentPlanInfo['invoice_and_credit'] == 0 || !($familyPaymentPlan->getAmountInvoiced() >= $familyPaymentPlan->getTotal())){
-                $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($familyPaymentPlanInfo['payment_plan_id']);
-                $paymentPlanInfo = $paymentPlan->getInfo();
-
-                $familyInvoice = new TSM_REGISTRATION_INVOICE($invoice_id);
-                $familyInvoice->removeFee($family_fee_id);
-                $familyInvoice->updateTotal();
-                $newTotal = $familyInvoice->getTotal();
-
-                if($invoice_id == $originalInvoiceId){
-                  $credit_invoice_id = $familyPaymentPlan->getCreditInvoiceId();
-                  $creditInvoice = new TSM_REGISTRATION_INVOICE($credit_invoice_id);
-                  $creditFeeId = $creditInvoice->getFirstFamilyFeeId();
-                  $credtFee = new TSM_REGISTRATION_FAMILY_FEE($creditFeeId);
-                  $newTotal = $newTotal*-1;
-                  $credtFee->updateAmount($newTotal);
-                  $creditInvoice->updateFeeAmount($creditFeeId,$newTotal);
-                  $creditInvoice->updateTotal();
-                }
-
-                $familyFee->delete();
-              }
-
-
-
-            }
-          }
-
-
-        }
+        $studentInfo = $student->getInfo();
+        $family = new TSM_REGISTRATION_FAMILY($studentInfo['family_id']);
+        $family->handleFees($handleFees);
       }
 
-      $student = new TSM_REGISTRATION_STUDENT($student_id);
+
       $success = $student->unenrollFromProgram($program_id);
       $response = Array("success" => false, "alertMessage" => null);
 
@@ -455,7 +429,7 @@ switch ($ajax) {
     }
     break;
   case "getHandleFeesView":
-    if(isset($student_id) && isset($feesToHandle) && isset($program_id)){
+    if(isset($student_id) && isset($feesToHandle) && (isset($program_id) || isset($course_id))){
       $feesToHandle = explode(",",$feesToHandle);
       foreach($feesToHandle as $family_fee_id){
         $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
@@ -463,6 +437,12 @@ switch ($ajax) {
         $fees[$family_fee_id] = $familyFee->getInfo();
         $fees[$family_fee_id]["invoiced"] = $familyFee->isInvoiced();
         $fees[$family_fee_id]["onPaymentPlan"] = $familyFee->isOnPaymentPlan();
+      }
+
+      if(isset($course_id)){
+        $actionUrl = "index.php?mod=registration&ajax=unenrollStudentFromCourse&student_id=".$student_id."&program_id=".$program_id."&course_id=".$course_id;
+      } else {
+        $actionUrl = "index.php?mod=registration&ajax=unenrollStudentFromProgram&student_id=".$student_id."&program_id=".$program_id;
       }
     ?>
     <div id="feesToHandle" class="modal hide fade" tabindex="-1" style="width: 800px; margin-left: -430px;" role="dialog"
@@ -472,7 +452,7 @@ switch ($ajax) {
         <h3 id="myModalLabel">Fee Adjustments</h3>
       </div>
       <div class="modal-body">
-        <form id="handleFeesForm" class="form-horizontal" method="post" action="index.php?mod=registration&ajax=unenrollStudentFromProgram&student_id=<?php echo $student_id; ?>&program_id=<?php echo $program_id; ?>">
+        <form id="handleFeesForm" class="form-horizontal" method="post" action="<?php echo $actionUrl; ?>">
 
           <table class="table table-striped">
             <caption>Please specify what you would like to do with the fees below.</caption>
@@ -497,6 +477,7 @@ switch ($ajax) {
                 <td>
                   <select name="handleFees[<?php echo $fee['family_fee_id']; ?>][handleMethod]">
                     <option value="1">Remove from invoices and payment plan.</option>
+                    <option value="2">Non-refundable.</option>
                   </select>
 
                 </td>
@@ -516,7 +497,7 @@ switch ($ajax) {
     </div>
       <script type="text/javascript">
         $("#handleFeesForm").submit( function(){
-          var conf = confirm("Are you sure you want to remove the student from this program?");
+          var conf = confirm("Are you sure you want to remove the student from this program or course?");
           if(conf){
             var data = $(this).serialize();
             $.post($(this).attr("action"),data,function(data){

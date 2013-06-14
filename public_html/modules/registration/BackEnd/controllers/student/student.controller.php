@@ -26,6 +26,10 @@ switch ($action) {
     require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/student/changePeriod.student.controller.php");
     $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/student/changePeriod.student.view.php";
     break;
+  case "addEditStudent":
+    require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/student/addEdit.student.controller.php");
+    $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/student/addEdit.student.view.php";
+    break;
 }
 
 

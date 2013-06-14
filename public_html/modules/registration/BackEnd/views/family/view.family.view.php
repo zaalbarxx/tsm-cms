@@ -40,7 +40,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         </div>
     </div>
     <div class="infoSection well clearfix">
-        <h2>Students</h2>
+        <h2>Students - <a href="index.php?mod=registration&view=student&action=addEditStudent&family_id=<?php echo $familyInfo['family_id']; ?>" class="btn btn-primary fb">Add Student</a></h2>
         <br/>
       <?php
       foreach ($students as $student) {
