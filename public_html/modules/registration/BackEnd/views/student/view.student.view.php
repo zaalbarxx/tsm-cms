@@ -51,7 +51,19 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
                           $i = 1;
                           if ($program['courses']) {
                             foreach ($program['courses'] as $course) {
-                              echo "<tr><td>".$i.". ".$course['name']."</td><td><a href='index.php?mod=registration&view=student&action=changeStudentPeriodForCourse&course_period_id=".$course['course_period_id']."&student_id=".$student_id."&course_id=".$course['course_id']."&program_id=".$program['program_id']."' class='fb'>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</a></td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?mod=registration&ajax=unenrollStudentFromCourse&course_id=".$course['course_id']."&student_id=".$student_id."&program_id=".$course['program_id']."\" title=\"Unenroll From This Course\" data-tsm-course-id=\"".$course['course_id']."\" data-tsm-program-id=\"".$course['program_id']."\" class=\"deleteButton deleteCourse btn btn-danger btn-small\">Unenroll</a></td></tr>";
+                              echo "<tr><td>".$i.". ".$course['name']."</td><td><a href='index.php?mod=registration&view=student&action=changeStudentPeriodForCourse&course_period_id=".$course['course_period_id']."&student_id=".$student_id."&course_id=".$course['course_id']."&program_id=".$program['program_id']."' class='fb'>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</a></td><td>".$course['teacher_name']."</td><td align=center>";
+                              if(isset($course['tuition_popover'])){
+                                echo "<span class=\"hiddenFees\" data-content=\"".$course['tuition_popover']."\" data-original-title=\"Tuition Fees\" style=\"display: block;\">$".$course['tuition_amount']."</span>";
+                              } else {
+                                echo "$".$course['tuition_amount'];
+                              }
+                              echo "</td><td align=center>";
+                              if(isset($course['registration_popover'])){
+                                echo "<span class=\"hiddenFees\" data-content=\"".$course['registration_popover']."\" data-original-title=\"Registration Fees\" style=\"display: block;\">$".$course['registration_amount']."</span>";
+                              } else {
+                                echo "$".$course['registration_amount'];
+                              }
+                              echo "</td><td><a href=\"index.php?mod=registration&ajax=unenrollStudentFromCourse&course_id=".$course['course_id']."&student_id=".$student_id."&program_id=".$course['program_id']."\" title=\"Unenroll From This Course\" data-tsm-course-id=\"".$course['course_id']."\" data-tsm-program-id=\"".$course['program_id']."\" class=\"deleteButton deleteCourse btn btn-danger btn-small\">Unenroll</a></td></tr>";
                               $i++;
                             }
                           } else {
@@ -99,6 +111,11 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 <script type="text/javascript">
     $(".bigItem .title").click(function () {
         $(this).parent().children(".itemDetails").slideToggle();
+    });
+    $(".hiddenFees").popover({
+      html: true,
+      trigger: 'hover',
+      placement: 'top'
     });
     $(".deleteProgram").click(function () {
       var program_id = $(this).attr("data-tsm-program-id");

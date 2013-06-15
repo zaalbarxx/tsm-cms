@@ -8,7 +8,20 @@ switch ($action) {
     $families = $currentCampus->getFamilies();
     if (isset($families)) {
       foreach ($families as $family) {
+        $familyObject = new TSM_REGISTRATION_FAMILY($family['family_id']);
+        $feesInReview = $familyObject->getFeesInReview();
         $families[$family['family_id']]['status'] = null;
+        $families[$family['family_id']]['feesInReview'] = $feesInReview;
+        $paymentPlans = $familyObject->getPaymentPlans();
+        $families[$family['family_id']]['hasLooseFees'] = false;
+        if(isset($paymentPlans)){
+          foreach($paymentPlans as $paymentPlan){
+            $paymentPlanObject = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($paymentPlan['family_payment_plan_id']);
+            if($paymentPlanObject->setupComplete() == true && $paymentPlanObject->getUnassignedApplicableFees()){
+              $families[$family['family_id']]['hasLooseFees'] = true;
+            }
+          }
+        }
         switch ($family['current_step']) {
           case 0:
             $families[$family['family_id']]['status'] = " - Finalized";

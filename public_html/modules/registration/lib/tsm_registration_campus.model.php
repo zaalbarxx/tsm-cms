@@ -539,6 +539,26 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $this->students;
   }
 
+  public function getProgramById($program_id){
+    $q = "SELECT * FROM tsm_reg_programs WHERE program_id = $program_id";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $program = $a;
+    }
+
+    return $program;
+  }
+
+  public function getCourseById($course_id){
+    $q = "SELECT * FROM tsm_reg_courses WHERE course_id = $course_id";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $course = $a;
+    }
+
+    return $course;
+  }
+
 }
 
 ?>

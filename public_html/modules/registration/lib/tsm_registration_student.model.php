@@ -309,6 +309,9 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
 
     if($this->getUseRecordedFees() == true){
       $q = "SELECT * FROM tsm_reg_families_fees WHERE student_id = '".$this->studentId."' AND (program_id IS NOT NULL or course_id IS NOT NULL)";
+      if($fee_type_id != null){
+        $q .= " AND fee_type_id = ".$fee_type_id;
+      }
       if(isset($eligibleFees)){
         $q .= " AND (";
         //print_r($eligibleFees);die();
@@ -712,7 +715,11 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
 
           } else {
             if($preview == true){
-              $removeButInvoiced[] = $fee;
+              if($feeObject->getIsUnderReview() == false){
+                $removeButInvoiced[] = $fee;
+              }
+            } else {
+              $feeObject->setToReview(true);
             }
           }
         }
@@ -790,6 +797,17 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     }
 
     return $courses;
+  }
+
+  public function getLog(){
+    $q = "SELECT * FROM tsm_reg_student_log WHERE student_id = ".$this->studentId."";
+    $r = $this->db->runQuery($q);
+    $log = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $log[$a['student_log_id']] = $a;
+    }
+
+    return $log;
   }
 
 }

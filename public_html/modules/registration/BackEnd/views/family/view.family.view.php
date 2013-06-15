@@ -6,7 +6,19 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
             href="index.php?mod=registration&view=family&action=addEditFamily&family_id=<?php echo $familyInfo['family_id']; ?>"
             class="editButton" title="Edit Family"></a></h1>
 
-    <div class="infoSection well clearfix">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#familyInfo" data-toggle="tab">Home</a></li>
+      <li><a href="#students" data-toggle="tab">Students</a></li>
+      <li><a href="#paymentPlans" data-toggle="tab">Payment Plans</a></li>
+      <li><a href="#unassignedFees" data-toggle="tab">Unassigned Fees</a></li>
+      <?php if(isset($feesNeedingReview)){
+      ?><li><a href="#feesToReview" data-toggle="tab">Fees in Review</a></li><?php
+      } ?>
+      <li><a href="#studentLog" data-toggle="tab">Student Log</a></li>
+    </ul>
+
+    <div class="tab-content">
+    <div class="infoSection well clearfix tab-pane active" id="familyInfo">
         <h3>Family Information</h3>
 
         <div class="half">
@@ -39,7 +51,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
             </div>
         </div>
     </div>
-    <div class="infoSection well clearfix">
+    <div class="infoSection well clearfix tab-pane" id="students">
         <h2>Students - <a href="index.php?mod=registration&view=student&action=addEditStudent&family_id=<?php echo $familyInfo['family_id']; ?>" class="btn btn-primary fb">Add Student</a></h2>
         <br/>
       <?php
@@ -81,7 +93,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
       }
       ?>
     </div>
-    <div class="infoSection well">
+    <div class="infoSection well tab-pane" id="paymentPlans">
       <h2>Payment Plans</h2>
       <table style="width: 100%;" class="table table-striped table-bordered ">
         <tr style="font-weight: bold;">
@@ -119,7 +131,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
       </table>
 
     </div>
-    <div class="infoSection well">
+    <div class="infoSection well tab-pane" id="invoices">
         <h2>Recent Invoices</h2>
         <table style="width: 100%;" class="table table-striped table-bordered ">
             <tr style="font-weight: bold;">
@@ -152,7 +164,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         </table>
     </div>
   <?php if (isset($looseFees)) { ?>
-  <div class="infoSection well">
+  <div class="infoSection well tab-pane" id="unassignedFees">
     <h2>Unassigned Fees</h2>
     <p>This family has fees that have not been invoiced and are not assigned to a payment plan. They are listed below.</p>
     <div class="btn-group center">
@@ -176,7 +188,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
   <?php } ?>
 
   <?php if(isset($feesNeedingReview)){ ?>
-    <div class="infoSection well">
+    <div class="infoSection well tab-pane" id="feesToReview">
       <h2>Fees to Review</h2>
       <p>The following fees need attention.</p>
       <form id="handleFeesForm" class="form-horizontal" method="post" action="index.php?mod=registration&ajax=handleFees&family_id=<?php echo $family_id; ?>">
@@ -231,6 +243,41 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
       </script>
     </div>
   <?php } ?>
+
+
+    <div class="infoSection well tab-pane" id="studentLog">
+      <h2>Student Logs</h2>
+      <?php if(isset($students)){
+      foreach($students as $student){
+
+        if(isset($student['student_log'])){
+          echo "<h3>".$student['first_name']." ".$student['last_name']."</h3>";
+          echo "<table  class=\"table table-striped\"><tr><th>Message</th><th>Time Logged</th></tr>";
+          foreach($student['student_log'] as $log){
+            echo "<tr><td>";
+            if($log['add_remove'] == 0){
+              $message = "Unenrolled from ";
+            } else {
+              $message = "Enrolled in ";
+            }
+            $program = $currentCampus->getProgramById($log['program_id']);
+            if($log['course_id'] != ""){
+              $course = $currentCampus->getCourseById($log['course_id']);
+              $message .= $program['name'].": ".$course['name'];
+            } else {
+              $message .= $program['name'];
+            }
+            echo $message."</td><td>";
+            echo $log['time_logged']."</td></tr>";
+          }
+          echo "</table>";
+        }
+
+      }
+
+} ?>
+    </div>
+    </div>
 
 
 </div>

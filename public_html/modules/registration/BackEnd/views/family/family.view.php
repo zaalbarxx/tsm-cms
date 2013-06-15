@@ -30,8 +30,14 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
               href="index.php?mod=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"
               class="reviewButton" title="Review This Family"></a>
             </span>
-          <div class="itemDetails">
+          <div class="itemDetails" style="display:block;">
             <?php
+            if(isset($family['feesInReview'])){
+              echo "<span style='color: red; font-weight: bold;'>Fees Needing Review</span>";
+            }
+            if($family['hasLooseFees'] == true){
+              echo "<span style='color: red; font-weight: bold;'>Unassigned Tuition or Registration Fees</span>";
+            }
             //foreach($family['students'] as $student){
             //	echo $student['first_name'];
             //}

@@ -725,6 +725,17 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
+  public function getFeesInReview(){
+    $q = "SELECT * FROM tsm_reg_families_fees WHERE family_id = ".$this->familyId." AND to_review = 1";
+    $r = $this->db->runQuery($q);
+    $feeInReview = null;
+    while($a = mysql_fetch_assoc($r)){
+      $feeInReview[] = $a;
+    }
+
+    return $feeInReview;
+  }
+
 }
 
 ?>
