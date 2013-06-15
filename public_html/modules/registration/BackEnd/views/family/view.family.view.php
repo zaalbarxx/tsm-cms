@@ -10,7 +10,9 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
       <li class="active"><a href="#familyInfo" data-toggle="tab">Home</a></li>
       <li><a href="#students" data-toggle="tab">Students</a></li>
       <li><a href="#paymentPlans" data-toggle="tab">Payment Plans</a></li>
+      <li><a href="#invoices" data-toggle="tab">Invoices</a></li>
       <li><a href="#unassignedFees" data-toggle="tab">Unassigned Fees</a></li>
+
       <?php if(isset($feesNeedingReview)){
       ?><li><a href="#feesToReview" data-toggle="tab">Fees in Review</a></li><?php
       } ?>

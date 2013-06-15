@@ -33,7 +33,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           <div class="itemDetails" style="display:block;">
             <?php
             if(isset($family['feesInReview'])){
-              echo "<span style='color: red; font-weight: bold;'>Fees Needing Review</span>";
+              echo "<span style='color: red; font-weight: bold;'>Fees Needing Review</span><br />";
             }
             if($family['hasLooseFees'] == true){
               echo "<span style='color: red; font-weight: bold;'>Unassigned Tuition or Registration Fees</span>";
