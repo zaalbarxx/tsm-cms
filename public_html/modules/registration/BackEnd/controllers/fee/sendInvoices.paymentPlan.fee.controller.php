@@ -9,8 +9,12 @@ if(isset($invoices)){
     if($invoiceObject->getAmountDue() > 0){
       $invoiceObjects[$invoice['family_invoice_id']] = $invoiceObject;
       $invoiceInfos[$invoice['family_invoice_id']] = $invoiceObject->getInfo();
+      $invoiceInfos[$invoice['family_invoice_id']]['times_sent'] = $invoiceObject->getTimesSent();
       if(!isset($familyObjects[$invoice['family_id']])){
         $familyObjects[$invoice['family_id']] = new TSM_REGISTRATION_FAMILY($invoice['family_id']);
+      }
+      if($invoiceInfos[$invoice['family_invoice_id']]['times_sent'] > 0){
+        unset($invoiceInfos[$invoice['family_invoice_id']]);
       }
     }
   }
