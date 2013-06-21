@@ -629,6 +629,16 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
+  public function getShirtSize(){
+    $q = "SELECT * FROM tsm_reg_shirt_sizes WHERE shirt_size_id = '".$this->info['shirt_size_id']."'";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $shirt_size = $a['name'];
+    }
+
+    return $shirt_size;
+  }
+
   public function processFees($preview = false) {
     $this->setUseRecordedFees(false);
     $fees = $this->getFees();

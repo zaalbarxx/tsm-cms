@@ -66,7 +66,7 @@ if (isset($generateReport)) {
       $familyInfo = $family->getInfo();
 
       $students[$student['student_id']] = array_merge($student, $familyInfo);
-      ;
+      $students[$student['student_id']]['shirt_size'] = $studentObject->getShirtSize();
     }
 
   }
