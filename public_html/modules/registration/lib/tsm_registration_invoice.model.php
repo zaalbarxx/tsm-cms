@@ -93,18 +93,18 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     }
 
     require_once __TSM_ROOT__.'includes/3rdparty/swift/lib/swift_required.php';
-    /*
+
     $transport = Swift_SmtpTransport::newInstance('66.147.244.176', 25)
       ->setUsername('noreply@takesixmedia.com')
       ->setPassword('LTOZ7]OLz~wB')
     ;
-    */
 
+/*
     $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
       ->setUsername('billing@artiosacademies.com')
       ->setPassword('5646lane')
     ;
-
+*/
     $mailer = Swift_Mailer::newInstance($transport);
 
     // Create a message
