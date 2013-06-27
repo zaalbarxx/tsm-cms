@@ -51,9 +51,9 @@ if (isset($browseOfferings)) {
   } else {
     switch ($view) {
       case null:
-        require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/student/student.controller.php");
-        //$activeView = __TSM_ROOT__."modules/registration/FrontEnd/views/dashboard.view.php";
-        //require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/dashboard.controller.php");
+        //require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/student/student.controller.php");
+        $activeView = __TSM_ROOT__."modules/registration/FrontEnd/views/dashboard.view.php";
+        require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/dashboard.controller.php");
         break;
       case "family":
         require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/family/family.controller.php");

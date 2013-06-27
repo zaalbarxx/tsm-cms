@@ -15,13 +15,9 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
             <span class="label">Grade:</span> <?php echo $studentInfo['grade']; ?><br/>
             <span class="label">E-mail Address:</span> <?php echo $studentInfo['email']; ?>
         </div>
-        <div class="one-third">
-            <span class="label">Status: </span><?php echo $studentStatus; ?>
-        </div>
 
     </div>
     <div class="infoSection">
-        <a href="" class="showDetails right small_button">Hide Details</a>
 
         <h2>Enrollment Summary</h2>
         <br/>
@@ -35,7 +31,7 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
 				<span class="buttons">
 					<!--<a href="#" class="reviewButton" title="Review This Program"></a>
 					<a href="#" class="editButton" title="Edit This Student"></a>-->
-					<a href="#" class="deleteButton" title="Unenroll From This Program"></a>
+					<a href="index.php?mod=registration&ajax=unenrollFromProgram&student_id=<?php echo $student_id; ?>&program_id=<?php echo $program['program_id']; ?>" class="deleteButton" title="Unenroll From This Program"></a>
 				</span>
 
                 <div class="itemDetails" style="display: block;">
@@ -47,12 +43,13 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
                             <td>Teacher</td>
                             <td>Tuition</td>
                             <td>Registration</td>
+                          <td></td>
                         </tr>
                       <?php
                       $i = 1;
                       if ($program['courses']) {
                         foreach ($program['courses'] as $course) {
-                          echo "<tr><td>".$i.". ".$course['name']."</td><td>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td></tr>";
+                          echo "<tr><td>".$i.". ".$course['name']."</td><td>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?mod=registration&ajax=unenrollFromCourse&course_id=".$course['course_id']."&student_id=".$student_id."&program_id=".$course['program_id']."\" title=\"Unenroll From This Course\" data-tsm-course-id=\"".$course['course_id']."\" data-tsm-program-id=\"".$course['program_id']."\" class=\"deleteButton button\"></a></td></tr>";
                           $i++;
                         }
                       } else {
@@ -104,6 +101,18 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
         } else {
             $(this).children(".showDetails").html("show details");
         }
+    });
+    $(".deleteButton").click(function () {
+      $.get($(this).attr("href"), function (data) {
+        var response = JSON.parse(data);
+        if (response.alertMessage != null) {
+          alert(response.alertMessage);
+        }
+        if (response.success == true) {
+          window.location.reload();
+        }
+      });
+      return false;
     });
     /*
     $(".showDetails").click(function () {

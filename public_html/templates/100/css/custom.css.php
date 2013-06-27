@@ -211,7 +211,12 @@ float: left;
 margin-left: -14px;
 margin-top: -20px;
 margin-right: 40px;
+border-right: 1px solid #ccc;
 }
+#sideBar h2{
+text-align: center;
+margin: 0px;
+  }
 #sideBar .active{
 background: #4b545f;
 background: linear-gradient(top, #4f5964 0%, #5f6975 40%);
@@ -229,7 +234,7 @@ margin: 0px;
 padding: 0px;
 }
 #sideBar ul{
-margin-top: 30px;
+margin-top: 10px;
 margin-bottom: 30px;
 }
 #sideBar ul ul{
@@ -239,27 +244,18 @@ margin: 0px;
 display: block;
 width: 160px;
 height: 20px;
-padding: 15px 40px;
+padding: 15px 25px 0px 25px;
 text-decoration: none;
 color: #353535;
 font-weight: bold;
+text-align: center;
 }
 #sideBar ul ul li a{
 padding-left: 50px;
 padding-right: 30px;
 }
 #sideBar ul li a:hover{
-background: #4b545f;
-background: linear-gradient(top, #4f5964 0%, #5f6975 40%);
-background: -moz-linear-gradient(top, #4f5964 0%, #5f6975 40%);
-background: -webkit-linear-gradient(top, #4f5964 0%,#5f6975 40%);
-color: #fff;
-border-right: 1px solid #ccc;
-border-left: 3px #ccc solid;
-border-top: 1px solid transparent;
-border-bottom: 1px solid transparent;
-width: 156px;
-height: 18px;
+text-decoration: underline;
 }
 a.submitButton{
 text-decoration: none;
@@ -564,7 +560,7 @@ box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.6);
 border-radius: 10px;
 background: #eee;
 line-height: 1.3em;
-overflow: auto;
+overflow: hidden;
 margin-bottom: 30px;
 }
 /*
@@ -586,7 +582,7 @@ margin-bottom: -5px;
 }
 .infoSection .title .summary{
 float: right;
-width: 425px;
+width: 360px;
 text-align: right;
 display: inline-block;
 margin-top: -20px;

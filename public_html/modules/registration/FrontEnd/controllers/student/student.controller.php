@@ -5,12 +5,8 @@ if (!isset($action)) {
 
 switch ($action) {
   case null:
-    $students = $family->getStudents($reg->getSelectedSchoolYear());
-    foreach ($students as $student) {
-
-    }
     require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/student/students.controller.php");
-    $activeView = __TSM_ROOT__."modules/registration/FrontEnd/views/student/student.view.php";
+    $activeView = __TSM_ROOT__."modules/registration/FrontEnd/views/student/students.view.php";
     break;
   case "viewStudent":
     require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/student/view.student.controller.php");
