@@ -2,7 +2,7 @@
 require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php");
 ?>
 <div class="contentWithSideBar">
-    <h1><?php echo $pageTitle; ?></h2>
+    <h1><?php echo $pageTitle; ?></h1>
         <form method="post" id="studentInfoForm" action="">
             <fieldset>
                 <legend>Student Information</legend>
