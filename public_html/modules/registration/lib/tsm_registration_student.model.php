@@ -16,7 +16,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         $this->studentId = intval($studentId);
         $this->getInfo();
       } else {
-        die("No Permission");
+        throw new Exception('TSM_REGISTRATION_STUDENT: no permission');
       }
     }
   }
@@ -810,11 +810,11 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getLog(){
-    $q = "SELECT * FROM tsm_reg_student_log WHERE student_id = ".$this->studentId."";
+    $q = "SELECT * FROM tsm_reg_student_log WHERE student_id = ".$this->studentId." ORDER BY time_logged DESC";
     $r = $this->db->runQuery($q);
     $log = null;
     while ($a = mysql_fetch_assoc($r)) {
-      $log[$a['student_log_id']] = $a;
+      $log[$a['log_id']] = $a;
     }
 
     return $log;

@@ -28,7 +28,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
         $this->familyId = intval($familyId);
         $this->getInfo();
       } else {
-        die("no permission");
+        throw new Exception('TSM_REGISTRATION_FAMILY: no permission');
       }
     } else if (isset($_SESSION['family']['id'])) {
       $this->familyId = intval($_SESSION['family']['id']);
@@ -142,7 +142,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
         $_SESSION['family']['id'] = $a['family_id'];
         $campus = new TSM_REGISTRATION_CAMPUS($campus_id);
         $this->setSelectedSchoolYear($campus->getCurrentSchoolYear());
-        header("location: index.php");
+        //header("location: index.php");
         $success = 1;
       } else {
         $success = 0;
