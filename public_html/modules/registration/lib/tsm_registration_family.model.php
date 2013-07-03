@@ -211,6 +211,10 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getStudents($school_year = null) {
+    if($school_year == null){
+      $school_year = $this->getSelectedSchoolYear();
+    }
+
     $q = "SELECT * FROM tsm_reg_students s, tsm_reg_students_school_years ssy WHERE ssy.student_id = s.student_id AND ssy.school_year = '".$school_year."' AND s.family_id = ".$this->familyId." ORDER BY s.last_name";
     $r = $this->db->runQuery($q);
     $this->students = null;
@@ -361,10 +365,38 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $returnInvoices;
   }
 
+  public function getUnSyncedInvoices(){
+    if($this->inQuickbooks()){
+      $q = "SELECT * FROM tsm_reg_families_invoices fi, tsm_reg_families_payment_plans fpp, tsm_reg_fee_payment_plans pp
+      WHERE fi.family_payment_plan_id = fpp.family_payment_plan_id
+      AND pp.payment_plan_id = fpp.payment_plan_id
+      AND fi.family_id = '".$this->familyId."'
+      AND fi.quickbooks_invoice_id = ''";
+
+      $r = $this->db->runQuery($q);
+      $returnInvoices = null;
+      while ($a = mysql_fetch_assoc($r)) {
+        $returnInvoices[$a['family_invoice_id']] = $a;
+      }
+
+      $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_id = '".$this->familyId."'
+      AND family_payment_plan_id IS NULL
+      AND quickbooks_invoice_id = ''";
+      $r = $this->db->runQuery($q);
+      while ($a = mysql_fetch_assoc($r)) {
+        $returnInvoices[$a['family_invoice_id']] = $a;
+      }
+    } else {
+      $returnInvoices = null;
+    }
+
+    return $returnInvoices;
+  }
+
   public function getGivenName(){
-    if ($this->info['father_first'] != "" && $this->info['mother_first'] != "") {
+    if ($this->info['father_first'] != "" && $this->info['father_first'] != "deceased"  && $this->info['mother_first'] != "") {
       $givenName = $this->info['father_first']." & ".$this->info['mother_first'];
-    } elseif ($this->info['father_first'] == "") {
+    } elseif ($this->info['father_first'] == "" || $this->info['father_first'] == "deceased") {
       $givenName = $this->info['mother_first'];
     } elseif ($this->info['mother_first'] == "") {
       $givenName = $this->info['father_first'];
@@ -375,9 +407,9 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
 
   public function getFamilyName(){
 
-    if ($this->info['father_last'] != "" && $this->info['mother_last'] != "") {
+    if ($this->info['father_last'] != "" && $this->info['father_last'] != "deceased" && $this->info['mother_last'] != "") {
       $familyName = $this->info['father_last'];
-    } elseif ($this->info['father_last'] == "") {
+    } elseif ($this->info['father_last'] == "" || $this->info['father_last'] == "deceased") {
       $familyName = $this->info['mother_last'];
     } elseif ($this->info['mother_last'] == "") {
       $familyName = $this->info['father_last'];
@@ -563,6 +595,9 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
       $due_date = $due_date->add(date_interval_create_from_date_string('1 month'));
       $due_date = date_format($due_date, 'Y-m-d');
     }
+    if($family_payment_plan_id == null){
+      $family_payment_plan_id = "NULL";
+    }
 
 
     $q = "INSERT INTO tsm_reg_families_invoices (family_id,family_payment_plan_id,invoice_description,due_date)
@@ -654,6 +689,16 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     }
 
     return $returnFees;
+  }
+
+  public function getFeesByFeeId($fee_id){
+    $q = "SELECT * FROM tsm_reg_families_fees WHERE family_id = ".$this->familyId." AND fee_id = '$fee_id'";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $fees[$a['family_fee_id']] = $a;
+    }
+
+    return $fees;
   }
 
   public function getFeesNeedingReview(){

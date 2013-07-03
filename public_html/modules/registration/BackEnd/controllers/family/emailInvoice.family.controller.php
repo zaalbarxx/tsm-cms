@@ -10,6 +10,9 @@ if($invoiceInfo['family_payment_plan_id'] != ""){
   $paymentPlanInfo = $paymentPlan->getInfo();
 
   $emailContents = $paymentPlanInfo['invoice_email'];
+  if(!isset($emailContents)){
+    $emailContents = "{{name}},<br /><br />";
+  }
   $emailSubject = $paymentPlanInfo['invoice_email_subject'];
 } else {
   $emailContents = "";

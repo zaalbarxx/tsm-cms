@@ -502,6 +502,83 @@ switch ($ajax) {
     <?php
     }
     break;
+  case "bulkAssignFeeToStudents":
+    if (isset($fee_id) && isset($assignTo)) {
+      foreach($assignTo as $student_id){
+        $student = new TSM_REGISTRATION_STUDENT($student_id);
+        $student->assignFee($fee_id);
+      }
+
+      $success = true;
+
+      $response = Array("success" => false, "alertMessage" => null);
+
+      if ($success == true) {
+        $response["success"] = true;
+        $response["alertMessage"] = "The fee was successfully assigned to the selected students.";
+      } else {
+        $response["success"] = false;
+        $response["alertMessage"] = "The fee could not be assigned.";
+      }
+
+      echo json_encode($response);
+    }
+    break;
+  case "bulkFeeInvoice":
+    if (isset($invoiceFamily) && $invoice_description != "" && $due_date != "") {
+      foreach($invoiceFamily as $familyToInvoice=>$fees){
+        $family = new TSM_REGISTRATION_FAMILY($familyToInvoice);
+        $invoice_id = $family->createInvoice(null,$invoice_description,$due_date);
+        $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+        foreach($fees as $family_fee_id){
+          $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+          $familyFeeInfo = $familyFee->getInfo();
+          $params = Array("family_fee_id"=>$family_fee_id,"description"=>$familyFeeInfo['name'],"amount"=>$familyFeeInfo['amount']);
+          $invoice->addFee($params);
+        }
+        $invoice->updateTotal();
+      }
+      $success = true;
+    } else {
+
+    }
+
+
+    $response = Array("success" => false, "alertMessage" => null);
+
+    if ($success == true) {
+      $response["success"] = true;
+      $response["alertMessage"] = "The fee was successfully assigned to the selected students.";
+    } else {
+      $response["success"] = false;
+      $response["alertMessage"] = "The fee could not be assigned.";
+    }
+
+    echo json_encode($response);
+    break;
+  case "markInvoicesAsSent":
+    if(isset($familyInvoices)){
+      foreach($familyInvoices as $family_invoice_id){
+        $familyInvoice = new TSM_REGISTRATION_INVOICE($family_invoice_id);
+        $familyInvoice->markAsSent();
+      }
+      $success = true;
+    } else {
+      $success = false;
+    }
+
+    $response = Array("success" => false, "alertMessage" => null);
+
+    if ($success == true) {
+      $response["success"] = true;
+      $response["alertMessage"] = "The invoices were successfully marked as sent.";
+    } else {
+      $response["success"] = false;
+      $response["alertMessage"] = "The invoices could not be marked as sent.";
+    }
+
+    echo json_encode($response);
+    break;
 }
 die();
 ?>

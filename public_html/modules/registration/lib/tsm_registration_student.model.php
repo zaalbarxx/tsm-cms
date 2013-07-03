@@ -606,7 +606,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
-  public function assignFee($fee_id, $program_id, $course_id) {
+  public function assignFee($fee_id, $program_id = null, $course_id = null) {
     if (!$this->assignedFee($fee_id, $program_id, $course_id)) {
       $feeObject = new TSM_REGISTRATION_FEE($fee_id);
       $feeInfo = $feeObject->getInfo();

@@ -51,6 +51,14 @@ switch ($action) {
     require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/addToFees.conditions.fees.controller.php");
     $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/addToFees.conditions.fees.view.php";
     break;
+  case "bulkStudentAssign":
+    require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/fee/bulkStudentAssign.fee.controller.php");
+    $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/fee/bulkStudentAssign.fee.view.php";
+    break;
+  case "bulkFeeInvoice":
+    require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/fee/bulkFeeInvoice.fee.controller.php");
+    $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/fee/bulkFeeInvoice.fee.view.php";
+    break;
 }
 
 ?>

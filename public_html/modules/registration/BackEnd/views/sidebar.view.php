@@ -73,6 +73,11 @@
         } ?>>
             <a href="index.php?mod=registration&view=fees&action=paymentPlans">Payment Plans</a>
         </li>
+        <li <?php if ($tsm->stringEndsWith($_SERVER["REQUEST_URI"], "index.php?mod=registration&view=invoice")) {
+          echo "class='active'";
+        } ?>>
+          <a href="index.php?mod=registration&view=invoice">Invoices</a>
+        </li>
         <li class="nav-header">Reporting</li>
         <li <?php if (stristr($_SERVER["REQUEST_URI"], "index.php?mod=registration&view=reports")) {
           echo "class='active'";

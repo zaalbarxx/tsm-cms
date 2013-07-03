@@ -3,16 +3,21 @@
 <div class="span9">
   <h2>E-mail Invoice</h2>
   <p>Please edit the e-mail you would like to send below.</p>
-  <form id="emailInvoiceForm" action="index.php?mod=registration&ajax=sendInvoiceEmail&family_invoice_id=<?php echo $family_invoice_id; ?>">
-    <label for="send_to">Send To: </label><input type="text" name="send_to"
-                                                  value="<?php echo $familyInfo['primary_email']; ?>"/>
+  <form id="emailInvoiceForm" action="index.php?mod=registration&ajax=sendInvoices">
     <label for="email_subject">Email Subject: </label><input type="text" name="email_subject"
-                                                             value="<?php echo $emailSubject; ?>"/>
-    <textarea name="email_contents" class="editor"/>{{name}},<br /><br /><?php //echo $emailContents; ?></textarea>
+                                                             value=""/>
+    <textarea name="email_contents" class="editor"/>{{name}},<br /><br /></textarea>
     <script type="text/javascript">
       $('textarea.editor').ckeditor();
     </script>
     <br />
+    <?php
+    foreach($familyInvoices as $family_invoice_id){
+      ?>
+      <input type="hidden" name="invoicesToSend[]" value="<?php echo $family_invoice_id; ?>" />
+      <?php
+    }
+    ?>
     <input type="submit" value="Send Invoice" class="btn btn-primary right"/>
   </form>
 </div>

@@ -1,0 +1,3 @@
+<?php
+$students = $currentCampus->getStudents();
+?>

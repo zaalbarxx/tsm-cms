@@ -10,6 +10,7 @@ switch ($action) {
       foreach ($families as $family) {
         $familyObject = new TSM_REGISTRATION_FAMILY($family['family_id']);
         $feesInReview = $familyObject->getFeesInReview();
+        $families[$family['family_id']]['family_name'] = $familyObject->getFamilyName();
         $families[$family['family_id']]['status'] = null;
         $families[$family['family_id']]['feesInReview'] = $feesInReview;
         $paymentPlans = $familyObject->getPaymentPlans();

@@ -77,15 +77,17 @@ $campusList = $reg->getCampuses();
 
         //get the invoices from quickbooks
         $quickbooksInvoices = $invoiceService->findAll($quickbooks->Context, $quickbooks->creds['qb_realm'], $query, 1, 999);
-        foreach($quickbooksInvoices as $invoice){
-          $quickbooksId = $invoice->getId();
-          $invoiceId = $updateInvoices[$quickbooksId]['family_invoice_id'];
-          $extKey = $invoice->getExternalKey();
-          $header = $invoice->getHeader();
-          $invoiceObject = new TSM_REGISTRATION_INVOICE($invoiceId);
-          $extTxnIds[] = substr($extKey,4,-1);
-          //update the external key for the invoice
-          $invoiceObject->setQuickbooksExternalKey($extKey);
+        if(isset($quickbooksInvoices)){
+          foreach($quickbooksInvoices as $invoice){
+            $quickbooksId = $invoice->getId();
+            $invoiceId = $updateInvoices[$quickbooksId]['family_invoice_id'];
+            $extKey = $invoice->getExternalKey();
+            $header = $invoice->getHeader();
+            $invoiceObject = new TSM_REGISTRATION_INVOICE($invoiceId);
+            $extTxnIds[] = substr($extKey,4,-1);
+            //update the external key for the invoice
+            $invoiceObject->setQuickbooksExternalKey($extKey);
+          }
         }
       }
 
@@ -148,13 +150,30 @@ $campusList = $reg->getCampuses();
       //get all the local families and create an array to access them by quickbooks customer id
       $families = $currentCampus->getFamilies();
       $familyByQuickBooksId = null;
+      $unsyncedInvoices = Array();
       if(isset($families)){
         foreach($families as $family){
           if($family['quickbooks_customer_id'] != ""){
             $familyByQuickBooksId[$family['quickbooks_customer_id']] = $family;
           }
+
+          //load in unsynced invoices
+          $familyObject = new TSM_REGISTRATION_FAMILY($family['family_id']);
+          $familyUnsyncedInvoices = $familyObject->getUnSyncedInvoices();
+          if(is_array($familyUnsyncedInvoices)){
+            $unsyncedInvoices = array_merge($unsyncedInvoices,$familyUnsyncedInvoices);
+          }
         }
       }
+
+      //sync unsynced invoices to QB
+      if (isset($unsyncedInvoices)){
+        foreach($unsyncedInvoices as $invoice){
+          $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
+          $invoiceObject->addToQuickbooks();
+        }
+      }
+
 
 
       //Now we need to create payments in our system that are not already there.
