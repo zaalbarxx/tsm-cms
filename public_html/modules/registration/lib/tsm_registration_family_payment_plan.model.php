@@ -379,13 +379,13 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     return $invoice;
   }
 
-  public function invoiceFull(){
+  public function invoiceFull($dueDate = null){
     $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
     $familyInfo = $family->getInfo();
     $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($this->info['payment_plan_id']);
     $paymentPlanInfo = $paymentPlan->getInfo();
 
-    $invoice_id = $family->createInvoice($this->familyPaymentPlanId,$paymentPlanInfo['full_invoice_description']);
+    $invoice_id = $family->createInvoice($this->familyPaymentPlanId,$paymentPlanInfo['full_invoice_description'],$dueDate);
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 
 

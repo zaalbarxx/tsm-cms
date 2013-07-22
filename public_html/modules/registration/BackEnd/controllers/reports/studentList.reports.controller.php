@@ -31,9 +31,17 @@ if (isset($generateReport)) {
   $students = $currentCampus->getStudents();
   foreach ($students as $student) {
     $studentObject = new TSM_REGISTRATION_STUDENT($student['student_id']);
+	  $inAProgram = false;
     foreach ($programs as $program_id => $courses) {
-      if (!$studentObject->inProgram($program_id)) {
-        unset($students[$student['student_id']]);
+	    $inProgram = $studentObject->inProgram($program_id);
+      if (!$inProgram) {
+	      if($andOrProgram == 'and'){
+		      unset($students[$student['student_id']]);
+	      }
+      } elseif($inProgram){
+	      if($andOrProgram == 'or'){
+		      $inAProgram = true;
+	      }
       } else {
         foreach ($courses as $course_id) {
           if (!$studentObject->inCourse($course_id)) {
@@ -42,6 +50,14 @@ if (isset($generateReport)) {
         }
       }
     }
+
+	  if($andOrProgram == 'or'){
+		  if(!$inAProgram){
+			  unset($students[$student['student_id']]);
+		  }
+	  }
+
+
 
     if ($grade_1 != null) {
       if (!($student['grade'] >= $grade_1)) {

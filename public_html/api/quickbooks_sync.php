@@ -31,14 +31,16 @@ require_once(__TSM_ROOT__."modules/registration/lib/tsm_registration.model.php")
 $reg = new TSM_REGISTRATION();
 $campusList = $reg->getCampuses();
 
+$originalCampusId = $reg->getCurrentCampusId();
+
 //todo: verify that this is working correctly
 //todo: make sure this is only syncing changed and new invoices and payments
 //todo: make sure this is checking updated payments to see which invoices they are applied to and applying them to those invoices.
-//if(isset($campusList)){
-//  foreach($campusList as $campus){
-    //$reg->setCurrentCampusId($campus['campus_id']);
-    $reg->setCurrentCampusId(1);
-    $currentCampus = new TSM_REGISTRATION_CAMPUS(1);
+if(isset($campusList)){
+  foreach($campusList as $campus){
+    $reg->setCurrentCampusId($campus['campus_id']);
+    //$reg->setCurrentCampusId(1);
+    $currentCampus = new TSM_REGISTRATION_CAMPUS($campus['campus_id']);
     $reg->setSelectedSchoolYear($currentCampus->getCurrentSchoolYear());
     if($currentCampus->usesQuickbooks()){
       $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
@@ -278,7 +280,8 @@ $campusList = $reg->getCampuses();
       }
 
     }
-//  }
-//}
+  }
+}
+$reg->setCurrentCampusId($originalCampusId);
 $memUsage = memory_get_peak_usage(true)/1048576;
 echo "Sync is complete: ".$memUsage."MB";

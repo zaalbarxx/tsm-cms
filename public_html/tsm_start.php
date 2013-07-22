@@ -28,5 +28,6 @@ $tsm->adminUser = new AdminUser();
 
 //TURN CONTROL OVER TO THE COMPONENT
 require_once($tsm->getComponentOld());
+//require_once($tsm)
 
 ?>

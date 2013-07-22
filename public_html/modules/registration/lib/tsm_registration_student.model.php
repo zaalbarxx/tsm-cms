@@ -111,6 +111,16 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     return $this->isApproved;
   }
 
+	public function inAProgram(){
+		$q = "SELECT * FROM tsm_reg_student_program sp, tsm_reg_programs p WHERE sp.student_id = '".$this->studentId."' AND sp.program_id = p.program_id AND p.school_year = '".$this->getSelectedSchoolYear()."'";
+		$r = $this->db->runQuery($q);
+		if (mysql_num_rows($r) > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
   public function inProgram($program_id) {
     $q = "SELECT * FROM tsm_reg_student_program WHERE student_id = '".$this->studentId."' AND program_id = '".$program_id."'";
     $r = $this->db->runQuery($q);

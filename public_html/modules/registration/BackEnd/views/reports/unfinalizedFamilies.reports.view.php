@@ -13,8 +13,8 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
             <a class="title"
                href="index.php?mod=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"><?php echo $family['father_last']; ?></a>
               <span class="buttons"><a
-                      href="index.php?mod=registration&view=student&action=viewStudent&student_id=<?php echo $family['family_id']; ?>"
-                      class="reviewButton" title="Review This Student"></a></span>
+                      href="index.php?mod=registration&view=family&action=viewFamily&family_id=<?php echo $family['family_id']; ?>"
+                      class="reviewButton" title="Review This Family"></a></span>
 
             <div class="itemDetails">
             </div>
