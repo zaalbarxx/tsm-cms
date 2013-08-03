@@ -3,16 +3,23 @@
     <h2>Invoice Fees</h2>
     <p>Please select the fees that you would like to invoice below.</p>
     <span class="right"><label class="checkbox"><input id="checkAll" type="checkbox"> Check All</label></span>
-    <?php foreach($students as $student){
-      echo "<h3>".$student['info']['first_name']."".$student['last_name']."</h3>";
-      foreach($student['fees'] as $fee){
-        ?>
-        <div class="well well-small">
-          <div class="title"><?php echo $fee['name']; ?>: $<?php echo $fee['amount']; ?></div><input style="float: right; margin-top: -18px;" type="checkbox" class="feesToAdd" name="feesToAdd[]" data-tsm-amount="<?php echo $fee['amount']; ?>" value="<?php echo $fee['family_fee_id']; ?>" />
-        </div>
-        <?php
-      }
-    } ?>
+    <?php
+    if(isset($students)){
+	    foreach($students as $student){
+	      echo "<h3>".$student['info']['first_name']."".$student['last_name']."</h3>";
+	      foreach($student['fees'] as $fee){
+	        ?>
+	        <div class="well well-small">
+	          <div class="title"><?php echo $fee['name']; ?>: $<?php echo $fee['amount']; ?></div><input style="float: right; margin-top: -18px;" type="checkbox" class="feesToAdd" name="feesToAdd[]" data-tsm-amount="<?php echo $fee['amount']; ?>" value="<?php echo $fee['family_fee_id']; ?>" />
+	        </div>
+	        <?php
+	      }
+	    }
+    } else {
+	    echo "There are no fees to invoice. You may have already created this invoice. Please check the 'invoices' tab under the family information.";
+    }
+
+    ?>
     <div style="text-align: right; font-size: 20px">Invoice Total: $<span id="planTotal">0.00</span></div>
     <br />
     <span class="center">

@@ -104,27 +104,30 @@ if(isset($campusList)){
           }
           $fees = $invoiceObject->getFees();
           $qbInvoice = $invoiceService->findById($quickbooks->Context, $quickbooks->creds['qb_realm'],$invoice['quickbooks_invoice_id']);
-          //echo $invoiceService->lastResponse()."\r\n\r\n\r\n";
-          //print_r($qbInvoice);
+	        if(is_object($qbInvoice)){
+		        //echo $invoiceService->lastResponse()."\r\n\r\n\r\n";
+		        //print_r($qbInvoice);
 
-          $header = $qbInvoice->getHeader();
-          $header->remove("TotalAmt");
-          //$header->setTotalAmt($invoiceObject->getTotal());
+		        $header = $qbInvoice->getHeader();
+		        $header->remove("TotalAmt");
+		        //$header->setTotalAmt($invoiceObject->getTotal());
 
-          $qbInvoice->remove("Header");
-          $qbInvoice->add($header);
+		        $qbInvoice->remove("Header");
+		        $qbInvoice->add($header);
 
 
 
-          $qbInvoice->remove("Line");
-          if(isset($fees)){
-            foreach($fees as $fee){
-              $qbInvoice->add($quickbooks->createLineFromFee($fee,$total));
-            }
-          }
+		        $qbInvoice->remove("Line");
+		        if(isset($fees)){
+			        foreach($fees as $fee){
+				        $qbInvoice->add($quickbooks->createLineFromFee($fee,$total));
+			        }
+		        }
 
-          $invoiceService->update($quickbooks->Context, $quickbooks->creds['qb_realm'],$id,$qbInvoice);
-          $invoiceObject->updateLastQBSync();
+		        $invoiceService->update($quickbooks->Context, $quickbooks->creds['qb_realm'],$id,$qbInvoice);
+		        $invoiceObject->updateLastQBSync();
+	        }
+
 
           //echo $invoiceService->lastRequest()."\r\n\r\n\r\n";
 

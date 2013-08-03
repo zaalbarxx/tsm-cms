@@ -588,7 +588,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $quickbooks_customer_id;
   }
 
-  public function createInvoice($family_payment_plan_id = null, $invoice_description = null, $due_date = null) {
+  public function createInvoice($family_payment_plan_id = null, $invoice_description = null, $due_date = null, $invoiceDate = null) {
     if ($due_date == null) {
       $due_date = date("Y-m-d");
       $due_date = new DateTime($due_date);
@@ -610,12 +610,27 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     $campusInfo = $campus->getInfo();
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
     $invoice->setDocNumber($campusInfo['invoice_prefix'].$invoice_id);
+	  if($invoiceDate != null){
+			$invoice->setInvoiceDate($invoiceDate);
+	  }
 
     return $invoice_id;
   }
 
   public function createInvoiceFromFees($fees, $description, $family_payment_plan_id = "NULL", $due_date = null) {
     global $currentCampus;
+	  $doNotCreate = false;
+	  foreach($fees as $fee){
+		  $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+		  if($feeObject->isInvoiced()){
+			  $doNotCreate = true;
+		  }
+	  }
+
+	  if($doNotCreate == true){
+		  return false;
+	  }
+
     $invoice_id = $this->createInvoice($family_payment_plan_id, $description,$due_date);
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 

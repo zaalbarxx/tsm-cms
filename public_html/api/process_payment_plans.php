@@ -36,8 +36,8 @@ $originalCampusId = $reg->getCurrentCampusId();
 
 if(isset($campusList)){
   foreach($campusList as $campus){
-	  //if($campus['auto_invoicing_enabled'] == 1){
-		if($campus['campus_id'] == 9){
+	  if($campus['auto_invoicing_enabled'] == 1){
+		//if($campus['campus_id'] == 2){
 		  echo "<h2>Processing ".$campus['name']."</h2>";
 	    $reg->setCurrentCampusId($campus['campus_id']);
 	    //$reg->setCurrentCampusId(1);
@@ -97,38 +97,27 @@ if(isset($campusList)){
 	                    }
 
 	                    //CHECK TO SEE IF WE HAVE REACHED THE FULL NUMBER OF INVOICES FOR THIS PP
-	                    if($numInvoices < $paymentPlan['num_invoices']){
-	                      $lastInvoice = $familyPaymentPlanObject->getLastInvoice();
+		                  $reqInvoices = $paymentPlanObject->getRequiredNumInvoiceToDate();
+		                  for($numInvoices;$numInvoices < $reqInvoices; $numInvoices++){
+			                  $lastInvoice = $familyPaymentPlanObject->getLastInvoice();
 
-	                      //GET THE NEXT INVOICE DATE FOR THIS PP
-	                      if(isset($lastInvoice)){
-	                        $lastInvoiceDate = new DateTime($lastInvoice['invoice_time']);
-		                      echo "------Last invoice time: ".date_format($lastInvoiceDate,'Y-m-d')."<br />";
-	                        $nextInvoiceDate = $lastInvoiceDate->add(date_interval_create_from_date_string($paymentPlan['invoice_frequency'].' month'));
-	                        //$nextInvoiceDate = date_format($nextInvoiceDate,'Y-m-d');
-	                        $nextInvoiceDate = date_format($nextInvoiceDate,'Y-m-15');
-		                      echo "------Next invoice time: ".$nextInvoiceDate."<br />";
-	                        $nextInvoiceDate = strtotime($nextInvoiceDate);
-	                        //echo $nextInvoiceDate."<br />";
-
-	                        //IF WE'RE PAST THE NEXT INVOICE THIS INSTALLMENT
-	                        if($today >= $nextInvoiceDate){
-		                        echo "Invoicing...<br />";
-		                        if(isset($invoiceNow)){
-	                            $invoice = $familyPaymentPlanObject->invoiceInstallment();
-		                        }
-	                          //$invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
-	                        }
-	                      } else {
-		                      echo "Invoicing...<br />";
-		                      if(isset($invoiceNow)){
-	                          $invoice = $familyPaymentPlanObject->invoiceInstallment();
-		                      }
-	                        //$invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
-	                      }
-	                    } else {
-		                    echo "Payment Plan Complete...<br />";
-	                    }
+			                  //GET THE NEXT INVOICE DATE FOR THIS PP
+			                  if(isset($lastInvoice)){
+				                  $invoiceDay = Date("d",strtotime($paymentPlan['start_date']));
+				                  $lastInvoiceDate = new DateTime($lastInvoice['invoice_time']);
+				                  echo "------Last invoice time: ".date_format($lastInvoiceDate,'Y-m-d')."<br />";
+				                  $nextInvoiceDate = $lastInvoiceDate->add(date_interval_create_from_date_string($paymentPlan['invoice_frequency'].' month'));
+				                  $nextInvoiceDate = date_format($nextInvoiceDate,'Y-m-'.$invoiceDay);
+				                  echo "------Next invoice time: ".$nextInvoiceDate."<br />";
+			                  } else {
+				                  $nextInvoiceDate = $paymentPlan['start_date'];
+				                  //$invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
+			                  }
+			                  echo "--------Creating invoice on: ".$nextInvoiceDate."<br />";
+			                  if(isset($invoiceNow)){
+				                  $invoice = $familyPaymentPlanObject->invoiceInstallment(null,$nextInvoiceDate);
+			                  }
+		                  }
 		                  echo "<br />";
 	                  }
 	                }
@@ -222,40 +211,29 @@ if(isset($campusList)){
 		                    }
 	                      //$invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
 	                    }
+
 	                    //CHECK TO SEE IF WE HAVE REACHED THE FULL NUMBER OF INVOICES FOR THIS PP
-	                    else if($numInvoices < ($paymentPlan['num_invoices'] + 1)){
-	                      $lastInvoice = $familyPaymentPlanObject->getLastInvoice();
+		                  $reqInvoices = $paymentPlanObject->getRequiredNumInvoiceToDate();
+		                  for($numInvoices;$numInvoices < $reqInvoices; $numInvoices++){
+			                  $lastInvoice = $familyPaymentPlanObject->getLastInvoice();
 
-	                      //GET THE NEXT INVOICE DATE FOR THIS PP
-	                      if(isset($lastInvoice)){
-	                        $lastInvoiceDate = new DateTime($lastInvoice['invoice_time']);
-		                      echo "-----Last invoice time: ".date_format($lastInvoiceDate,'Y-m-d')."<br />";
-	                        $nextInvoiceDate = $lastInvoiceDate->add(date_interval_create_from_date_string($paymentPlan['invoice_frequency'].' month'));
-	                        $nextInvoiceDate = date_format($nextInvoiceDate,'Y-m-d');
-		                      echo "-----Next invoice time: ".$nextInvoiceDate."<br />";
-	                        $nextInvoiceDate = strtotime($nextInvoiceDate);
-
-	                        //IF WE'RE PAST THE NEXT INVOICE THIS INSTALLMENT
-	                        if($today >= $nextInvoiceDate){
-	                          //die('invoicing next invoice');
-		                        echo "Invoicing...<br />";
-		                        if(isset($invoiceNow)){
-			                        $invoice = $familyPaymentPlanObject->invoiceInstallment();
-		                        }
-
-	                          //$invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
-	                        }
-	                      } else {
-		                      echo "Invoicing...<br />";
-		                      if(isset($invoiceNow)){
-			                      $invoice = $familyPaymentPlanObject->invoiceInstallment();
-		                      }
-
-	                        //$invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
-	                      }
-	                    } else {
-		                    echo "Payment Plan Complete...<br />";
-	                    }
+			                  //GET THE NEXT INVOICE DATE FOR THIS PP
+			                  if(isset($lastInvoice)){
+				                  $invoiceDay = Date("d",strtotime($paymentPlan['start_date']));
+				                  $lastInvoiceDate = new DateTime($lastInvoice['invoice_time']);
+				                  echo "------Last invoice time: ".date_format($lastInvoiceDate,'Y-m-d')."<br />";
+				                  $nextInvoiceDate = $lastInvoiceDate->add(date_interval_create_from_date_string($paymentPlan['invoice_frequency'].' month'));
+				                  $nextInvoiceDate = date_format($nextInvoiceDate,'Y-m-'.$invoiceDay);
+				                  echo "------Next invoice time: ".$nextInvoiceDate."<br />";
+			                  } else {
+				                  $nextInvoiceDate = $paymentPlan['start_date'];
+				                  //$invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
+			                  }
+			                  echo "--------Creating invoice on: ".$nextInvoiceDate."<br />";
+			                  if(isset($invoiceNow)){
+				                  $invoice = $familyPaymentPlanObject->invoiceInstallment(null,$nextInvoiceDate);
+			                  }
+		                  }
 		                  echo "<br />";
 	                  }
 	                }

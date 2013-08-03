@@ -555,6 +555,13 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
+	public function setInvoiceDate($invoiceTime){
+		$q = "UPDATE tsm_reg_families_invoices SET invoice_time = '".$invoiceTime."' WHERE family_invoice_id = '".$this->invoiceId."'";
+		$this->db->runQuery($q);
+
+		return true;
+	}
+
   public function getTotal() {
     $q = "SELECT amount FROM tsm_reg_families_invoices WHERE family_invoice_id = '".$this->invoiceId."'";
     $r = $this->db->runQuery($q);
