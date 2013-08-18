@@ -261,6 +261,34 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     return $invoice;
   }
 
+	public function getNextInstallmentAmount(){
+		$paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($this->info['payment_plan_id']);
+		$paymentPlan = $paymentPlan->getInfo();
+
+		$numInvoices = $this->getNumInvoices();
+		if($this->info['invoice_and_credit'] == 1){
+			$numInvoices = $numInvoices - 2;
+		}
+
+		//if we're invoicing a percentage up front and then invoicing installments, we need to modify the number of invoices to be +1;
+		if($paymentPlan['payment_plan_type_id'] == 4){
+			$paymentPlan['num_invoices']++;
+		}
+
+		$totalInvoiced = $this->getAmountInvoiced();
+		$totalAmount = $this->getTotal();
+		$totalRemaining = $totalAmount - $totalInvoiced;
+		$numInvoicesRemaining = $paymentPlan['num_invoices'] - $numInvoices;
+		if($numInvoicesRemaining > 0){
+			$invoiceTotal = $totalRemaining / $numInvoicesRemaining;
+		} else {
+			$invoiceTotal = 0;
+		}
+
+
+		return $invoiceTotal;
+	}
+
   public function invoiceInstallment($invoiceAmount = null,$invoiceDate = null, $dueDate = null){
     $family = new TSM_REGISTRATION_FAMILY($this->info['family_id']);
     $familyInfo = $family->getInfo();
