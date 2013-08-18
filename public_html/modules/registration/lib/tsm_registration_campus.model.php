@@ -97,6 +97,25 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $amount;
   }
 
+	public function getFinalizedRevenue(){
+		$q = "SELECT SUM(amount) as total_rev FROM tsm_reg_families_fees ff
+LEFT JOIN tsm_reg_families_payment_plans fpp ON fpp.family_payment_plan_id = ff.family_payment_plan_id
+LEFT JOIN tsm_reg_families_school_years fsy ON fsy.family_id = ff.family_id
+LEFT JOIN tsm_reg_families f ON f.family_id = fsy.family_id
+LEFT JOIN tsm_reg_fee_payment_plans fpay ON fpay.payment_plan_id = fpp.payment_plan_id
+    WHERE fsy.school_year = '".$this->getSelectedSchoolYear()."'
+    AND (fsy.current_step = 0 OR fsy.current_step = 6)
+    AND f.campus_id = '".$this->campusId."'
+AND ((ff.fee_id != fpay.installment_fee_id
+AND ff.fee_id != fpay.credit_fee_id) OR fpp.family_payment_plan_id IS NULL) AND ff.name NOT LIKE '%paypal%'";
+		$r = $this->db->runQuery($q);
+		while ($a = mysql_fetch_assoc($r)) {
+			$amount = $a['total_rev'];
+		}
+
+		return $amount;
+	}
+
   public function getFeeTypes() {
     $q = "SELECT * FROM tsm_reg_fee_types WHERE campus_id = '".$this->campusId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
     $r = $this->db->runQuery($q);
