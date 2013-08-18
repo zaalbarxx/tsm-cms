@@ -62,12 +62,11 @@ if(isset($campusList)){
             if(strtotime($invoice['last_qb_sync']) < strtotime($invoice['last_updated'])){
               $updateInv[$invoice['quickbooks_invoice_id']] = $invoice;
 
-              echo "Updating invoice: ".$invoice['family_invoice_id']."<br />";
             }
           }
         }
       }
-
+			echo "Got to 1<br />";
       //If some invoices need their external key from QuickBooks, we go grab them and update the local record.
       if(isset($txnIds)){
         //build the query for the invoices that we need to update
@@ -92,18 +91,27 @@ if(isset($campusList)){
           }
         }
       }
-
+	    echo "Got to 2<br />";
       if(isset($updateInv)){
         foreach($updateInv as $invoice){
+
           $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
           $total = $invoiceObject->getTotal();
-          if($total > 0){
+	        $isCreditMemo = false;
+	        if(stripos($a,'offset') !== false OR $invoice['amount'] < 0){
+		        $isCreditMemo = true;
+	        }
+
+          if($isCreditMemo == false){
+	          echo "Updating ".$invoice['invoice_description']." invoice: ".$invoice['family_invoice_id']." to amount: ".$invoice['amount']."...";
             $invoiceService = new QuickBooks_IPP_Service_Invoice();
           } else {
+	          echo "Updating ".$invoice['invoice_description']." credit memo: ".$invoice['family_invoice_id']." to amount: ".$invoice['amount']."...";
             $invoiceService = new QuickBooks_IPP_Service_CreditMemo();
           }
           $fees = $invoiceObject->getFees();
           $qbInvoice = $invoiceService->findById($quickbooks->Context, $quickbooks->creds['qb_realm'],$invoice['quickbooks_invoice_id']);
+
 	        if(is_object($qbInvoice)){
 		        //echo $invoiceService->lastResponse()."\r\n\r\n\r\n";
 		        //print_r($qbInvoice);
@@ -124,8 +132,15 @@ if(isset($campusList)){
 			        }
 		        }
 
-		        $invoiceService->update($quickbooks->Context, $quickbooks->creds['qb_realm'],$id,$qbInvoice);
-		        $invoiceObject->updateLastQBSync();
+		        $success = $invoiceService->update($quickbooks->Context, $quickbooks->creds['qb_realm'],$id,$qbInvoice);
+		        if($success == false){
+			        echo "FAILED (".$invoiceService->errorText().")!<br />";
+		        } else {
+			        $invoiceObject->updateLastQBSync();
+			        echo "SUCCESS!<br />";
+		        }
+	        } else {
+		        echo "FAILED (no object)!<br />";
 	        }
 
 
@@ -137,6 +152,7 @@ if(isset($campusList)){
           //print_r($invoice);
         }
       }
+	    echo "Got to 3<br />";
 
       //die();
       //Once all the external keys are up to date locally, we need to re-grab the local invoices.
@@ -151,6 +167,7 @@ if(isset($campusList)){
           }
         }
       }
+	    echo "Got to 4<br />";
 
       //get all the local families and create an array to access them by quickbooks customer id
       $families = $currentCampus->getFamilies();
@@ -170,6 +187,7 @@ if(isset($campusList)){
           }
         }
       }
+	    echo "Got to 5<br />";
 
       //sync unsynced invoices to QB
       if (isset($unsyncedInvoices)){
@@ -178,6 +196,7 @@ if(isset($campusList)){
           $invoiceObject->addToQuickbooks();
         }
       }
+	    echo "Got to 6<br />";
 
 
 
@@ -255,7 +274,7 @@ if(isset($campusList)){
           }
         }
       }
-
+	    echo "Got to 7<br />";
 
       //Sync new payments from site to quickbooks
 
@@ -281,6 +300,7 @@ if(isset($campusList)){
 
         }
       }
+	    echo "Got to 8<br />";
 
     }
   }
