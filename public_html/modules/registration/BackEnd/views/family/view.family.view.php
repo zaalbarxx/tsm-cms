@@ -24,15 +24,21 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
     <div class="infoSection well clearfix tab-pane active" id="familyInfo">
         <h3>Family Information</h3>
 
+				<div class="half">
+					<strong>Father:</strong> <?php echo $familyInfo['father_first']." ".$familyInfo['father_last']; ?>
+					<br/>
+					<strong>Father's Cell:</strong> <?php echo $familyInfo['father_cell']; ?>
+					<br/>
+					<strong>Mother:</strong> <?php echo $familyInfo['mother_first']." ".$familyInfo['mother_last']; ?>
+					<br/>
+					<strong>Mother's Cell:</strong> <?php echo $familyInfo['mother_cell']; ?>
+					<br/>
+					<strong>Primary E-mail:</strong> <?php echo $familyInfo['primary_email']; ?><br/>
+					<strong>Seconary E-mail:</strong> <?php echo $familyInfo['secondary_email']; ?>
+				</div>
         <div class="half">
-            <strong>Father:</strong> <?php echo $familyInfo['father_first']." ".$familyInfo['father_last']; ?>
-            <br/>
-            <strong>Mother:</strong> <?php echo $familyInfo['mother_first']." ".$familyInfo['mother_last']; ?>
-            <br/>
-            <strong>Primary E-mail:</strong> <?php echo $familyInfo['primary_email']; ?><br/>
-            <strong>Seconary E-mail:</strong> <?php echo $familyInfo['secondary_email']; ?>
-        </div>
-        <div class="half">
+	        <strong>Primary Phone:</strong> <?php echo $familyInfo['primary_phone']; ?><br/>
+	        <strong>Seconary Phone:</strong> <?php echo $familyInfo['secondary_secondary']; ?>
             <address>
                 <span class="title">Billing Address</span><br/>
               <?php echo $familyInfo['address']."<br />".$familyInfo['city'].", ".$familyInfo['state']." ".$familyInfo['zip']; ?>
