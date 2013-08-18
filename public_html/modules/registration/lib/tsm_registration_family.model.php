@@ -142,7 +142,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
         $_SESSION['family']['id'] = $a['family_id'];
         $campus = new TSM_REGISTRATION_CAMPUS($campus_id);
         $this->setSelectedSchoolYear($campus->getCurrentSchoolYear());
-        //header("location: index.php");
+        header("location: index.php");
         $success = 1;
       } else {
         $success = 0;
@@ -728,7 +728,6 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function handleFees($handleFees){
-
     foreach($handleFees as $family_fee_id=>$handleInfo){
       if($handleInfo['handleMethod'] == 1){
 
@@ -737,20 +736,25 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
         $familyFeeInfo = $familyFee->getInfo();
         if($familyFee->isInvoiced()){
           $invoice_id = $familyFee->getInvoiceId();
-          if(isset($familyFeeInfo['family_payment_plan_id']) && isset($invoice_id)){
+          if(isset($invoice_id)){
             //echo "the fee is on a payment plan";
-            $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyFeeInfo['family_payment_plan_id']);
+	          if(isset($familyFeeInfo['family_payment_plan_id'])){
+	            $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyFeeInfo['family_payment_plan_id']);
+	            $originalInvoiceId = $familyPaymentPlan->getOriginalInvoiceId();
+		          $familyPaymentPlanInfo = $familyPaymentPlan->getInfo();
+	          } else {
+		          $originalInvoiceId = 0;
+	          }
 
-            $originalInvoiceId = $familyPaymentPlan->getOriginalInvoiceId();
 
-            $familyPaymentPlanInfo = $familyPaymentPlan->getInfo();
-            if($familyPaymentPlanInfo['invoice_and_credit'] == 0 || !($familyPaymentPlan->getAmountInvoiced() >= $familyPaymentPlan->getTotal())){
+	          //if($familyPaymentPlanInfo['invoice_and_credit'] == 0 || !($familyPaymentPlan->getAmountInvoiced() >= $familyPaymentPlan->getTotal())){
+		        //if($familyPaymentPlanInfo['invoice_and_credit'] == 0){
               $familyInvoice = new TSM_REGISTRATION_INVOICE($invoice_id);
               $familyInvoice->removeFee($family_fee_id);
               $familyInvoice->updateTotal();
-              $newTotal = $familyInvoice->getTotal();
 
               if($invoice_id == $originalInvoiceId){
+	              $newTotal = $familyInvoice->getTotal();
                 $credit_invoice_id = $familyPaymentPlan->getCreditInvoiceId();
                 $creditInvoice = new TSM_REGISTRATION_INVOICE($credit_invoice_id);
                 $creditFeeId = $creditInvoice->getFirstFamilyFeeId();
@@ -764,7 +768,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
               $familyFee->setPaymentPlan("NULL");
               $familyFee->setToReview(false);
               $familyFee->delete();
-            }
+            //}
           }
         } else if($familyFee->isOnPaymentPlan()){
           $familyFee->setPaymentPlan("NULL");
