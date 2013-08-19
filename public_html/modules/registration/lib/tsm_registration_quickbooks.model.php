@@ -31,7 +31,7 @@ Class TSM_REGISTRATION_QUICKBOOKS extends TSM_REGISTRATION {
 
     $this->this_url = 'http://'.$_SERVER['SERVER_NAME'].'/sandbox/admin/index.php?mod=registration&view=quickbooks&action=connect';
     $this->that_url = 'http://'.$_SERVER['SERVER_NAME'].'/sandbox/admin/index.php?mod=registration&view=quickbooks&action=connected';
-    $this->dsn = 'mysql://root:@localhost/takesixm_sandbox';
+    $this->dsn = 'mysql://root:@localhost/schoolsystem';
     $this->encryption_key = 'VgTtKpHDEmjsjbp2EsktwtQF3ecBjEFCf9CyNzaVjodzt4rKI0BCOK1VKUD818i';
 
     // The tenant that user is accessing within your own app
