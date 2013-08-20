@@ -607,6 +607,10 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
+  public function deleteFee($feeId){
+    $q = "UPDATE tsm_reg_families_invoice_fees SET soft_deleted=TRUE WHERE family_invoice_id=".$this->invoiceId." AND family_fee_id=".$feeId;
+    $this->db->runQuery($q);
+  }
 }
 
 ?>

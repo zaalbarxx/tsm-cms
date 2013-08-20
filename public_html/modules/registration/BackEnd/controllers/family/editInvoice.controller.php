@@ -13,6 +13,7 @@ foreach($fees_temp as $fee){
 		);
 	$fee_total += $fee['amount'];
 }
+$invoice_id = $family_invoice_id;
 
 
 

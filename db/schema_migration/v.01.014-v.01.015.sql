@@ -1,0 +1,1 @@
+ALTER TABLE tsm_reg_families_invoice_fees ADD COLUMN soft_deleted BOOLEAN DEFAULT FALSE
