@@ -12,6 +12,7 @@ $(document).ready(function(){
 			var response = JSON.parse(data);
 			if (response.success == true) {
        			$(row).remove();
+       			$('tfoot td.total').html(response.total);
      		}
       		if (response.alertMessage != null) {
         		alert(response.alertMessage);
@@ -53,7 +54,7 @@ $(document).ready(function(){
 			<tr>
 				<td></td>
 				<td></td>
-				<td>$ <?php echo $fee_total ?></td>
+				<td class='total'>$ <?php echo $fee_total ?></td>
 				<td></td>
 				<td></td>
 			</tr>
