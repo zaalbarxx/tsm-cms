@@ -27,7 +27,7 @@ class TSM_REGISTRATION_FAMILY_FEE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function isInvoiced() {
-    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_fee_id = '".$this->familyFeeId."'";
+    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_fee_id = '".$this->familyFeeId."' AND soft_delete=FALSE";
     $r = $this->db->runQuery($q);
     if (mysql_num_rows($r) > 0) {
       return true;

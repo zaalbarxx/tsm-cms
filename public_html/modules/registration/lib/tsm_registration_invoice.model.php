@@ -44,7 +44,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getFirstFamilyFeeId(){
-    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."' ORDER BY family_invoice_fee_id ASC LIMIT 1";
+    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."' AND soft_deleted=FALSE ORDER BY family_invoice_fee_id ASC LIMIT 1";
     $r = $this->db->runQuery($q);
     while($a = mysql_fetch_assoc($r)){
       $family_fee_id = $a['family_fee_id'];
@@ -349,7 +349,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function containsFee($family_fee_id) {
-    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."' AND family_fee_id = '".$family_fee_id."'";
+    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."' AND family_fee_id = '".$family_fee_id."' AND soft_delete=FALSE";
     $r = $this->db->runQuery($q);
     if (mysql_num_rows($r) == 0) {
       return false;
@@ -610,6 +610,9 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   public function deleteFee($feeId){
     $q = "UPDATE tsm_reg_families_invoice_fees SET soft_deleted=TRUE WHERE family_invoice_id=".$this->invoiceId." AND family_fee_id=".$feeId;
     $this->db->runQuery($q);
+
+	  $q = "INSERT INTO tsm_reg_families_invoice_fee_log (add_remove,family_fee_id,family_invoice_id) VALUES(0,$feeId,".$this->info['family_invoice_id'].")";
+	  $this->db->runQuery($q);
   }
 }
 
