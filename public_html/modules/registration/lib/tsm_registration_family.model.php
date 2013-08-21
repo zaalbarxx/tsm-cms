@@ -342,7 +342,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $id;
   }
 
-  public function getInvoices($displayed = null) {
+  public function getInvoices($displayed = null,$includeDeleted = false) {
     $q = "SELECT * FROM tsm_reg_families_invoices fi, tsm_reg_families_payment_plans fpp, tsm_reg_fee_payment_plans pp
     WHERE fi.family_payment_plan_id = fpp.family_payment_plan_id
     AND pp.payment_plan_id = fpp.payment_plan_id
@@ -350,13 +350,19 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     if ($displayed) {
       $q .= " AND fi.displayed = '$displayed'";
     }
+	  if($includeDeleted == false){
+		  $q .= " AND fi.deleted_at IS NULL ";
+	  }
     $r = $this->db->runQuery($q);
     $returnInvoices = null;
     while ($a = mysql_fetch_assoc($r)) {
       $returnInvoices[$a['family_invoice_id']] = $a;
     }
 
-    $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_id = '".$this->familyId."' AND family_payment_plan_id IS NULL";
+    $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_id = '".$this->familyId."' AND family_payment_plan_id IS NULL ";
+	  if($includeDeleted == false){
+		  $q .= " AND deleted_at IS NULL ";
+	  }
     $r = $this->db->runQuery($q);
     while ($a = mysql_fetch_assoc($r)) {
       $returnInvoices[$a['family_invoice_id']] = $a;
@@ -367,25 +373,14 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
 
   public function getUnSyncedInvoices(){
     if($this->inQuickbooks()){
-      $q = "SELECT * FROM tsm_reg_families_invoices fi, tsm_reg_families_payment_plans fpp, tsm_reg_fee_payment_plans pp
-      WHERE fi.family_payment_plan_id = fpp.family_payment_plan_id
-      AND pp.payment_plan_id = fpp.payment_plan_id
-      AND fi.family_id = '".$this->familyId."'
-      AND fi.quickbooks_invoice_id = ''";
-
-      $r = $this->db->runQuery($q);
-      $returnInvoices = null;
-      while ($a = mysql_fetch_assoc($r)) {
-        $returnInvoices[$a['family_invoice_id']] = $a;
-      }
-
-      $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_id = '".$this->familyId."'
-      AND family_payment_plan_id IS NULL
-      AND quickbooks_invoice_id = ''";
-      $r = $this->db->runQuery($q);
-      while ($a = mysql_fetch_assoc($r)) {
-        $returnInvoices[$a['family_invoice_id']] = $a;
-      }
+	    $returnInvoices = $this->getInvoices();
+	    if(isset($returnInvoices)){
+		    foreach($returnInvoices as $invoice){
+			    if(!$invoice['quickbooks_invoice_id'] == ''){
+				    unset($returnInvoices[$invoice['family_invoice_id']]);
+			    }
+		    }
+	    }
     } else {
       $returnInvoices = null;
     }
@@ -548,6 +543,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     $q = "SELECT * FROM tsm_reg_families_invoices
     WHERE family_payment_plan_id = '".$family_payment_plan_id."'
     AND family_id = '".$this->familyId."'
+    AND deleted_at IS NULL
     ORDER BY family_invoice_id ASC";
     $r = $this->db->runQuery($q);
     $returnInvoices = null;

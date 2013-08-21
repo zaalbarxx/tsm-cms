@@ -72,7 +72,8 @@ class TSM_REGISTRATION_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     WHERE fpp.family_payment_plan_id = fi.family_payment_plan_id
     AND fi.family_id = f.family_id
     AND fpp.payment_plan_id = '".$this->info['payment_plan_id']."'
-    AND fi.displayed = 1";
+    AND fi.displayed = 1
+    AND fi.deleted_at IS NULL";
     $r = $this->db->runQuery($q);
     while($a = mysql_fetch_assoc($r)){
       $invoices[$a['family_invoice_id']] = $a;

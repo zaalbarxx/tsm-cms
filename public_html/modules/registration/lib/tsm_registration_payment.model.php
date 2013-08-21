@@ -43,7 +43,8 @@ class TSM_REGISTRATION_PAYMENT extends TSM_REGISTRATION_CAMPUS {
   public function getLines(){
     $q = "SELECT * FROM tsm_reg_families_payment_invoice pi, tsm_reg_families_invoices fi
     WHERE fi.family_invoice_id = pi.family_invoice_id
-    AND pi.family_payment_id = '".$this->paymentId."'";
+    AND pi.family_payment_id = '".$this->paymentId."'
+    AND fi.deleted_at IS NULL";
     $r = $this->db->runQuery($q);
     while($a = mysql_fetch_assoc($r)){
       $paymentLines[] = $a;

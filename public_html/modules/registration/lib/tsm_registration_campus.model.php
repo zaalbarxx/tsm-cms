@@ -67,7 +67,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $this->info['current_school_year'];
   }
 
-  public function getInvoices($displayed = null) {
+  public function getInvoices($displayed = null,$includeDeleted = false) {
     $q = "SELECT fi.*, fpp.*, pp.* FROM tsm_reg_families_invoices fi, tsm_reg_families_payment_plans fpp, tsm_reg_fee_payment_plans pp
     WHERE fi.family_payment_plan_id = fpp.family_payment_plan_id
     AND pp.payment_plan_id = fpp.payment_plan_id
@@ -75,6 +75,9 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     if ($displayed) {
       $q .= " AND fi.displayed = '$displayed'";
     }
+	  if($includeDeleted == false){
+		  $q .= " AND fi.deleted_at IS NULL ";
+	  }
     $r = $this->db->runQuery($q);
     $returnInvoices = null;
     while ($a = mysql_fetch_assoc($r)) {

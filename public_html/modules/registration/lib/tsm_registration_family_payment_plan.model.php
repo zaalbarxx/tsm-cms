@@ -31,7 +31,8 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
   public function getNumInvoices(){
     $q = "SELECT COUNT(family_invoice_id) AS num_invoices
     FROM tsm_reg_families_invoices
-    WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."'";
+    WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."'
+    AND deleted_at IS NULL";
     $r = $this->db->runQuery($q);
     while ($a = mysql_fetch_assoc($r)) {
       $numInvoices = $a['num_invoices'];
@@ -44,6 +45,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     $q = "SELECT * FROM tsm_reg_families_invoices
     WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."'
     AND invoice_and_credit = 0
+    AND deleted_at IS NULL
     ORDER BY family_invoice_id DESC LIMIT 1";
     $r = $this->db->runQuery($q);
     $lastInvocie = null;
@@ -80,7 +82,9 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getInvoices(){
-    $q = "SELECT * FROM tsm_reg_families_invoices fi WHERE fi.family_payment_plan_id = '".$this->familyPaymentPlanId."'";
+    $q = "SELECT * FROM tsm_reg_families_invoices fi
+    WHERE fi.family_payment_plan_id = '".$this->familyPaymentPlanId."'
+    AND deleted_at IS NULL";
     $r = $this->db->runQuery($q);
     while ($a = mysql_fetch_assoc($r)) {
       $invoices[$a['family_invoice_id']] = $a;
@@ -94,7 +98,11 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     $paymentPlanInfo = $paymentPlan->getInfo();
 
     if($paymentPlanInfo['invoice_and_credit'] == 1){
-      $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."' AND invoice_and_credit = 1 AND amount > 0";
+      $q = "SELECT * FROM tsm_reg_families_invoices
+      WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."'
+      AND invoice_and_credit = 1
+      AND amount > 0
+      AND deleted_at IS NULL";
       $r = $this->db->runQuery($q);
       while ($a = mysql_fetch_assoc($r)) {
         $invoice_id = $a['family_invoice_id'];
@@ -108,7 +116,11 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
 
   public function getCreditInvoiceId(){
     if($this->info['invoice_and_credit'] == 1){
-      $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."' AND invoice_and_credit = 1 AND amount < 0";
+      $q = "SELECT * FROM tsm_reg_families_invoices
+      WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."'
+      AND invoice_and_credit = 1
+      AND amount < 0
+      AND deleted_at IS NULL";
       $r = $this->db->runQuery($q);
       while ($a = mysql_fetch_assoc($r)) {
         $invoice_id = $a['family_invoice_id'];

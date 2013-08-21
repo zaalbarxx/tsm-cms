@@ -349,7 +349,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function containsFee($family_fee_id) {
-    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."' AND family_fee_id = '".$family_fee_id."' AND soft_delete=FALSE";
+    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."' AND family_fee_id = '".$family_fee_id."' AND soft_deleted=FALSE";
     $r = $this->db->runQuery($q);
     if (mysql_num_rows($r) == 0) {
       return false;
