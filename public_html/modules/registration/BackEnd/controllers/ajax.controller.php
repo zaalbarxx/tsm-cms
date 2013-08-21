@@ -579,6 +579,21 @@ switch ($ajax) {
 
     echo json_encode($response);
     break;
+    case "deleteFeeFromInvoice":
+    if(isset($invoiceId) && isset($feeId)){
+      $invoice = new TSM_REGISTRATION_INVOICE($invoiceId);
+      $invoice->deleteFee($feeId);
+      $invoice->updateTotal();
+      $total = $invoice->addFees($invoice->getFees());
+      $response['total'] = $total;
+      $response["success"] = true;
+      $response["alertMessage"] = "The invoice fee was successfully deleted.";
+    }else{
+      $response["success"] = false;
+      $response["alertMessage"] = "The invoice fee could not be deleted";
+    }
+    echo json_encode($response);
+    break;
 }
 die();
 ?>

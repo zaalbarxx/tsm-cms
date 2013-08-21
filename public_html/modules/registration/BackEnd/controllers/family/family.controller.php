@@ -82,6 +82,9 @@ switch ($action) {
     require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/family/emailInvoice.family.controller.php");
     $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/family/emailInvoice.family.view.php";
     break;
+  case "editInvoice":
+    require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/family/editInvoice.controller.php");
+    $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/family/editInvoice.view.php";
 }
 
 

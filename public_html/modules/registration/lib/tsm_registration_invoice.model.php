@@ -417,7 +417,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
   public function getFees() {
     //$q = "SELECT invf.*, ff.fee_id, ff.name FROM tsm_reg_families_invoice_fees invf, tsm_reg_families_fees ff WHERE ff.family_fee_id = invf.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."'";
-    $q = "SELECT invf.*, ff.fee_id, ff.name FROM tsm_reg_families_invoice_fees invf, tsm_reg_families_fees ff WHERE ff.family_fee_id = invf.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."'";
+    $q = "SELECT invf.*, ff.fee_id, ff.name FROM tsm_reg_families_invoice_fees invf, tsm_reg_families_fees ff WHERE ff.family_fee_id = invf.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."' AND invf.soft_deleted=FALSE";
 
     $r = $this->db->runQuery($q);
     $returnFees = null;
@@ -607,6 +607,10 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
+  public function deleteFee($feeId){
+    $q = "UPDATE tsm_reg_families_invoice_fees SET soft_deleted=TRUE WHERE family_invoice_id=".$this->invoiceId." AND family_fee_id=".$feeId;
+    $this->db->runQuery($q);
+  }
 }
 
 ?>

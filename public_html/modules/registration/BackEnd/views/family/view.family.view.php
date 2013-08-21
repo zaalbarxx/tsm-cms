@@ -158,7 +158,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           <?php
           if (isset($invoices)) {
             foreach ($invoices as $invoice) {
-              echo "<tr><td>".$invoice['doc_number']."</td><td>".$invoice['invoice_description']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>".$invoice['timesSent']."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td><td><a href='index.php?mod=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>View</a></td>";
+              echo "<tr><td>".$invoice['doc_number']."</td><td>".$invoice['invoice_description']."</td><td>".date('m/d/Y', strtotime($invoice['invoice_time']))."</td><td>".$invoice['timesSent']."</td><td>$".$invoice['amount']."</td><td>$".$invoice['amountPaid']."</td><td>$".$invoice['amountDue']."</td><td><a href='index.php?mod=registration&view=invoice&action=viewPDF&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>View</a></td><td><a href='index.php?mod=registration&view=family&action=editInvoice&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary'>Edit</a></td>";
               if($invoice['displayed'] == 1){
                 echo "<td><a href='index.php?mod=registration&view=family&action=emailInvoice&family_invoice_id=".$invoice['family_invoice_id']."' class='btn btn-primary fb'>Email</a></td>";
               } else {
