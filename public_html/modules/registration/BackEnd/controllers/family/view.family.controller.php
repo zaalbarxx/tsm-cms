@@ -32,6 +32,7 @@ if(isset($paymentPlans)){
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountPaid'] = number_format($paymentPlanObject->getAmountPaid(), 2, '.', ',');
     $amtInvoiced = $paymentPlanObject->getAmountInvoiced();
     $total = $paymentPlanObject->getTotal();
+    //todo: detetect canAddFees correctly (determine logic)
     //$paymentPlans[$paymentPlan['family_payment_plan_id']]['canAddFees'] = $amtInvoiced < $total;
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['canAddFees'] = 1;
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['totalAmount'] = number_format($total, 2, '.', ',');
