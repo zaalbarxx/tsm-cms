@@ -97,19 +97,24 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     $paymentPlan = new TSM_REGISTRATION_PAYMENT_PLAN($this->info['payment_plan_id']);
     $paymentPlanInfo = $paymentPlan->getInfo();
 
-    if($paymentPlanInfo['invoice_and_credit'] == 1){
+    //if($paymentPlanInfo['invoice_and_credit'] == 1){
       $q = "SELECT * FROM tsm_reg_families_invoices
       WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."'
-      AND invoice_and_credit = 1
-      AND amount > 0
-      AND deleted_at IS NULL";
+      AND amount >= 0
+      AND deleted_at IS NULL
+      ORDER BY family_invoice_id ASC LIMIT 1";
       $r = $this->db->runQuery($q);
-      while ($a = mysql_fetch_assoc($r)) {
-        $invoice_id = $a['family_invoice_id'];
+      if(mysql_num_rows($r) > 0){
+        while ($a = mysql_fetch_assoc($r)) {
+          $invoice_id = $a['family_invoice_id'];
+        }
+      } else {
+        $invoice_id = false;
       }
-    } else {
-      $invoice_id = false;
-    }
+
+    //} else {
+    //  $invoice_id = false;
+    //}
 
     return $invoice_id;
   }

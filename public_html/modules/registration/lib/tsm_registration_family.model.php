@@ -683,6 +683,19 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $returnFees;
   }
 
+  public function getUninvoicedFees(){
+    $q = "SELECT * FROM tsm_reg_families_fees WHERE family_id = '".$this->familyId."'";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $familyFee = new TSM_REGISTRATION_FAMILY_FEE($a['family_fee_id']);
+      if (!$familyFee->isInvoiced()) {
+        $returnFees[] = $a;
+      }
+    }
+
+    return $returnFees;
+  }
+
   public function getFees($fee_type_id = null) {
     $students = $this->getStudents($this->getSelectedSchoolYear());
     $returnFees = null;
@@ -752,13 +765,15 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
               if($invoice_id == $originalInvoiceId){
 	              $newTotal = $familyInvoice->getTotal();
                 $credit_invoice_id = $familyPaymentPlan->getCreditInvoiceId();
-                $creditInvoice = new TSM_REGISTRATION_INVOICE($credit_invoice_id);
-                $creditFeeId = $creditInvoice->getFirstFamilyFeeId();
-                $credtFee = new TSM_REGISTRATION_FAMILY_FEE($creditFeeId);
-                $newTotal = $newTotal*-1;
-                $credtFee->updateAmount($newTotal);
-                $creditInvoice->updateFeeAmount($creditFeeId,$newTotal);
-                $creditInvoice->updateTotal();
+                if($credit_invoice_id){
+                  $creditInvoice = new TSM_REGISTRATION_INVOICE($credit_invoice_id);
+                  $creditFeeId = $creditInvoice->getFirstFamilyFeeId();
+                  $credtFee = new TSM_REGISTRATION_FAMILY_FEE($creditFeeId);
+                  $newTotal = $newTotal*-1;
+                  $credtFee->updateAmount($newTotal);
+                  $creditInvoice->updateFeeAmount($creditFeeId,$newTotal);
+                  $creditInvoice->updateTotal();
+                }
               }
 
               $familyFee->setPaymentPlan("NULL");
