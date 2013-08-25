@@ -534,6 +534,13 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
+  public function setCreditMemo($value) {
+    $q = "UPDATE tsm_reg_families_invoices SET credit_memo = $value WHERE family_invoice_id = '".$this->invoiceId."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
   public function setQuickbooksId($id) {
     $q = "UPDATE tsm_reg_families_invoices SET quickbooks_invoice_id = '".$id."' WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);

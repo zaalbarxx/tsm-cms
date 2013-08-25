@@ -724,7 +724,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
         }
 
         if ($needed == false) {
-          //echo "deleteing: ".$fee['fee_id']."\r\n";
+          //echo "deleteing: ".$fee['family_fee_id']."\r\n";
           $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
           if (!$feeObject->isInvoiced() && !$feeObject->isOnPaymentPlan() && $feeObject->isRemovable() == true) {
             if($preview == false){
@@ -733,7 +733,7 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
               $removeFees[] = $fee;
             }
 
-          } else {
+          } elseif($feeObject->isRemovable() == true) {
             if($preview == true){
               if($feeObject->getIsUnderReview() == false){
                 $removeButInvoiced[] = $fee;

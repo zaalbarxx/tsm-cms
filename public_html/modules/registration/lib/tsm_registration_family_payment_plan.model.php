@@ -381,6 +381,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     $familyFee->setPaymentPlan($this->familyPaymentPlanId);
     $invoiceCredit = new TSM_REGISTRATION_INVOICE($credit_invoice_id);
     $invoiceCredit->addFee(Array("family_fee_id" => $family_fee_id, "description" => $paymentPlanInfo['credit_fee_description'], "amount" => $creditFeeAmount));
+    $invoiceCredit->setCreditMemo(1);
     $invoiceCredit->updateTotal();
     $invoiceCredit->hide();
     $invoiceCredit->setInvoiceAndCredit(true);

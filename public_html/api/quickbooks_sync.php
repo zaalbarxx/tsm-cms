@@ -4,6 +4,11 @@ ini_set("display_errors", "1");
 ini_set('memory_limit', '256M');
 set_time_limit(0);
 
+function rand_char($length) {
+	$random = md5(uniqid(rand(), true));
+	return $random;
+}
+
 session_start();
 //REQUIRE THE CONFIG FILE
 require_once('../tsm_config.php');
@@ -39,7 +44,7 @@ $originalCampusId = $reg->getCurrentCampusId();
 if(isset($campusList)){
   foreach($campusList as $campus){
     $reg->setCurrentCampusId($campus['campus_id']);
-    //$reg->setCurrentCampusId(1);
+    //$reg->setCurrentCampusId(2);
     $currentCampus = new TSM_REGISTRATION_CAMPUS($campus['campus_id']);
     $reg->setSelectedSchoolYear($currentCampus->getCurrentSchoolYear());
     if($currentCampus->usesQuickbooks()){
@@ -90,16 +95,103 @@ if(isset($campusList)){
             $invoiceObject->setQuickbooksExternalKey($extKey);
           }
         }
+
+	      $creditMemoService = new QuickBooks_IPP_Service_CreditMemo();
+	      $quickbooksCreditMemos = $creditMemoService->findAll($quickbooks->Context, $quickbooks->creds['qb_realm'], $query, 1, 999);
+	      if(isset($quickbooksCreditMemos)){
+		      foreach($quickbooksCreditMemos as $invoice){
+			      $quickbooksId = $invoice->getId();
+			      $invoiceId = $updateInvoices[$quickbooksId]['family_invoice_id'];
+			      $extKey = $invoice->getExternalKey();
+			      $header = $invoice->getHeader();
+			      $invoiceObject = new TSM_REGISTRATION_INVOICE($invoiceId);
+			      $extTxnIds[] = substr($extKey,4,-1);
+			      //update the external key for the invoice
+			      $invoiceObject->setQuickbooksExternalKey($extKey);
+		      }
+	      }
       }
+	    //die();
 	    echo "Got to 2<br />";
+
+	    //Once all the external keys are up to date locally, we need to re-grab the local invoices.
+	    $localInvoices = $currentCampus->getInvoices();
+
+	    $invoicesByExtKey = null;
+	    //Create an array of the invoices by quickbooks external key.
+	    if(isset($localInvoices)){
+		    foreach($localInvoices as $invoice){
+			    if($invoice['quickbooks_external_key'] != "" and $invoice['quickbooks_invoice_id'] != ""){
+				    $invoicesByExtKey[$invoice['quickbooks_external_key']] = $invoice;
+			    }
+		    }
+	    }
+
+	    /*
+	    $invoiceService = new QuickBooks_IPP_Service_CreditMemo();
+	    $erroredInvoices = $invoiceService->findAll($quickbooks->Context, $quickbooks->creds['qb_realm'], null, 1, 999);
+	    foreach($erroredInvoices as $qbInvoice){
+		    //var_dump($qbInvoice);die();
+		    $extKey = $qbInvoice->getExternalKey();
+		    $localInvoice = $invoicesByExtKey[$extKey];
+		    if($localInvoice){
+
+			    $invoiceObject = new TSM_REGISTRATION_INVOICE($localInvoice['family_invoice_id']);
+			    $total = $invoiceObject->getTotal();
+			    if($localInvoice['credit_memo'] == 0 or $total >= 0){
+				    echo "skipping...<br />";
+				    continue;
+			    }
+			    $header = $qbInvoice->getHeader();
+			    $header->remove("TotalAmt");
+			    //$header->setTotalAmt($invoiceObject->getTotal());
+
+			    $qbInvoice->remove("Header");
+			    $qbInvoice->add($header);
+
+
+
+			    $qbInvoice->remove("Line");
+			    $fees = $invoiceObject->getFees();
+			    if(isset($fees)){
+				    foreach($fees as $fee){
+					    $qbInvoice->add($quickbooks->createLineFromFee($fee,$total));
+				    }
+			    }
+					//print_r($qbInvoice);
+//die();
+			    echo "updating: ".$localInvoice['family_invoice_id']." amount: ".$total."<br />";
+
+			    $success = $invoiceService->update($quickbooks->Context, $quickbooks->creds['qb_realm'],$id,$qbInvoice);
+			    if($success == false){
+				    echo "FAILED (".$invoiceService->errorText().")!<br />";
+			    } else {
+				    $invoiceObject->updateLastQBSync();
+				    echo "SUCCESS!<br />";
+			    }
+
+		    }
+	    }
+	    die();
+			*/
+
+
       if(isset($updateInv)){
         foreach($updateInv as $invoice){
 
           $invoiceObject = new TSM_REGISTRATION_INVOICE($invoice['family_invoice_id']);
           $total = $invoiceObject->getTotal();
 	        $isCreditMemo = false;
-	        if(stripos($a,'offset') !== false OR $invoice['amount'] < 0){
+	        if($invoice['credit_memo'] == 1){
 		        $isCreditMemo = true;
+		        //continue;
+	        }
+	        if($isCreditMemo == true & $total >= 0){
+		        echo "Updating ".$invoice['invoice_description']." credit memo: ".$invoice['family_invoice_id']." to amount: ".$invoice['amount']."...INCORRECT AMOUNT<br />";
+	          continue;
+	        } else if($isCreditMemo == false & $total <= 0){
+		        echo "Updating ".$invoice['invoice_description']." invoice: ".$invoice['family_invoice_id']." to amount: ".$invoice['amount']."...INCORRECT AMOUNT<br />";
+		        continue;
 	        }
 
           if($isCreditMemo == false){
@@ -136,12 +228,13 @@ if(isset($campusList)){
 		        if($success == false){
 			        echo "FAILED (".$invoiceService->errorText().")!<br />";
 		        } else {
-			        $invoiceObject->updateLastQBSync();
+							$invoiceObject->updateLastQBSync();
 			        echo "SUCCESS!<br />";
 		        }
 	        } else {
-		        echo "FAILED (no object)!<br />";
+		        echo "FAILED: ".$invoice['quickbooks_invoice_id']." - ".rand_char(32)." (no object)!<br />";
 	        }
+	        //die();
 
 
           //echo $invoiceService->lastRequest()."\r\n\r\n\r\n";
@@ -155,18 +248,7 @@ if(isset($campusList)){
 	    echo "Got to 3<br />";
 
       //die();
-      //Once all the external keys are up to date locally, we need to re-grab the local invoices.
-      $localInvoices = $currentCampus->getInvoices();
 
-      $invoicesByExtKey = null;
-      //Create an array of the invoices by quickbooks external key.
-      if(isset($localInvoices)){
-        foreach($localInvoices as $invoice){
-          if($invoice['quickbooks_external_key'] != "" and $invoice['quickbooks_invoice_id'] != ""){
-            $invoicesByExtKey[$invoice['quickbooks_external_key']] = $invoice;
-          }
-        }
-      }
 	    echo "Got to 4<br />";
 
       //get all the local families and create an array to access them by quickbooks customer id
@@ -234,7 +316,7 @@ if(isset($campusList)){
               $date = $header->getTxnDate();
               $params = Array("amount" => $amount,
               "date" => $date,
-              "payment_type" => $header->getPaymentMethodName(),
+              "payment_type" => mysql_escape_string($header->getPaymentMethodName()),
               "reference_number" => $header->getDocNumber());
               $payment_id = $familyObjects[$qbid]->addPayment($params);
               $paymentObject = new TSM_REGISTRATION_PAYMENT($payment_id);
