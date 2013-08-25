@@ -5,6 +5,6 @@
 		header('Location:/admin/index.php?mod=registration&view=student&action=viewStudent&student_id='.$student_id);
 	}
 	else{
-		$student_program = $student->getProgramById($student_program_id);
+		$registration_date = $student->getRegistrationDate($student_program_id);
 		$pageTitle = 'Edit registration date';
 	}
