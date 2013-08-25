@@ -57,6 +57,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
                 <a class="btn" target="_blank"
                    href="index.php?mod=registration&view=family&action=viewFamily&family_id=<?php echo $familyInfo['family_id']; ?>&loginAs=1">Login
                     As</a>
+                <a class='btn btn-danger deactivateFamily' href='index.php?mod=registration&view=family&action=addEditFamily&family_id=<?php echo $familyInfo['family_id'];?>&deactivateFamily=1'>Deactivate</a>
             </div>
         </div>
     </div>
@@ -313,8 +314,15 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
             }
           }); 
         }
-
-
-      })
+      });
+      $('.deactivateFamily').on('click',function(){
+        var confirm = window.confirm('"Are you sure you want to deactivate this family? This will unenroll the students from all courses and programs. Before continuing, you should review the families invoices and delete any that should not remain in Quickbooks.');
+        if(confirm){
+          return true;
+        }
+        else{
+          return false;
+        }
+      });
     });
 </script>

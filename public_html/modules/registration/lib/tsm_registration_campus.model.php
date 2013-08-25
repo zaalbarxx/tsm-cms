@@ -522,7 +522,7 @@ AND ff.fee_id != fpay.credit_fee_id) OR fpp.family_payment_plan_id IS NULL) AND 
   }
 
   public function getFamilies() {
-    $q = "SELECT * FROM tsm_reg_families f, tsm_reg_families_school_years fsy WHERE f.campus_id = ".$this->campusId." AND fsy.family_id = f.family_id AND fsy.school_year = '".$this->getSelectedSchoolYear()."' ORDER BY f.father_last, f.mother_last";
+    $q = "SELECT * FROM tsm_reg_families f, tsm_reg_families_school_years fsy WHERE f.campus_id = ".$this->campusId." AND fsy.family_id = f.family_id AND f.active=1 AND fsy.school_year = '".$this->getSelectedSchoolYear()."' ORDER BY f.father_last, f.mother_last";
     $r = $this->db->runQuery($q);
     $this->families = null;
     while ($a = mysql_fetch_assoc($r)) {
@@ -551,7 +551,7 @@ AND ff.fee_id != fpay.credit_fee_id) OR fpp.family_payment_plan_id IS NULL) AND 
   }
 
   public function getStudents() {
-    $q = "SELECT * FROM tsm_reg_students s, tsm_reg_students_school_years ssy WHERE s.campus_id = ".$this->campusId." AND ssy.student_id = s.student_id AND ssy.school_year = '".$this->getSelectedSchoolYear()."' ORDER BY s.last_name";
+    $q = "SELECT * FROM tsm_reg_students s, tsm_reg_students_school_years ssy WHERE s.campus_id = ".$this->campusId." AND ssy.student_id = s.student_id AND s.active=1 AND ssy.school_year = '".$this->getSelectedSchoolYear()."' ORDER BY s.last_name";
     $r = $this->db->runQuery($q);
     $this->students = null;
     while ($a = mysql_fetch_assoc($r)) {

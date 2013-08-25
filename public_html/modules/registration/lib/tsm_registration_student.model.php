@@ -829,19 +829,32 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
 
     return $log;
   }
-  public function getProgramById($id){
-    $q = "SELECT * FROM tsm_reg_student_program WHERE student_id=".$this->studentId.' AND student_program_id='.$id;
-    $r = $this->db->runQuery($q);
-    while ($a = mysql_fetch_assoc($r)) {
-        $result = $a;
-    }
-    return $result;
-  }
+
   public function updateProgramRegistrationDate($program_id,$date){
     $q = "UPDATE tsm_reg_student_program SET registration_date='".$date."' WHERE student_program_id=".$program_id;
     $r = $this->db->runQuery($q);
     $this->processFees(false);
     return true;
+  }
+
+  public function getStudentPrograms(){
+    $q = "SELECT program_id FROM tsm_reg_student_program WHERE student_id=".$this->studentId;
+    $r = $this->db->runQuery($q);
+    $results = array();
+    while ($a = mysql_fetch_assoc($r)) {
+      $results[] = $a;
+    }
+    return $results;
+  }
+
+    public function getStudentCourses(){
+    $q = "SELECT course_id,program_id FROM tsm_reg_student_course WHERE student_id=".$this->studentId;
+    $r = $this->db->runQuery($q);
+    $results = array();
+    while ($a = mysql_fetch_assoc($r)) {
+      $results[] = $a;
+    }
+    return $results;
   }
 }
 

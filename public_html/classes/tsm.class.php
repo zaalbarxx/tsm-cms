@@ -450,11 +450,13 @@ class TSM {
         <script src=\"../includes/3rdparty/jquery/jquery-1.9.3.min.js\" type=\"text/javascript\"></script>
         <script src=\"../includes/3rdparty/jquery/plugins/jquery-migrate-1.2.0.min.js\" type=\"text/javascript\"></script>
     <!--<![endif]-->
+    <link href=\"../includes/3rdparty/bootstrap-datepicker/css/bootstrap-datetimepicker.min.css\" rel=\"stylesheet\" media=\"screen\">
     <link rel=\"stylesheet\" href=\"../includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.css?v=2.1.3\" type=\"text/css\" media=\"screen\" />
     <link href=\"../includes/3rdparty/bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\" media=\"screen\">
     <script type=\"text/javascript\" src=\"../includes/3rdparty/jquery/plugins/fancybox/jquery.fancybox.pack.js?v=2.1.3\"></script>
     <script type=\"text/javascript\" src=\"../includes/3rdparty/jquery/plugins/jquery.validate.min.js\"></script>
     <script type=\"text/javascript\" src=\"../includes/3rdparty/bootstrap/js/bootstrap.min.js\"></script>
+    <script type=\"text/javascript\" src=\"../includes/3rdparty/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js\"></script>
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
     <link href=\"../includes/3rdparty/bootstrap/css/bootstrap-responsive.css\" rel=\"stylesheet\">
     <script type=\"text/javascript\" src=\"../includes/3rdparty/jquery/plugins/jquery.maskedinput.js\"></script>";

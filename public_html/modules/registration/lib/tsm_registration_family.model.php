@@ -811,6 +811,24 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $feeInReview;
   }
 
+  public function deactivateFamily($students_list = null){
+    $std = '';
+    if($students_list == null){
+      $students_list  = $this->getStudents();
+    }
+    if(!empty($students_list)){
+      foreach($students_list as $student){
+        $std.=$student['student_id'].',';
+      }
+      $std = substr_replace($std,'',-1);
+      $q = 'UPDATE tsm_reg_students SET active=0 WHERE student_id IN('.$std.')';
+      $r = $this->db->runQuery($q);
+    }
+
+    $q = 'UPDATE tsm_reg_families SET active=0 WHERE family_id = '.$this->familyId;
+    $r = $this->db->runQuery($q);
+    return true;
+  }
 }
 
 ?>
