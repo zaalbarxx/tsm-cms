@@ -153,6 +153,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
                 <td>Amount Due</td>
               <td></td>
               <td></td>
+              <td></td>
             </tr>
 
           <?php
@@ -164,6 +165,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
               } else {
                 echo "<td></td>";
               }
+              echo "<td><a data-id='".$invoice['family_invoice_id']."' class='btn btn-primary delete-invoice' href='#'>Delete</a></td>";
               echo "</tr>";
             }
           } else {
@@ -293,5 +295,26 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 <script type="text/javascript">
     $(".bigItem .title").click(function () {
         $(this).parent().children(".itemDetails").slideToggle();
+    });
+    $(document).ready(function(){
+      $('.delete-invoice').on('click',function(){
+        var confirmed = confirm('Are you sure you want to delete this invoice ?');
+        if(confirmed){
+          var id = $(this).attr('data-id');
+          var row = $(this).parent().parent();
+          $.get('index.php?mod=registration&ajax=deleteInvoice&invoiceId='+id).done(function(data){
+            var response = $.parseJSON(data);
+            if(response.success==true){
+              alert(response.alertMessage);
+              row.remove();
+            }
+            else{
+              alert('Error was encountered when trying to delete invoice.');
+            }
+          }); 
+        }
+
+
+      })
     });
 </script>

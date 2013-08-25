@@ -84,7 +84,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
                         <br/>
                     </div>
                     <div class="half">
-                        <strong>Registration Time:</strong> <?php echo $program['registration_date']; ?><br/>
+                        <strong>Registration Time:</strong> <?php echo $program['registration_date']; ?>&nbsp;&nbsp;<a class='btn btn-mini' href='index.php?mod=registration&view=student&action=editRegistrationDate&student_id=<?php echo $studentInfo['student_id']; ?>&student_program_id=<?php echo $program['student_program_id']; ?>'>Edit</a><br/>
                         <strong>Program Tuition:</strong> $<?php echo $program['tuition_total']; ?><br/>
                         <strong>Yearly Tuition:</strong> $<?php echo $program['tuition_total']; ?><br/>
                     </div>
