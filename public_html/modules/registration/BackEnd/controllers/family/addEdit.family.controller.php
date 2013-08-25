@@ -22,8 +22,8 @@ if(isset($deactivateFamily)){
     foreach($programs as $program){
       $student->unenrollFromProgram($program['program_id']);
     }
-    $family->deactivateFamily($students);
   }
+  $family->deactivateFamily($students);
   header('Location:index.php?mod=registration&view=family');
 }
 

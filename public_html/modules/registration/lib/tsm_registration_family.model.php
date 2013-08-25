@@ -818,6 +818,8 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     }
     if(!empty($students_list)){
       foreach($students_list as $student){
+        $studentObject = new TSM_REGISTRATION_STUDENT($student['student_id']);
+        $studentObject->processFees();
         $std.=$student['student_id'].',';
       }
       $std = substr_replace($std,'',-1);
