@@ -594,6 +594,26 @@ switch ($ajax) {
     }
     echo json_encode($response);
     break;
+
+    case "deleteInvoice":
+    if(isset($invoiceId)){
+      $invoice = new TSM_REGISTRATION_INVOICE($invoiceId);
+      if($invoice->deleteInvoice() == true){
+        $response['success'] = true;
+        $response['alertMessage'] = 'Invoice has been successfully deleted.';
+      }
+      else{
+        $response['success'] = false;
+        $response['alertMessage'] = 'Error was encountered when deleting an invoice.';
+      }
+
+    }
+    else{
+      $response["success"] = false;
+      $response['alertMessage'] = 'Invoice id was not provided.';
+    }
+    echo json_encode($response);
+    break;
 }
 die();
 ?>

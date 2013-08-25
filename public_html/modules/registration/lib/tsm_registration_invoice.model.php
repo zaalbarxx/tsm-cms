@@ -614,6 +614,12 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 	  $q = "INSERT INTO tsm_reg_families_invoice_fee_log (add_remove,family_fee_id,family_invoice_id) VALUES(0,$feeId,".$this->info['family_invoice_id'].")";
 	  $this->db->runQuery($q);
   }
+
+  public function deleteInvoice(){
+    $q = "UPDATE tsm_reg_families_invoices SET deleted_at='".date('Y-m-d H-i-s')."' WHERE family_invoice_id=".$this->invoiceId;
+    $this->db->runQuery($q);
+    return true;
+  }
 }
 
 ?>
