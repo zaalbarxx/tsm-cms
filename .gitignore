@@ -1,3 +1,5 @@
 .DS_Store
 .idea/
 public_html/files/
+/public_html/tsm_db_conn.php
+/public_html/tsm_config.php
