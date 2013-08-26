@@ -115,12 +115,13 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           <td>Amt Invoiced</td>
           <td>Amt Due</td>
           <td>Status</td>
+          <td></td>
         </tr>
         <?php
         if(isset($paymentPlans)){
           foreach($paymentPlans as $paymentPlan){
             echo "<tr><td>".$paymentPlan['family_payment_plan_id']."</td>
-            <td>".$paymentPlan['name']."</td>
+            <td class='payment-plan-name'>".$paymentPlan['name']."</td>
             <!--<td>".$paymentPlan['fee_type_names']."</td>-->
             <td>$".$paymentPlan['totalAmount']."</td>
             <td>$".$paymentPlan['amountPaid']."</td>
@@ -133,7 +134,9 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
               echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=addFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Add Fees</a>";
               //echo " | <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=invoiceFeesToPaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Invoice All</a>";
             }
-            echo "</td></tr>";
+            echo "</td>";
+            echo "<td data-family-payment-id='".$paymentPlan['family_payment_plan_id']."' data-id='".$paymentPlan['payment_plan_id']."'><a href='#modalChangePayment' data-action='changePaymentPlan' class='btn btn-primary'>Change plan</a></td>";
+            echo "</tr>";
           }
         }
 
@@ -290,7 +293,27 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 } ?>
     </div>
     </div>
-
+<div id="modalChangePayment" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+<h3 id="myModalLabel">Change payment plan</h3>
+</div>
+<div class="modal-body text-center">
+  <span>Changing a payment plan will delete all invoices for the current plan and the invoices for the chosen plan will be re-created. You will need to re-assign any payments that have already been made for this plan to the new invoices.</span>
+  <div class='error' style='color:red;'></div>
+<select>
+  <?php 
+  foreach($currentCampus->getPaymentPlans() as $plan){
+    echo "<option data-id='".$plan['payment_plan_id']."'>".$plan['name']."</option>";
+  }
+  ?>
+</select>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+<button data-action='savePaymentPlan' class="btn btn-primary">Save changes</button>
+</div>
+</div>
 
 </div>
 <script type="text/javascript">
@@ -298,6 +321,40 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
         $(this).parent().children(".itemDetails").slideToggle();
     });
     $(document).ready(function(){
+      var paymentPlanId=null;
+      var familyPaymentPlanId=null;
+
+      //on button click save some data and show modal
+      $('a[data-action=changePaymentPlan]').on('click',function(){
+        paymentPlanId = $(this).parent().attr('data-id');
+        familyPaymentPlanId = $(this).parent().attr('data-family-payment-id');
+        $('#modalChangePayment option').removeAttr('selected');
+        $('#modalChangePayment option[data-id='+paymentPlanId+']').attr('selected',true);
+        $('#modalChangePayment').modal('show');
+      });
+
+      //on save button from modal change if plan is different than current one then change payment plan and visually change it
+      $('button[data-action=savePaymentPlan]').on('click',function(){
+        selected_id = $('#modalChangePayment select').find(":selected").attr('data-id');
+        if(selected_id!=paymentPlanId){
+          $.get('index.php?mod=registration&ajax=changePaymentPlan&familyPaymentPlanId='+familyPaymentPlanId+'&paymentPlanId='+selected_id).done(function(data){
+            var d = $.parseJSON(data);
+            if(d.success){
+              //change attributes in cells after getting JSON
+              $('td[data-family-payment-id='+familyPaymentPlanId+']').attr('data-id',d.paymentPlanId);
+              $('td[data-family-payment-id='+familyPaymentPlanId+']').parent().children('.payment-plan-name').html(d.paymentPlanName);
+            }
+            $('#modalChangePayment').modal('hide');
+            alert(d.alertMessage);
+          });
+        }
+        else{
+          $('#modalChangePayment div.error').html('Selected payment plan is same as currently set.');
+        }
+      });
+
+
+
       $('.delete-invoice').on('click',function(){
         var confirmed = confirm('Are you sure you want to delete this invoice ?');
         if(confirmed){

@@ -614,6 +614,26 @@ switch ($ajax) {
     }
     echo json_encode($response);
     break;
+    case 'changePaymentPlan':
+      if(isset($familyPaymentPlanId) && isset($paymentPlanId)){
+        $paymentPlanObject = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyPaymentPlanId);
+        $paymentPlanObject->changeToPaymentPlan($paymentPlanId);
+        
+        $paymentPlanObject = null;
+        $paymentPlanObject = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyPaymentPlanId);
+        $info = $paymentPlanObject->getInfo();
+        
+        $response['success'] = true;
+        $response['paymentPlanName'] = $info['name'];
+        $response['paymentPlanId'] = $info['payment_plan_id'];
+        $response['alertMessage'] = 'Payment plan has been changed.';
+      }
+      else{
+        $response['success'] = false;
+        $response['alertMessage'] = 'Error encountered when trying to change plan.';
+      }
+      echo json_encode($response);
+    break;
 }
 die();
 ?>
