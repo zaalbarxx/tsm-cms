@@ -525,7 +525,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
       $invoice = new TSM_REGISTRATION_INVOICE($i['family_invoice_id']);
       $invoice->deleteInvoice();
     }
-    $q = "UPDATE tsm_reg_families_payment_plans SET payment_plan_id=".$paymentPlanId.' WHERE payment_plan_id='.$this->familyPaymentPlanId;
+    $q = "UPDATE tsm_reg_families_payment_plans SET family_payment_plan_id=".$paymentPlanId.' WHERE payment_plan_id='.$this->familyPaymentPlanId;
     $r = $this->db->runQuery($q);
     return true;
   }
