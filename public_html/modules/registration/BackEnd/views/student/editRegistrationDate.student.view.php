@@ -5,7 +5,8 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 <script>
 	$(document).ready(function(){
 			$('#datetimepicker').datetimepicker({
-				language:'en-US'
+				language:'en',
+				weekStart:1
 			})
 	});
 </script>
