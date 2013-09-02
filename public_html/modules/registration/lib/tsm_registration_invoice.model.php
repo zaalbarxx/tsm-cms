@@ -624,7 +624,31 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 	  $this->db->runQuery($q);
   }
 
+  public function isInstallmentInvoice(){
+    if($this->info['family_payment_plan_id'] != "" && $this->info['invoice_and_credit'] == 0){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function isCreditMemo(){
+    return $this->info['credit_memo'];
+  }
+
   public function deleteInvoice(){
+    if($this->isInstallmentInvoice() || $this->isCreditMemo()){
+      $fees = $this->getFees();
+      foreach($fees as $f){
+
+        $familyFee = new TSM_REGISTRATION_FAMILY_FEE($f['family_fee_id']);
+        $info = $familyFee->getInfo();
+        if($info['program_id'] == "" && $info['course_id'] == "" && $info['student_id'] == 0){
+          $this->deleteFee($f['fee_id']);
+          $familyFee->delete();
+        }
+      }
+    }
     $q = "UPDATE tsm_reg_families_invoices SET deleted_at='".date('Y-m-d H-i-s')."' WHERE family_invoice_id=".$this->invoiceId;
     $this->db->runQuery($q);
     return true;
