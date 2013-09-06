@@ -653,6 +653,20 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $this->db->runQuery($q);
     return true;
   }
+
+  public function updateInvoiceAndDueDate($invoice_date,$due_date){
+    $invoice_date = (!empty($invoice_date) ? $invoice_date : null);
+    $due_date = (!empty($due_date) ? $due_date : null);
+
+    if($invoice_date ==null && $due_date == null){
+      return false;
+    }
+
+    $q = 'UPDATE tsm_reg_families_invoices SET invoice_time="'.$invoice_date.'", due_date="'.$due_date.'",last_updated="'.date('Y-m-d H-i-s').'" WHERE family_invoice_id='.$this->invoiceId;
+    $this->db->runQuery($q);
+    return true;
+  }
+
 }
 
 ?>
