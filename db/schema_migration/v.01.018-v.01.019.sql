@@ -1,4 +1,4 @@
-ALTER TABLE  `tsm_reg_families_fees` ADD  `installment_fee` TINYINT( 1 ) NOT NULL AFTER  `installment_fee`;
+ALTER TABLE  `tsm_reg_families_fees` ADD  `installment_fee` TINYINT( 1 ) NOT NULL AFTER  `to_review`;
 
 ALTER TABLE  `tsm_reg_families_fees` ADD  `credit_fee` TINYINT( 1 ) NOT NULL AFTER  `installment_fee`;
 
