@@ -1,0 +1,1 @@
+ALTER TABLE tsm_reg_families_fees ADD COLUMN credit boolean NOT NULL DEFAULT false;

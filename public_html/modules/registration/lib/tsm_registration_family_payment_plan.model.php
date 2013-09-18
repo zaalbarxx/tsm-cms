@@ -74,10 +74,10 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getAmountDue(){
+
     $total = $this->getTotal();
     $paid = $this->getAmountPaid();
     $due = $total - $paid;
-
     return $due;
   }
 
@@ -205,8 +205,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
       $unassignedFees = $this->getUnassignedApplicableFees();
       $total = $reg->addFees($fees) + $reg->addFees($unassignedFees);
     }
-
-
+    
     return $total;
   }
 
@@ -259,7 +258,7 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
         }
         $invoiceAmtPaid = $invoiceObject->getAmountPaid();
         if($invoiceAmtPaid > 0){
-          $invoiceAmtPaid = $invoiceObject->getAmountPaid() - $amtToSubtract;
+          $invoiceAmtPaid = $invoiceAmtPaid - $amtToSubtract;
         }
         $amountPaid = $amountPaid + $invoiceAmtPaid;
       }
@@ -532,6 +531,47 @@ class TSM_REGISTRATION_FAMILY_PAYMENT_PLAN extends TSM_REGISTRATION_CAMPUS {
     $q = "UPDATE tsm_reg_families_payment_plans SET payment_plan_id=".$paymentPlanId.' WHERE family_payment_plan_id='.$this->familyPaymentPlanId;
     $r = $this->db->runQuery($q);
     return true;
+  }
+  public function getCredits(){
+    //not sure
+    $creditFeeId = $this->info['credit_fee_id'];
+    $installmentFeeId = $this->info['installment_fee_id'];
+   
+    $q = "SELECT family_fee_id,name,amount FROM tsm_reg_families_fees WHERE family_payment_plan_id = '".$this->familyPaymentPlanId."' AND credit=1";
+    $r = $this->db->runQuery($q);
+    $fees = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $fees[] = array(
+        'id'=>$a['family_fee_id'],
+        'name'=>$a['name'],
+        'amount'=>abs($a['amount'])
+        );
+    }
+
+    return $fees;
+  }
+
+    public function addNewCredit($familyId,$title,$amount){
+    $familyId = intval($familyId);
+    $pId = intval($familyPaymentPlanId);
+    $amount = -abs(intval($amount));
+
+    $q = "INSERT INTO tsm_reg_families_fees(family_id,family_payment_plan_id,name,amount,credit,fee_id) VALUES ($familyId,$this->familyPaymentPlanId,'$title',$amount,1,0)";
+    $this->db->runQuery($q);
+    $id = mysql_insert_id();
+    if($id != false){
+      return intval($id);
+    }
+    return false;
+  }
+
+  public function deleteCredit($id){
+    $q = "DELETE FROM tsm_reg_families_fees WHERE family_payment_plan_id=".$this->familyPaymentPlanId.' AND family_fee_id='.$id.' AND credit=1';
+    $r = $this->db->runQuery($q);
+    if($r!=false){
+      return true;
+    }
+    return false;
   }
 
 }

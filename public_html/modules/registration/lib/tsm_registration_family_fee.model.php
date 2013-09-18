@@ -145,6 +145,8 @@ class TSM_REGISTRATION_FAMILY_FEE extends TSM_REGISTRATION_CAMPUS {
     }
   }
 
+
+
 }
 
 ?>

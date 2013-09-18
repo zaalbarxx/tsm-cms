@@ -634,6 +634,58 @@ switch ($ajax) {
       }
       echo json_encode($response);
     break;
+  case 'getCreditsForPaymentPlan':
+    if(isset($paymentPlanId)){
+      $paymentPlanObject = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($paymentPlanId);
+      $fees = $paymentPlanObject->getCredits();
+      $response['success'] = true;
+      $response['data'] = ($fees!=null) ? $fees : array();
+    }
+    else{
+      $response['success'] = false;
+    }
+    echo json_encode($response);
+  break;
+  case 'addCreditToPaymentPlan':
+    if(isset($paymentPlanId) && isset($title) && isset($amount) && isset($familyId)){
+      $paymentPlanObject = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($paymentPlanId);
+      if($id = $paymentPlanObject->addNewCredit($familyId,$title,$amount)){
+        $total = $paymentPlanObject->getTotal();
+        $due = $paymentPlanObject->getAmountDue();
+        $response['success'] = true;
+        $response['id'] = $id;
+        $response['total'] = $total;
+        $response['due'] = number_format($due,2);
+      }
+      else{
+        $response['success'] = false;
+      }
+    }
+    else{
+      $response['success'] = false;
+    }
+    echo json_encode($response);
+  break;
+
+  case 'removeCreditFromPaymentPlan':
+    if(isset($creditId) && isset($paymentPlanId)){
+      $paymentPlanObject = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($paymentPlanId);
+      if($paymentPlanObject->deleteCredit($creditId) == true){
+        $total = $paymentPlanObject->getTotal();
+        $due = $paymentPlanObject->getAmountDue();
+        $response['success'] = true;
+        $response['total'] = $total;
+        $response['due'] = number_format($due,2);
+      }
+      else{
+        $response['success'] = false;
+      }
+    }
+    else{
+      $response['success'] = false;
+    }
+    echo json_encode($response);
+  break;
 }
 die();
 ?>
