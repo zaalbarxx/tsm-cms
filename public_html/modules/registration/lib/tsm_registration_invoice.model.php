@@ -544,8 +544,17 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   public function setQuickbooksId($id) {
     $q = "UPDATE tsm_reg_families_invoices SET quickbooks_invoice_id = '".$id."' WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);
+    $this->info['quickbooks_invoice_id'] = $id;
 
     return true;
+  }
+
+  public function isInQuickbooks(){
+    if($this->info['quickbooks_invoice_id'] != ""){
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public function setQuickbooksExternalKey($key){
