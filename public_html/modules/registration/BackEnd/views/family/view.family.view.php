@@ -105,7 +105,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
     </div>
     <div class="infoSection well tab-pane" id="paymentPlans">
       <h2>Payment Plans</h2>
-      <table style="width: 100%;" class="table table-striped table-bordered ">
+      <table style="width: 100%;" class="table table-striped table-bordered" data-id='payment-plans'>
         <tr style="font-weight: bold;">
           <td>ID</td>
           <td>Description</td>
@@ -116,17 +116,19 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
           <td>Amt Due</td>
           <td>Status</td>
           <td></td>
+          <td></td>
         </tr>
         <?php
         if(isset($paymentPlans)){
           foreach($paymentPlans as $paymentPlan){
-            echo "<tr><td>".$paymentPlan['family_payment_plan_id']."</td>
+            echo "<tr data-id=".$paymentPlan['family_payment_plan_id'].">
+            <td>".$paymentPlan['family_payment_plan_id']."</td>
             <td class='payment-plan-name'>".$paymentPlan['name']."</td>
             <!--<td>".$paymentPlan['fee_type_names']."</td>-->
-            <td>$".$paymentPlan['totalAmount']."</td>
+            <td data-id='total'>$".$paymentPlan['totalAmount']."</td>
             <td>$".$paymentPlan['amountPaid']."</td>
             <td>$".$paymentPlan['amountInvoiced']."</td>
-            <td>$".$paymentPlan['amountDue']."</td>
+            <td data-id='due'>$".$paymentPlan['amountDue']."</td>
             <td>".$paymentPlan['status'];
             if($paymentPlan['status'] == "Pending Approval"){
               echo " - <a class='btn btn-success btn-mini fb' href='index.php?mod=registration&view=family&action=approvePaymentPlan&familyPaymentPlanId=".$paymentPlan['family_payment_plan_id']."'>Approve</a>";
@@ -136,6 +138,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
             }
             echo "</td>";
             echo "<td data-family-payment-id='".$paymentPlan['family_payment_plan_id']."' data-id='".$paymentPlan['payment_plan_id']."'><a href='#modalChangePayment' data-action='changePaymentPlan' class='btn btn-primary'>Change plan</a></td>";
+            echo "<td data-family-payment-id='".$paymentPlan['family_payment_plan_id']."' data-id='".$paymentPlan['payment_plan_id']."'><a href='#modalManageCredit' data-action='manageCredit' class='btn btn-primary'>Manage credit</a></td>";
             echo "</tr>";
           }
         }
@@ -293,6 +296,57 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 } ?>
     </div>
     </div>
+
+<div id="modalManageCredit" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+   <h3 id="myModalLabel">Manage credits for payment plan</h3>
+  </div>
+  <div class="modal-body">
+          <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Credit id</th>
+              <th>Title</th>
+              <th>Amount</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button class='btn btn-success' data-target='#modalAddCredit'>Add credit</button>
+  </div>
+</div>
+
+<div id="modalAddCredit" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+   <h3 id="myModalLabel">Add credit for payment plan</h3>
+  </div>
+  <div class="modal-body">
+    <form action="" class="form-horizontal" data-action='AddCredit'>
+      <fieldset>
+        <div class="control-group">
+          <label for="" class="control-label">Title:</label><input type="text" name='title'>
+      </div>
+        <div class="control-group">
+          <label for="" class="control-label">Amount:</label><input type="text" name='amount'>
+      </div>
+      </fieldset>
+      
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" data-toggle='modal' data-target='#modalManageCredit' aria-hidden="true">Back</button>
+    <button data-action='addCredit' class='btn btn-success'>Save credit</button>
+  </div>
+</div>
+
+
 <div id="modalChangePayment" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -317,13 +371,110 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 
 </div>
 <script type="text/javascript">
+
+
+
+
+
     $(".bigItem .title").click(function () {
         $(this).parent().children(".itemDetails").slideToggle();
     });
     $(document).ready(function(){
       var paymentPlanId=null;
       var familyPaymentPlanId=null;
+      var familyId = <?php echo $familyInfo['family_id'];?>
+      //---------------------------------------------------------------------
+      //Block for managing credits
+      //handler for clicking Add credit
+      $('#modalManageCredit button[data-target=#modalAddCredit]').on('click',function(){
+        $('#modalManageCredit').modal('toggle');
+        $('#modalAddCredit form[data-action=AddCredit]')[0].reset();
+        $('#modalAddCredit').modal();
+      });
+      //--------------------------------------------------------------------
+      //handler for saving credit
+      //--------------------------------------------------------------------
+      $('#modalAddCredit button[data-action=addCredit]').on('click',function(event){
+        console.log('hi');
+        event.preventDefault();
+        var data = $('#modalAddCredit form[data-action=AddCredit]').serializeArray();
+        var title;
+        var amount;
+        var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+))$/;
+        console.log(data);
+        for(i=0;i<data.length;i++){
+          if(data[i].name =='title'){
+            title = data[i].value;
+          }
+          else{
+            amount = data[i].value;
+          }
+        }
+        if(!floatRegex.test(amount)){
+          alert('Please,enter correct ammount.');
+        }
+        else{
+          $.ajax({
+            url:'index.php?mod=registration&ajax=addCreditToPaymentPlan',
+            type:'POST',
+            data:{paymentPlanId:paymentPlanId,familyId:familyId,title:title,amount:amount}
+          }).done(function(data){
+              data = $.parseJSON(data);
+              $('#modalAddCredit').modal('toggle');
+              $('table[data-id=payment-plans] tr[data-id='+paymentPlanId+'] td[data-id=total]').html('$'+data.total);
+              $('table[data-id=payment-plans] tr[data-id='+paymentPlanId+'] td[data-id=due]').html('$'+data.due);
+            if(data.success != true){
+              alert('There was a problem with adding a credit. Try again.');
+            }
+          });
+        }
+      })
+      //---------------------------------
+      //Handler for showing credit modal
+      $('a[data-action=manageCredit]').on('click',function(){
+        $('#modalManageCredit table tbody').empty();
+        paymentPlanId = $(this).parent().attr('data-family-payment-id');
+                $.ajax({
+          url:'index.php?mod=registration&ajax=getCreditsForPaymentPlan',
+          type:'POST',
+          data:{paymentPlanId:paymentPlanId}
+        }).done(function(data){
+          data = $.parseJSON(data);
+          if(data.success == true){
+            var a = $('#modalManageCredit div.modal-body table');
+            for(i=0;i<data.data.length;i++){
+              a.children('tbody').append('<tr data-id="'+data.data[i].id+'"><td>'+data.data[i].id+'</td><td>'+data.data[i].name+'</td><td>$'+data.data[i].amount+'</td><td><button class="btn btn-danger" data-id="'+data.data[i].id+'">Delete</button></tr>');
+              //on clicking remove button
+              $('#modalManageCredit button[data-id='+data.data[i].id+']').on('click',function(){
+                id = $(this).attr('data-id');
+                $.ajax({
+                  url:'index.php?mod=registration&ajax=removeCreditFromPaymentPlan',
+                  type:'POST',
+                  data:{creditId:id,paymentPlanId:paymentPlanId}
+                }).done(function(data){
+                  data = $.parseJSON(data);
+                  if(data.success == true){
+                    $('#modalManageCredit tr[data-id='+id+']').remove();
+                    $('table[data-id=payment-plans] tr[data-id='+paymentPlanId+'] td[data-id=total]').html('$'+data.total);
+                    $('table[data-id=payment-plans] tr[data-id='+paymentPlanId+'] td[data-id=due]').html('$'+data.due);
+                  }
+                  else{
+                    alert('Could not delete credit. Try again.');
+                  }
+                })
+              });
+            }
+          }
+          else{
+            alert('Could not receive a list of credits for this payment plan. Try again.');
+            return;
+          }
+          $('#modalManageCredit').modal('toggle');
+        });
+        
+      })
 
+      //--------------------------------------------------------------------------------
       //on button click save some data and show modal
       $('a[data-action=changePaymentPlan]').on('click',function(){
         paymentPlanId = $(this).parent().attr('data-id');
