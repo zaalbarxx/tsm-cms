@@ -1,20 +1,21 @@
 <?php
 require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php");
 ?>
+
 <script>
 invoice_id = <?php echo $invoice_id ?>;
 $(document).ready(function(){
-	$('button.delete').on('click',function(e){
+	$('#feesInfo').on('click','.delete',function(e){
+		e.preventDefault();
 		var fee_id = $(this).attr('data-id');
 		var row = $(this).parent().parent();
-		e.preventDefault();
-		var c = comfirm('Are you sure you want to delete this invoice?');
+		var c = confirm('Are you sure you want to delete this invoice?');
 		if(c){
 			$.get('index.php?mod=registration&ajax=deleteFeeFromInvoice&invoiceId='+invoice_id+'&feeId='+fee_id,function(data){
 				var response = JSON.parse(data);
 				if (response.success == true) {
        				$(row).remove();
-       				$('tfoot td.total').html(response.total);
+       				$('tfoot td.total').html('$ '+response.total);
      			}
       			if (response.alertMessage != null) {
         			alert(response.alertMessage);
@@ -74,6 +75,7 @@ $(document).ready(function(){
 				</tfoot>
 				<?php } ?>
 			</table>
+			<button class='btn btn-primary' data-action='addUninvoicedFee'>Add uninvoiced fee</button>
 		</div>
 
     	<div class="infoSection well tab-pane" id="invoice_dates">
@@ -105,8 +107,62 @@ $(document).ready(function(){
 	</div>
 </div>
 
+<div id="modalAddUninvoicedFee" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+   <h3 id="myModalLabel">Add uninvoiced fee to this invoice.</h3>
+  </div>
+  <div class="modal-body">
+	<table class='table table-bordered'>
+		<thead>
+			<tr>
+				<td>ID</td>
+				<td>Fee description</td>
+				<td>Amount</td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" data-toggle='modal' aria-hidden="true">Back</button>
+  </div>
+</div>
 <script>
 	$(document).ready(function(){
+		$('button[data-action=addUninvoicedFee]').on('click',function(){
+			$.ajax('index.php?mod=registration&ajax=getUninvoicedFees&family_id='+<?php echo $family_id?>).done(function(data){
+				data = $.parseJSON(data);
+				modalTable = $('#modalAddUninvoicedFee table tbody');
+				modalTable.empty();
+				for(i=0;i<data.data.length;i++){
+					modalTable.append('<tr><td>'+data.data[i].id+'</td><td>'+data.data[i].description+'</td><td>'+data.data[i].amount+'</td><td><button data-id="'+data.data[i].id+'" class="btn btn-success confirm">Add</button></td></tr>');
+				}
+				$('#modalAddUninvoicedFee button.confirm').on('click',function(){
+					$.ajax({
+						url:'index.php?mod=registration&ajax=addUninvoicedFee&invoice_id=<?php echo $invoice_id?>&fee_id='+ $(this).attr('data-id')
+					}).done(function(data){
+						var data = $.parseJSON(data);
+						if(data.success == true){
+							$('#feesInfo tbody').append('<tr><td>'+data.data.invoice.id+'</td><td>'+data.data.invoice.description+'</td><td>$ '+data.data.invoice.amount+'</td><td style="text-align:center;"><a href="" class="btn btn-primary">Edit</a></td><td style="text-align:center;"><button data-id='+data.data.invoice.id+' class="btn btn-primary delete">Delete</button></td></tr>');
+							$('#feesInfo td.total').html('$ '+data.data.total);
+						}
+						else{
+							alert('Unexpected error. Try again');
+						}
+						$('#modalAddUninvoicedFee').modal('hide');
+					});
+
+				})
+				$('#modalAddUninvoicedFee').modal('show');
+			});
+		});
+
+
+
+
 			$('#datetimepicker').datetimepicker({
 				language:'en',
 				weekStart:1

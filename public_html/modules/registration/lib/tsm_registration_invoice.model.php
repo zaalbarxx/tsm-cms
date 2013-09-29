@@ -374,7 +374,6 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     } else {
       $amount = null;
     }
-
     if ($this->containsFee($family_fee_id) == false) {
       $q = "INSERT INTO tsm_reg_families_invoice_fees (family_id,description,amount,family_fee_id,family_invoice_id)
       VALUES('".$this->info['family_id']."','".$description."','".$amount."','$family_fee_id','".$this->invoiceId."')";
@@ -665,6 +664,17 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $q = 'UPDATE tsm_reg_families_invoices SET invoice_time="'.$invoice_date.'", due_date="'.$due_date.'",last_updated="'.date('Y-m-d H-i-s').'" WHERE family_invoice_id='.$this->invoiceId;
     $this->db->runQuery($q);
     return true;
+  }
+  public function addUninvoicedFee($fee_id){
+    $q = "SELECT description,amount FROM tsm_reg_families_invoice_fees WHERE family_fee_id = ".$fee_id;
+    $result = $this->db->runQuery($q);
+    $result = mysql_fetch_assoc($result);
+    $this->addFee(array('family_fee_id'=>$fee_id,'description'=>$result['description'],'amount'=>$result['amount']));
+    $this->updateTotal();
+    return array(
+      'id'=>$fee_id,
+      'description'=>$result['description'],
+      'amount'=>$result['amount']);
   }
 
 }
