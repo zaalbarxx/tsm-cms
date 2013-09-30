@@ -675,14 +675,14 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
   public function addUninvoicedFee($fee_id){
-    $q = "SELECT description,amount FROM tsm_reg_families_invoice_fees WHERE family_fee_id = ".$fee_id;
+    $q = "SELECT name,amount FROM tsm_reg_families_fees WHERE family_fee_id = ".$fee_id;
     $result = $this->db->runQuery($q);
     $result = mysql_fetch_assoc($result);
-    $this->addFee(array('family_fee_id'=>$fee_id,'description'=>$result['description'],'amount'=>$result['amount']));
+    $this->addFee(array('family_fee_id'=>$fee_id,'description'=>$result['name'],'amount'=>$result['amount']));
     $this->updateTotal();
     return array(
       'id'=>$fee_id,
-      'description'=>$result['description'],
+      'description'=>$result['name'],
       'amount'=>$result['amount']);
   }
 
