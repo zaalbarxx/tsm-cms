@@ -686,6 +686,50 @@ switch ($ajax) {
     }
     echo json_encode($response);
   break;
+  case 'getUninvoicedFees':
+    if(isset($family_id)){
+      $family = new TSM_REGISTRATION_FAMILY($family_id);
+      $fees = $family->getFees();
+      if(!count($fees)>0){
+        $fees = array();
+      }
+      $results = array();
+      foreach($fees as $fee){
+        $f = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+        if(!$f->isInvoiced()){
+          $f = $f->getInfo();
+          $results[] = array(
+              'id' => $f['family_fee_id'],
+              'description' => $f['name'],
+              'amount' => $f['amount']
+            );
+        }
+      }
+      $response['success'] = true;
+      $response['data'] = $results;
+    }
+    else{
+      $response['success'] = false;
+    }
+    echo json_encode($response);
+    break;
+    case 'addUninvoicedFee':
+    if(isset($fee_id) && isset($invoice_id)){
+      $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+      if($inv = $invoice->addUninvoicedFee($fee_id)){
+        $response['success'] = true;
+        $response['data']['invoice'] = $inv;
+        $response['data']['total'] = $invoice->getTotal();        
+      }
+      else{
+        $response['success'] = false;
+      }
+    }
+    else{
+      $response['success'] = false;
+    }
+    echo json_encode($response);
+    break;
 }
 die();
 ?>
