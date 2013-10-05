@@ -677,6 +677,11 @@ width: 100%;
 z-index: 9;
 }
 
+.familyEditInfo input{
+	margin-left:29px;
+	width:180px;
+}
+
 <?php if ($_GET['fb'] == "1") { ?>
 #topMenuWrapper{
 display:none;
@@ -738,5 +743,7 @@ width: 92%;
 .supportLink{
 display: none;
 }
+
+
 
 <?php } ?>

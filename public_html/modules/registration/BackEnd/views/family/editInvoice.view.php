@@ -43,7 +43,7 @@ $(document).ready(function(){
 						<td>Ref. no.</td>
 						<td>Description</td>
 						<td>Ammount</td>
-						<td></td>
+						<!-- <td></td> -->
 						<td></td>
 					</tr>
 				</thead>
@@ -55,9 +55,9 @@ $(document).ready(function(){
 							"<tr>
 								<td>".$fee['ref_no']."</td>
 								<td>".$fee['description']."</td>
-								<td>$ ".$fee['ammount']."</td>
-								<td style='text-align:center;'><a href='' class='btn btn-primary'>Edit</a></td>
-								<td style='text-align:center;'><button data-id='".$fee['ref_no']."' class='btn btn-primary delete'>Delete</button></td>
+								<td>$ ".$fee['ammount']."</td>";
+								//<td style='text-align:center;'><a href='' class='btn btn-primary'>Edit</a></td>
+							echo "<td style='text-align:center;'><button data-id='".$fee['ref_no']."' class='btn btn-primary delete'>Delete</button></td>
 							</tr>";
 						}
 
@@ -69,7 +69,7 @@ $(document).ready(function(){
 						<td></td>
 						<td></td>
 						<td class='total'>$ <?php echo $fee_total ?></td>
-						<td></td>
+						<!-- <td></td> -->
 						<td></td>
 					</tr>
 				</tfoot>
