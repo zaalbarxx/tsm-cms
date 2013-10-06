@@ -677,11 +677,14 @@ width: 100%;
 z-index: 9;
 }
 
-.familyEditInfo input{
+.studentEditInfo input,.familyEditInfo input{
 	margin-left:29px;
 	width:180px;
 }
-
+.tips{
+	margin-left:30px;
+	font-size:13px;
+}
 <?php if ($_GET['fb'] == "1") { ?>
 #topMenuWrapper{
 display:none;

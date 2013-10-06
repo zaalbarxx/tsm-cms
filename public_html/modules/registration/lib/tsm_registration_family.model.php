@@ -832,20 +832,20 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
-  public function editInfo($info){
+  public function editInfo($data){
     @$q = 'UPDATE tsm_reg_families SET 
-          father_first ="'.$info['father_first'].'",
-          father_last ="'.$info['father_last'].'",
-          mother_first ="'.$info['mother_first'].'",
-          mother_last ="'.$info['mother_last'].'",
-          father_cell ="'.$info['father_cell'].'",
-          mother_cell ="'.$info['mother_cell'].'",
-          primary_email ="'.$info['email_primary'].'",
-          secondary_email ="'.$info['email_secondary'].'",
-          address ="'.$info['address'].'",
-          city ="'.$info['city'].'",
-          state ="'.$info['state'].'",
-          zip ="'.$info['zip'].'" 
+          father_first ="'.$data['father_first'].'",
+          father_last ="'.$data['father_last'].'",
+          mother_first ="'.$data['mother_first'].'",
+          mother_last ="'.$data['mother_last'].'",
+          father_cell ="'.$data['father_cell'].'",
+          mother_cell ="'.$data['mother_cell'].'",
+          primary_email ="'.$data['email_primary'].'",
+          secondary_email ="'.$data['email_secondary'].'",
+          address ="'.$data['address'].'",
+          city ="'.$data['city'].'",
+          state ="'.$data['state'].'",
+          zip ="'.$data['zip'].'" 
           WHERE family_id='.$this->familyId;
 
           $r=$this->db->runQuery($q);

@@ -856,6 +856,18 @@ class TSM_REGISTRATION_STUDENT extends TSM_REGISTRATION_CAMPUS {
     }
     return $results;
   }
+
+  public function editInfo($data,$family_id){
+    $q = 'UPDATE tsm_reg_students SET 
+    nickname ="'.$data['nickname'].'",
+    birth_date ="'.$data['birth_date'].'",
+    grade ="'.$data['grade'].'",
+    email ="'.$data['email'].'" 
+    WHERE student_id='.$this->studentId.' 
+    AND family_id='.$family_id;
+    $r = $this->db->runQuery($q);
+    return true;
+  }
 }
 
 ?>

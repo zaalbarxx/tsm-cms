@@ -14,6 +14,10 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
             <span class="label">Age:</span> <?php echo $student->getAge(); ?><br/>
             <span class="label">Grade:</span> <?php echo $studentInfo['grade']; ?><br/>
             <span class="label">E-mail Address:</span> <?php echo $studentInfo['email']; ?>
+            <br/><br/>
+            <span class="label">
+              <a href="index.php?mod=registration&view=student&action=editInfo&student_id=<?php echo $studentInfo['student_id']; ?>" class="small_button">Edit information</a>
+            </span>
         </div>
 
     </div>
