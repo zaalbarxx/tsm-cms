@@ -685,6 +685,71 @@ z-index: 9;
 	margin-left:30px;
 	font-size:13px;
 }
+
+.forgot_password{
+	margin-top:5px;
+}
+.forgot_password a{
+	font-weight:bold;
+}
+
+#formPassword {
+    margin-left: auto;
+    margin-right: auto;
+    width: 666px;
+    height: 304px;
+    padding-left: 30px;
+}
+#formPassword .select {
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    width: 247px;
+    height: 40px;
+    border: 1px solid black;
+    background-color: white;
+}
+
+#formPassword label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+    font-size: 14px;
+    width:246px;
+}
+
+#formPassword .textbox {
+    font-family: "Rokkitt";
+    font-size: 14px;
+    padding: 8px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    width: 228px;
+    height: 20px;
+    border: 1px solid black;
+    background-color: white;
+}
+.passwordContainer .errorMessage{
+	display:block;
+}
+form#formPassword{
+	margin:0 auto;
+	padding:0;
+}
+#formPassword label,#formPassword input{
+	text-align:center;
+	margin:0 auto;
+}
+#formPassword input[type=submit]{
+	margin-top:15px;
+	display:block;
+}
+
+
+
+
+
+
 <?php if ($_GET['fb'] == "1") { ?>
 #topMenuWrapper{
 display:none;

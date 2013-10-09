@@ -6,6 +6,11 @@ $reg = new TSM_REGISTRATION();
 $reg->family = new TSM_REGISTRATION_FAMILY();
 $family = $reg->family;
 
+$flash = null;
+if(isset($_SESSION['flash'])){
+  $flash = $_SESSION['flash'];
+  unset($_SESSION['flash']);
+}
 if (!isset($view)) {
   $view = null;
 }
@@ -25,7 +30,6 @@ if (isset($setSelectedSchoolYear)) {
     header('Location: '.$_SERVER["REQUEST_URI"]);
   }
 }
-
 if (isset($browseOfferings)) {
   require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/browse/browse.controller.php");
 } else if ($reg->family->isLoggedIn() == false) {
@@ -35,7 +39,11 @@ if (isset($browseOfferings)) {
     }
   }
   $campusList = $reg->getCampuses(true);
-  if (isset($registerNow)) {
+
+  if(isset($action) && $action=='resetPassword'){
+    require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/family/family.controller.php");
+  }
+  elseif (isset($registerNow)) {
     require_once(__TSM_ROOT__."modules/registration/FrontEnd/controllers/steps/step.controller.php");
   } else {
     $activeView = __TSM_ROOT__."modules/registration/FrontEnd/views/login.view.php";

@@ -27,6 +27,9 @@
             <input type="hidden" name="login" value="1">
             <input type="submit" value="Login" class="small_button">
         </form>
+        <div class='forgot_password'>
+            Forgot password ? Click <a href='index.php?mod=registration&view=family&action=resetPassword'>here</a>.
+        </div>
         <br/>
 
         <!--<div class="forgotPassword">
@@ -43,7 +46,7 @@
     <div class="half">
 
         <form name="familyRegistrationForm" id="familyRegistrationForm" method="post" action="">
-            <label for="campus_id">Campus: <select id="campus_id" name="campus_id" class="select">
+            <label for="campus_id2">Campus: <select id="campus_id" name="campus_id" class="select">
                 <option value="">Select a Campus</option>
               <?php if (isset($campusList)) {
               foreach ($campusList as $campus) {
@@ -125,6 +128,8 @@
     }
 </style>
 <script type="text/javascript">
+$(document).ready(function(){
+    <?php if($flash!=null)echo "alert('".$flash."');";?>
     $("#familyRegistrationForm").validate({
         rules:{
             campus_id:"required",
@@ -140,4 +145,6 @@
             password:"required"
         }
     });
+});
+
 </script>

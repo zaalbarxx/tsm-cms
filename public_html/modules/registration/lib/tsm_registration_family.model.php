@@ -852,7 +852,106 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
           return true;
   }
 
-}
-  
+  public function resetPassword($campus_id,$email){
+    $q = 'SELECT * FROM tsm_reg_families WHERE 
+          primary_email="'.$email.'" AND 
+          campus_id='.$campus_id.' AND 
+          active=1 LIMIT 1';
+    $result = $this->db->runQuery($q);
+    if(mysql_num_rows($result)==1){
+      $row = mysql_fetch_assoc($result);
+      $token = md5(uniqid());
+
+      $mailer = $this->setupEmail();
+
+      $content ="
+              <h3>Password reset</h3>
+              <p>To change your password, please click <a href='".$_SERVER['HTTP_HOST']."/index.php?mod=registration&view=family&action=resetPassword&token=".$token."&email=".$email."'>here</a></p>
+              ";
+      $content_plain="
+              Password reset \n
+              To change your password, please open this link ".$_SERVER['HTTP_HOST']."/index.php?mod=registration&view=family&action=resetPassword&token=".$token."&email=".$email;
+      
+      $content=str_replace('\"','"',$content);
+      // Create a message
+      $message = Swift_Message::newInstance('Reset password')
+        ->setFrom(array('noreply@artiosacademies.com' => 'Artios Academies'))
+        ->setTo(array($email))
+        ->setBody($content,'text/html')
+        ->addPart($content_plain,'text/plain');
+
+      $result = $mailer->send($message);
+      if($result == 1){
+        //save data in database if mail was successfully sent 
+        $family_id = $row['family_id'];
+
+        $date = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s').' + 1 day'));
+
+        $q = 'UPDATE tsm_reg_families SET 
+        password_reset_token="'.$token.'",
+        password_reset_expire="'.$date.'" 
+        WHERE family_id='.$family_id;
+        $this->db->runQuery($q);
+        return true;
+      }
+      else{
+        return false;
+      }
+
+    }
+    else{
+      return false;
+    }
+  }
+
+  public function checkResetToken($email,$token){
+    $q = 'SELECT password_reset_expire FROM tsm_reg_families WHERE primary_email="'.$email.'" 
+          AND password_reset_token="'.$token.'" LIMIT 1';
+    $res = $this->db->runQuery($q);
+    if(mysql_num_rows($res)==1){
+      $time = mysql_fetch_assoc($res);
+      $time = strtotime($time['password_reset_expire']);
+      $now = time();
+      if($time > $now){
+        return true;
+      }
+    }
+    return false;
+  }
+  private function setupEmail(){
+    require_once __TSM_ROOT__.'includes/3rdparty/swift/lib/swift_required.php';
+
+    $transport = Swift_SmtpTransport::newInstance('66.147.244.176', 25)
+      ->setUsername('noreply@takesixmedia.com')
+      ->setPassword('LTOZ7]OLz~wB');
+      $mailer = Swift_Mailer::newInstance($transport);
+      return $mailer;
+  }
+
+  public function changePassword($email,$password,$token){
+    $password = $this->tsm->createPassword($password);
+    $exists = 'SELECT * FROM tsm_reg_families WHERE primary_email="'.$email.'" AND password_reset_token="'.$token.'" LIMIT 1';
+    $exists = $this->db->runQuery($exists);
+    if(mysql_num_rows($exists)==0) return false;
+
+    $q = 'UPDATE tsm_reg_families SET password="'.$password.'" WHERE primary_email="'.$email.'" AND password_reset_token="'.$token.'" LIMIT 1';
+    $res = $this->db->runQuery($q);
+
+    //clear token and date, just in case
+    $q = 'UPDATE tsm_reg_families SET password_reset_token="" AND password_reset_expire="0000-00-00 00:00:00"WHERE primary_email="'.$email.'" AND password_reset_token="'.$token.'" LIMIT 1';
+    $this->db->runQuery($q);
+    return true;
+  }
+
+  public function recentPayments(){
+    $q = 'SELECT payment_description,reference_number,quickbooks_payment_id,payment_type,amount,payment_time FROM tsm_reg_families_payments WHERE family_id='.$this->familyId.' ORDER BY payment_time DESC LIMIT 10';
+    $res = $this->db->runQuery($q);
+    $results = array();
+    while($r = mysql_fetch_assoc($res)){
+      $results[] = $r;
+    }
+    return $results;
+  }
+ } 
 
 ?>
