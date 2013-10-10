@@ -832,26 +832,6 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
-  public function editInfo($info){
-    @$q = 'UPDATE tsm_reg_families SET 
-          father_first ="'.$info['father_first'].'",
-          father_last ="'.$info['father_last'].'",
-          mother_first ="'.$info['mother_first'].'",
-          mother_last ="'.$info['mother_last'].'",
-          father_cell ="'.$info['father_cell'].'",
-          mother_cell ="'.$info['mother_cell'].'",
-          primary_email ="'.$info['email_primary'].'",
-          secondary_email ="'.$info['email_secondary'].'",
-          address ="'.$info['address'].'",
-          city ="'.$info['city'].'",
-          state ="'.$info['state'].'",
-          zip ="'.$info['zip'].'" 
-          WHERE family_id='.$this->familyId;
-
-          $r=$this->db->runQuery($q);
-          return true;
-  }
-
   public function resetPassword($campus_id,$email){
     $q = 'SELECT * FROM tsm_reg_families WHERE 
           primary_email="'.$email.'" AND 

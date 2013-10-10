@@ -3,30 +3,19 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
 ?>
 <div class="contentArea">
 
-  <h1 style="text-align: center;">Edit information</h1>
-
-  <p style="text-align: center;">Below you can edit family information.</p>
+  <h1 style="text-align: center;">Edit Family Information</h1>
 
   <div class="infoSection">
-    <h2>Family Information</h2>
     <div class="familyEditInfo">
       <form action='' method='POST' id="familyEditInfo">
         <div class="half">
           <span class="title"
-                        style="width: 150px;">Father first name:</span> <input type='text' name='father_first' value="<?php echo $familyInfo['father_first']; ?>">
+                        style="width: 150px;">Father First Name:</span> <input type='text' name='father_first' value="<?php echo $familyInfo['father_first']; ?>">
           <br/>
                     <span class="title"
-                        style="width: 150px;">Father last name:</span> <input type='text' name='father_last' value="<?php echo $familyInfo['father_last']; ?>">
+                        style="width: 150px;">Father Last Name:</span> <input type='text' name='father_last' value="<?php echo $familyInfo['father_last']; ?>">
           <br/>
           <span class="title" style="width: 150px;">Father Cell:</span> <input type='text' id='father_cell' name='father_cell' value="<?php echo $familyInfo['father_cell']; ?>">
-          <br/><br/>
-          <span class="title"
-                        style="width: 150px;">Mother first name:</span> <input type='text' name='mother_first' value="<?php echo $familyInfo['mother_first']; ?>">
-          <br/>
-          <span class="title"
-                        style="width: 150px;">Mother last name:</span> <input type='text' name='mother_last' value="<?php echo $familyInfo['mother_last']; ?>">
-          <br/>
-          <span class="title" style="width: 150px;">Mother Cell:</span> <input type='text' id='mother_cell' name='mother_cell' value="<?php echo $familyInfo['mother_cell']; ?>">
           <br/><br/>
 
           <span class="title" style="width: 150px;">Primary E-mail:</span> <input type='text' name='email_primary' value="<?php echo $familyInfo['primary_email']; ?>">
@@ -37,6 +26,14 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
           <br/><br/>
         </div>
         <div class="half">
+                    <span class="title"
+                          style="width: 150px;">Mother First Name:</span> <input type='text' name='mother_first' value="<?php echo $familyInfo['mother_first']; ?>">
+          <br/>
+          <span class="title"
+                style="width: 150px;">Mother Last Name:</span> <input type='text' name='mother_last' value="<?php echo $familyInfo['mother_last']; ?>">
+          <br/>
+          <span class="title" style="width: 150px;">Mother Cell:</span> <input type='text' id='mother_cell' name='mother_cell' value="<?php echo $familyInfo['mother_cell']; ?>">
+          <br/><br/>
               <span class="title" style="width: 150px;">Address:</span> <input type='text' name='address' value="<?php echo $familyInfo['address']; ?>">
           <br/>
               <span class="title" style="width: 150px;">City:</span> <input type='text' name='city' value="<?php echo $familyInfo['city']; ?>">
@@ -46,9 +43,9 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
                   <span class="title" style="width: 150px;">Zip code:</span> <input type='text' name='zip' value="<?php echo $familyInfo['zip']; ?>">
           <br/>
           <br/>
-          <input type="submit" class="submitButton" value="Save"/>
+
         </div>
-        
+        <input type="submit" class="submitButton right" style="clear: both;" value="Save Information"/>
       </form>
     </div>
   </div>
