@@ -924,11 +924,16 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function recentPayments(){
-    $q = 'SELECT payment_description,reference_number,quickbooks_payment_id,payment_type,amount,payment_time FROM tsm_reg_families_payments WHERE family_id='.$this->familyId.' ORDER BY payment_time DESC LIMIT 10';
+    $q = 'SELECT family_payment_id,payment_description,reference_number,quickbooks_payment_id,payment_type,amount,payment_time FROM tsm_reg_families_payments WHERE family_id='.$this->familyId.' ORDER BY payment_time DESC LIMIT 10';
     $res = $this->db->runQuery($q);
     $results = array();
     while($r = mysql_fetch_assoc($res)){
       $results[] = $r;
+    }
+
+    foreach($results as $key=>$result){
+      $p = new TSM_REGISTRATION_PAYMENT($result['family_payment_id']);
+      $results[$key]['invoices'] = $p->getInvoices();
     }
     return $results;
   }

@@ -26,6 +26,17 @@ class TSM_REGISTRATION_PAYMENT extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
+  public function getInvoices(){
+    $q = "SELECT * FROM tsm_reg_families_payment_invoice pi, tsm_reg_families_invoices fi
+    WHERE fi.family_invoice_id = pi.family_invoice_id AND pi.family_payment_id = ".$this->paymentId;
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $this->invoices[] = $a;
+    }
+
+    return $this->invoices;
+  }
+
   public function setQuickbooksId($id) {
     $q = "UPDATE tsm_reg_families_payments SET quickbooks_payment_id = '".$id."' WHERE family_payment_id = '".$this->paymentId."'";
     $this->db->runQuery($q);

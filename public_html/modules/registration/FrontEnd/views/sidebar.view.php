@@ -8,7 +8,7 @@
         <a href="index.php?mod=registration&view=student">My Students</a>
       </li>
       <li>
-        <a href="index.php?mod=registration&view=family&action=recentPayments">Recent payments</a>
+        <a href="index.php?mod=registration&view=family&action=recentPayments">Recent Payments</a>
       </li>
       <!--<li>
         <a href="index.php?mod=registration">Recent Invoices</a>
