@@ -845,16 +845,16 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
       $mailer = $this->setupEmail();
 
       $content ="
-              <h3>Password reset</h3>
+              <h3>Password Reset</h3>
               <p>To change your password, please click <a href='".$_SERVER['HTTP_HOST']."/index.php?mod=registration&view=family&action=resetPassword&token=".$token."&email=".$email."'>here</a></p>
               ";
       $content_plain="
-              Password reset \n
+              Password Reset \n
               To change your password, please open this link ".$_SERVER['HTTP_HOST']."/index.php?mod=registration&view=family&action=resetPassword&token=".$token."&email=".$email;
       
       $content=str_replace('\"','"',$content);
       // Create a message
-      $message = Swift_Message::newInstance('Reset password')
+      $message = Swift_Message::newInstance('Reset Password')
         ->setFrom(array('noreply@artiosacademies.com' => 'Artios Academies'))
         ->setTo(array($email))
         ->setBody($content,'text/html')
