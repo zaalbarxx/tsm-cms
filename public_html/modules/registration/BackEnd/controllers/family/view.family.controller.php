@@ -12,6 +12,7 @@ if (isset($students)) {
     $students[$student['student_id']]['student_log'] = $studentObject->getLog();
   }
 }
+$fees = $family->getFees();
 $invoices = $family->getInvoices();
 $paymentPlans = $family->getPaymentPlans();
 if (isset($invoices)) {

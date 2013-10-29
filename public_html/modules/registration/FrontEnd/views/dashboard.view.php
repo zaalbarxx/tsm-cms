@@ -8,7 +8,7 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
 <p style="text-align: center;">Below is a summary of your family registration. You can view which students you have enrolled by clicking "My Students" on the left.</p>
 
 <div class="infoSection">
-  <h2>Family Information</h2>
+  <h2>Family Information - <a href="index.php?mod=registration&view=family&action=editInfo" class="editButton" title="Edit Family"></a></h2>
 
   <div class="half">
             <span class="title"

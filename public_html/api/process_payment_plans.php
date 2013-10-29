@@ -113,7 +113,7 @@ if(isset($campusList)){
 				                  $nextInvoiceDate = $paymentPlan['start_date'];
 				                  //$invoice->emailInvoice("jlane@veritasproductions.net",$paymentPlanObject->getInvoiceEmail(),$paymentPlanObject->getInvoiceEmailSubject());
 			                  }
-			                  echo "--------Creating invoice on: ".$nextInvoiceDate."<br />";
+			                  echo "--------Creating invoice on: ".$nextInvoiceDate." - $".$familyPaymentPlanObject->getNextInstallmentAmount()."<br />";
 			                  if(isset($invoiceNow)){
 				                  $invoice = $familyPaymentPlanObject->invoiceInstallment(null,$nextInvoiceDate);
 			                  }

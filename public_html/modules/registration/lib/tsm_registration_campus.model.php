@@ -67,7 +67,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $this->info['current_school_year'];
   }
 
-  public function getInvoices($displayed = null,$includeDeleted = false) {
+  public function getInvoices($displayed = null,$onlyDeleted = false) {
     $q = "SELECT fi.*, fpp.*, pp.* FROM tsm_reg_families_invoices fi, tsm_reg_families_payment_plans fpp, tsm_reg_fee_payment_plans pp
     WHERE fi.family_payment_plan_id = fpp.family_payment_plan_id
     AND pp.payment_plan_id = fpp.payment_plan_id
@@ -75,9 +75,30 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     if ($displayed) {
       $q .= " AND fi.displayed = '$displayed'";
     }
-	  if($includeDeleted == false){
+	  if($onlyDeleted == false){
 		  $q .= " AND fi.deleted_at IS NULL ";
-	  }
+	  } else if($onlyDeleted = true){
+      $q .= " AND fi.deleted_at IS NOT NULL";
+    }
+    $r = $this->db->runQuery($q);
+    $returnInvoices = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $returnInvoices[$a['family_invoice_id']] = $a;
+    }
+
+    $q = "SELECT * FROM tsm_reg_families_invoices fi, tsm_reg_families f
+    WHERE f.family_id = fi.family_id
+    AND f.campus_id = '".$this->campusId."' AND fi.family_invoice_id IN(
+    SELECT family_invoice_id FROM tsm_reg_families_invoices WHERE family_payment_plan_id IS NULL
+    )";
+    if ($displayed) {
+      $q .= " AND fi.displayed = '$displayed'";
+    }
+    if($onlyDeleted == false){
+      $q .= " AND fi.deleted_at IS NULL ";
+    } else if($onlyDeleted = true){
+      $q .= " AND fi.deleted_at IS NOT NULL";
+    }
     $r = $this->db->runQuery($q);
     $returnInvoices = null;
     while ($a = mysql_fetch_assoc($r)) {

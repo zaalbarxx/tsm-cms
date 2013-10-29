@@ -29,8 +29,8 @@ Class TSM_REGISTRATION_QUICKBOOKS extends TSM_REGISTRATION {
     $this->oauth_consumer_key = 'qyprdQnp3HN97Sg8CFcGPWwK9scRM6';
     $this->oauth_consumer_secret = 'ptknTKS6ahlO2eJBtRGMxZSsGtPeFTubhzdCvNEu';
 
-    $this->this_url = 'http://'.$_SERVER['SERVER_NAME'].'/sandbox/admin/index.php?mod=registration&view=quickbooks&action=connect';
-    $this->that_url = 'http://'.$_SERVER['SERVER_NAME'].'/sandbox/admin/index.php?mod=registration&view=quickbooks&action=connected';
+    $this->this_url = 'http://'.$_SERVER['SERVER_NAME'].'/admin/index.php?mod=registration&view=quickbooks&action=connect';
+    $this->that_url = 'http://'.$_SERVER['SERVER_NAME'].'/admin/index.php?mod=registration&view=quickbooks&action=connected';
     $this->dsn = 'mysql://root:@localhost/schoolsystem';
     $this->encryption_key = 'VgTtKpHDEmjsjbp2EsktwtQF3ecBjEFCf9CyNzaVjodzt4rKI0BCOK1VKUD818i';
 

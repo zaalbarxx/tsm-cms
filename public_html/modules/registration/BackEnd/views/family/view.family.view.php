@@ -13,6 +13,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
       <li><a href="#invoices" data-toggle="tab">Invoices</a></li>
 	    <?php if(isset($looseFees)){ ?>
       <li><a href="#unassignedFees" data-toggle="tab">Unassigned Fees</a></li>
+      <li><a href="#fees" data-toggle="tab">Fees</a></li>
 			<?php } ?>
       <?php if(isset($feesNeedingReview)){
       ?><li><a href="#feesToReview" data-toggle="tab">Fees in Review</a></li><?php
@@ -267,7 +268,30 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
     </div>
   <?php } ?>
 
+    <div class="infoSection well tab-pane" id="fees">
+      <h2>Fees</h2>
+      <table style="width: 100%;" class="table table-striped table-bordered" data-id='payment-plans'>
+        <tr style="font-weight: bold;">
+          <td>ID</td>
+          <td>Description</td>
+          <td>Amount</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tbody>
+        <?php foreach($fees as $fee){
+          echo '<tr>';
 
+          echo '<td>'.$fee['family_fee_id'].'</td><td>'.$fee['name'].'</td><td>'.$fee['amount'].'</td>';
+
+          echo '<td style="text-align:center;"><a href="#"><button class="btn btn-primary">Edit</button></a></td><td style="text-align:center;"><a href="#"><button class="btn btn-danger">Delete</button></a></td>';
+
+          echo '</tr>';
+        }
+        ?>
+      </tbody>
+    </table>
+    </div>
     <div class="infoSection well tab-pane" id="studentLog">
       <h2>Student Logs</h2>
       <?php if(isset($students)){

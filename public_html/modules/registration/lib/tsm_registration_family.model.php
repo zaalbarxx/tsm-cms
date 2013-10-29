@@ -832,26 +832,6 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
-  public function editInfo($data){
-    @$q = 'UPDATE tsm_reg_families SET 
-          father_first ="'.$data['father_first'].'",
-          father_last ="'.$data['father_last'].'",
-          mother_first ="'.$data['mother_first'].'",
-          mother_last ="'.$data['mother_last'].'",
-          father_cell ="'.$data['father_cell'].'",
-          mother_cell ="'.$data['mother_cell'].'",
-          primary_email ="'.$data['email_primary'].'",
-          secondary_email ="'.$data['email_secondary'].'",
-          address ="'.$data['address'].'",
-          city ="'.$data['city'].'",
-          state ="'.$data['state'].'",
-          zip ="'.$data['zip'].'" 
-          WHERE family_id='.$this->familyId;
-
-          $r=$this->db->runQuery($q);
-          return true;
-  }
-
   public function resetPassword($campus_id,$email){
     $q = 'SELECT * FROM tsm_reg_families WHERE 
           primary_email="'.$email.'" AND 
@@ -865,16 +845,16 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
       $mailer = $this->setupEmail();
 
       $content ="
-              <h3>Password reset</h3>
+              <h3>Password Reset</h3>
               <p>To change your password, please click <a href='".$_SERVER['HTTP_HOST']."/index.php?mod=registration&view=family&action=resetPassword&token=".$token."&email=".$email."'>here</a></p>
               ";
       $content_plain="
-              Password reset \n
+              Password Reset \n
               To change your password, please open this link ".$_SERVER['HTTP_HOST']."/index.php?mod=registration&view=family&action=resetPassword&token=".$token."&email=".$email;
       
       $content=str_replace('\"','"',$content);
       // Create a message
-      $message = Swift_Message::newInstance('Reset password')
+      $message = Swift_Message::newInstance('Reset Password')
         ->setFrom(array('noreply@artiosacademies.com' => 'Artios Academies'))
         ->setTo(array($email))
         ->setBody($content,'text/html')
@@ -944,11 +924,16 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function recentPayments(){
-    $q = 'SELECT payment_description,reference_number,quickbooks_payment_id,payment_type,amount,payment_time FROM tsm_reg_families_payments WHERE family_id='.$this->familyId.' ORDER BY payment_time DESC LIMIT 10';
+    $q = 'SELECT family_payment_id,payment_description,reference_number,quickbooks_payment_id,payment_type,amount,payment_time FROM tsm_reg_families_payments WHERE family_id='.$this->familyId.' ORDER BY payment_time DESC LIMIT 10';
     $res = $this->db->runQuery($q);
     $results = array();
     while($r = mysql_fetch_assoc($res)){
       $results[] = $r;
+    }
+
+    foreach($results as $key=>$result){
+      $p = new TSM_REGISTRATION_PAYMENT($result['family_payment_id']);
+      $results[$key]['invoices'] = $p->getInvoices();
     }
     return $results;
   }

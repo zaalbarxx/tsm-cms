@@ -3,11 +3,11 @@ $family = new TSM_REGISTRATION_FAMILY;
 if(isset($email) && isset($campus_id)){
 	$status = $family->resetPassword($campus_id,$email);
 	if($status==true){
-		$_SESSION['flash'] = 'Email with link to change password has been sent on your e-mail.';
+		$_SESSION['flash'] = 'A link to change you password has been sent on your e-mail address. Please check your e-mail.';
 		header('Location:/');
 	}
 	else{
-		$error = 'There was not account found with provided data. Try again.';
+		$error = 'We could not find an account associated with the e-mail address you provided. Please try again.';
 	}
 }
 elseif(isset($token) && isset($email)){
@@ -18,17 +18,17 @@ elseif(isset($token) && isset($email)){
 			$activeView = __TSM_ROOT__."modules/registration/FrontEnd/views/family/confirmResetPassword.family.view.php";
 		}
 		else{
-			$_SESSION['flash'] = 'Token was either not valid or it expired. Try to reset password again.';
+			$_SESSION['flash'] = 'The token was either invalid or it has expired. Please try to reset the password again.';
 			header('Location:/');
 		}
 	}
 	elseif($method =='POST'){
 		if($family->changePassword($email,$password,$token)){
-			$_SESSION['flash'] = 'Password has been successfully changed. You can log in now.';
+			$_SESSION['flash'] = 'Your password has been successfully changed. Please login using the login form.';
 			header('Location:/');
 		}
 		else{
-			$error = 'There was no account found with provided token and email.';
+			$error = 'There was no account found with the provided token and email.';
 		}
 
 	}

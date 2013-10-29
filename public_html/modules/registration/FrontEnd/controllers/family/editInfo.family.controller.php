@@ -1,6 +1,6 @@
 <?php 
 if(isset($_POST['father_first']) && count($_POST)==12){
-	if($family->editInfo($_POST)){
+  if($family->saveFamily()){
 		header('Location:index.php?mod=registration');
 	}
 	else{

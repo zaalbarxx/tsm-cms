@@ -51,6 +51,58 @@ if(isset($campusList)){
       $quickbooks = new TSM_REGISTRATION_QUICKBOOKS();
       $invoiceService = new QuickBooks_IPP_Service_Invoice();
 
+      //first, we need to get all the deleted invoices and delete them from quickbooks
+      /*
+      $deletedInvoices = $currentCampus->getInvoices(null,true);
+      if(isset($deletedInvoices)){
+        foreach($deletedInvoices as $key=>$i){
+          if($i['quickbooks_invoice_id'] != ""){
+            //echo $i['quickbooks_invoice_id']."<br />";
+          } else {
+            //todo:check if invoice is really gone from QB, then delete it here
+            unset($deletedInvoices[$key]);
+          }
+        }
+
+        foreach($deletedInvoices as $i){
+          //process deletion
+          echo "Deleting invoice: ".$i['doc_number']."...";
+          $invoice = new TSM_REGISTRATION_INVOICE($i['family_invoice_id']);
+          if($invoice->isCreditMemo()){
+            $delType = "CreditMemo";
+            $invoiceService = new QuickBooks_IPP_Service_CreditMemo();
+          } else {
+            $delType = "Invoice";
+            $invoiceService = new QuickBooks_IPP_Service_Invoice();
+          }
+
+          $qbInvoice = $invoiceService->findById($quickbooks->Context, $quickbooks->creds['qb_realm'],$i['quickbooks_invoice_id']);
+          //found the object, now delete it
+          if(is_object($qbInvoice)){
+            $syncToken = $qbInvoice->getSyncToken();
+            $parse = QuickBooks_IPP_IDS::parseIDType($i['quickbooks_invoice_id']);
+            //$id = $qbInvoice->getId();
+            $xml = '<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+                  <Del RequestId="'.rand_char(32).'" xmlns="http://www.intuit.com/sb/cdm/v2">
+                     <Object xsi:type="'.$delType.'"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <Id idDomain="'.$parse[0].'">'.$parse[1].'</Id>
+                     </Object>
+                  </Del>';
+            //echo $xml;die();
+            $IPP = $quickbooks->Context->IPP();
+            $var = $IPP->IDS($quickbooks->Context, $quickbooks->creds['qb_realm'], $delType, QuickBooks_IPP_IDS::OPTYPE_QUERY, $xml);
+            if($var == true){
+              echo "SUCCESS!<br />";
+            } else {
+              echo "FAILED<br />";
+              echo $IPP->lastResponse();
+            }
+          }
+        }
+      }
+      */
+
       //Check to see if any local invoices don't have their quickbooks external key
       $localInvoices = $currentCampus->getInvoices();
       $txnIds = null;
@@ -159,7 +211,7 @@ if(isset($campusList)){
 				    }
 			    }
 					//print_r($qbInvoice);
-//die();
+          //die();
 			    echo "updating: ".$localInvoice['family_invoice_id']." amount: ".$total."<br />";
 
 			    $success = $invoiceService->update($quickbooks->Context, $quickbooks->creds['qb_realm'],$id,$qbInvoice);

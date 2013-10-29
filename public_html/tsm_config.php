@@ -25,6 +25,6 @@ function getAdminPath() {
 define("__TSM_ROOT__", getRootPath());
 define("__TSM_ADMIN_ROOT__", getAdminPath());
 
-// define("__TSM_ROOT__", "/Users/jeremymlane/Development/Veritas/Veritas/tsm-cms/project_root/public_html/");
-// define("__TSM_ADMIN_ROOT__", "/Users/jeremymlane/Development/Veritas/Veritas/tsm-cms/project_root/public_html/admin/");
+//define("__TSM_ROOT__", "/Users/jeremymlane/Development/Veritas/Veritas/tsm-cms/project_root/public_html/");
+//define("__TSM_ADMIN_ROOT__", "/Users/jeremymlane/Development/Veritas/Veritas/tsm-cms/project_root/public_html/admin/");
 ?>
