@@ -9,10 +9,14 @@ switch ($action) {
 
     $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/reports/reports.view.php";
     break;
-  case "studentList":
-    require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/reports/studentList.reports.controller.php");
-    $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/reports/studentList.reports.view.php";
-    break;
+	case "studentList":
+		require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/reports/studentList.reports.controller.php");
+		$activeView = __TSM_ROOT__."modules/registration/BackEnd/views/reports/studentList.reports.view.php";
+		break;
+	case "tshirtSizes":
+		require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/reports/tshirtSizes.reports.controller.php");
+		$activeView = __TSM_ROOT__."modules/registration/BackEnd/views/reports/tshirtSizes.reports.view.php";
+		break;
   case "unenrolledStudents":
     require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/reports/unenrolledStudents.reports.controller.php");
     $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/reports/unenrolledStudents.reports.view.php";

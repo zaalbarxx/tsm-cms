@@ -27,6 +27,7 @@
       <a href="http://pinterest.com/reachoutww/" target="_blank" rel="nofollow" class="pinterest"></a>
       <a href="http://www.youtube.com/user/reachoutworldwide" target="_blank" rel="nofollow" class="youtube"></a>
       <a href="http://reachoutworldwide.wordpress.com/" target="_blank" rel="nofollow" class="wordpress"></a>
+	    <a href="http://instagram.com/reachoutww/" target="_blank" rel="nofollow" class="instagram"></a>
     </div>
     <ul>
       <li>

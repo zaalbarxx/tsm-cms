@@ -17,12 +17,14 @@ if (!$family->isLoggedIn()) {
     if (isset($registerFamily)) {
       $reg->setSelectedSchoolYear($currentCampus->getCurrentSchoolYear());
       $new_family_id = $family->registerFamily();
+      $success = $family->login($primary_email, $password, $campus_id);
       $newFamily = new TSM_REGISTRATION_FAMILY($new_family_id);
       if ($new_family_id) {
         $newFamily->addToSchoolYear($currentCampus->getCurrentSchoolYear());
         if ($newFamily->moveToNextStep()) {
-          $family->login($primary_email, $password, $campus_id);
-          header("Location: index.php?mod=registration");
+          if($success){
+            header("Location: index.php?mod=registration");
+          }
         } else {
           die("Error moving to the next step.");
         }

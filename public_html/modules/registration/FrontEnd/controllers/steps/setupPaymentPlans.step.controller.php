@@ -111,6 +111,7 @@ if ($invoices == null) {
       $invoice->addToQuickbooks();
     }
     $invoice->hide();
+    $invoice->setCreditMemo(1);
     $invoice->setInvoiceAndCredit(true);
 
     //Invoice first installment

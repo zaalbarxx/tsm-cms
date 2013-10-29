@@ -33,4 +33,8 @@ class QuickBooks_IPP_Service_CreditMemo extends QuickBooks_IPP_Service {
   public function add($Context, $realmID, $Object) {
     return parent::_add($Context, $realmID, QuickBooks_IPP_IDS::RESOURCE_CREDITMEMO, $Object);
   }
+
+  public function update($Context, $realmID, $IDType, $Object) {
+    return parent::_update($Context, $realmID, QuickBooks_IPP_IDS::RESOURCE_CREDITMEMO, $Object, $IDType);
+  }
 }

@@ -70,6 +70,7 @@ class TSM_REGISTRATION_COURSE extends TSM_REGISTRATION {
       $student = new TSM_REGISTRATION_STUDENT($a['student_id']);
       $studentInfo = $student->getInfo();
       $this->enrolledStudents[$a['student_id']] = $studentInfo;
+      $this->enrolledStudents[$a['student_id']]['course_period_id'] = $a['course_period_id'];
     }
 
     return $this->enrolledStudents;

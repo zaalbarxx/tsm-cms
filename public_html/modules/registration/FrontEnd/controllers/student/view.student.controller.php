@@ -16,13 +16,13 @@ if ($student->isApproved() == true) {
 
 if (isset($programs)) {
   foreach ($programs as $program) {
-    $programs[$program['program_id']]['tuition_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], 1));
-    $programs[$program['program_id']]['registration_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], 2));
+    $programs[$program['program_id']]['tuition_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], $campusInfo['tuition_fee_type_id']));
+    $programs[$program['program_id']]['registration_total'] = $reg->addFees($student->getFeesForProgramAndCourses($program['program_id'], $campusInfo['registration_fee_type_id']));
     $programs[$program['program_id']]['courses'] = $student->getCoursesIn($program['program_id']);
     if (isset($programs[$program['program_id']]['courses'])) {
       foreach ($programs[$program['program_id']]['courses'] as $course) {
-        $programs[$program['program_id']]['courses'][$course['course_id']]['tuition_amount'] = $reg->addFees($student->getFeesForCourse($course['course_id'], $program['program_id'], 1));
-        $programs[$program['program_id']]['courses'][$course['course_id']]['registration_amount'] = $reg->addFees($student->getFeesForCourse($course['course_id'], $program['program_id'], 2));
+        $programs[$program['program_id']]['courses'][$course['course_id']]['tuition_amount'] = $reg->addFees($student->getFeesForCourse($course['course_id'], $program['program_id'], $campusInfo['tuition_fee_type_id']));
+        $programs[$program['program_id']]['courses'][$course['course_id']]['registration_amount'] = $reg->addFees($student->getFeesForCourse($course['course_id'], $program['program_id'], $campusInfo['registration_fee_type_id']));
       }
     }
 

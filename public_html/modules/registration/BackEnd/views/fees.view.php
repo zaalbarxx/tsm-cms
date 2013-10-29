@@ -13,7 +13,12 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
       ?>
         <div class="smallItem well well-small">
             <span class="title"><?php echo $fee['name']; ?> - $<?php echo $fee['amount']; ?></span>
+          <span class="btn-group">
+            <a href="index.php?mod=registration&view=fees&action=bulkStudentAssign&fee_id=<?php echo $fee['fee_id']; ?>" class="fb btn btn-primary btn-small">Bulk Assign</a>
+            <a href="index.php?mod=registration&view=fees&action=bulkFeeInvoice&fee_id=<?php echo $fee['fee_id']; ?>" class="fb btn btn-primary btn-small">Bulk Invoice</a>
+          </span>
           <span class="buttons">
+
           <a href="index.php?mod=registration&view=fees&action=addEditFee&fee_id=<?php echo $fee['fee_id']; ?>"
              class="editButton fb" title="Edit This Fee"></a>
           <a href="index.php?mod=registration&ajax=deleteFee&fee_id=<?php echo $fee['fee_id']; ?>" class="deleteButton"

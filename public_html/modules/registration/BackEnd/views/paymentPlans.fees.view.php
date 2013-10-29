@@ -13,8 +13,10 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
     foreach ($paymentPlans as $plan) {
       ?>
         <div class="smallItem well well-small">
-            <span class="title"><?php echo $plan['name']; ?> - <?php echo $plan['num_families']; ?></span>
+            <span class="title"><?php echo $plan['name']; ?> - <?php echo $plan['num_families']; ?> - $<?php echo number_format($plan['next_installment_amount'],2,".",","); ?> - $<?php echo number_format($plan['pending_next_installment_amount'],2,".",","); ?></span>
           <span class="buttons">
+	          <a href="index.php?mod=registration&view=fees&action=viewFamilies&paymentPlanId=<?php echo $plan['payment_plan_id']; ?>"
+	             class="reviewButton" title="View Families"></a>
           <a href="index.php?mod=registration&view=fees&action=sendPaymentPlanInvoices&payment_plan_id=<?php echo $plan['payment_plan_id']; ?>"
              class="sendButton fb" title="Send Invoices For This Payment Plan"></a>
           <a href="index.php?mod=registration&view=fees&action=addEditPaymentPlan&payment_plan_id=<?php echo $plan['payment_plan_id']; ?>"

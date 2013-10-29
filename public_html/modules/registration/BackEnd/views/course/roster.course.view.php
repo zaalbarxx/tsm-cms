@@ -12,25 +12,28 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
     <div class="programStudents">
 
       <?php if (isset($courseStudents)) {
-      foreach ($courseStudents as $student) {
-        ?>
-          <div class="smallItem well well-small">
-              <span class="title"
-                    style="cursor: pointer;"><?php echo $student['first_name']." ".$student['last_name']; ?>
-                  , Grade: <?php echo $student['grade']; ?></span>
-              <span class="buttons"></span>
+        foreach($periods as $period){
+          echo "<h3>".$reg->displayPeriod($period)."</h3>";
+          foreach ($period['students'] as $student) {
+            ?>
+              <div class="smallItem well well-small">
+                  <span class="title"
+                        style="cursor: pointer;"><?php echo $student['first_name']." ".$student['last_name']; ?>
+                      , Grade: <?php echo $student['grade']; ?></span>
+                  <span class="buttons"></span>
 
-              <div class="itemDetails">
-                  <span class="label">E-mail:</span> <?php
-                if ($student['email'] != "") {
-                  echo $student['email'];
-                } else {
-                  echo "N/A";
-                }  ?>
+                  <div class="itemDetails">
+                      <span class="label">E-mail:</span> <?php
+                    if ($student['email'] != "") {
+                      echo $student['email'];
+                    } else {
+                      echo "N/A";
+                    }  ?>
+                  </div>
               </div>
-          </div>
-        <?php
-      }
+            <?php
+          }
+        }
     } else {
       echo "This program has no students enrolled.";
     } ?>

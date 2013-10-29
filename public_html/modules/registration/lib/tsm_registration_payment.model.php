@@ -26,6 +26,17 @@ class TSM_REGISTRATION_PAYMENT extends TSM_REGISTRATION_CAMPUS {
     return $this->info;
   }
 
+  public function getInvoices(){
+    $q = "SELECT * FROM tsm_reg_families_payment_invoice pi, tsm_reg_families_invoices fi
+    WHERE fi.family_invoice_id = pi.family_invoice_id AND pi.family_payment_id = ".$this->paymentId;
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $this->invoices[] = $a;
+    }
+
+    return $this->invoices;
+  }
+
   public function setQuickbooksId($id) {
     $q = "UPDATE tsm_reg_families_payments SET quickbooks_payment_id = '".$id."' WHERE family_payment_id = '".$this->paymentId."'";
     $this->db->runQuery($q);
@@ -43,7 +54,8 @@ class TSM_REGISTRATION_PAYMENT extends TSM_REGISTRATION_CAMPUS {
   public function getLines(){
     $q = "SELECT * FROM tsm_reg_families_payment_invoice pi, tsm_reg_families_invoices fi
     WHERE fi.family_invoice_id = pi.family_invoice_id
-    AND pi.family_payment_id = '".$this->paymentId."'";
+    AND pi.family_payment_id = '".$this->paymentId."'
+    AND fi.deleted_at IS NULL";
     $r = $this->db->runQuery($q);
     while($a = mysql_fetch_assoc($r)){
       $paymentLines[] = $a;
@@ -71,11 +83,13 @@ class TSM_REGISTRATION_PAYMENT extends TSM_REGISTRATION_CAMPUS {
     $paymentHeader->setNote($this->info['payment_description']);
     $paymentObject->addHeader($paymentHeader);
     $lines = $this->getLines();
-    foreach($lines as $localLine){
-      $Line = new QuickBooks_IPP_Object_Line();
-      $Line->setTxnId($localLine['quickbooks_external_key']);
-      $Line->setAmount($localLine['amount']);
-      $paymentObject->addLine($Line);
+    if(isset($lines)){
+      foreach($lines as $localLine){
+        $Line = new QuickBooks_IPP_Object_Line();
+        $Line->setTxnId($localLine['quickbooks_external_key']);
+        $Line->setAmount($localLine['amount']);
+        $paymentObject->addLine($Line);
+      }
     }
     $service = new QuickBooks_IPP_Service_Payment();
     $quickbooks_payment_id = $service->add($quickbooks->Context, $quickbooks->creds['qb_realm'], $paymentObject);

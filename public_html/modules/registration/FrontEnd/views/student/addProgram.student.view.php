@@ -10,7 +10,7 @@
                 - <span
                         style="font-size: 12px; position: relative; top: -1px;">Click for Details</span></span>
 				<span class="buttons">
-				<a href="index.php?mod=registration&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
+				<a href="index.php?mod=registration&view=student&action=addProgram&student_id=<?php echo $studentInfo['student_id']; ?>&enrollInProgram=<?php echo $program['program_id']; ?>"
            class="addButton24"
            title="Enroll <?php echo $studentInfo['first_name']; ?> in <?php echo $program['name']; ?>"></a>
 				</span>

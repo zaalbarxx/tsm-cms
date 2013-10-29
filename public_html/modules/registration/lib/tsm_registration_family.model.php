@@ -28,7 +28,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
         $this->familyId = intval($familyId);
         $this->getInfo();
       } else {
-        die("no permission");
+        throw new Exception('TSM_REGISTRATION_FAMILY: no permission');
       }
     } else if (isset($_SESSION['family']['id'])) {
       $this->familyId = intval($_SESSION['family']['id']);
@@ -184,8 +184,8 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $this->isLoggedIn;
   }
 
-  public function getInfo() {
-    if ($this->info == null) {
+  public function getInfo($force=false) {
+    if ($this->info == null || $force==true) {
       $q = "SELECT * FROM tsm_reg_families WHERE family_id = ".$this->familyId;
       $r = $this->db->runQuery($q);
       while ($a = mysql_fetch_assoc($r)) {
@@ -211,6 +211,10 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function getStudents($school_year = null) {
+    if($school_year == null){
+      $school_year = $this->getSelectedSchoolYear();
+    }
+
     $q = "SELECT * FROM tsm_reg_students s, tsm_reg_students_school_years ssy WHERE ssy.student_id = s.student_id AND ssy.school_year = '".$school_year."' AND s.family_id = ".$this->familyId." ORDER BY s.last_name";
     $r = $this->db->runQuery($q);
     $this->students = null;
@@ -332,10 +336,13 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     $this->db->runQuery($q);
     $id = mysql_insert_id($this->db->conn);
 
+    $q = "INSERT INTO tsm_reg_families_fee_log (family_id,add_remove,fee_id,amount,fee_name) VALUES('".$this->info['family_id']."',1,$fee_id,'$amount','$name')";
+    $this->db->runQuery($q);
+
     return $id;
   }
 
-  public function getInvoices($displayed = null) {
+  public function getInvoices($displayed = null,$includeDeleted = false) {
     $q = "SELECT * FROM tsm_reg_families_invoices fi, tsm_reg_families_payment_plans fpp, tsm_reg_fee_payment_plans pp
     WHERE fi.family_payment_plan_id = fpp.family_payment_plan_id
     AND pp.payment_plan_id = fpp.payment_plan_id
@@ -343,13 +350,19 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     if ($displayed) {
       $q .= " AND fi.displayed = '$displayed'";
     }
+	  if($includeDeleted == false){
+		  $q .= " AND fi.deleted_at IS NULL ";
+	  }
     $r = $this->db->runQuery($q);
     $returnInvoices = null;
     while ($a = mysql_fetch_assoc($r)) {
       $returnInvoices[$a['family_invoice_id']] = $a;
     }
 
-    $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_id = '".$this->familyId."' AND family_payment_plan_id IS NULL";
+    $q = "SELECT * FROM tsm_reg_families_invoices WHERE family_id = '".$this->familyId."' AND family_payment_plan_id IS NULL ";
+	  if($includeDeleted == false){
+		  $q .= " AND deleted_at IS NULL ";
+	  }
     $r = $this->db->runQuery($q);
     while ($a = mysql_fetch_assoc($r)) {
       $returnInvoices[$a['family_invoice_id']] = $a;
@@ -358,10 +371,27 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $returnInvoices;
   }
 
+  public function getUnSyncedInvoices(){
+    if($this->inQuickbooks()){
+	    $returnInvoices = $this->getInvoices();
+	    if(isset($returnInvoices)){
+		    foreach($returnInvoices as $invoice){
+			    if(!$invoice['quickbooks_invoice_id'] == ''){
+				    unset($returnInvoices[$invoice['family_invoice_id']]);
+			    }
+		    }
+	    }
+    } else {
+      $returnInvoices = null;
+    }
+
+    return $returnInvoices;
+  }
+
   public function getGivenName(){
-    if ($this->info['father_first'] != "" && $this->info['mother_first'] != "") {
+    if ($this->info['father_first'] != "" && $this->info['father_first'] != "deceased"  && $this->info['mother_first'] != "") {
       $givenName = $this->info['father_first']." & ".$this->info['mother_first'];
-    } elseif ($this->info['father_first'] == "") {
+    } elseif ($this->info['father_first'] == "" || $this->info['father_first'] == "deceased") {
       $givenName = $this->info['mother_first'];
     } elseif ($this->info['mother_first'] == "") {
       $givenName = $this->info['father_first'];
@@ -372,9 +402,9 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
 
   public function getFamilyName(){
 
-    if ($this->info['father_last'] != "" && $this->info['mother_last'] != "") {
+    if ($this->info['father_last'] != "" && $this->info['father_last'] != "deceased" && $this->info['mother_last'] != "") {
       $familyName = $this->info['father_last'];
-    } elseif ($this->info['father_last'] == "") {
+    } elseif ($this->info['father_last'] == "" || $this->info['father_last'] == "deceased") {
       $familyName = $this->info['mother_last'];
     } elseif ($this->info['mother_last'] == "") {
       $familyName = $this->info['father_last'];
@@ -412,7 +442,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     } elseif ($father_first == "") {
       $givenName = $mother_first;
     } elseif ($mother_first == "") {
-      $givenName = $fatherFirst;
+      $givenName = $father_first;
     }
 
     if ($father_last != "" && $mother_last != "") {
@@ -513,6 +543,7 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     $q = "SELECT * FROM tsm_reg_families_invoices
     WHERE family_payment_plan_id = '".$family_payment_plan_id."'
     AND family_id = '".$this->familyId."'
+    AND deleted_at IS NULL
     ORDER BY family_invoice_id ASC";
     $r = $this->db->runQuery($q);
     $returnInvoices = null;
@@ -553,12 +584,15 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $quickbooks_customer_id;
   }
 
-  public function createInvoice($family_payment_plan_id = null, $invoice_description = null, $due_date = null) {
+  public function createInvoice($family_payment_plan_id = null, $invoice_description = null, $due_date = null, $invoiceDate = null) {
     if ($due_date == null) {
       $due_date = date("Y-m-d");
       $due_date = new DateTime($due_date);
       $due_date = $due_date->add(date_interval_create_from_date_string('1 month'));
       $due_date = date_format($due_date, 'Y-m-d');
+    }
+    if($family_payment_plan_id == null){
+      $family_payment_plan_id = "NULL";
     }
 
 
@@ -572,12 +606,27 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     $campusInfo = $campus->getInfo();
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
     $invoice->setDocNumber($campusInfo['invoice_prefix'].$invoice_id);
+	  if($invoiceDate != null){
+			$invoice->setInvoiceDate($invoiceDate);
+	  }
 
     return $invoice_id;
   }
 
   public function createInvoiceFromFees($fees, $description, $family_payment_plan_id = "NULL", $due_date = null) {
     global $currentCampus;
+	  $doNotCreate = false;
+	  foreach($fees as $fee){
+		  $feeObject = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+		  if($feeObject->isInvoiced()){
+			  $doNotCreate = true;
+		  }
+	  }
+
+	  if($doNotCreate == true){
+		  return false;
+	  }
+
     $invoice_id = $this->createInvoice($family_payment_plan_id, $description,$due_date);
     $invoice = new TSM_REGISTRATION_INVOICE($invoice_id);
 
@@ -634,6 +683,19 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $returnFees;
   }
 
+  public function getUninvoicedFees(){
+    $q = "SELECT * FROM tsm_reg_families_fees WHERE family_id = '".$this->familyId."'";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $familyFee = new TSM_REGISTRATION_FAMILY_FEE($a['family_fee_id']);
+      if (!$familyFee->isInvoiced()) {
+        $returnFees[] = $a;
+      }
+    }
+
+    return $returnFees;
+  }
+
   public function getFees($fee_type_id = null) {
     $students = $this->getStudents($this->getSelectedSchoolYear());
     $returnFees = null;
@@ -653,6 +715,228 @@ class TSM_REGISTRATION_FAMILY extends TSM_REGISTRATION_CAMPUS {
     return $returnFees;
   }
 
-}
+  public function getFeesByFeeId($fee_id){
+    $q = "SELECT * FROM tsm_reg_families_fees WHERE family_id = ".$this->familyId." AND fee_id = '$fee_id'";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $fees[$a['family_fee_id']] = $a;
+    }
+
+    return $fees;
+  }
+
+  public function getFeesNeedingReview(){
+    $q = "SELECT * FROM tsm_reg_families_fees WHERE family_id = ".$this->familyId." AND to_review = '1'";
+    $r = $this->db->runQuery($q);
+    $feesNeedingReview = null;
+    while($a = mysql_fetch_assoc($r)){
+      $feesNeedingReview[] = $a;
+    }
+
+    return $feesNeedingReview;
+  }
+
+  public function handleFees($handleFees){
+    foreach($handleFees as $family_fee_id=>$handleInfo){
+      if($handleInfo['handleMethod'] == 1){
+
+        //echo $family_fee_id.": removing from invoices and family";
+        $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+        $familyFeeInfo = $familyFee->getInfo();
+        if($familyFee->isInvoiced()){
+          $invoice_id = $familyFee->getInvoiceId();
+          if(isset($invoice_id)){
+            //echo "the fee is on a payment plan";
+	          if(isset($familyFeeInfo['family_payment_plan_id'])){
+	            $familyPaymentPlan = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($familyFeeInfo['family_payment_plan_id']);
+	            $originalInvoiceId = $familyPaymentPlan->getOriginalInvoiceId();
+		          $familyPaymentPlanInfo = $familyPaymentPlan->getInfo();
+	          } else {
+		          $originalInvoiceId = 0;
+	          }
+
+
+	          //if($familyPaymentPlanInfo['invoice_and_credit'] == 0 || !($familyPaymentPlan->getAmountInvoiced() >= $familyPaymentPlan->getTotal())){
+		        //if($familyPaymentPlanInfo['invoice_and_credit'] == 0){
+              $familyInvoice = new TSM_REGISTRATION_INVOICE($invoice_id);
+              $familyInvoice->removeFee($family_fee_id);
+              $familyInvoice->updateTotal();
+
+              if($invoice_id == $originalInvoiceId){
+	              $newTotal = $familyInvoice->getTotal();
+                $credit_invoice_id = $familyPaymentPlan->getCreditInvoiceId();
+                if($credit_invoice_id){
+                  $creditInvoice = new TSM_REGISTRATION_INVOICE($credit_invoice_id);
+                  $creditFeeId = $creditInvoice->getFirstFamilyFeeId();
+                  $credtFee = new TSM_REGISTRATION_FAMILY_FEE($creditFeeId);
+                  $newTotal = $newTotal*-1;
+                  $credtFee->updateAmount($newTotal);
+                  $creditInvoice->updateFeeAmount($creditFeeId,$newTotal);
+                  $creditInvoice->updateTotal();
+                }
+              }
+
+              $familyFee->setPaymentPlan("NULL");
+              $familyFee->setToReview(false);
+              $familyFee->delete();
+            //}
+          }
+        } else if($familyFee->isOnPaymentPlan()){
+          $familyFee->setPaymentPlan("NULL");
+          $familyFee->setToReview(false);
+          $familyFee->delete();
+        }
+
+      } else if($handleInfo['handleMethod'] == 2){
+        //echo $family_fee_id.": nonrefundable";
+        $familyFee = new TSM_REGISTRATION_FAMILY_FEE($family_fee_id);
+        $familyFee->setRemovable(false);
+        $familyFee->setToReview(false);
+      }
+
+
+    }
+
+    return true;
+  }
+
+  public function getFeesInReview(){
+    $q = "SELECT * FROM tsm_reg_families_fees WHERE family_id = ".$this->familyId." AND to_review = 1";
+    $r = $this->db->runQuery($q);
+    $feeInReview = null;
+    while($a = mysql_fetch_assoc($r)){
+      $feeInReview[] = $a;
+    }
+
+    return $feeInReview;
+  }
+
+  public function deactivateFamily($students_list = null){
+    $std = '';
+    if($students_list == null){
+      $students_list  = $this->getStudents();
+    }
+    if(!empty($students_list)){
+      foreach($students_list as $student){
+        $studentObject = new TSM_REGISTRATION_STUDENT($student['student_id']);
+        $studentObject->processFees();
+        $std.=$student['student_id'].',';
+      }
+      $std = substr_replace($std,'',-1);
+      $q = 'UPDATE tsm_reg_students SET active=0 WHERE student_id IN('.$std.')';
+      $r = $this->db->runQuery($q);
+    }
+
+    $q = 'UPDATE tsm_reg_families SET active=0 WHERE family_id = '.$this->familyId;
+    $r = $this->db->runQuery($q);
+    return true;
+  }
+
+  public function resetPassword($campus_id,$email){
+    $q = 'SELECT * FROM tsm_reg_families WHERE 
+          primary_email="'.$email.'" AND 
+          campus_id='.$campus_id.' AND 
+          active=1 LIMIT 1';
+    $result = $this->db->runQuery($q);
+    if(mysql_num_rows($result)==1){
+      $row = mysql_fetch_assoc($result);
+      $token = md5(uniqid());
+
+      $mailer = $this->setupEmail();
+
+      $content ="
+              <h3>Password Reset</h3>
+              <p>To change your password, please click <a href='".$_SERVER['HTTP_HOST']."/index.php?mod=registration&view=family&action=resetPassword&token=".$token."&email=".$email."'>here</a></p>
+              ";
+      $content_plain="
+              Password Reset \n
+              To change your password, please open this link ".$_SERVER['HTTP_HOST']."/index.php?mod=registration&view=family&action=resetPassword&token=".$token."&email=".$email;
+      
+      $content=str_replace('\"','"',$content);
+      // Create a message
+      $message = Swift_Message::newInstance('Reset Password')
+        ->setFrom(array('noreply@artiosacademies.com' => 'Artios Academies'))
+        ->setTo(array($email))
+        ->setBody($content,'text/html')
+        ->addPart($content_plain,'text/plain');
+
+      $result = $mailer->send($message);
+      if($result == 1){
+        //save data in database if mail was successfully sent 
+        $family_id = $row['family_id'];
+
+        $date = date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s').' + 1 day'));
+
+        $q = 'UPDATE tsm_reg_families SET 
+        password_reset_token="'.$token.'",
+        password_reset_expire="'.$date.'" 
+        WHERE family_id='.$family_id;
+        $this->db->runQuery($q);
+        return true;
+      }
+      else{
+        return false;
+      }
+
+    }
+    else{
+      return false;
+    }
+  }
+
+  public function checkResetToken($email,$token){
+    $q = 'SELECT password_reset_expire FROM tsm_reg_families WHERE primary_email="'.$email.'" 
+          AND password_reset_token="'.$token.'" LIMIT 1';
+    $res = $this->db->runQuery($q);
+    if(mysql_num_rows($res)==1){
+      $time = mysql_fetch_assoc($res);
+      $time = strtotime($time['password_reset_expire']);
+      $now = time();
+      if($time > $now){
+        return true;
+      }
+    }
+    return false;
+  }
+  private function setupEmail(){
+    require_once __TSM_ROOT__.'includes/3rdparty/swift/lib/swift_required.php';
+
+    $transport = Swift_SmtpTransport::newInstance('66.147.244.176', 25)
+      ->setUsername('noreply@takesixmedia.com')
+      ->setPassword('LTOZ7]OLz~wB');
+      $mailer = Swift_Mailer::newInstance($transport);
+      return $mailer;
+  }
+
+  public function changePassword($email,$password,$token){
+    $password = $this->tsm->createPassword($password);
+    $exists = 'SELECT * FROM tsm_reg_families WHERE primary_email="'.$email.'" AND password_reset_token="'.$token.'" LIMIT 1';
+    $exists = $this->db->runQuery($exists);
+    if(mysql_num_rows($exists)==0) return false;
+
+    $q = 'UPDATE tsm_reg_families SET password="'.$password.'" WHERE primary_email="'.$email.'" AND password_reset_token="'.$token.'" LIMIT 1';
+    $res = $this->db->runQuery($q);
+
+    //clear token and date, just in case
+    $q = 'UPDATE tsm_reg_families SET password_reset_token="" AND password_reset_expire="0000-00-00 00:00:00"WHERE primary_email="'.$email.'" AND password_reset_token="'.$token.'" LIMIT 1';
+    $this->db->runQuery($q);
+    return true;
+  }
+
+  public function recentPayments(){
+    $q = 'SELECT family_payment_id,payment_description,reference_number,quickbooks_payment_id,payment_type,amount,payment_time FROM tsm_reg_families_payments WHERE family_id='.$this->familyId.' ORDER BY payment_time DESC LIMIT 10';
+    $res = $this->db->runQuery($q);
+    $results = array();
+    while($r = mysql_fetch_assoc($res)){
+      $results[] = $r;
+    }
+
+    foreach($results as $key=>$result){
+      $p = new TSM_REGISTRATION_PAYMENT($result['family_payment_id']);
+      $results[$key]['invoices'] = $p->getInvoices();
+    }
+    return $results;
+  }
+ } 
 
 ?>

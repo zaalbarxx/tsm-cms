@@ -340,7 +340,7 @@ margin-bottom: 15px;*/
 }
 .smallItem .title{
 margin-left: 30px;
-width: 50%;
+width: 60%;
 display: inline-block;
 font-size: 18px;
 font-weight: bold;

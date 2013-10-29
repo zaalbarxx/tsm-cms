@@ -1,12 +1,11 @@
 <?php
 require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php");
-
 //todo: add the list of fees that apply to each program here
 ?>
 <div class="span9">
     <h1><?php echo $pageTitle; ?> - <a
             href="index.php?mod=registration&view=student&action=addEditStudent&student_id=<?php echo $studentInfo['student_id']; ?>"
-            class="editButton" title="Edit Student"></a></h1>
+            class="editButton fb" title="Edit Student"></a></h1>
 
     <div class="well well-large">
         <h2>Student Information</h2>
@@ -31,7 +30,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
 					<!--<a href="#" class="reviewButton" title="Review This Program"></a>
 					<a href="#" class="editButton" title="Edit This Student"></a>-->
 					<a href="index.php?mod=registration&ajax=unenrollStudentFromProgram&student_id=<?php echo $student_id; ?>&program_id=<?php echo $program['program_id']; ?>"
-             class="deleteButton" title="Unenroll From This Program"></a>
+             class="deleteButton deleteProgram" title="Unenroll From This Program" data-tsm-program-id="<?php echo $program['program_id']; ?>"></a>
 				</span>
 
                 <div class="itemDetails" style="display: block;">
@@ -52,7 +51,19 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
                           $i = 1;
                           if ($program['courses']) {
                             foreach ($program['courses'] as $course) {
-                              echo "<tr><td>".$i.". ".$course['name']."</td><td><a href='index.php?mod=registration&view=student&action=changeStudentPeriodForCourse&course_period_id=".$course['course_period_id']."&student_id=".$student_id."&course_id=".$course['course_id']."&program_id=".$program['program_id']."' class='fb'>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</a></td><td>".$course['teacher_name']."</td><td align=center>$".$course['tuition_amount']."</td><td align=center>$".$course['registration_amount']."</td><td><a href=\"index.php?mod=registration&ajax=unenrollStudentFromCourse&course_id=".$course['course_id']."&student_id=".$student_id."&program_id=".$course['program_id']."\" title=\"Unenroll From This Course\" class=\"deleteButton btn btn-danger btn-small\">Unenroll</a></td></tr>";
+                              echo "<tr><td>".$i.". ".$course['name']."</td><td><a href='index.php?mod=registration&view=student&action=changeStudentPeriodForCourse&course_period_id=".$course['course_period_id']."&student_id=".$student_id."&course_id=".$course['course_id']."&program_id=".$program['program_id']."' class='fb'>".$tsm->intToDay($course['day']).". ".date("g:ia", strtotime($course['start_time']))." - ".date("g:ia", strtotime($course['end_time']))."</a></td><td>".$course['teacher_name']."</td><td align=center>";
+                              if(isset($course['tuition_popover'])){
+                                echo "<span class=\"hiddenFees\" data-content=\"".$course['tuition_popover']."\" data-original-title=\"Tuition Fees\" style=\"display: block;\">$".$course['tuition_amount']."</span>";
+                              } else {
+                                echo "$".$course['tuition_amount'];
+                              }
+                              echo "</td><td align=center>";
+                              if(isset($course['registration_popover'])){
+                                echo "<span class=\"hiddenFees\" data-content=\"".$course['registration_popover']."\" data-original-title=\"Registration Fees\" style=\"display: block;\">$".$course['registration_amount']."</span>";
+                              } else {
+                                echo "$".$course['registration_amount'];
+                              }
+                              echo "</td><td><a href=\"index.php?mod=registration&ajax=unenrollStudentFromCourse&course_id=".$course['course_id']."&student_id=".$student_id."&program_id=".$course['program_id']."\" title=\"Unenroll From This Course\" data-tsm-course-id=\"".$course['course_id']."\" data-tsm-program-id=\"".$course['program_id']."\" class=\"deleteButton deleteCourse btn btn-danger btn-small\">Unenroll</a></td></tr>";
                               $i++;
                             }
                           } else {
@@ -73,7 +84,7 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
                         <br/>
                     </div>
                     <div class="half">
-                        <strong>Registration Time:</strong> <?php echo $program['registration_date']; ?><br/>
+                        <strong>Registration Time:</strong> <?php echo $program['registration_date']; ?>&nbsp;&nbsp;<a class='btn btn-mini' href='index.php?mod=registration&view=student&action=editRegistrationDate&student_id=<?php echo $studentInfo['student_id']; ?>&student_program_id=<?php echo $program['student_program_id']; ?>'>Edit</a><br/>
                         <strong>Program Tuition:</strong> $<?php echo $program['tuition_total']; ?><br/>
                         <strong>Yearly Tuition:</strong> $<?php echo $program['tuition_total']; ?><br/>
                     </div>
@@ -101,18 +112,65 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
     $(".bigItem .title").click(function () {
         $(this).parent().children(".itemDetails").slideToggle();
     });
-    $(".deleteButton").click(function () {
-        $.get($(this).attr("href"), function (data) {
-            var response = JSON.parse(data);
-            if (response.alertMessage != null) {
-                alert(response.alertMessage);
-            }
-            if (response.success == true) {
-                window.location.reload();
-            }
-        });
-        return false;
+    $(".hiddenFees").popover({
+      html: true,
+      trigger: 'hover',
+      placement: 'top'
     });
+    $(".deleteProgram").click(function () {
+      var program_id = $(this).attr("data-tsm-program-id");
+      $.get($(this).attr("href"), function (data) {
+        var response = JSON.parse(data);
+        if (response.success == true) {
+          window.location.reload();
+        } else if(response.error == 1){
+          //handle enrolled in courses
+          alert(response.alertMessage);
+
+        } else if(response.error == 2){
+          //handle fees can't be removed.
+          $.get("index.php?mod=registration&ajax=getHandleFeesView&student_id=<?php echo $student_id; ?>&program_id=" + program_id + "&feesToHandle=" + response.nonRemovableFees,function(data){
+            $("body").append(data);
+            $("#feesToHandle").modal().on("hidden",function(){
+              $(this).remove();
+            });
+
+            //alert(data);
+          });
+
+
+        }
+      });
+      return false;
+    });
+    $(".deleteCourse").click(function () {
+      var course_id = $(this).attr("data-tsm-course-id");
+      var program_id = $(this).attr("data-tsm-program-id");
+      $.get($(this).attr("href"), function (data) {
+        var response = JSON.parse(data);
+        if (response.success == true) {
+          window.location.reload();
+        } else if(response.error == 1){
+          //handle enrolled in courses
+          alert(response.alertMessage);
+
+        } else if(response.error == 2){
+          //handle fees can't be removed.
+          $.get("index.php?mod=registration&ajax=getHandleFeesView&student_id=<?php echo $student_id; ?>&program_id=" + program_id + "&course_id=" + course_id + "&feesToHandle=" + response.nonRemovableFees,function(data){
+            $("body").append(data);
+            $("#feesToHandle").modal().on("hidden",function(){
+              $(this).remove();
+            });
+
+            //alert(data);
+          });
+
+
+        }
+      });
+      return false;
+    });
+
     $(".showDetails").click(function () {
         if ($(this).html() == "Show Details") {
             $(this).parent().children(".bigItem").children(".itemDetails").show(500);

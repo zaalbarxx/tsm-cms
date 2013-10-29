@@ -67,13 +67,37 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     return $this->info['current_school_year'];
   }
 
-  public function getInvoices($displayed = null) {
+  public function getInvoices($displayed = null,$onlyDeleted = false) {
     $q = "SELECT fi.*, fpp.*, pp.* FROM tsm_reg_families_invoices fi, tsm_reg_families_payment_plans fpp, tsm_reg_fee_payment_plans pp
     WHERE fi.family_payment_plan_id = fpp.family_payment_plan_id
     AND pp.payment_plan_id = fpp.payment_plan_id
     AND pp.campus_id = '".$this->campusId."'";
     if ($displayed) {
       $q .= " AND fi.displayed = '$displayed'";
+    }
+	  if($onlyDeleted == false){
+		  $q .= " AND fi.deleted_at IS NULL ";
+	  } else if($onlyDeleted = true){
+      $q .= " AND fi.deleted_at IS NOT NULL";
+    }
+    $r = $this->db->runQuery($q);
+    $returnInvoices = null;
+    while ($a = mysql_fetch_assoc($r)) {
+      $returnInvoices[$a['family_invoice_id']] = $a;
+    }
+
+    $q = "SELECT * FROM tsm_reg_families_invoices fi, tsm_reg_families f
+    WHERE f.family_id = fi.family_id
+    AND f.campus_id = '".$this->campusId."' AND fi.family_invoice_id IN(
+    SELECT family_invoice_id FROM tsm_reg_families_invoices WHERE family_payment_plan_id IS NULL
+    )";
+    if ($displayed) {
+      $q .= " AND fi.displayed = '$displayed'";
+    }
+    if($onlyDeleted == false){
+      $q .= " AND fi.deleted_at IS NULL ";
+    } else if($onlyDeleted = true){
+      $q .= " AND fi.deleted_at IS NOT NULL";
     }
     $r = $this->db->runQuery($q);
     $returnInvoices = null;
@@ -96,6 +120,25 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
 
     return $amount;
   }
+
+	public function getFinalizedRevenue(){
+		$q = "SELECT SUM(amount) as total_rev FROM tsm_reg_families_fees ff
+LEFT JOIN tsm_reg_families_payment_plans fpp ON fpp.family_payment_plan_id = ff.family_payment_plan_id
+LEFT JOIN tsm_reg_families_school_years fsy ON fsy.family_id = ff.family_id
+LEFT JOIN tsm_reg_families f ON f.family_id = fsy.family_id
+LEFT JOIN tsm_reg_fee_payment_plans fpay ON fpay.payment_plan_id = fpp.payment_plan_id
+    WHERE fsy.school_year = '".$this->getSelectedSchoolYear()."'
+    AND (fsy.current_step = 0 OR fsy.current_step = 6)
+    AND f.campus_id = '".$this->campusId."'
+AND ((ff.fee_id != fpay.installment_fee_id
+AND ff.fee_id != fpay.credit_fee_id) OR fpp.family_payment_plan_id IS NULL) AND ff.name NOT LIKE '%paypal%'";
+		$r = $this->db->runQuery($q);
+		while ($a = mysql_fetch_assoc($r)) {
+			$amount = $a['total_rev'];
+		}
+
+		return $amount;
+	}
 
   public function getFeeTypes() {
     $q = "SELECT * FROM tsm_reg_fee_types WHERE campus_id = '".$this->campusId."' AND school_year = '".$this->getSelectedSchoolYear()."'";
@@ -500,7 +543,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
   }
 
   public function getFamilies() {
-    $q = "SELECT * FROM tsm_reg_families f, tsm_reg_families_school_years fsy WHERE f.campus_id = ".$this->campusId." AND fsy.family_id = f.family_id AND fsy.school_year = '".$this->getSelectedSchoolYear()."' ORDER BY f.father_last, f.mother_last";
+    $q = "SELECT * FROM tsm_reg_families f, tsm_reg_families_school_years fsy WHERE f.campus_id = ".$this->campusId." AND fsy.family_id = f.family_id AND f.active=1 AND fsy.school_year = '".$this->getSelectedSchoolYear()."' ORDER BY f.father_last, f.mother_last";
     $r = $this->db->runQuery($q);
     $this->families = null;
     while ($a = mysql_fetch_assoc($r)) {
@@ -529,7 +572,7 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
   }
 
   public function getStudents() {
-    $q = "SELECT * FROM tsm_reg_students s, tsm_reg_students_school_years ssy WHERE s.campus_id = ".$this->campusId." AND ssy.student_id = s.student_id AND ssy.school_year = '".$this->getSelectedSchoolYear()."' ORDER BY s.last_name";
+    $q = "SELECT * FROM tsm_reg_students s, tsm_reg_students_school_years ssy WHERE s.campus_id = ".$this->campusId." AND ssy.student_id = s.student_id AND s.active=1 AND ssy.school_year = '".$this->getSelectedSchoolYear()."' ORDER BY s.last_name";
     $r = $this->db->runQuery($q);
     $this->students = null;
     while ($a = mysql_fetch_assoc($r)) {
@@ -537,6 +580,26 @@ class TSM_REGISTRATION_CAMPUS extends TSM_REGISTRATION {
     }
 
     return $this->students;
+  }
+
+  public function getProgramById($program_id){
+    $q = "SELECT * FROM tsm_reg_programs WHERE program_id = $program_id";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $program = $a;
+    }
+
+    return $program;
+  }
+
+  public function getCourseById($course_id){
+    $q = "SELECT * FROM tsm_reg_courses WHERE course_id = $course_id";
+    $r = $this->db->runQuery($q);
+    while ($a = mysql_fetch_assoc($r)) {
+      $course = $a;
+    }
+
+    return $course;
   }
 
 }

@@ -23,9 +23,9 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
                       href="index.php?mod=registration&view=student&action=viewStudent&student_id=<?php echo $student['student_id']; ?>"
                       class="reviewButton" title="Review This Student"></a></span>
 
-          <div class="itemDetails">
+          <div class="itemDetails" style="display: block;">
             <?php
-            /* This code is useful for making sure everyone was assigned the correct fees
+
             $studentObject = new TSM_REGISTRATION_STUDENT($student['student_id']);
             $processFees = $studentObject->processFees(true);
             if((isset($processFees['addFees']) || isset($processFees['removeFees'])) && !isset($processFees['removeButInvoiced'])){
@@ -38,7 +38,6 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
               //$studentObject->processFees();
               //die();
             }
-            */
             ?>
           </div>
       </div>

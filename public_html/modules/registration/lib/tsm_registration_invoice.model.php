@@ -36,6 +36,23 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return $timesSent;
   }
 
+  public function updateFeeAmount($family_fee_id,$amount){
+    $q = "UPDATE tsm_reg_families_invoice_fees SET amount = '$amount' WHERE family_fee_id = $family_fee_id AND family_invoice_id = '".$this->invoiceId."'";
+    $this->db->runQuery($q);
+
+    return true;
+  }
+
+  public function getFirstFamilyFeeId(){
+    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."' AND soft_deleted=FALSE ORDER BY family_invoice_fee_id ASC LIMIT 1";
+    $r = $this->db->runQuery($q);
+    while($a = mysql_fetch_assoc($r)){
+      $family_fee_id = $a['family_fee_id'];
+    }
+
+    return $family_fee_id;
+  }
+
   public function emailInvoice($sendTo, $contents, $subject){
     global $currentCampus;
 
@@ -55,6 +72,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     $subject = str_replace("{{name}}",$family->getDisplayName(),$subject);
     $contents = str_replace("{{amount}}",$this->info['amount'],$contents);
     $subject = str_replace("{{amount}}",$this->info['amount'],$subject);
+    /*
     if($currentCampus->usesQuickbooks() && $family->inQuickbooks()){
       $contents = $contents.'
       <br />
@@ -73,21 +91,21 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       </form>
       <br /><br />
       ';
-    }
+    }*/
 
     require_once __TSM_ROOT__.'includes/3rdparty/swift/lib/swift_required.php';
-    /*
+
     $transport = Swift_SmtpTransport::newInstance('66.147.244.176', 25)
       ->setUsername('noreply@takesixmedia.com')
       ->setPassword('LTOZ7]OLz~wB')
     ;
-    */
 
+/*
     $transport = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
       ->setUsername('billing@artiosacademies.com')
       ->setPassword('5646lane')
     ;
-
+*/
     $mailer = Swift_Mailer::newInstance($transport);
 
     // Create a message
@@ -108,6 +126,11 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     }
 
     return $result;
+  }
+
+  public function markAsSent(){
+    $q = "INSERT INTO tsm_reg_families_invoice_email (family_invoice_id,family_id,email_subject) VALUES('".$this->invoiceId."','".$this->info['family_id']."','Marked as Sent')";
+    $this->db->runQuery($q);
   }
 
   public function generatePDF($forEmail = false) {
@@ -326,7 +349,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function containsFee($family_fee_id) {
-    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."' AND family_fee_id = '".$family_fee_id."'";
+    $q = "SELECT * FROM tsm_reg_families_invoice_fees WHERE family_invoice_id = '".$this->invoiceId."' AND family_fee_id = '".$family_fee_id."' AND soft_deleted=FALSE";
     $r = $this->db->runQuery($q);
     if (mysql_num_rows($r) == 0) {
       return false;
@@ -351,11 +374,26 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     } else {
       $amount = null;
     }
-
-
     if ($this->containsFee($family_fee_id) == false) {
       $q = "INSERT INTO tsm_reg_families_invoice_fees (family_id,description,amount,family_fee_id,family_invoice_id)
       VALUES('".$this->info['family_id']."','".$description."','".$amount."','$family_fee_id','".$this->invoiceId."')";
+      $this->db->runQuery($q);
+
+      $q = "INSERT INTO tsm_reg_families_invoice_fee_log (add_remove,family_fee_id,family_invoice_id) VALUES(1,$family_fee_id,".$this->info['family_invoice_id'].")";
+      $this->db->runQuery($q);
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function removeFee($family_fee_id){
+    if(isset($this->info['family_invoice_id'])){
+      $q = "DELETE FROM tsm_reg_families_invoice_fees WHERE family_fee_id = '$family_fee_id' AND family_invoice_id = '".$this->info['family_invoice_id']."'";
+      $this->db->runQuery($q);
+
+      $q = "INSERT INTO tsm_reg_families_invoice_fee_log (add_remove,family_fee_id,family_invoice_id) VALUES(0,$family_fee_id,".$this->info['family_invoice_id'].")";
       $this->db->runQuery($q);
 
       return true;
@@ -378,7 +416,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
   public function getFees() {
     //$q = "SELECT invf.*, ff.fee_id, ff.name FROM tsm_reg_families_invoice_fees invf, tsm_reg_families_fees ff WHERE ff.family_fee_id = invf.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."'";
-    $q = "SELECT invf.*, ff.fee_id, ff.name FROM tsm_reg_families_invoice_fees invf, tsm_reg_families_fees ff WHERE ff.family_fee_id = invf.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."'";
+    $q = "SELECT invf.*, ff.fee_id, ff.name FROM tsm_reg_families_invoice_fees invf, tsm_reg_families_fees ff WHERE ff.family_fee_id = invf.family_fee_id AND invf.family_invoice_id = '".$this->invoiceId."' AND invf.soft_deleted=FALSE";
 
     $r = $this->db->runQuery($q);
     $returnFees = null;
@@ -437,7 +475,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       }
       $quickbooksInvoice = new QuickBooks_IPP_Object_CreditMemo();
       $creditMemoTotal = $invoiceTotal * -1;
-      $invoiceHeader->setTotalAmt($creditMemoTotal);
+      //$invoiceHeader->setTotalAmt($creditMemoTotal);
       $invoiceHeader->setARAccountName("Accounts Receivable");
       //todo: need to set the account to whatever account the campus is set to.
       $quickbooksInvoice->addHeader($invoiceHeader);
@@ -446,82 +484,7 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     if (!$doNotProcess) {
       if (isset($fees)) {
         foreach ($fees as $fee) {
-          if (isset($fee['fee_id'])) {
-            $feeObject = new TSM_REGISTRATION_FEE($fee['fee_id']);
-            $feeInfo = $feeObject->getInfo();
-
-            $Line = new QuickBooks_IPP_Object_Line();
-            $Line->setItemId($feeInfo['quickbooks_item_id']);
-
-            //we need to make the negative charge positive if this is a credit to their account.
-            if ($invoiceTotal > 0) {
-              $Line->setAmount($fee['amount']);
-            } else {
-              $Line->setAmount($fee['amount'] * -1);
-            }
-
-            $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
-            $familyFeeInfo = $familyFee->getInfo();
-
-            //todo:figure out why the paypal convenience fee is not getting assigned the correct class.
-            if($familyFeeInfo['program_id'] != 0 || $familyFeeInfo['course_id'] == 0){
-              if($familyFeeInfo['program_id'] == 0){
-                $programString = " program_id IS NULL ";
-              } else {
-                $programString = " program_id = ".$familyFeeInfo['program_id']." ";
-              }
-              if($familyFeeInfo['course_id'] == 0){
-                $courseString = "course_id IS NULL";
-              } else {
-                $courseString = "course_id = ".$familyFeeInfo['course_id']." ";
-              }
-              if($familyFeeInfo['course_id'] == 0 && $familyFeeInfo['program_id'] != 0){
-                $q = "SELECT * FROM tsm_reg_program_fee WHERE $programString AND fee_id = '".$familyFeeInfo['fee_id']."'";
-              } elseif($familyFeeInfo['course_id'] != 0) {
-                $q = "SELECT * FROM tsm_reg_course_fee WHERE $programString AND $courseString AND fee_id = '".$familyFeeInfo['fee_id']."'";
-              }
-              if(isset($q)){
-                $r = $this->db->runQuery($q);
-                while($a = mysql_fetch_assoc($r)){
-                  $feeQbClassId = $a['quickbooks_class_id'];
-                }
-              } else {
-                $feeQbClassId = null;
-              }
-              if($feeQbClassId != null){
-                $Line->setClassId($feeQbClassId);
-              }
-            } else if($fee['fee_id'] == $campusInfo['paypal_convenience_fee_id']){
-              if($campusInfo['paypal_convenience_fee_qb_class_id'] != ""){
-                $Line->setClassId($campusInfo['paypal_convenience_fee_qb_class_id']);
-              }
-            }
-
-
-            if($familyFeeInfo['student_id'] != 0){
-              $student = new TSM_REGISTRATION_STUDENT($familyFeeInfo['student_id']);
-              $studentInfo = $student->getInfo();
-              $studentName = $studentInfo['first_name']." ".$studentInfo['last_name'].": ";
-            } else {
-              $studentName = null;
-            }
-
-            if($studentName != null){
-              $description = $studentName.": ".$fee['name'];
-            } else {
-              $description = $fee['name'];
-            }
-
-            $Line->setDescription($description);
-            $Line->setQty(1);
-            $quickbooksInvoice->addLine($Line);
-          } else {
-            $Line = new QuickBooks_IPP_Object_Line();
-            $Line->setAmount($fee['amount']);
-            $Line->setDescription($fee['name']);
-            $Line->setQty(1);
-            $quickbooksInvoice->addLine($Line);
-          }
+          $quickbooksInvoice->add($quickbooks->createLineFromFee($fee,$invoiceTotal));
         }
       }
 
@@ -540,12 +503,20 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
       $extKey = $invoice->getExternalKey();
       $this->setQuickbooksExternalKey($extKey);
 
+      $this->updateLastQBSync();
 
       return true;
     } else {
       die("doNotProcess");
       return false;
     }
+  }
+
+  public function updateLastQBSync(){
+    $q = "UPDATE tsm_reg_families_invoices SET last_qb_sync = '".date("Y-m-d H:i:s",time())."' WHERE family_invoice_id = '".$this->invoiceId."'";
+    $this->db->runQuery($q);
+
+    return true;
   }
 
   public function hide() {
@@ -562,11 +533,27 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
     return true;
   }
 
-  public function setQuickbooksId($id) {
-    $q = "UPDATE tsm_reg_families_invoices SET quickbooks_invoice_id = '".$id."' WHERE family_invoice_id = '".$this->invoiceId."'";
+  public function setCreditMemo($value) {
+    $q = "UPDATE tsm_reg_families_invoices SET credit_memo = $value WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);
 
     return true;
+  }
+
+  public function setQuickbooksId($id) {
+    $q = "UPDATE tsm_reg_families_invoices SET quickbooks_invoice_id = '".$id."' WHERE family_invoice_id = '".$this->invoiceId."'";
+    $this->db->runQuery($q);
+    $this->info['quickbooks_invoice_id'] = $id;
+
+    return true;
+  }
+
+  public function isInQuickbooks(){
+    if($this->info['quickbooks_invoice_id'] != ""){
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public function setQuickbooksExternalKey($key){
@@ -582,6 +569,13 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
 
     return true;
   }
+
+	public function setInvoiceDate($invoiceTime){
+		$q = "UPDATE tsm_reg_families_invoices SET invoice_time = '".$invoiceTime."' WHERE family_invoice_id = '".$this->invoiceId."'";
+		$this->db->runQuery($q);
+
+		return true;
+	}
 
   public function getTotal() {
     $q = "SELECT amount FROM tsm_reg_families_invoices WHERE family_invoice_id = '".$this->invoiceId."'";
@@ -622,10 +616,74 @@ class TSM_REGISTRATION_INVOICE extends TSM_REGISTRATION_CAMPUS {
   }
 
   public function updateTotal() {
-    $q = "UPDATE tsm_reg_families_invoices SET amount = '".$this->addFees($this->getFees())."' WHERE family_invoice_id = '".$this->invoiceId."'";
+    $q = "UPDATE tsm_reg_families_invoices SET amount = '".$this->addFees($this->getFees())."', last_updated = '".date("Y-m-d H:i:s",time())."' WHERE family_invoice_id = '".$this->invoiceId."'";
     $this->db->runQuery($q);
 
     return true;
+  }
+
+  public function deleteFee($feeId){
+    $q = "UPDATE tsm_reg_families_invoice_fees SET soft_deleted=TRUE WHERE family_invoice_id=".$this->invoiceId." AND family_fee_id=".$feeId;
+    $this->db->runQuery($q);
+    $familyFee = new TSM_REGISTRATION_FAMILY_FEE($feeId);
+    $familyFee->setPaymentPlan("NULL");
+
+	  $q = "INSERT INTO tsm_reg_families_invoice_fee_log (add_remove,family_fee_id,family_invoice_id) VALUES(0,$feeId,".$this->info['family_invoice_id'].")";
+	  $this->db->runQuery($q);
+  }
+
+  public function isInstallmentInvoice(){
+    if($this->info['family_payment_plan_id'] != "" && $this->info['invoice_and_credit'] == 0){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public function isCreditMemo(){
+    return $this->info['credit_memo'];
+  }
+
+  public function deleteInvoice(){
+    if($this->isInstallmentInvoice() || $this->isCreditMemo()){
+      $fees = $this->getFees();
+      foreach($fees as $f){
+
+        $familyFee = new TSM_REGISTRATION_FAMILY_FEE($f['family_fee_id']);
+        $info = $familyFee->getInfo();
+        if($info['program_id'] == "" && $info['course_id'] == "" && $info['student_id'] == 0){
+          $this->deleteFee($f['fee_id']);
+          $familyFee->delete();
+        }
+      }
+    }
+    $q = "UPDATE tsm_reg_families_invoices SET deleted_at='".date('Y-m-d H-i-s')."' WHERE family_invoice_id=".$this->invoiceId;
+    $this->db->runQuery($q);
+    return true;
+  }
+
+  public function updateInvoiceAndDueDate($invoice_date,$due_date){
+    $invoice_date = (!empty($invoice_date) ? $invoice_date : null);
+    $due_date = (!empty($due_date) ? $due_date : null);
+
+    if($invoice_date ==null && $due_date == null){
+      return false;
+    }
+
+    $q = 'UPDATE tsm_reg_families_invoices SET invoice_time="'.$invoice_date.'", due_date="'.$due_date.'",last_updated="'.date('Y-m-d H-i-s').'" WHERE family_invoice_id='.$this->invoiceId;
+    $this->db->runQuery($q);
+    return true;
+  }
+  public function addUninvoicedFee($fee_id){
+    $q = "SELECT name,amount FROM tsm_reg_families_fees WHERE family_fee_id = ".$fee_id;
+    $result = $this->db->runQuery($q);
+    $result = mysql_fetch_assoc($result);
+    $this->addFee(array('family_fee_id'=>$fee_id,'description'=>$result['name'],'amount'=>$result['amount']));
+    $this->updateTotal();
+    return array(
+      'id'=>$fee_id,
+      'description'=>$result['name'],
+      'amount'=>$result['amount']);
   }
 
 }

@@ -9,8 +9,10 @@ if (isset($students)) {
     $students[$student['student_id']]['age'] = $studentObject->getAge();
     $students[$student['student_id']]['tuition_total'] = $reg->addFees($studentObject->getFees($campusInfo['tuition_fee_type_id']));
     $students[$student['student_id']]['registration_total'] = $reg->addFees($studentObject->getFees($campusInfo['registration_fee_type_id']));
+    $students[$student['student_id']]['student_log'] = $studentObject->getLog();
   }
 }
+$fees = $family->getFees();
 $invoices = $family->getInvoices();
 $paymentPlans = $family->getPaymentPlans();
 if (isset($invoices)) {
@@ -29,8 +31,13 @@ if(isset($paymentPlans)){
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['status'] = $paymentPlanObject->getStatus();
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountDue'] = number_format($paymentPlanObject->getAmountDue(), 2, '.', ',');
     $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountPaid'] = number_format($paymentPlanObject->getAmountPaid(), 2, '.', ',');
-    $paymentPlans[$paymentPlan['family_payment_plan_id']]['totalAmount'] = number_format($paymentPlanObject->getTotal(), 2, '.', ',');
-    $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountInvoiced'] = number_format($paymentPlanObject->getAmountInvoiced(), 2, '.', ',');
+    $amtInvoiced = $paymentPlanObject->getAmountInvoiced();
+    $total = $paymentPlanObject->getTotal();
+    //todo: detetect canAddFees correctly (determine logic)
+    //$paymentPlans[$paymentPlan['family_payment_plan_id']]['canAddFees'] = $amtInvoiced < $total;
+    $paymentPlans[$paymentPlan['family_payment_plan_id']]['canAddFees'] = 1;
+    $paymentPlans[$paymentPlan['family_payment_plan_id']]['totalAmount'] = number_format($total, 2, '.', ',');
+    $paymentPlans[$paymentPlan['family_payment_plan_id']]['amountInvoiced'] = number_format($amtInvoiced, 2, '.', ',');
     if($paymentPlanObject->getUnassignedApplicableFees()){
       $paymentPlans[$paymentPlan['family_payment_plan_id']]['moreFeesAvailible'] = true;
     } else {
@@ -43,6 +50,14 @@ if(isset($paymentPlans)){
   }
 }
 $looseFees = $family->getLooseFees();
+$feesNeedingReview = $family->getFeesNeedingReview();
+if(isset($feesNeedingReview)){
+  foreach($feesNeedingReview as $id=>$fee){
+    $familyFee = new TSM_REGISTRATION_FAMILY_FEE($fee['family_fee_id']);
+    $feesNeedingReview[$id]['invoiced'] = $familyFee->isInvoiced();
+    $feesNeedingReview[$id]['onPaymentPlan'] = $familyFee->isOnPaymentPlan();
+  }
+}
 //print_r($paymentPlans);die();
 
 
@@ -50,5 +65,5 @@ if (isset($loginAs)) {
   $reg->loginAs($familyInfo['family_id']);
 }
 
-$pageTitle = $familyInfo['father_last'];
+$pageTitle = $family->getFamilyName();
 ?>

@@ -10,7 +10,7 @@
   foreach($invoiceInfos as $invoice){
     $invoiceObject = $invoiceObjects[$invoice['family_invoice_id']];
     $familyObject = $familyObjects[$invoice['family_id']];
-    $timesSent = $invoiceObject->getTimesSent();
+    $timesSent = $invoice['times_sent'];
     ?>
     <div class="smallItem well well-small">
       <span class="title"><?php echo $familyObject->getDisplayName(); ?>: <br />

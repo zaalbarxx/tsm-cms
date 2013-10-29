@@ -1,0 +1,3 @@
+<?php
+
+$recentPayments = $family->recentPayments();

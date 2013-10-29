@@ -2,7 +2,7 @@
 require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php");
 ?>
 <div class="contentWithSideBar">
-    <h1><?php echo $pageTitle; ?></h2>
+    <h1><?php echo $pageTitle; ?></h1>
         <form method="post" id="studentInfoForm" action="">
             <fieldset>
                 <legend>Student Information</legend>
@@ -33,29 +33,18 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
                   echo "<option value=\"".$i."\">".$i."</option>";
                 } ?>
                 </select><br/>
-                <label for="age">Age: </label><select name="age">
-                <option value="">Select Age</option>
-              <?php for ($i = 1; $i <= 100; $i++) {
-              if ($studentInfo['age'] == $i) {
-                $selected = "selected=selected";
-              } else {
-                $selected = "";
-              }
-              echo "<option value=\"".$i."\">".$i."</option>";
-            } ?>
-            </select><br/>
                 <label for="grade">Grade: </label><select name="grade">
                 <option value="">Select Grade</option>
               <?php
-              for ($i = 1; $i <= 14; $i++) {
+              for ($i = -1; $i <= 12; $i++) {
                 if ($studentInfo['grade'] == $i) {
                   $selected = "selected=selected";
                 } else {
                   $selected = "";
                 }
-                if ($i == 13) {
+                if ($i == 0) {
                   $name = "Kindergarten";
-                } elseif ($i == 14) {
+                } elseif ($i == -1) {
                   $name = "Preschool";
                 } else {
                   $name = $i;
@@ -67,18 +56,35 @@ require_once(__TSM_ROOT__."modules/registration/FrontEnd/views/sidebar.view.php"
             </fieldset>
 
             <br/>
-            <input type="hidden" name="birth_date" id="birth_date" value=""/>
+            <input type="hidden" name="birth_date" id="birth_date" value="<?php echo $studentInfo['birth_date']; ?>"/>
             <input type="hidden" name="family_id" value="<?php echo $family->getFamilyId(); ?>"/>
             <input type="hidden" name="campus_id" value="<?php echo $currentCampus->getCampusId(); ?>"/>
             <input type="hidden" name="website_id" value="<?php echo $tsm->website->getWebsiteId(); ?>"/>
             <input type="hidden" name="<?php echo $submitField; ?>" value="1"/>
-            <input type="submit" class="submitButton" style="float: right;" value="Next Step"/>
+            <input type="submit" class="submitButton" style="float: right;" value="Save Student"/>
             <br/><br/><br/>
         </form>
 </div>
 <script type="text/javascript">
+  $("#studentInfoForm").validate({
+    rules:{
+      first_name:"required",
+      last_name:"required",
+      email:"email",
+      grade:"required",
+      //age:"required",
+      birthdate_day:"required",
+      birthdate_month:"required",
+      birthdate_year:"required",
+      first_year:"required"
+    }
+  });
     $("#studentInfoForm").submit(function () {
         var birthDate = $("#birthdate_year").val() + "-" + $("#birthdate_month").val() + "-" + $("#birthdate_day").val();
         $("#birth_date").val(birthDate);
     });
+    var birth_date = $("#birth_date").val().split("-");
+    $("#birthdate_month").val(parseInt(birth_date[1]));
+    $("#birthdate_day").val(parseInt(birth_date[2]));
+    $("#birthdate_year").val(parseInt(birth_date[0]));
 </script>

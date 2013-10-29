@@ -20,7 +20,7 @@ if (isset($student_id)) {
   $submitField = "saveStudent";
   if (isset($saveStudent)) {
     if ($student->saveStudent($student_id)) {
-      header('Location: index.php?mod=registration&view=student');
+      header('Location: index.php?mod=registration&view=student&action=viewStudent&student_id='.$studentInfo['student_id']);
     }
   }
 } else {

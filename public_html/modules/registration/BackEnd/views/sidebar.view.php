@@ -44,6 +44,7 @@
         } ?>>
             <a href="index.php?mod=registration&view=periods">Periods</a>
         </li>
+	    <?php if($_SESSION['adminUser']['id'] == 1 or $_SESSION['adminUser']['id'] == 2){ ?>
         <li class="nav-header">Fee Information</li>
         <li <?php if (stristr($_SERVER["REQUEST_URI"], "index.php?mod=registration&view=fees")) {
           echo "class='active'";
@@ -73,6 +74,12 @@
         } ?>>
             <a href="index.php?mod=registration&view=fees&action=paymentPlans">Payment Plans</a>
         </li>
+        <li <?php if ($tsm->stringEndsWith($_SERVER["REQUEST_URI"], "index.php?mod=registration&view=invoice")) {
+          echo "class='active'";
+        } ?>>
+          <a href="index.php?mod=registration&view=invoice">Invoices</a>
+        </li>
+	    <?php } ?>
         <li class="nav-header">Reporting</li>
         <li <?php if (stristr($_SERVER["REQUEST_URI"], "index.php?mod=registration&view=reports")) {
           echo "class='active'";

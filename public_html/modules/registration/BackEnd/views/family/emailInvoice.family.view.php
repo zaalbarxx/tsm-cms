@@ -5,10 +5,10 @@
   <p>Please edit the e-mail you would like to send below.</p>
   <form id="emailInvoiceForm" action="index.php?mod=registration&ajax=sendInvoiceEmail&family_invoice_id=<?php echo $family_invoice_id; ?>">
     <label for="send_to">Send To: </label><input type="text" name="send_to"
-                                                  value="jlane@veritasproductions.net<?php //echo $familyInfo['primary_email']; ?>"/>
+                                                  value="<?php echo $familyInfo['primary_email']; ?>"/>
     <label for="email_subject">Email Subject: </label><input type="text" name="email_subject"
                                                              value="<?php echo $emailSubject; ?>"/>
-    <textarea name="email_contents" class="editor"/><?php echo $emailContents; ?></textarea>
+    <textarea name="email_contents" class="editor"/>{{name}},<br /><br /><?php //echo $emailContents; ?></textarea>
     <script type="text/javascript">
       $('textarea.editor').ckeditor();
     </script>

@@ -8,7 +8,21 @@ switch ($action) {
     $families = $currentCampus->getFamilies();
     if (isset($families)) {
       foreach ($families as $family) {
+        $familyObject = new TSM_REGISTRATION_FAMILY($family['family_id']);
+        $feesInReview = $familyObject->getFeesInReview();
+        $families[$family['family_id']]['family_name'] = $familyObject->getFamilyName();
         $families[$family['family_id']]['status'] = null;
+        $families[$family['family_id']]['feesInReview'] = $feesInReview;
+        $paymentPlans = $familyObject->getPaymentPlans();
+        $families[$family['family_id']]['hasLooseFees'] = false;
+        if(isset($paymentPlans)){
+          foreach($paymentPlans as $paymentPlan){
+            $paymentPlanObject = new TSM_REGISTRATION_FAMILY_PAYMENT_PLAN($paymentPlan['family_payment_plan_id']);
+            if($paymentPlanObject->setupComplete() == true && $paymentPlanObject->getUnassignedApplicableFees()){
+              $families[$family['family_id']]['hasLooseFees'] = true;
+            }
+          }
+        }
         switch ($family['current_step']) {
           case 0:
             $families[$family['family_id']]['status'] = " - Finalized";
@@ -67,6 +81,10 @@ switch ($action) {
   case "emailInvoice":
     require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/family/emailInvoice.family.controller.php");
     $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/family/emailInvoice.family.view.php";
+    break;
+  case "editInvoice":
+    require_once(__TSM_ROOT__."modules/registration/BackEnd/controllers/family/editInvoice.controller.php");
+    $activeView = __TSM_ROOT__."modules/registration/BackEnd/views/family/editInvoice.view.php";
     break;
 }
 

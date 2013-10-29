@@ -40,7 +40,12 @@ require_once(__TSM_ROOT__."modules/registration/BackEnd/views/sidebar.view.php")
       }
       ?>
     </select><br/>
-        <label>In Programs: </label><br/>
+        <label>In
+	        <select name="andOrProgram">
+		        <option value="and">All of Selected</option>
+		        <option value="or">One of Selected</option>
+	        </select>
+	        Programs: </label><br/>
       <?php if (isset($programs)) {
       foreach ($programs as $program) {
         ?>
